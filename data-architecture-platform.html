@@ -1,0 +1,1855 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data Architecture Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/static/pretendard.css">
+  <style>
+    @font-face {
+      font-family: "KyoboHand";
+      src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307@1.1/KyoboHandwriting2023wsa.woff2") format("woff2");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --paper: #ead8aa;
+      --paper-light: #f8e9c4;
+      --paper-warm: #ddc48f;
+      --line: rgba(38, 68, 88, .18);
+      --ink: #17130f;
+      --ink-soft: #33291f;
+      --navy: #173c78;
+      --navy-soft: #315b92;
+      --maroon: #7c261f;
+      --maroon-soft: #9a3a32;
+      --olive: #4e5533;
+      --gold: #9a7729;
+      --paper-shadow: rgba(44, 28, 9, .24);
+      --font-hand: "KyoboHand", "Gowun Dodum", "Pretendard", "Malgun Gothic", sans-serif;
+      --font-korean: "Gowun Dodum", "Pretendard", "Malgun Gothic", sans-serif;
+      --font-script: "Kalam", "KyoboHand", "Segoe Print", cursive;
+    }
+
+    * {
+      box-sizing: border-box;
+      letter-spacing: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-hand);
+      background: radial-gradient(circle at 12% 10%, rgba(255, 255, 255, .34), transparent 30%),
+                  linear-gradient(135deg, #c9a66b, #ead6a2 46%, #bd955b);
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    svg {
+      display: block;
+    }
+
+    ::selection {
+      background: var(--gold);
+      color: #fff;
+    }
+
+    .icon {
+      width: 1em;
+      height: 1em;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .notebook {
+      position: relative;
+      width: min(100%, 1080px);
+      margin: 0 auto;
+      padding: 72px 54px 48px 86px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 23% 18%, rgba(118, 76, 29, .13) 0 1px, transparent 1.6px) 0 0 / 38px 38px,
+        radial-gradient(circle at 78% 62%, rgba(70, 46, 22, .10) 0 1px, transparent 1.4px) 12px 4px / 46px 46px,
+        repeating-linear-gradient(to bottom, transparent 0 35px, var(--line) 36px 37px),
+        linear-gradient(90deg, transparent 0 50px, rgba(112, 82, 39, .18) 51px 52px, transparent 53px),
+        linear-gradient(180deg, var(--paper-light), var(--paper) 45%, var(--paper-warm));
+      box-shadow: 0 18px 42px var(--paper-shadow);
+    }
+
+    .notebook::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(83, 53, 22, .12), transparent 16%, transparent 84%, rgba(83, 53, 22, .08)),
+        radial-gradient(circle at 35% 9%, rgba(67, 41, 14, .12), transparent 2px),
+        radial-gradient(circle at 67% 71%, rgba(67, 41, 14, .11), transparent 2px);
+      mix-blend-mode: multiply;
+    }
+
+    .spiral {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 42px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='42' height='40'%3E%3Cellipse cx='9' cy='20' rx='12' ry='9' fill='none' stroke='%23201510' stroke-width='4'/%3E%3Cellipse cx='9' cy='20' rx='7' ry='5' fill='none' stroke='%2382652f' stroke-width='2' opacity='.45'/%3E%3C/svg%3E");
+      background-repeat: repeat-y;
+      background-size: 42px 40px;
+      opacity: .9;
+      filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, .22));
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* 헤더 */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 42px;
+    }
+
+    .home-link {
+      font-family: var(--font-script);
+      font-size: 0.95rem;
+      color: var(--navy);
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .home-link:hover {
+      opacity: 1;
+    }
+
+    .title-block {
+      flex: 1;
+    }
+
+    .eyebrow {
+      font-family: var(--font-script);
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin: 0 0 8px 0;
+      color: var(--navy);
+    }
+
+    .main-title {
+      font-family: var(--font-hand);
+      font-size: 3.6rem;
+      line-height: 0.95;
+      margin: 0;
+      transform: rotate(-1deg);
+      color: var(--ink);
+    }
+
+    .subtitle {
+      font-size: 1.15rem;
+      line-height: 1.5;
+      margin: 16px 0 0 0;
+      color: var(--ink-soft);
+      max-width: 500px;
+    }
+
+    .badges {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      background: rgba(23, 60, 120, 0.08);
+      border: 1px solid var(--navy);
+      border-radius: 20px;
+      font-size: 0.9rem;
+      color: var(--navy);
+    }
+
+    /* 섹션 공통 */
+    section {
+      margin-bottom: 52px;
+    }
+
+    .section-label {
+      font-family: var(--font-script);
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin: 0 0 24px 0;
+      color: var(--navy);
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-label::after {
+      content: "";
+      position: absolute;
+      left: -8px;
+      right: -12px;
+      bottom: -8px;
+      height: 6px;
+      background: linear-gradient(currentColor, currentColor) 0 2px / 100% 2px no-repeat,
+                  linear-gradient(currentColor, currentColor) 6px 6px / 86% 2px no-repeat;
+      opacity: 0.9;
+      transform: rotate(-1.3deg);
+    }
+
+    /* Zachman 매트릭스 */
+    .zachman-container {
+      overflow-x: auto;
+      margin: 24px 0;
+    }
+
+    .zachman-grid {
+      display: grid;
+      grid-template-columns: 140px repeat(6, 1fr);
+      gap: 0;
+      min-width: 900px;
+      background: rgba(255, 255, 255, 0.4);
+      border: 1px solid var(--line);
+    }
+
+    .zachman-cell {
+      padding: 12px;
+      border: 1px solid var(--line);
+      font-size: 0.9rem;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .zachman-cell:hover {
+      background: rgba(255, 255, 255, 0.7);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .zachman-header {
+      background: var(--navy);
+      color: white;
+      font-weight: bold;
+      padding: 14px 12px;
+      min-height: auto;
+    }
+
+    .zachman-row-header {
+      background: rgba(23, 60, 120, 0.15);
+      font-weight: bold;
+      color: var(--navy);
+    }
+
+    .zachman-planner {
+      background: rgba(23, 60, 120, 0.08);
+    }
+
+    .zachman-owner {
+      background: rgba(49, 91, 146, 0.08);
+    }
+
+    .zachman-designer {
+      background: rgba(78, 85, 51, 0.08);
+    }
+
+    .zachman-builder {
+      background: rgba(154, 119, 41, 0.08);
+    }
+
+    .zachman-implementer {
+      background: rgba(124, 38, 31, 0.08);
+    }
+
+    .zachman-user {
+      background: rgba(154, 58, 50, 0.08);
+    }
+
+    /* 7단계 타임라인 */
+    .timeline-container {
+      margin: 32px 0;
+    }
+
+    /* 수평 타임라인 */
+    .timeline-wrapper {
+      margin: 32px 0;
+      overflow-x: auto;
+    }
+
+    .timeline-svg {
+      display: block;
+      width: 100%;
+      min-height: 280px;
+      background: transparent;
+    }
+
+    .stage-node {
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .stage-node:hover .stage-circle {
+      r: 26;
+    }
+
+    .stage-circle {
+      r: 24;
+      transition: r 0.2s;
+    }
+
+    .stage-circle.strategy-req {
+      fill: var(--navy);
+    }
+
+    .stage-circle.design {
+      fill: var(--olive);
+    }
+
+    .stage-circle.impl-ops {
+      fill: var(--maroon);
+    }
+
+    .stage-num {
+      font-size: 18px;
+      font-weight: bold;
+      fill: white;
+      text-anchor: middle;
+      dominant-baseline: middle;
+    }
+
+    .stage-label {
+      font-size: 12px;
+      font-weight: bold;
+      fill: var(--ink);
+      text-anchor: middle;
+    }
+
+    .stage-desc-text {
+      font-size: 10px;
+      fill: var(--ink-soft);
+      text-anchor: middle;
+    }
+
+    .group-label {
+      font-size: 11px;
+      font-weight: bold;
+      fill: var(--ink-soft);
+      text-anchor: middle;
+    }
+
+    .connector-line {
+      stroke: var(--line);
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+    }
+
+    .group-bg {
+      fill: none;
+      stroke: none;
+    }
+
+    .group-bg.strategy-req {
+      fill: rgba(23, 60, 120, 0.06);
+    }
+
+    .group-bg.design {
+      fill: rgba(78, 85, 51, 0.06);
+    }
+
+    .group-bg.impl-ops {
+      fill: rgba(124, 38, 31, 0.06);
+    }
+
+    /* ISP 메타 모델 체인 */
+    .isp-chain {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      margin: 24px 0;
+      padding: 16px 0;
+    }
+
+    .isp-box {
+      flex: 0 0 180px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--navy);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .isp-label {
+      font-weight: bold;
+      font-size: 1rem;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .isp-concern {
+      font-size: 0.85rem;
+      color: var(--ink-soft);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .isp-example {
+      font-size: 0.8rem;
+      background: var(--navy);
+      color: white;
+      padding: 6px 8px;
+      border-radius: 4px;
+      margin-top: 8px;
+    }
+
+    .arrow {
+      flex: 0 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--navy);
+      font-weight: bold;
+      font-size: 1.4rem;
+    }
+
+    /* 5대 주제 영역 */
+    .subject-areas {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .subject-card {
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.6);
+      border: 2px solid var(--line);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .subject-card:hover {
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .subject-icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+
+    .subject-title {
+      font-weight: bold;
+      font-size: 1.05rem;
+      margin-bottom: 12px;
+      color: var(--navy);
+    }
+
+    .subject-entities {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+    }
+
+    .entity-chip {
+      display: inline-block;
+      padding: 4px 10px;
+      background: var(--navy);
+      color: white;
+      border-radius: 12px;
+      font-size: 0.8rem;
+    }
+
+    /* 아키텍트의 철학 */
+    .philosophy {
+      background: rgba(154, 119, 41, 0.1);
+      border-left: 4px solid var(--gold);
+      padding: 24px;
+      border-radius: 8px;
+      text-align: center;
+      margin: 32px 0;
+    }
+
+    .philosophy-quote {
+      font-family: var(--font-script);
+      font-size: 1.4rem;
+      line-height: 1.6;
+      margin: 0;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .philosophy-quote::before,
+    .philosophy-quote::after {
+      content: '"';
+      color: var(--gold);
+      font-size: 1.8rem;
+    }
+
+    /* 하단 네비게이션 */
+    .footer-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+    }
+
+    .footer-text {
+      font-size: 0.95rem;
+      color: var(--ink-soft);
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      padding: 8px 16px;
+      background: var(--navy);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: var(--font-hand);
+      font-size: 0.95rem;
+      transition: opacity 0.2s;
+    }
+
+    .nav-btn:hover {
+      opacity: 0.8;
+    }
+
+    /* ── 전략의 사슬 ─────────────────────────────── */
+    .strategy-chain-svg { display:block; width:100%; overflow:visible; }
+    .chain-node { cursor:pointer; }
+    .chain-node .chain-bg { transition: transform 0.22s; transform-box:fill-box; transform-origin:center; }
+    .chain-node:hover .chain-bg { transform: scale(1.13); }
+    .chain-node.chain-active .chain-bg { filter: brightness(1.22) drop-shadow(0 0 8px rgba(23,60,120,.45)); }
+    .chain-path { fill:none; stroke: rgba(23,60,120,.22); stroke-width:2; stroke-linecap:round; }
+    .chain-path-anim { stroke-dasharray:300; stroke-dashoffset:300; transition: stroke-dashoffset 0.7s ease forwards; }
+    .chain-path-anim.drawn { stroke-dashoffset:0; }
+    #chain-panel { display:none; margin-top:16px; padding:16px 20px; background:rgba(255,255,255,.6); border-radius:10px; border-left:4px solid var(--navy); }
+    #chain-panel.visible { display:block; animation: fadeSlideUp .25s ease; }
+    @keyframes fadeSlideUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+    #chain-panel h3 { margin:0 0 4px; font-size:1rem; color:var(--navy); }
+    #chain-panel .chain-panel-sub { margin:0 0 8px; font-size:.82rem; color:var(--gold); font-weight:bold; }
+    #chain-panel .chain-panel-body { margin:0 0 10px; font-size:.9rem; color:var(--ink-soft); line-height:1.5; }
+    #chain-panel .chain-panel-ex { background:rgba(23,60,120,.07); border-radius:6px; padding:8px 12px; font-size:.82rem; color:var(--ink-soft); white-space:pre-line; line-height:1.6; }
+
+    /* ── 주제 영역 뷰 토글 ────────────────────────── */
+    .view-toggle { display:flex; gap:8px; margin-bottom:14px; }
+    .view-btn { padding:5px 14px; border:1.5px solid var(--navy); border-radius:20px; background:transparent; color:var(--navy); cursor:pointer; font-family:var(--font-hand); font-size:.88rem; transition:all .18s; }
+    .view-btn.active { background:var(--navy); color:#fff; }
+    .subject-areas.hidden { display:none !important; }
+    #relmap-wrap { display:none; }
+    #relmap-wrap.on { display:block; }
+    #relmap-svg { display:block; width:100%; max-width:540px; margin:0 auto; }
+    .relmap-node { cursor:pointer; }
+    .relmap-node .rl-bg { transition: filter .2s, transform .2s; transform-box:fill-box; transform-origin:center; }
+    .relmap-node:hover .rl-bg { transform:scale(1.1); filter:brightness(1.18); }
+    .relmap-node.dim { opacity:.2; }
+    .relmap-node.lit .rl-bg { filter: drop-shadow(0 0 10px rgba(23,60,120,.5)); }
+    .relmap-line { stroke:rgba(23,60,120,.22); stroke-width:1.5; fill:none; transition: stroke .2s, stroke-width .2s; }
+    .relmap-line.active { stroke:var(--navy); stroke-width:2.5; }
+    .relmap-label { pointer-events:none; }
+
+    /* ── 철학 확장 ───────────────────────────────── */
+    .philosophy-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; margin:0 0 20px; }
+    .philo-card { background:rgba(255,255,255,.52); border:1px solid rgba(154,119,41,.45); border-radius:12px; padding:18px 14px; text-align:center; transition: transform .2s; }
+    .philo-card:hover { transform:translateY(-3px); }
+    .philo-icon { font-size:1.5rem; margin-bottom:8px; }
+    .philo-title { font-weight:700; font-size:.93rem; color:var(--navy); margin-bottom:6px; }
+    .philo-desc { font-size:.8rem; color:var(--ink-soft); line-height:1.45; }
+    .philosophy-divider { height:1px; background:rgba(154,119,41,.25); margin:16px 0; }
+
+    /* 반응형 */
+    @media (max-width: 768px) {
+      .notebook {
+        padding: 48px 32px 32px 64px;
+      }
+
+      .main-title {
+        font-size: 2.4rem;
+      }
+
+      .header {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .stages-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .subject-areas {
+        grid-template-columns: 1fr;
+      }
+
+      .isp-chain {
+        gap: 8px;
+      }
+
+      .isp-box {
+        flex: 0 0 150px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="notebook">
+    <div class="spiral"></div>
+    <main>
+      <!-- 헤더 -->
+      <div class="header">
+        <div class="title-block">
+          <div class="eyebrow">전사 데이터 아키텍처</div>
+          <h1 class="main-title">Data Architecture Platform</h1>
+          <p class="subtitle">증권 도메인 기반 전사 데이터 아키텍처 설계 연구</p>
+          <div class="badges">
+            <span class="badge">Zachman Framework</span>
+            <span class="badge">ISP Methodology</span>
+            <span class="badge">Securities Domain</span>
+          </div>
+        </div>
+        <a class="home-link" href="index.html">← 홈</a>
+      </div>
+
+      <!-- Section 1: Zachman 매트릭스 -->
+      <section>
+        <h2 class="section-label">Zachman Framework 6×6</h2>
+        <p style="color: var(--ink-soft); font-size: 0.95rem; margin-top: -8px;">클릭하면 각 셀의 산출물 예시를 확인할 수 있습니다.</p>
+        <div class="zachman-container">
+          <div class="zachman-grid">
+            <!-- 헤더 행 -->
+            <div class="zachman-cell zachman-header">Perspective</div>
+            <div class="zachman-cell zachman-header">What<br><span style="font-size:0.75rem">(Data)</span></div>
+            <div class="zachman-cell zachman-header">How<br><span style="font-size:0.75rem">(Process)</span></div>
+            <div class="zachman-cell zachman-header">Where<br><span style="font-size:0.75rem">(Location)</span></div>
+            <div class="zachman-cell zachman-header">Who<br><span style="font-size:0.75rem">(Person)</span></div>
+            <div class="zachman-cell zachman-header">When<br><span style="font-size:0.75rem">(Time)</span></div>
+            <div class="zachman-cell zachman-header">Why<br><span style="font-size:0.75rem">(Motivation)</span></div>
+
+            <!-- 행 1: Planner -->
+            <div class="zachman-cell zachman-row-header zachman-planner">Planner</div>
+            <div class="zachman-cell zachman-planner">핵심 엔터티 정의</div>
+            <div class="zachman-cell zachman-planner">비즈니스 프로세스</div>
+            <div class="zachman-cell zachman-planner">조직 구조</div>
+            <div class="zachman-cell zachman-planner">역할/권한</div>
+            <div class="zachman-cell zachman-planner">전략 로드맵</div>
+            <div class="zachman-cell zachman-planner">비즈니스 목표</div>
+
+            <!-- 행 2: Owner -->
+            <div class="zachman-cell zachman-row-header zachman-owner">Owner</div>
+            <div class="zachman-cell zachman-owner">데이터 요건</div>
+            <div class="zachman-cell zachman-owner">업무 규칙</div>
+            <div class="zachman-cell zachman-owner">시스템 영역</div>
+            <div class="zachman-cell zachman-owner">조직/권한</div>
+            <div class="zachman-cell zachman-owner">이벤트/주기</div>
+            <div class="zachman-cell zachman-owner">정책/규제</div>
+
+            <!-- 행 3: Designer -->
+            <div class="zachman-cell zachman-row-header zachman-designer">Designer</div>
+            <div class="zachman-cell zachman-designer">개념 데이터 모델</div>
+            <div class="zachman-cell zachman-designer">데이터 흐름</div>
+            <div class="zachman-cell zachman-designer">네트워크 아키텍처</div>
+            <div class="zachman-cell zachman-designer">사용자 인터페이스</div>
+            <div class="zachman-cell zachman-designer">동기화 전략</div>
+            <div class="zachman-cell zachman-designer">품질 표준</div>
+
+            <!-- 행 4: Builder -->
+            <div class="zachman-cell zachman-row-header zachman-builder">Builder</div>
+            <div class="zachman-cell zachman-builder">논리 데이터 모델</div>
+            <div class="zachman-cell zachman-builder">프로세스 정의</div>
+            <div class="zachman-cell zachman-builder">배포 환경</div>
+            <div class="zachman-cell zachman-builder">보안 구조</div>
+            <div class="zachman-cell zachman-builder">배치 스케줄</div>
+            <div class="zachman-cell zachman-builder">거버넌스 규칙</div>
+
+            <!-- 행 5: Implementer -->
+            <div class="zachman-cell zachman-row-header zachman-implementer">Implementer</div>
+            <div class="zachman-cell zachman-implementer">물리 데이터 모델</div>
+            <div class="zachman-cell zachman-implementer">프로그램/스크립트</div>
+            <div class="zachman-cell zachman-implementer">DB 인스턴스</div>
+            <div class="zachman-cell zachman-implementer">접근 제어 설정</div>
+            <div class="zachman-cell zachman-implementer">성능 튜닝</div>
+            <div class="zachman-cell zachman-implementer">운영 절차</div>
+
+            <!-- 행 6: User -->
+            <div class="zachman-cell zachman-row-header zachman-user">User</div>
+            <div class="zachman-cell zachman-user">실제 데이터</div>
+            <div class="zachman-cell zachman-user">실행 결과</div>
+            <div class="zachman-cell zachman-user">운영 시스템</div>
+            <div class="zachman-cell zachman-user">실제 사용자</div>
+            <div class="zachman-cell zachman-user">실시간 이벤트</div>
+            <div class="zachman-cell zachman-user">비즈니스 성과</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: 7단계 타임라인 -->
+      <section class="timeline-container">
+        <h2 class="section-label">7단계 데이터 아키텍처 로드맵</h2>
+        <p style="color: var(--ink-soft); font-size: 0.95rem; margin-top: -8px;">전략에서 운영까지, 데이터 아키텍처의 완전한 여정</p>
+        
+        <div class="timeline-wrapper">
+          <svg class="timeline-svg" viewBox="0 0 1400 280" xmlns="http://www.w3.org/2000/svg">
+            <!-- 그룹 배경 -->
+            <rect class="group-bg strategy-req" x="40" y="20" width="280" height="240" rx="8"/>
+            <rect class="group-bg design" x="340" y="20" width="420" height="240" rx="8"/>
+            <rect class="group-bg impl-ops" x="780" y="20" width="280" height="240" rx="8"/>
+
+            <!-- 그룹 라벨 -->
+            <text class="group-label" x="180" y="50">전략 · 요건</text>
+            <text class="group-label" x="550" y="50">설계</text>
+            <text class="group-label" x="920" y="50">구현 · 운영</text>
+
+            <!-- 연결선 -->
+            <line class="connector-line" x1="105" y1="140" x2="165" y2="140"/>
+            <polygon points="175,140 165,135 168,140 165,145" fill="var(--line)"/>
+            
+            <line class="connector-line" x1="245" y1="140" x2="305" y2="140"/>
+            <polygon points="315,140 305,135 308,140 305,145" fill="var(--line)"/>
+            
+            <line class="connector-line" x1="385" y1="140" x2="445" y2="140"/>
+            <polygon points="455,140 445,135 448,140 445,145" fill="var(--line)"/>
+            
+            <line class="connector-line" x1="525" y1="140" x2="585" y2="140"/>
+            <polygon points="595,140 585,135 588,140 585,145" fill="var(--line)"/>
+            
+            <line class="connector-line" x1="665" y1="140" x2="725" y2="140"/>
+            <polygon points="735,140 725,135 728,140 725,145" fill="var(--line)"/>
+            
+            <line class="connector-line" x1="805" y1="140" x2="865" y2="140"/>
+            <polygon points="875,140 865,135 868,140 865,145" fill="var(--line)"/>
+
+            <!-- Stage 01 -->
+            <g class="stage-node" data-stage="01">
+              <circle class="stage-circle strategy-req" cx="105" cy="140"/>
+              <text class="stage-num">01</text>
+              <text class="stage-label" x="105" y="180">ISP 메타</text>
+              <text class="stage-desc-text" x="105" y="200">전략 연결</text>
+            </g>
+
+            <!-- Stage 02 -->
+            <g class="stage-node" data-stage="02">
+              <circle class="stage-circle strategy-req" cx="245" cy="140"/>
+              <text class="stage-num" x="245">02</text>
+              <text class="stage-label" x="245" y="180">데이터 요건</text>
+              <text class="stage-desc-text" x="245" y="200">언어 번역</text>
+            </g>
+
+            <!-- Stage 03 -->
+            <g class="stage-node" data-stage="03">
+              <circle class="stage-circle design" cx="385" cy="140"/>
+              <text class="stage-num" x="385">03</text>
+              <text class="stage-label" x="385" y="180">개념 모델</text>
+              <text class="stage-desc-text" x="385" y="200">구조화</text>
+            </g>
+
+            <!-- Stage 04 -->
+            <g class="stage-node" data-stage="04">
+              <circle class="stage-circle design" cx="525" cy="140"/>
+              <text class="stage-num" x="525">04</text>
+              <text class="stage-label" x="525" y="180">논리 모델</text>
+              <text class="stage-desc-text" x="525" y="200">정의</text>
+            </g>
+
+            <!-- Stage 05 -->
+            <g class="stage-node" data-stage="05">
+              <circle class="stage-circle design" cx="665" cy="140"/>
+              <text class="stage-num" x="665">05</text>
+              <text class="stage-label" x="665" y="180">물리 모델</text>
+              <text class="stage-desc-text" x="665" y="200">구현</text>
+            </g>
+
+            <!-- Stage 06 -->
+            <g class="stage-node" data-stage="06">
+              <circle class="stage-circle impl-ops" cx="805" cy="140"/>
+              <text class="stage-num" x="805">06</text>
+              <text class="stage-label" x="805" y="180">데이터 통합</text>
+              <text class="stage-desc-text" x="805" y="200">파이프라인</text>
+            </g>
+
+            <!-- Stage 07 -->
+            <g class="stage-node" data-stage="07">
+              <circle class="stage-circle impl-ops" cx="945" cy="140"/>
+              <text class="stage-num" x="945">07</text>
+              <text class="stage-label" x="945" y="180">거버넌스</text>
+              <text class="stage-desc-text" x="945" y="200">표준화</text>
+            </g>
+          </svg>
+        </div>
+
+        <div id="stage-detail-panel" style="display:none; margin-top: 24px; padding: 16px; background: rgba(255,255,255,0.5); border-radius: 8px; border-left: 4px solid var(--navy);">
+          <h3 id="stage-detail-title" style="margin: 0 0 8px 0; font-size: 1.1rem;"></h3>
+          <p id="stage-detail-desc" style="margin: 0 0 12px 0; color: var(--ink-soft);"></p>
+          <p style="margin: 0; font-size: 0.9rem;"><strong>핵심 질문:</strong> <span id="stage-detail-question"></span></p>
+        </div>
+      </section>
+
+      <!-- Section 3: 전략의 사슬 (Chain of Strategy) -->
+      <section id="strategy-chain-section">
+        <h2 class="section-label">전략의 사슬 (Chain of Strategy)</h2>
+        <p style="color:var(--ink-soft);font-size:.95rem;margin-top:-8px;">비즈니스 목표가 어떻게 데이터 엔터티로 구체화되는가 — 아키텍처의 존재 이유(Why) · 노드를 클릭하면 상세 내용을 볼 수 있습니다</p>
+
+        <svg class="strategy-chain-svg" viewBox="0 0 1000 185" xmlns="http://www.w3.org/2000/svg" style="margin:20px 0">
+
+          <!-- Animated connection paths -->
+          <path class="chain-path chain-path-anim" id="cp1" d="M116,88 L244,88"/>
+          <polygon id="cp1-arr" points="247,88 240,84 240,92" fill="rgba(23,60,120,.28)" style="opacity:0;transition:opacity .3s .9s"/>
+          <text x="180" y="79" text-anchor="middle" fill="var(--ink-soft)" font-size="8" opacity=".7" style="pointer-events:none">defines</text>
+
+          <path class="chain-path chain-path-anim" id="cp2" d="M316,88 L444,88" style="transition-delay:.25s"/>
+          <polygon id="cp2-arr" points="447,88 440,84 440,92" fill="rgba(23,60,120,.28)" style="opacity:0;transition:opacity .3s 1.15s"/>
+          <text x="380" y="79" text-anchor="middle" fill="var(--ink-soft)" font-size="8" opacity=".7" style="pointer-events:none">reveals</text>
+
+          <path class="chain-path chain-path-anim" id="cp3" d="M516,88 L644,88" style="transition-delay:.5s"/>
+          <polygon id="cp3-arr" points="647,88 640,84 640,92" fill="rgba(23,60,120,.28)" style="opacity:0;transition:opacity .3s 1.4s"/>
+          <text x="580" y="79" text-anchor="middle" fill="var(--ink-soft)" font-size="8" opacity=".7" style="pointer-events:none">drives</text>
+
+          <path class="chain-path chain-path-anim" id="cp4" d="M716,88 L844,88" style="transition-delay:.75s"/>
+          <polygon id="cp4-arr" points="847,88 840,84 840,92" fill="rgba(23,60,120,.28)" style="opacity:0;transition:opacity .3s 1.65s"/>
+          <text x="780" y="79" text-anchor="middle" fill="var(--ink-soft)" font-size="8" opacity=".7" style="pointer-events:none">produces</text>
+
+          <!-- Node 1: 조직 (Organization) -->
+          <g class="chain-node" data-chain="org">
+            <circle class="chain-bg" cx="80" cy="88" r="36" fill="#173c78" opacity=".88"/>
+            <text x="80" y="82" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="11" font-weight="bold" style="pointer-events:none">조직</text>
+            <text x="80" y="96" text-anchor="middle" dominant-baseline="middle" fill="rgba(255,255,255,.75)" font-size="8.5" style="pointer-events:none">Organization</text>
+            <text x="80" y="136" text-anchor="middle" fill="var(--ink)" font-size="10.5" font-weight="bold" style="pointer-events:none">자산운용 본부</text>
+            <text x="80" y="152" text-anchor="middle" fill="var(--ink-soft)" font-size="9" style="pointer-events:none">리스크 관리팀</text>
+            <text x="80" y="167" text-anchor="middle" fill="var(--navy-soft)" font-size="8.5" opacity=".8" style="pointer-events:none">IT 전략 부서</text>
+          </g>
+
+          <!-- Node 2: 목표 (Goal) -->
+          <g class="chain-node" data-chain="goal">
+            <circle class="chain-bg" cx="280" cy="88" r="36" fill="#4e5533" opacity=".88"/>
+            <text x="280" y="82" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="11" font-weight="bold" style="pointer-events:none">목표</text>
+            <text x="280" y="96" text-anchor="middle" dominant-baseline="middle" fill="rgba(255,255,255,.75)" font-size="8.5" style="pointer-events:none">Strategic Goal</text>
+            <text x="280" y="136" text-anchor="middle" fill="var(--ink)" font-size="10.5" font-weight="bold" style="pointer-events:none">실시간 통합 평가</text>
+            <text x="280" y="152" text-anchor="middle" fill="var(--ink-soft)" font-size="9" style="pointer-events:none">수익률 최적화</text>
+            <text x="280" y="167" text-anchor="middle" fill="var(--navy-soft)" font-size="8.5" opacity=".8" style="pointer-events:none">한도 실시간 통제</text>
+          </g>
+
+          <!-- Node 3: 문제점 (Problem) -->
+          <g class="chain-node" data-chain="problem">
+            <circle class="chain-bg" cx="480" cy="88" r="36" fill="#7c261f" opacity=".88"/>
+            <text x="480" y="82" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="11" font-weight="bold" style="pointer-events:none">문제점</text>
+            <text x="480" y="96" text-anchor="middle" dominant-baseline="middle" fill="rgba(255,255,255,.75)" font-size="8.5" style="pointer-events:none">Core Problem</text>
+            <text x="480" y="136" text-anchor="middle" fill="var(--ink)" font-size="10.5" font-weight="bold" style="pointer-events:none">데이터 사일로</text>
+            <text x="480" y="152" text-anchor="middle" fill="var(--ink-soft)" font-size="9" style="pointer-events:none">정합성 붕괴</text>
+            <text x="480" y="167" text-anchor="middle" fill="var(--navy-soft)" font-size="8.5" opacity=".8" style="pointer-events:none">의사결정 지연</text>
+          </g>
+
+          <!-- Node 4: CSF (Critical Success Factors) -->
+          <g class="chain-node" data-chain="csf">
+            <circle class="chain-bg" cx="680" cy="88" r="36" fill="#9a7729" opacity=".88"/>
+            <text x="680" y="80" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="10" font-weight="bold" style="pointer-events:none">핵심 성공</text>
+            <text x="680" y="94" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="10" font-weight="bold" style="pointer-events:none">요인 (CSF)</text>
+            <text x="680" y="136" text-anchor="middle" fill="var(--ink)" font-size="10.5" font-weight="bold" style="pointer-events:none">표준화 체계</text>
+            <text x="680" y="152" text-anchor="middle" fill="var(--ink-soft)" font-size="9" style="pointer-events:none">이력 관리 모델</text>
+            <text x="680" y="167" text-anchor="middle" fill="var(--navy-soft)" font-size="8.5" opacity=".8" style="pointer-events:none">메타데이터 정책</text>
+          </g>
+
+          <!-- Node 5: 핵심 엔터티 (Core Entity) -->
+          <g class="chain-node" data-chain="entity">
+            <circle class="chain-bg" cx="880" cy="88" r="36" fill="#315b92" opacity=".88"/>
+            <text x="880" y="80" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="10" font-weight="bold" style="pointer-events:none">핵심</text>
+            <text x="880" y="94" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="10" font-weight="bold" style="pointer-events:none">엔터티</text>
+            <text x="880" y="136" text-anchor="middle" fill="var(--ink)" font-size="10.5" font-weight="bold" style="pointer-events:none">ASSET · LEDGER</text>
+            <text x="880" y="152" text-anchor="middle" fill="var(--ink-soft)" font-size="9" style="pointer-events:none">POSITION · TRADE</text>
+            <text x="880" y="167" text-anchor="middle" fill="var(--navy-soft)" font-size="8.5" opacity=".8" style="pointer-events:none">INSTRUMENT</text>
+          </g>
+        </svg>
+
+        <!-- 상세 패널 -->
+        <div id="chain-panel">
+          <h3 id="chain-panel-title"></h3>
+          <p class="chain-panel-sub" id="chain-panel-sub"></p>
+          <p class="chain-panel-body" id="chain-panel-body"></p>
+          <div class="chain-panel-ex" id="chain-panel-ex"></div>
+        </div>
+      </section>
+
+      <!-- Section 4: 5대 주제 영역 -->
+      <section>
+        <h2 class="section-label">5대 주제 영역 (Subject Area)</h2>
+        <p style="color:var(--ink-soft);font-size:.95rem;margin-top:-8px;">영역 간 결합도(Low Coupling) ↓ · 영역 내 응집도(High Cohesion) ↑ — 클릭하면 의존 관계를 확인할 수 있습니다</p>
+
+        <!-- 뷰 토글 -->
+        <div class="view-toggle">
+          <button class="view-btn active" id="btn-card">카드 보기</button>
+          <button class="view-btn" id="btn-relmap">관계 맵 보기</button>
+        </div>
+
+        <!-- 카드 뷰 (기존) -->
+        <div class="subject-areas" id="subject-cards">
+          <div class="subject-card" data-area="customer">
+            <div class="subject-icon">👤</div>
+            <div class="subject-title">고객/투자자</div>
+            <div class="subject-entities">
+              <span class="entity-chip">CUSTOMER</span>
+              <span class="entity-chip">ACCOUNT</span>
+              <span class="entity-chip">RELATIONSHIP</span>
+            </div>
+          </div>
+
+          <div class="subject-card" data-area="product">
+            <div class="subject-icon">📈</div>
+            <div class="subject-title">금융상품</div>
+            <div class="subject-entities">
+              <span class="entity-chip">INSTRUMENT</span>
+              <span class="entity-chip">PRICE</span>
+              <span class="entity-chip">QUOTE</span>
+            </div>
+          </div>
+
+          <div class="subject-card" data-area="account">
+            <div class="subject-icon">💰</div>
+            <div class="subject-title">계좌/잔고</div>
+            <div class="subject-entities">
+              <span class="entity-chip">BALANCE</span>
+              <span class="entity-chip">POSITION</span>
+              <span class="entity-chip">HOLDING</span>
+            </div>
+          </div>
+
+          <div class="subject-card" data-area="order">
+            <div class="subject-icon">🔄</div>
+            <div class="subject-title">주문/거래</div>
+            <div class="subject-entities">
+              <span class="entity-chip">ORDER</span>
+              <span class="entity-chip">TRADE</span>
+              <span class="entity-chip">SETTLEMENT</span>
+            </div>
+          </div>
+
+          <div class="subject-card" data-area="price">
+            <div class="subject-icon">📊</div>
+            <div class="subject-title">시장기준정보</div>
+            <div class="subject-entities">
+              <span class="entity-chip">MARKET_INFO</span>
+              <span class="entity-chip">HOLIDAY</span>
+              <span class="entity-chip">REFERENCE</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 관계 맵 뷰 -->
+        <div id="relmap-wrap">
+          <svg id="relmap-svg" viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+      </section>
+
+      <!-- Section 5: 아키텍트의 철학 -->
+      <section>
+        <h2 class="section-label">아키텍트의 철학</h2>
+        <div class="philosophy-grid">
+          <div class="philo-card">
+            <div class="philo-icon">🔗</div>
+            <div class="philo-title">전략-데이터 정합성</div>
+            <div class="philo-desc">모든 데이터 엔터티는 비즈니스 전략의 목표를 달성하기 위해 존재한다. 이유 없는 테이블은 없다.</div>
+          </div>
+          <div class="philo-card">
+            <div class="philo-icon">🏛</div>
+            <div class="philo-title">무결성 우선 설계</div>
+            <div class="philo-desc">단순한 저장소가 아니라, 비즈니스 규칙이 시스템적으로 강제되는 지능형 아키텍처를 추구한다.</div>
+          </div>
+          <div class="philo-card">
+            <div class="philo-icon">♻️</div>
+            <div class="philo-title">지속 가능한 아키텍처</div>
+            <div class="philo-desc">설계도로 끝나는 아키텍처가 아닌, 거버넌스로 완성되어 변화에도 살아남는 구조를 만든다.</div>
+          </div>
+        </div>
+        <div class="philosophy-divider"></div>
+        <div class="philosophy">
+          <p class="philosophy-quote">데이터 아키텍처는 기술 설계가 아니라<br>비즈니스 전략의 번역이다.</p>
+        </div>
+      </section>
+
+      <!-- 하단 네비게이션 -->
+      <footer class="footer-nav">
+        <div class="footer-text">전사 데이터 아키텍처 이해도 포트폴리오</div>
+        <div class="nav-buttons">
+          <a class="nav-btn" href="index.html">← 홈으로</a>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  
+<script>
+  const zachmanRows = [
+    { key: 'planner', label: 'Planner', nuance: '전략 관점' },
+    { key: 'owner', label: 'Owner', nuance: '업무 관점' },
+    { key: 'designer', label: 'Designer', nuance: '설계 관점' },
+    { key: 'builder', label: 'Builder', nuance: '구현 관점' },
+    { key: 'implementer', label: 'Implementer', nuance: '배포 관점' },
+    { key: 'user', label: 'User', nuance: '이용 관점' },
+  ];
+
+  const zachmanCols = [
+    { key: 'what', label: 'What', sub: 'Data' },
+    { key: 'how', label: 'How', sub: 'Process' },
+    { key: 'where', label: 'Where', sub: 'Location' },
+    { key: 'who', label: 'Who', sub: 'Person' },
+    { key: 'when', label: 'When', sub: 'Time' },
+    { key: 'why', label: 'Why', sub: 'Motivation' },
+  ];
+
+  const zachmanCellLibrary = {
+    what: {
+      planner: {
+        question: '무엇이 비즈니스에서 가장 중요한 데이터인가?',
+        outputs: 'Enterprise Entity List: CUSTOMER, ACCOUNT, ORDER, TRADE, INSTRUMENT, POSITION',
+        stage: 'Stage 3 · Conceptual Model'
+      },
+      owner: {
+        question: '운영 관점에서 반드시 정의되어야 하는 데이터는 무엇인가?',
+        outputs: 'Business Glossary, Subject Area, KPI 정의, 데이터 책임자/소유자',
+        stage: 'Stage 2 · Data Requirements'
+      },
+      designer: {
+        question: '개념적 수준에서 어떤 엔터티와 관계를 구조화할 것인가?',
+        outputs: 'Conceptual ERD, Subject Area Map, 핵심 관계식',
+        stage: 'Stage 3 · Conceptual Model'
+      },
+      builder: {
+        question: '개념 모델을 어떤 속성/식별자 구조로 정밀화할 것인가?',
+        outputs: 'Logical ERD, 식별자 정의, 정규화 규칙, 속성 사전',
+        stage: 'Stage 4 · Logical Model'
+      },
+      implementer: {
+        question: 'DB에 구현 가능한 물리 구조는 어떻게 설계할 것인가?',
+        outputs: 'Physical Table DDL, PK/FK, Index, Partition, Naming Convention',
+        stage: 'Stage 5 · Physical Model'
+      },
+      user: {
+        question: '실제 운영 데이터는 어떤 형태로 소비되는가?',
+        outputs: '거래 이력, 잔고 스냅샷, 리포트 추출, 조회 API 결과',
+        stage: 'Stage 6 · Integration / Stage 7 · Governance'
+      }
+    },
+    how: {
+      planner: {
+        question: '비즈니스 프로세스의 큰 흐름은 무엇인가?',
+        outputs: '주문 → 체결 → 정산의 End-to-End 업무 흐름',
+        stage: 'Stage 1 · ISP Meta Model'
+      },
+      owner: {
+        question: '업무 규칙과 승인 절차는 어떻게 정의되는가?',
+        outputs: '주문 제한 규칙, 승인 체계, 업무 예외 처리 기준',
+        stage: 'Stage 2 · Data Requirements'
+      },
+      designer: {
+        question: '핵심 프로세스 간 데이터 이동은 어떻게 연결되는가?',
+        outputs: 'Process Flow, Interface Mapping, Data Dependency Diagram',
+        stage: 'Stage 3 · Conceptual Model'
+      },
+      builder: {
+        question: '실행 가능한 프로세스 정의는 무엇인가?',
+        outputs: 'Batch Job Spec, Workflow Definition, ETL Job Sequence',
+        stage: 'Stage 4 · Logical Model'
+      },
+      implementer: {
+        question: '실행 코드와 배치 스크립트는 어떻게 구현되는가?',
+        outputs: 'Stored Procedure, SQL Job, Shell Script, Scheduler Config',
+        stage: 'Stage 5 · Physical Model'
+      },
+      user: {
+        question: '실행 결과는 사용자에게 어떻게 보이는가?',
+        outputs: '거래 완료, 정산 결과, 리포트 반영, 실시간 처리 상태',
+        stage: 'Stage 6 · Integration'
+      }
+    },
+    where: {
+      planner: {
+        question: '조직/채널 관점에서 데이터가 어디서 사용되는가?',
+        outputs: '본사, 영업점, HTS/MTS, 리스크 센터, 백오피스',
+        stage: 'Stage 1 · ISP Meta Model'
+      },
+      owner: {
+        question: '시스템 영역은 어디로 나뉘는가?',
+        outputs: '영업계정 DB, 리스크 DB, 상품 DB, 정산 DB',
+        stage: 'Stage 2 · Data Requirements'
+      },
+      designer: {
+        question: '네트워크/논리 위치는 어떻게 연결되는가?',
+        outputs: 'Source → Staging → ODS → DWH → Mart',
+        stage: 'Stage 3 · Conceptual Model'
+      },
+      builder: {
+        question: '배포/운영 환경은 어떻게 분리되는가?',
+        outputs: 'DEV / TEST / STG / PROD, DR Center, Network Zone',
+        stage: 'Stage 4 · Logical Model'
+      },
+      implementer: {
+        question: '물리 인프라는 어디에 배치되는가?',
+        outputs: 'DB Cluster, ETL Server, API Server, Message Broker',
+        stage: 'Stage 5 · Physical Model'
+      },
+      user: {
+        question: '사용자는 어떤 채널에서 시스템에 접근하는가?',
+        outputs: '내부 업무 시스템, 대시보드, 배치 리포트, 운영 콘솔',
+        stage: 'Stage 6 · Integration'
+      }
+    },
+    who: {
+      planner: {
+        question: '전략을 책임지는 이해관계자는 누구인가?',
+        outputs: 'CIO, 데이터 오너, 업무 총괄, 투자/리스크 담당자',
+        stage: 'Stage 1 · ISP Meta Model'
+      },
+      owner: {
+        question: '업무 책임자와 승인자는 누구인가?',
+        outputs: '업무 오너, 부서장, 승인권자, 운영 담당자',
+        stage: 'Stage 2 · Data Requirements'
+      },
+      designer: {
+        question: '모델을 설계하는 역할은 누구인가?',
+        outputs: '데이터 아키텍트, 모델러, 업무 분석가, EA 담당',
+        stage: 'Stage 3 · Conceptual Model'
+      },
+      builder: {
+        question: '정밀 설계를 수행하는 역할은 누구인가?',
+        outputs: 'DBA, 백엔드 개발자, ETL 개발자, 보안 담당자',
+        stage: 'Stage 4 · Logical Model'
+      },
+      implementer: {
+        question: '실제 운영 권한을 가진 사람은 누구인가?',
+        outputs: '운영자, 배포 담당자, 인프라 엔지니어, 보안 관리자',
+        stage: 'Stage 5 · Physical Model'
+      },
+      user: {
+        question: '최종 사용자와 소비자는 누구인가?',
+        outputs: '영업 담당자, 리스크 담당자, 회계 담당자, 경영진',
+        stage: 'Stage 6 · Integration'
+      }
+    },
+    when: {
+      planner: {
+        question: '전략은 어떤 주기와 시점으로 점검되는가?',
+        outputs: '연간 ISP, 분기별 로드맵, 중기 아키텍처 계획',
+        stage: 'Stage 1 · ISP Meta Model'
+      },
+      owner: {
+        question: '업무는 어떤 주기로 발생하는가?',
+        outputs: '실시간 주문, EOD 정산, T+1 반영, 월말 마감',
+        stage: 'Stage 2 · Data Requirements'
+      },
+      designer: {
+        question: '데이터 동기화 타이밍은 어떻게 정의되는가?',
+        outputs: '실시간 / 준실시간 / 배치 / 이벤트 기반',
+        stage: 'Stage 3 · Conceptual Model'
+      },
+      builder: {
+        question: '스케줄과 배치 윈도우는 어떻게 배분되는가?',
+        outputs: 'Batch Window, SLA, Retry Policy, Cutoff Time',
+        stage: 'Stage 4 · Logical Model'
+      },
+      implementer: {
+        question: '물리적으로 실행되는 시각은 언제인가?',
+        outputs: '00:05 배치, 09:00 오픈, 15:30 마감, 야간 리컨실',
+        stage: 'Stage 5 · Physical Model'
+      },
+      user: {
+        question: '이용자는 어떤 시점의 데이터를 보는가?',
+        outputs: '실시간 잔고, 장중 거래, 일마감 스냅샷, 감사 로그',
+        stage: 'Stage 6 · Integration'
+      }
+    },
+    why: {
+      planner: {
+        question: '왜 이 아키텍처가 필요한가?',
+        outputs: '리스크 통제, 데이터 정합성, 전사 전략 정렬',
+        stage: 'Stage 1 · ISP Meta Model'
+      },
+      owner: {
+        question: '왜 이 데이터가 관리되어야 하는가?',
+        outputs: '규제 대응, 운영 효율, 고객 신뢰, 재사용성',
+        stage: 'Stage 2 · Data Requirements'
+      },
+      designer: {
+        question: '왜 이 구조로 모델링해야 하는가?',
+        outputs: '표준화, 중복 제거, 확장성, 일관된 의미체계',
+        stage: 'Stage 3 · Conceptual Model'
+      },
+      builder: {
+        question: '왜 정규화/명세가 필요한가?',
+        outputs: '성능, 무결성, 유지보수성, 변경 영향 최소화',
+        stage: 'Stage 4 · Logical Model'
+      },
+      implementer: {
+        question: '왜 물리 최적화가 필요한가?',
+        outputs: '조회 성능, 비용 효율, 장애 복원력, 운영 자동화',
+        stage: 'Stage 5 · Physical Model'
+      },
+      user: {
+        question: '왜 사용자 경험까지 고려해야 하는가?',
+        outputs: '업무 정확도, 의사결정 속도, 가시성, 감사 가능성',
+        stage: 'Stage 6 · Integration / Stage 7 · Governance'
+      }
+    }
+  };
+
+  const stageData = {
+    '01': {
+      title: 'ISP 메타 모델 수립',
+      desc: '전략과 데이터를 연결하는 방법론과 범위를 정의한다.',
+      question: '전략과 데이터를 어떻게 연결하는가?'
+    },
+    '02': {
+      title: '데이터 요건 분석',
+      desc: '비즈니스 언어를 데이터 요건과 규칙으로 번역한다.',
+      question: '비즈니스 언어를 어떻게 데이터로 번역하는가?'
+    },
+    '03': {
+      title: '개념 데이터 모델링',
+      desc: '핵심 엔터티와 관계를 비즈니스 관점에서 구조화한다.',
+      question: '핵심 개념을 어떻게 구조화하는가?'
+    },
+    '04': {
+      title: '논리 데이터 모델링',
+      desc: '개념 모델을 속성, 키, 정규화 기준으로 정밀화한다.',
+      question: '개념을 어떻게 정밀하게 정의하는가?'
+    },
+    '05': {
+      title: '물리 데이터 모델링',
+      desc: '논리 설계를 DBMS에 구현 가능한 형태로 변환한다.',
+      question: '논리 설계를 어떻게 구현 가능하게 만드는가?'
+    },
+    '06': {
+      title: '데이터 통합 아키텍처',
+      desc: '분산된 데이터를 표준화된 흐름으로 묶어낸다.',
+      question: '분산된 데이터를 어떻게 통합하는가?'
+    },
+    '07': {
+      title: '데이터 거버넌스 및 표준화',
+      desc: '아키텍처를 지속 가능한 운영 체계로 유지한다.',
+      question: '아키텍처를 어떻게 지속 가능하게 유지하는가?'
+    }
+  };
+
+  const subjectAreas = {
+    customer: {
+      title: '고객/투자자',
+      summary: '계좌와 거래를 소유하고 관계를 형성하는 출발점이다.',
+      entities: ['CUSTOMER', 'ACCOUNT', 'RELATIONSHIP'],
+      deps: ['account'],
+      links: ['계좌 소유', '고객 식별']
+    },
+    product: {
+      title: '금융상품',
+      summary: '주문, 체결, 평가의 기준이 되는 상품 정의 영역이다.',
+      entities: ['INSTRUMENT', 'PRICE', 'QUOTE'],
+      deps: ['order', 'account', 'price'],
+      links: ['종목 참조', '평가 기준']
+    },
+    account: {
+      title: '계좌/잔고',
+      summary: '보유와 잔고, 포지션 집계를 책임지는 핵심 영역이다.',
+      entities: ['BALANCE', 'POSITION', 'HOLDING'],
+      deps: ['order', 'product'],
+      links: ['잔고 집계', '발주 주체']
+    },
+    order: {
+      title: '주문/거래',
+      summary: '실시간 이벤트가 발생하는 가장 역동적인 거래 영역이다.',
+      entities: ['ORDER', 'TRADE', 'SETTLEMENT'],
+      deps: ['product', 'account'],
+      links: ['종목 참조', '계좌 참조']
+    },
+    price: {
+      title: '시장기준정보',
+      summary: '시세와 기준 정보로 나머지 모든 영역의 판단 기준이 된다.',
+      entities: ['MARKET_INFO', 'HOLIDAY', 'REFERENCE'],
+      deps: ['product', 'account'],
+      links: ['기준 시세', '평가 기준']
+    }
+  };
+
+  const timelineMeta = [
+    { group: 'strategy-req', title: '전략 · 요건' },
+    { group: 'design', title: '설계' },
+    { group: 'impl-ops', title: '구현 · 운영' }
+  ];
+
+  function injectStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+      .zachman-cell.is-active {
+        border-color: var(--navy) !important;
+        border-width: 2px !important;
+        box-shadow: inset 0 0 0 1px rgba(23,60,120,.08);
+      }
+      .zachman-cell.is-muted {
+        opacity: .42;
+      }
+      .stage-node.is-active .stage-circle {
+        filter: brightness(1.2);
+      }
+      .stage-node.is-dim {
+        opacity: .28;
+      }
+      .subject-card.is-active {
+        transform: scale(1.06);
+        z-index: 4;
+        border-color: var(--navy) !important;
+      }
+      .subject-card.is-muted {
+        opacity: .18;
+      }
+      .journey-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        margin: 14px 0 8px;
+      }
+      .journey-controls .nav-btn {
+        cursor: pointer;
+      }
+      .helper-pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(23,60,120,.08);
+        border: 1px solid rgba(23,60,120,.22);
+        color: var(--navy);
+        font-size: .88rem;
+      }
+      .floating-panel {
+        position: fixed;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%) translateX(20px);
+        width: min(360px, calc(100vw - 40px));
+        background: rgba(255,255,255,.96);
+        border: 2px solid var(--navy);
+        border-radius: 14px;
+        box-shadow: 0 18px 36px rgba(0,0,0,.18);
+        z-index: 1000;
+        padding: 16px 16px 14px;
+        font-size: 0.94rem;
+        animation: slideIn .28s ease forwards;
+      }
+      .floating-panel h3 {
+        margin: 0 0 8px;
+        color: var(--navy);
+        font-size: 1.02rem;
+      }
+      .floating-panel p {
+        margin: 8px 0;
+        line-height: 1.45;
+      }
+      .panel-close {
+        position: absolute;
+        top: 8px;
+        right: 10px;
+        border: 0;
+        background: transparent;
+        cursor: pointer;
+        font-size: 1.1rem;
+        color: var(--ink-soft);
+      }
+      .stage-detail-panel {
+        display: none;
+      }
+      .subject-detail-grid {
+        margin-top: 16px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(260px, .8fr);
+        gap: 14px;
+      }
+      .subject-summary-panel {
+        background: rgba(255,255,255,.58);
+        border: 1px solid rgba(23,60,120,.18);
+        border-radius: 12px;
+        padding: 16px;
+      }
+      .subject-deps {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .dep-chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 5px 10px;
+        border-radius: 999px;
+        background: var(--navy);
+        color: #fff;
+        font-size: .8rem;
+      }
+      .subject-line-list {
+        display: grid;
+        gap: 8px;
+        align-content: start;
+      }
+      .subject-line-item {
+        padding: 10px 12px;
+        background: rgba(255,255,255,.55);
+        border: 1px solid rgba(23,60,120,.15);
+        border-radius: 10px;
+      }
+      @keyframes slideIn {
+        from { transform: translateY(-50%) translateX(24px); opacity: 0; }
+        to { transform: translateY(-50%) translateX(0); opacity: 1; }
+      }
+      @keyframes pulse {
+        0%,100% { transform: scale(1); }
+        50% { transform: scale(1.06); }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function assignZachmanCoordinates() {
+    const cells = [...document.querySelectorAll('.zachman-grid .zachman-cell')];
+    let idx = 0;
+    cells.forEach((cell, i) => {
+      // 첫 7칸은 헤더 행
+      if (i < 7) return;
+      const offset = i - 7;
+      const rowIndex = Math.floor(offset / 7);
+      const colIndex = offset % 7;
+
+      const row = zachmanRows[rowIndex];
+      if (row) cell.dataset.row = row.key;
+
+      // row header 칸은 col을 주지 않는다.
+      if (colIndex > 0) {
+        const col = zachmanCols[colIndex - 1];
+        if (col) cell.dataset.col = col.key;
+
+        const key = `${row.key}-${col.key}`;
+        const data = zachmanCellLibrary[col.key]?.[row.key];
+        if (data) {
+          cell.dataset.question = data.question;
+          cell.dataset.outputs = data.outputs;
+          cell.dataset.stage = data.stage;
+        }
+        cell.dataset.zachmanKey = key;
+        idx += 1;
+      }
+    });
+  }
+
+  function renderZachmanPanel(cell) {
+    const rowKey = cell.dataset.row;
+    const colKey = cell.dataset.col;
+    if (!rowKey || !colKey) return;
+
+    const data = zachmanCellLibrary[colKey]?.[rowKey];
+    if (!data) return;
+
+    const row = zachmanRows.find(r => r.key === rowKey);
+    const col = zachmanCols.find(c => c.key === colKey);
+
+    document.querySelectorAll('.zachman-cell').forEach(el => {
+      el.classList.remove('is-active', 'is-muted');
+    });
+    cell.classList.add('is-active');
+
+    document.querySelectorAll('.zachman-grid .zachman-cell').forEach(el => {
+      const sameRow = el.dataset.row === rowKey;
+      const sameCol = el.dataset.col === colKey;
+      if ((sameRow || sameCol) && el !== cell) {
+        el.classList.add('is-active');
+      } else if (el !== cell && el.dataset.row && el.dataset.col) {
+        el.classList.add('is-muted');
+      }
+    });
+
+    let panel = document.getElementById('zachman-panel');
+    if (!panel) {
+      panel = document.createElement('aside');
+      panel.id = 'zachman-panel';
+      panel.className = 'floating-panel';
+      document.body.appendChild(panel);
+    }
+
+    panel.innerHTML = `
+      <button class="panel-close" aria-label="닫기">✕</button>
+      <h3>${row.label} × ${col.label}</h3>
+      <p style="color:var(--ink-soft); margin-top:-2px;">${row.nuance} · ${col.sub}</p>
+      <p><strong>핵심 질문</strong><br>${data.question}</p>
+      <p><strong>증권 산출물 예시</strong><br>${data.outputs}</p>
+      <p><strong>연계 단계</strong><br>${data.stage}</p>
+    `;
+    panel.querySelector('.panel-close').onclick = () => panel.remove();
+  }
+
+  function bindZachmanExplorer() {
+    document.querySelectorAll('.zachman-grid .zachman-cell').forEach(cell => {
+      cell.addEventListener('click', () => {
+        if (!cell.dataset.row || !cell.dataset.col) return;
+        renderZachmanPanel(cell);
+      });
+    });
+  }
+
+  function ensureJourneyControls() {
+    const timelineSection = document.querySelector('.timeline-container');
+    const intro = timelineSection?.querySelector('p');
+    if (!timelineSection || !intro) return;
+
+    const controls = document.createElement('div');
+    controls.className = 'journey-controls';
+    controls.innerHTML = `
+      <button type="button" class="nav-btn" id="journey-start">▶ 아키텍처 여정 시작</button>
+      <button type="button" class="nav-btn" id="journey-reset" style="background: var(--olive);">다시 보기</button>
+      <span class="helper-pill">클릭하면 7단계가 순차적으로 활성화됩니다</span>
+    `;
+    intro.insertAdjacentElement('afterend', controls);
+  }
+
+  function resetJourney() {
+    document.querySelectorAll('.stage-node').forEach(node => {
+      node.classList.remove('is-active', 'is-dim');
+      const circle = node.querySelector('.stage-circle');
+      const baseR = 24;
+      if (circle) circle.setAttribute('r', baseR);
+    });
+    document.querySelectorAll('.connector-line, .timeline-svg polygon').forEach(el => {
+      el.style.opacity = '1';
+    });
+  }
+
+  function playJourney() {
+    resetJourney();
+    const nodes = [...document.querySelectorAll('.stage-node')];
+    const connectors = [...document.querySelectorAll('.connector-line')];
+
+    nodes.forEach((node, idx) => {
+      setTimeout(() => {
+        node.classList.add('is-active');
+        const circle = node.querySelector('.stage-circle');
+        if (circle) {
+          circle.setAttribute('r', 29);
+          setTimeout(() => circle.setAttribute('r', 24), 260);
+        }
+
+        if (idx > 0 && connectors[idx - 1]) {
+          connectors[idx - 1].style.opacity = '0.9';
+        }
+      }, idx * 700);
+    });
+  }
+
+  function bindJourneyAnimator() {
+    const startBtn = document.getElementById('journey-start');
+    const resetBtn = document.getElementById('journey-reset');
+    if (startBtn) startBtn.addEventListener('click', playJourney);
+    if (resetBtn) resetBtn.addEventListener('click', resetJourney);
+  }
+
+  function fixStageLabels() {
+    document.querySelectorAll('.stage-node').forEach(node => {
+      const circle = node.querySelector('.stage-circle');
+      const num = node.querySelector('.stage-num');
+      if (!circle || !num) return;
+      const cx = circle.getAttribute('cx');
+      const cy = circle.getAttribute('cy');
+      if (cx && cy) {
+        num.setAttribute('x', cx);
+        num.setAttribute('y', cy);
+      }
+    });
+  }
+
+  function renderSubjectPanel(areaKey) {
+    const data = subjectAreas[areaKey];
+    if (!data) return;
+
+    let panel = document.getElementById('subject-panel');
+    if (!panel) {
+      panel = document.createElement('section');
+      panel.id = 'subject-panel';
+      panel.className = 'subject-detail-grid';
+      document.querySelector('.subject-areas')?.insertAdjacentElement('afterend', panel);
+    }
+
+    panel.innerHTML = `
+      <div class="subject-summary-panel">
+        <h3 style="margin:0 0 8px; color:var(--navy); font-size:1.08rem;">${data.title}</h3>
+        <p style="margin:0; color:var(--ink-soft); line-height:1.55;">${data.summary}</p>
+        <div class="subject-deps">
+          ${data.entities.map(e => `<span class="dep-chip">${e}</span>`).join('')}
+        </div>
+      </div>
+      <div class="subject-summary-panel">
+        <h3 style="margin:0 0 10px; color:var(--navy); font-size:1rem;">의존 관계</h3>
+        <div class="subject-line-list">
+          ${data.links.map(link => `<div class="subject-line-item">${link}</div>`).join('')}
+        </div>
+      </div>
+    `;
+
+    document.querySelectorAll('.subject-card').forEach(card => {
+      card.classList.toggle('is-active', card.dataset.area === areaKey);
+      card.classList.toggle('is-muted', card.dataset.area !== areaKey);
+    });
+  }
+
+  function resetSubjectExplorer() {
+    document.querySelectorAll('.subject-card').forEach(card => {
+      card.classList.remove('is-active', 'is-muted');
+    });
+    const panel = document.getElementById('subject-panel');
+    if (panel) panel.remove();
+  }
+
+  function bindSubjectExplorer() {
+    document.querySelectorAll('.subject-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        e.stopPropagation();
+        renderSubjectPanel(card.dataset.area);
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.subject-card') && !e.target.closest('#subject-panel')) {
+        resetSubjectExplorer();
+      }
+    });
+  }
+
+  function bindStageDetail() {
+    document.querySelectorAll('.stage-node').forEach(node => {
+      node.addEventListener('click', () => {
+        const stage = node.dataset.stage;
+        const data = stageData[stage];
+        if (!data) return;
+
+        const panel = document.getElementById('stage-detail-panel');
+        const title = document.getElementById('stage-detail-title');
+        const desc = document.getElementById('stage-detail-desc');
+        const question = document.getElementById('stage-detail-question');
+
+        if (!panel || !title || !desc || !question) return;
+        panel.style.display = 'block';
+        panel.classList.add('stage-detail-panel');
+        title.textContent = data.title;
+        desc.textContent = data.desc;
+        question.textContent = data.question;
+      });
+    });
+  }
+
+  /* ─── 전략의 사슬 데이터 ─────────────────────────────────────── */
+  const chainData = {
+    org: {
+      title: '조직 (Organization)',
+      sub: '아키텍처 설계의 주체와 맥락을 정의',
+      body: '자산운용 본부, 리스크 관리팀, IT 전략 부서가 이 아키텍처의 이해관계자다. 이들의 전략적 목표가 데이터 아키텍처 설계의 출발점이 된다.',
+      ex: '자산운용 본부 → 포트폴리오 수익률 극대화\n리스크 관리팀 → 전사 투자 한도 실시간 통제\nIT 전략 부서 → 데이터 인프라 표준화 및 거버넌스'
+    },
+    goal: {
+      title: '목표 (Strategic Goal)',
+      sub: '아키텍처가 달성해야 하는 비즈니스 목표',
+      body: '"전사 자산의 실시간 통합 가치 평가 및 수익률 최적화" — 단순한 데이터 저장을 넘어 의사결정을 지원하는 측정 가능하고 실행 가능한 목표를 설정한다.',
+      ex: '① 주식·채권·파생상품을 단일 기준으로 통합 평가\n② 포트폴리오 실시간 수익률 계산\n③ 리스크 한도 소진 현황 실시간 모니터링'
+    },
+    problem: {
+      title: '문제점 (Core Problem)',
+      sub: '목표 달성을 방해하는 핵심 장애물',
+      body: '"자산 유형별 데이터 파편화(Data Silo)로 인한 통합 가치 평가 지연 및 데이터 부정합" — 주식·채권·파생상품 데이터가 서로 다른 체계로 관리되어 실시간 합산 시 무결성이 위협받는다.',
+      ex: '영업계정 DB / 리스크 DB / 상품 DB가 각각 독립 운영\n→ 동일 종목의 수익률이 부서마다 다르게 계산됨\n→ 실시간 통합 조회 불가 → 의사결정 지연'
+    },
+    csf: {
+      title: '핵심 성공 요인 (CSF)',
+      sub: '문제를 해결하고 목표를 달성하기 위한 필수 조건',
+      body: '아키텍처가 반드시 해결해야 할 두 가지 핵심 과제를 정의한다. 이 CSF들이 이후 모든 설계 결정의 근거가 된다.',
+      ex: 'CSF 1: 전사 투자 자산 데이터 표준화\n→ 상이한 자산군을 하나의 논리 체계로 통합\n\nCSF 2: 시계열 선분 이력 관리 체계 구축\n→ 특정 시점의 자산 가치 즉시 복원 가능'
+    },
+    entity: {
+      title: '핵심 엔터티 (Core Entity)',
+      sub: '전략이 구체화된 데이터 구조의 핵심',
+      body: '위의 모든 분석이 이 엔터티들의 설계로 귀결된다. 엔터티는 단순한 테이블이 아니라 비즈니스 전략의 실체다.',
+      ex: 'ASSET (자산): 표준화된 금융투자상품 마스터\nLEDGER (원장): 시계열 선분 이력 기반 거래 원장\nPOSITION (포지션): 계좌별 실시간 잔고 집계\nTRADE (체결): 주문-체결-정산 거래 이력'
+    }
+  };
+
+  /* ─── 전략의 사슬 바인딩 ──────────────────────────────────────── */
+  function bindStrategyChain() {
+    const panel = document.getElementById('chain-panel');
+    const pTitle = document.getElementById('chain-panel-title');
+    const pSub   = document.getElementById('chain-panel-sub');
+    const pBody  = document.getElementById('chain-panel-body');
+    const pEx    = document.getElementById('chain-panel-ex');
+
+    document.querySelectorAll('.chain-node').forEach(node => {
+      node.addEventListener('click', () => {
+        const d = chainData[node.dataset.chain];
+        if (!d) return;
+        pTitle.textContent = d.title;
+        pSub.textContent   = d.sub;
+        pBody.textContent  = d.body;
+        pEx.textContent    = d.ex;
+        panel.classList.add('visible');
+        document.querySelectorAll('.chain-node').forEach(n => n.classList.remove('chain-active'));
+        node.classList.add('chain-active');
+      });
+    });
+
+    // Path + arrow animation on scroll
+    const svg = document.querySelector('.strategy-chain-svg');
+    const drawChain = () => {
+      document.querySelectorAll('.chain-path-anim').forEach((p, i) => {
+        setTimeout(() => {
+          p.classList.add('drawn');
+          const arr = document.getElementById('cp' + (i+1) + '-arr');
+          if (arr) arr.style.opacity = '1';
+        }, i * 250);
+      });
+    };
+    if (svg && 'IntersectionObserver' in window) {
+      new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) { drawChain(); }
+      }, { threshold: 0.25 }).observe(svg);
+    } else {
+      drawChain();
+    }
+  }
+
+  /* ─── 관계 맵 빌드 + 토글 ────────────────────────────────────── */
+  const relmapAreas = [
+    { key:'customer', label:['고객','투자자'], cx:250, cy:52,  fill:'#173c78' },
+    { key:'product',  label:['금융','상품'],   cx:397, cy:158, fill:'#4e5533' },
+    { key:'order',    label:['주문','거래'],   cx:340, cy:325, fill:'#7c261f' },
+    { key:'price',    label:['시장','기준정보'], cx:160, cy:325, fill:'#9a7729' },
+    { key:'account',  label:['계좌','잔고'],   cx:103, cy:158, fill:'#315b92' }
+  ];
+  const relmapConns = [
+    { from:'customer', to:'account', label:'소유' },
+    { from:'product',  to:'order',   label:'종목 참조' },
+    { from:'product',  to:'account', label:'평가 기준' },
+    { from:'account',  to:'order',   label:'발주 주체' },
+    { from:'price',    to:'product', label:'기준 시세' },
+    { from:'price',    to:'account', label:'잔고 평가' }
+  ];
+
+  function buildRelationMap() {
+    const svg = document.getElementById('relmap-svg');
+    if (!svg || svg.children.length > 0) return;
+    let html = '';
+
+    // Draw connection lines + labels
+    relmapConns.forEach(c => {
+      const f = relmapAreas.find(a => a.key === c.from);
+      const t = relmapAreas.find(a => a.key === c.to);
+      if (!f || !t) return;
+      const mx = (f.cx + t.cx) / 2, my = (f.cy + t.cy) / 2;
+      html += `<line class="relmap-line" data-from="${c.from}" data-to="${c.to}" x1="${f.cx}" y1="${f.cy}" x2="${t.cx}" y2="${t.cy}"/>`;
+      html += `<text class="relmap-label" x="${mx}" y="${my - 5}" text-anchor="middle" fill="var(--ink-soft)" font-size="8.5">${c.label}</text>`;
+    });
+
+    // Draw nodes
+    relmapAreas.forEach(a => {
+      html += `
+        <g class="relmap-node" data-area="${a.key}">
+          <circle class="rl-bg" cx="${a.cx}" cy="${a.cy}" r="40" fill="${a.fill}" opacity=".85"/>
+          <text x="${a.cx}" y="${a.cy - 6}" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="10" font-weight="bold" style="pointer-events:none">${a.label[0]}</text>
+          <text x="${a.cx}" y="${a.cy + 8}" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="10" font-weight="bold" style="pointer-events:none">${a.label[1]}</text>
+        </g>`;
+    });
+    svg.innerHTML = html;
+
+    // Node click
+    svg.querySelectorAll('.relmap-node').forEach(node => {
+      node.addEventListener('click', e => {
+        e.stopPropagation();
+        const key = node.dataset.area;
+        svg.querySelectorAll('.relmap-node').forEach(n => {
+          n.classList.toggle('dim', n.dataset.area !== key);
+          n.classList.toggle('lit', n.dataset.area === key);
+        });
+        svg.querySelectorAll('.relmap-line').forEach(l => {
+          l.classList.toggle('active', l.dataset.from === key || l.dataset.to === key);
+        });
+        renderSubjectPanel(key);
+      });
+    });
+    svg.addEventListener('click', e => {
+      if (!e.target.closest('.relmap-node')) {
+        svg.querySelectorAll('.relmap-node').forEach(n => n.classList.remove('dim','lit'));
+        svg.querySelectorAll('.relmap-line').forEach(l => l.classList.remove('active'));
+        resetSubjectExplorer();
+      }
+    });
+  }
+
+  function bindViewToggle() {
+    const btnCard   = document.getElementById('btn-card');
+    const btnRelmap = document.getElementById('btn-relmap');
+    const cards     = document.getElementById('subject-cards');
+    const relmap    = document.getElementById('relmap-wrap');
+    if (!btnCard || !btnRelmap) return;
+
+    btnCard.addEventListener('click', () => {
+      btnCard.classList.add('active'); btnRelmap.classList.remove('active');
+      cards.classList.remove('hidden'); relmap.classList.remove('on');
+      resetSubjectExplorer();
+    });
+    btnRelmap.addEventListener('click', () => {
+      btnRelmap.classList.add('active'); btnCard.classList.remove('active');
+      cards.classList.add('hidden'); relmap.classList.add('on');
+      buildRelationMap();
+    });
+  }
+
+  injectStyles();
+  assignZachmanCoordinates();
+  fixStageLabels();
+  ensureJourneyControls();
+  bindZachmanExplorer();
+  bindJourneyAnimator();
+  bindSubjectExplorer();
+  bindStageDetail();
+  bindStrategyChain();
+  bindViewToggle();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Step 4 - 고난도 논리 데이터 모델링 (Advanced ERD) | Data Architecture Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/static/pretendard.css">
+  <style>
+    :root {
+      --paper: #ead8aa;
+      --paper-light: #f8e9c4;
+      --paper-warm: #ddc48f;
+      --line: rgba(38, 68, 88, .18);
+      --ink: #17130f;
+      --ink-soft: #33291f;
+      --navy: #173c78;
+      --navy-soft: #315b92;
+      --maroon: #7c261f;
+      --maroon-soft: #9a3a32;
+      --olive: #4e5533;
+      --gold: #9a7729;
+      --paper-shadow: rgba(44, 28, 9, .24);
+      --font-hand: "Pretendard", "Noto Sans KR", "Malgun Gothic", sans-serif;
+    }
+
+    * { box-sizing: border-box; letter-spacing: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-hand);
+      background: radial-gradient(circle at 12% 10%, rgba(255,255,255,.34), transparent 30%),
+                  linear-gradient(135deg, #c9a66b, #ead6a2 46%, #bd955b);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    ul { margin: 0; padding: 0; list-style: none; }
+    svg { display: block; }
+    ::selection { background: var(--gold); color: #fff; }
+
+    /* ── NOTEBOOK ── */
+    .notebook {
+      position: relative;
+      width: min(100%, 1080px);
+      margin: 0 auto;
+      padding: 72px 54px 48px 86px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 23% 18%, rgba(118,76,29,.13) 0 1px, transparent 1.6px) 0 0/38px 38px,
+        radial-gradient(circle at 78% 62%, rgba(70,46,22,.10) 0 1px, transparent 1.4px) 12px 4px/46px 46px,
+        repeating-linear-gradient(to bottom, transparent 0 35px, var(--line) 36px 37px),
+        linear-gradient(90deg, transparent 0 50px, rgba(112,82,39,.18) 51px 52px, transparent 53px),
+        linear-gradient(180deg, var(--paper-light), var(--paper) 45%, var(--paper-warm));
+      box-shadow: 0 18px 42px var(--paper-shadow);
+    }
+    .notebook::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(83,53,22,.12), transparent 16%, transparent 84%, rgba(83,53,22,.08)),
+        radial-gradient(circle at 35% 9%, rgba(67,41,14,.12), transparent 2px),
+        radial-gradient(circle at 67% 71%, rgba(67,41,14,.11), transparent 2px);
+      mix-blend-mode: multiply;
+    }
+    .spiral {
+      position: absolute;
+      left: 0; top: 0; bottom: 0; width: 42px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='42' height='40'%3E%3Cellipse cx='9' cy='20' rx='12' ry='9' fill='none' stroke='%23201510' stroke-width='4'/%3E%3Cellipse cx='9' cy='20' rx='7' ry='5' fill='none' stroke='%2382652f' stroke-width='2' opacity='.45'/%3E%3C/svg%3E");
+      background-repeat: repeat-y;
+      background-size: 42px 40px;
+      opacity: .9;
+      filter: drop-shadow(1px 1px 1px rgba(0,0,0,.22));
+    }
+    main { position: relative; z-index: 1; }
+
+    /* ── HEADER ── */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 36px;
+    }
+    .home-link {
+      font-size: 0.95rem;
+      color: var(--navy);
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .home-link:hover { opacity: 1; }
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+    }
+    .step-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px; height: 28px;
+      background: var(--navy);
+      color: white;
+      border-radius: 50%;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    /* ── NAV DOTS ── */
+    .nav-dots {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 48px;
+      flex-wrap: wrap;
+    }
+    .nav-dot {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: rgba(23,60,120,0.1);
+      border: 2px solid rgba(23,60,120,0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: var(--navy);
+      font-weight: 600;
+    }
+    .nav-dot:hover { background: rgba(23,60,120,0.2); transform: scale(1.1); }
+    .nav-dot.active {
+      background: var(--navy);
+      color: white;
+      border-color: var(--navy);
+      box-shadow: 0 4px 12px rgba(23,60,120,0.3);
+    }
+
+    /* ── TITLE ── */
+    .title-section { margin-bottom: 36px; }
+    h1 {
+      margin: 0 0 12px;
+      font-size: 2.2rem;
+      color: var(--navy);
+      line-height: 1.3;
+      font-weight: 700;
+    }
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--maroon);
+      font-weight: 500;
+      margin: 0;
+    }
+    .description {
+      margin-top: 16px;
+      font-size: 0.95rem;
+      color: var(--ink-soft);
+      line-height: 1.7;
+      max-width: 720px;
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      margin-bottom: 52px;
+      opacity: 0;
+      animation: fadeInUp 0.6s ease forwards;
+    }
+    section:nth-child(1) { animation-delay: 0.1s; }
+    section:nth-child(2) { animation-delay: 0.2s; }
+    section:nth-child(3) { animation-delay: 0.3s; }
+    section:nth-child(4) { animation-delay: 0.4s; }
+    section:nth-child(5) { animation-delay: 0.5s; }
+    section:nth-child(6) { animation-delay: 0.6s; }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .section-label {
+      font-size: 1.3rem;
+      color: var(--navy);
+      font-weight: 700;
+      margin: 0 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--navy);
+      display: inline-block;
+    }
+
+    /* ── ENTITY CARDS ── */
+    .entity-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .entity-card {
+      padding: 14px;
+      border-radius: 8px;
+      border: 2px solid;
+      background: white;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-align: center;
+    }
+    .entity-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    }
+    .entity-card.asset { border-color: var(--navy); }
+    .entity-card.trading { border-color: var(--maroon); }
+    .entity-card.risk { border-color: var(--olive); }
+    .entity-card.ledger { border-color: var(--gold); }
+    .entity-name {
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-bottom: 6px;
+      color: var(--ink);
+    }
+    .entity-type {
+      font-size: 0.75rem;
+      color: var(--ink-soft);
+    }
+
+    /* ── PATTERN CARDS ── */
+    .pattern-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .pattern-card {
+      padding: 18px;
+      background: rgba(255,255,255,0.7);
+      border-radius: 8px;
+      border-left: 4px solid;
+      transition: transform 0.25s ease;
+    }
+    .pattern-card:hover { transform: translateX(4px); }
+    .pattern-card.supertype { border-left-color: var(--navy); }
+    .pattern-card.recursive { border-left-color: var(--maroon); }
+    .pattern-card.history { border-left-color: var(--olive); }
+    .pattern-card.composite { border-left-color: var(--gold); }
+    .pattern-title {
+      font-weight: 700;
+      color: var(--navy);
+      margin: 0 0 8px;
+      font-size: 0.95rem;
+    }
+    .pattern-desc {
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      line-height: 1.6;
+      margin: 0;
+    }
+    .pattern-example {
+      font-size: 0.85rem;
+      color: #7c5427;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(0,0,0,0.1);
+      font-style: italic;
+    }
+
+    /* ── NORMALIZATION TABLE ── */
+    .norm-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background: white;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .norm-table th {
+      background: rgba(23,60,120,0.08);
+      padding: 12px;
+      text-align: left;
+      font-weight: 700;
+      color: var(--navy);
+      border-bottom: 2px solid var(--navy);
+      font-size: 0.9rem;
+    }
+    .norm-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      font-size: 0.9rem;
+    }
+    .norm-table tr:hover { background: rgba(0,0,0,0.02); }
+    .norm-level { font-weight: 700; color: var(--navy); }
+
+    /* ── INSIGHT BOX ── */
+    .insight-box {
+      padding: 16px;
+      background: rgba(255,255,255,0.6);
+      border-radius: 6px;
+      border-left: 4px solid var(--navy);
+      margin: 16px 0;
+    }
+    .insight-title {
+      margin: 0 0 8px;
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 0.95rem;
+    }
+    .insight-text {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      line-height: 1.7;
+    }
+
+    /* ── RELATIONSHIPS VISUAL ── */
+    .relationship-demo {
+      margin: 20px 0;
+      padding: 20px;
+      background: rgba(255,255,255,0.6);
+      border-radius: 8px;
+      border: 1px solid rgba(23,60,120,0.2);
+    }
+    .rel-label {
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+    .rel-diagram {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.85rem;
+      flex-wrap: wrap;
+    }
+    .rel-box {
+      padding: 8px 12px;
+      background: white;
+      border: 1px solid rgba(0,0,0,0.2);
+      border-radius: 4px;
+      color: var(--ink);
+    }
+    .rel-arrow {
+      color: var(--navy);
+      font-weight: 700;
+    }
+
+    /* ── STEP NAV ── */
+    .step-nav {
+      display: flex;
+      gap: 16px;
+      margin-top: 48px;
+      padding-top: 32px;
+      border-top: 2px solid rgba(0,0,0,0.08);
+    }
+    .nav-button {
+      padding: 12px 24px;
+      border: 2px solid var(--navy);
+      background: white;
+      color: var(--navy);
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.25s ease;
+      font-family: var(--font-hand);
+    }
+    .nav-button:hover {
+      background: var(--navy);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(23,60,120,0.2);
+    }
+    .nav-button.prev { order: -1; }
+  </style>
+</head>
+<body>
+<div class="notebook">
+  <div class="spiral"></div>
+
+  <main>
+    <!-- HEADER -->
+    <div class="header">
+      <div class="home-link" onclick="goHome()">← 홈</div>
+      <div class="step-indicator">
+        <span class="step-badge">4</span>
+        <span>고난도 논리 데이터 모델링</span>
+      </div>
+    </div>
+
+    <!-- NAV DOTS -->
+    <div class="nav-dots">
+      <div class="nav-dot" data-step="1" onclick="navigateToStep(1)">1</div>
+      <div class="nav-dot" data-step="2" onclick="navigateToStep(2)">2</div>
+      <div class="nav-dot" data-step="3" onclick="navigateToStep(3)">3</div>
+      <div class="nav-dot" data-step="4" onclick="navigateToStep(4)" style="background: var(--navy); color: white; border-color: var(--navy);">4</div>
+      <div class="nav-dot" data-step="5" onclick="navigateToStep(5)">5</div>
+      <div class="nav-dot" data-step="6" onclick="navigateToStep(6)">6</div>
+      <div class="nav-dot" data-step="7" onclick="navigateToStep(7)">7</div>
+    </div>
+
+    <!-- TITLE SECTION -->
+    <div class="title-section">
+      <h1>고난도 논리 데이터 모델링</h1>
+      <p class="subtitle">Advanced ERD &ndash; 엔터티 관계의 복잡성 설계</p>
+      <p class="description">
+        3단계까지 CRUD 정합성이 검증된 12개 엔터티를 이제 정교한 관계 모델로 표현합니다. 
+        일반화 구조(슈퍼타입/서브타입), 재귀적 관계, 시계열 선분 이력 등 
+        고난도 패턴을 적용하여 <strong>엔터피스 수준의 데이터 무결성</strong>을 보장합니다.
+      </p>
+    </div>
+
+    <!-- 섹션 1: ERD 개념과 주요 특징 -->
+    <section>
+      <h2 class="section-label">ERD 설계의 핵심 원칙</h2>
+      
+      <div class="pattern-grid">
+        <div class="pattern-card supertype">
+          <p class="pattern-title">① 정규화 (Normalization)</p>
+          <p class="pattern-desc">
+            엔터티의 속성을 함수 종속성(FD)에 따라 분해하여 
+            데이터 중복을 제거하고 갱신 이상(Anomaly)을 방지합니다.
+          </p>
+          <p class="pattern-example">
+            예: ORDER와 ORDER_STATUS를 분리하여 
+            주문 상태 변경 시에만 ORDER_STATUS 업데이트
+          </p>
+        </div>
+
+        <div class="pattern-card recursive">
+          <p class="pattern-title">② 엔터피 무결성 (Entity Integrity)</p>
+          <p class="pattern-desc">
+            모든 엔터티는 고유 식별자(PK)를 가지며, 
+            PK 속성은 NULL이 될 수 없습니다.
+          </p>
+          <p class="pattern-example">
+            예: ORDER.ORDER_ID (PK), EXECUTION.EXEC_ID (PK)
+          </p>
+        </div>
+
+        <div class="pattern-card history">
+          <p class="pattern-title">③ 참조 무결성 (Referential Integrity)</p>
+          <p class="pattern-desc">
+            FK는 참조하는 테이블의 PK 값만 가지거나 NULL이며, 
+            고아 레코드(Orphan Record) 발생을 방지합니다.
+          </p>
+          <p class="pattern-example">
+            예: EXECUTION.ORDER_ID → ORDER.ORDER_ID (ON DELETE CASCADE)
+          </p>
+        </div>
+
+        <div class="pattern-card composite">
+          <p class="pattern-title">④ 도메인 무결성 (Domain Integrity)</p>
+          <p class="pattern-desc">
+            속성 값이 정의된 도메인(데이터 타입, 범위, 형식)을 따릅니다.
+          </p>
+          <p class="pattern-example">
+            예: RISK_LIMIT.LIMIT_VALUE ≥ 0, ORDER.STATUS ∈ {PENDING, EXECUTED, CANCELLED}
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 섹션 2: 엔터티 카운트 및 식별 -->
+    <section>
+      <h2 class="section-label">12개 엔터티 & 주제 영역 매핑</h2>
+      
+      <div style="margin: 20px 0; padding: 16px; background: rgba(255,255,255,0.6); border-radius: 6px; border-left: 4px solid var(--navy);">
+        <p style="margin: 0; color: var(--ink-soft); font-size: 0.95rem; line-height: 1.6;">
+          <strong style="color: var(--navy);">자산 관리 SA (Asset Master)</strong><br>
+          ASSET, ASSET_CLASS, MARKET_DATA<br>
+          <br>
+          <strong style="color: var(--maroon);">거래 관리 SA (Trading)</strong><br>
+          ORDER, EXECUTION, SETTLEMENT<br>
+          <br>
+          <strong style="color: var(--olive);">위험 관리 SA (Risk Control)</strong><br>
+          POSITION, RISK_LIMIT, P&L<br>
+          <br>
+          <strong style="color: var(--gold);">원장 관리 SA (Ledger)</strong><br>
+          LEDGER, TRANSACTION_LOG, PRICE_HISTORY
+        </p>
+      </div>
+
+      <div class="entity-grid">
+        <div class="entity-card asset">
+          <div class="entity-name">ASSET</div>
+          <div class="entity-type">상품 마스터</div>
+        </div>
+        <div class="entity-card asset">
+          <div class="entity-name">ASSET_CLASS</div>
+          <div class="entity-type">상품 분류</div>
+        </div>
+        <div class="entity-card asset">
+          <div class="entity-name">MARKET_DATA</div>
+          <div class="entity-type">시장 데이터</div>
+        </div>
+        <div class="entity-card trading">
+          <div class="entity-name">ORDER</div>
+          <div class="entity-type">주문</div>
+        </div>
+        <div class="entity-card trading">
+          <div class="entity-name">EXECUTION</div>
+          <div class="entity-type">체결</div>
+        </div>
+        <div class="entity-card trading">
+          <div class="entity-name">SETTLEMENT</div>
+          <div class="entity-type">정산</div>
+        </div>
+        <div class="entity-card risk">
+          <div class="entity-name">POSITION</div>
+          <div class="entity-type">포지션</div>
+        </div>
+        <div class="entity-card risk">
+          <div class="entity-name">RISK_LIMIT</div>
+          <div class="entity-type">위험 한도</div>
+        </div>
+        <div class="entity-card risk">
+          <div class="entity-name">P&L</div>
+          <div class="entity-type">손익</div>
+        </div>
+        <div class="entity-card ledger">
+          <div class="entity-name">LEDGER</div>
+          <div class="entity-type">원장</div>
+        </div>
+        <div class="entity-card ledger">
+          <div class="entity-name">TRANSACTION_LOG</div>
+          <div class="entity-type">거래 로그</div>
+        </div>
+        <div class="entity-card ledger">
+          <div class="entity-name">PRICE_HISTORY</div>
+          <div class="entity-type">가격 이력</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 섹션 3: 고난도 관계 패턴 -->
+    <section>
+      <h2 class="section-label">ERD의 고난도 패턴</h2>
+
+      <div style="padding: 16px; background: rgba(255,255,255,0.6); border-radius: 6px; border: 1px solid rgba(0,0,0,0.08); margin-bottom: 20px;">
+        <p style="margin: 0; color: var(--ink-soft); font-size: 0.9rem; line-height: 1.7;">
+          아래 네 가지 패턴은 단순한 1:N, M:N 관계를 넘어, 
+          <strong>비즈니스 로직의 복잡성</strong>을 데이터 모델에 정확히 반영합니다.
+        </p>
+      </div>
+
+      <!-- 패턴 1: 슈퍼타입/서브타입 -->
+      <div class="relationship-demo">
+        <div class="rel-label">패턴 1️⃣ 슈퍼타입/서브타입 (Supertype/Subtype)</div>
+        <div class="rel-diagram">
+          <div class="rel-box">ASSET (PK: ASSET_ID)</div>
+          <div class="rel-arrow">▼</div>
+        </div>
+        <div style="margin-top: 8px; padding: 10px; background: rgba(23,60,120,0.08); border-radius: 4px; border-left: 2px solid var(--navy);">
+          <p style="margin: 0; font-size: 0.85rem; color: var(--ink); line-height: 1.6;">
+            <strong>적용:</strong> ASSET_CLASS (주식/채권/파생상품)에 따라 
+            속성이 달라지므로 슈퍼타입(ASSET) + 서브타입(STOCK, BOND, DERIVATIVE) 구조.<br>
+            <strong>장점:</strong> 공통 속성(이름, 통화)은 한 번만 저장, 
+            타입별 속성은 서브타입에서 관리.<br>
+            <strong>관계:</strong> ASSET 1 ── N STOCK/BOND/DERIVATIVE (is-a 관계)
+          </p>
+        </div>
+      </div>
+
+      <!-- 패턴 2: 재귀적 관계 -->
+      <div class="relationship-demo">
+        <div class="rel-label">패턴 2️⃣ 재귀적 관계 (Recursive Relationship)</div>
+        <div class="rel-diagram">
+          <div class="rel-box">ASSET (ASSET_ID, PARENT_ASSET_ID)</div>
+        </div>
+        <div style="margin-top: 8px; padding: 10px; background: rgba(124,38,31,0.08); border-radius: 4px; border-left: 2px solid var(--maroon);">
+          <p style="margin: 0; font-size: 0.85rem; color: var(--ink); line-height: 1.6;">
+            <strong>적용:</strong> ASSET_CLASS가 계층(Level 1: 주식, Level 2: 국내주식, Level 3: KOSPI 주식)을 이룬다면 
+            ASSET_CLASS 자신이 자신을 참조.<br>
+            <strong>실제:</strong> ASSET_CLASS.PARENT_CLASS_ID FK → ASSET_CLASS.CLASS_ID<br>
+            <strong>쿼리:</strong> "KOSPI 주식의 모든 상품" = ASSET JOIN ASSET_CLASS (재귀 검색)
+          </p>
+        </div>
+      </div>
+
+      <!-- 패턴 3: 선분 이력 (SCD Type 2) -->
+      <div class="relationship-demo">
+        <div class="rel-label">패턴 3️⃣ 선분 이력 관리 (Slowly Changing Dimension, SCD Type 2)</div>
+        <div class="rel-diagram">
+          <div class="rel-box">PRICE_HISTORY<br>(ASSET_ID, PRICE_DATE, VALID_FROM, VALID_TO)</div>
+        </div>
+        <div style="margin-top: 8px; padding: 10px; background: rgba(78,85,51,0.08); border-radius: 4px; border-left: 2px solid var(--olive);">
+          <p style="margin: 0; font-size: 0.85rem; color: var(--ink); line-height: 1.6;">
+            <strong>적용:</strong> 상품의 가격이 시간에 따라 변할 때, 
+            새로운 가격이 발생하면 이전 행의 VALID_TO를 업데이트하고, 새 행을 삽입.<br>
+            <strong>예:</strong><br>
+            &nbsp;&nbsp; (ASSET_001, 2024-01-01, 2024-01-01, 2024-01-15) → PRICE = 100,000<br>
+            &nbsp;&nbsp; (ASSET_001, 2024-01-16, 2024-01-16, 9999-12-31) → PRICE = 105,000<br>
+            <strong>쿼리:</strong> "2024-01-10의 상품 가격" = WHERE VALID_FROM ≤ '2024-01-10' AND VALID_TO ≥ '2024-01-10'
+          </p>
+        </div>
+      </div>
+
+      <!-- 패턴 4: 연결 엔터티 (M:N) -->
+      <div class="relationship-demo">
+        <div class="rel-label">패턴 4️⃣ 연결 엔터티 & 복합 PK (Composite Primary Key)</div>
+        <div class="rel-diagram">
+          <div class="rel-box">ORDER (ORDER_ID)</div>
+          <div class="rel-arrow">M ─── N</div>
+          <div class="rel-box">EXECUTION (EXEC_ID)</div>
+        </div>
+        <div style="margin-top: 8px; padding: 10px; background: rgba(154,119,41,0.08); border-radius: 4px; border-left: 2px solid var(--gold);">
+          <p style="margin: 0; font-size: 0.85rem; color: var(--ink); line-height: 1.6;">
+            <strong>관계:</strong> 한 주문(ORDER)이 여러 체결(EXECUTION)을 가질 수 있고, 
+            한 체결이 여러 정산(SETTLEMENT)과 연결될 수 있음.<br>
+            <strong>모델:</strong> EXECUTION ( <u>EXEC_ID</u>, ORDER_ID FK, QUANTITY, PRICE, ...)
+          </p>
+        </div>
+      </div>
+
+      <div class="insight-box" style="border-left-color: var(--maroon); margin-top: 24px;">
+        <p class="insight-title">🔍 이 4가지 패턴의 교집합</p>
+        <p class="insight-text">
+          실제 설계에서는 이 패턴들이 결합됩니다. 예: 
+          ASSET (슈퍼타입) → STOCK (서브타입) → PRICE_HISTORY (선분이력) → ORDER → EXECUTION (M:N)
+        </p>
+      </div>
+    </section>
+
+    <!-- 섹션 4: 정규화 수준 및 검증 -->
+    <section>
+      <h2 class="section-label">정규화 수준 & 데이터 무결성 검증</h2>
+
+      <table class="norm-table">
+        <thead>
+          <tr>
+            <th>정규화 수준</th>
+            <th>규칙</th>
+            <th>우리 설계의 적용</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="norm-level">1NF (First)</td>
+            <td>원자값(Atomic Value)만 허용</td>
+            <td>모든 속성은 원자값 (예: ORDER_QTY는 숫자, 배열 ✗)</td>
+          </tr>
+          <tr>
+            <td class="norm-level">2NF (Second)</td>
+            <td>부분 함수 종속성 제거</td>
+            <td>ORDER_STATUS를 분리하여 ORDER의 상태 이력과 분리</td>
+          </tr>
+          <tr>
+            <td class="norm-level">3NF (Third)</td>
+            <td>이행 함수 종속성 제거</td>
+            <td>ASSET.CLASS_ID → ASSET_CLASS (이행 제거)</td>
+          </tr>
+          <tr>
+            <td class="norm-level">BCNF</td>
+            <td>모든 결정자가 후보 키</td>
+            <td>복합 PK 검증: (ASSET_ID, PRICE_DATE) ✓</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="insight-box" style="border-left-color: var(--gold); margin-top: 20px;">
+        <p class="insight-title">✅ 우리의 데이터 무결성 전략</p>
+        <p class="insight-text">
+          <strong>3NF를 기본 기준으로 삼으며</strong>, 
+          성능과 비즈니스 요구를 위해 필요한 부분에서만 역정규화(Denormalization)를 적용합니다. 
+          예: P&L 캐시 테이블은 조회 성능을 위해 역정규화, 
+          하지만 실시간 갱신 트리거로 데이터 신뢰성 유지.
+        </p>
+      </div>
+    </section>
+
+    <!-- 섹션 5: 주요 관계 매핑 -->
+    <section>
+      <h2 class="section-label">주요 엔터티 간 관계 요약</h2>
+
+      <div style="padding: 16px; background: rgba(255,255,255,0.6); border-radius: 6px; border: 1px solid rgba(0,0,0,0.08);">
+        <p style="margin: 8px 0; color: var(--ink); font-size: 0.9rem; line-height: 1.8;">
+          <strong style="color: var(--navy);">ASSET → MARKET_DATA:</strong> 1:N (상품 1개는 여러 시장정보)<br>
+          <strong style="color: var(--navy);">ASSET ↔ ASSET_CLASS:</strong> N:1 (상품은 정확히 1개 분류)<br>
+          <strong style="color: var(--maroon);">ORDER → EXECUTION:</strong> 1:N (주문 1개는 여러 체결)<br>
+          <strong style="color: var(--maroon);">EXECUTION → SETTLEMENT:</strong> 1:N (체결 1개는 여러 정산)<br>
+          <strong style="color: var(--olive);">EXECUTION → POSITION:</strong> N:1 (체결이 포지션을 생성/변경)<br>
+          <strong style="color: var(--olive);">POSITION ↔ RISK_LIMIT:</strong> N:1 (포지션 여러개가 1개 한도와 연결)<br>
+          <strong style="color: var(--gold);">EXECUTION → LEDGER:</strong> N:1 (여러 체결이 원장 1행으로 기록)<br>
+          <strong style="color: var(--gold);">EXECUTION → TRANSACTION_LOG:</strong> N:1 (체결이 로그에 기록)
+        </p>
+      </div>
+    </section>
+
+    <!-- 섹션 6: 다음 단계 -->
+    <section>
+      <h2 class="section-label">아키텍처 설계의 계속</h2>
+
+      <div class="insight-box" style="border-left-color: var(--navy);">
+        <p class="insight-title">📌 4단계 정리</p>
+        <p class="insight-text">
+          ERD를 통해 우리는 12개 엔터티의 관계를 <strong>정규화, 무결성 제약, 고난도 패턴</strong>으로 
+          정확히 정의했습니다. 이는 애플리케이션 계층에서 
+          <strong>비즈니스 로직 오류 방지(예: 미정산 주문 수정 불가)</strong>의 기초가 됩니다.
+        </p>
+      </div>
+
+      <div class="insight-box" style="border-left-color: var(--maroon); margin-top: 16px;">
+        <p class="insight-title">🎯 5단계로의 연결</p>
+        <p class="insight-text">
+          다음 단계에서는 <strong>5단계: 물리 데이터베이스 설계 (Physical Data Modeling)</strong>로 진행합니다.
+          논리 ERD를 RDBMS(Oracle, PostgreSQL 등)에 매핑하며, 
+          인덱스 전략, 파티셔닝, 저장 프로시저 등 <strong>성능과 운영성</strong>을 확보합니다.
+        </p>
+      </div>
+    </section>
+
+    <!-- 네비게이션 버튼 -->
+    <div class="step-nav">
+      <button class="nav-button prev" onclick="navigateToStep(3)">← 이전 단계</button>
+      <button class="nav-button" onclick="navigateToStep(5)">다음 단계 →</button>
+    </div>
+  </main>
+</div>
+
+<script>
+    function navigateToStep(step) {
+      const steps = {
+        1: 'step1-strategy-meta-modeling.html',
+        2: 'step2-enterprise-architecture.html',
+        3: 'step3-subject-area.html',
+        4: 'step4-logical-modeling.html',
+        5: 'step5-normalization.html',
+        6: 'step6-physical-optimization.html',
+        7: 'step7-data-governance.html'
+      };
+
+      // Update active nav dot with smooth transition
+      document.querySelectorAll('.nav-dot').forEach(dot => {
+        dot.classList.remove('active');
+      });
+      document.querySelector(`[data-step="${step}"]`).classList.add('active');
+
+      // Smooth page transition
+      document.body.style.opacity = '0';
+      setTimeout(() => {
+        window.location.href = steps[step];
+      }, 300);
+    }
+
+  function goHome() {
+    document.body.style.opacity = '0';
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 300);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.body.style.opacity = '1';
+    document.body.style.transition = 'opacity 0.3s ease';
+    
+    // Set active nav dot
+    document.querySelector('[data-step="4"]').classList.add('active');
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') navigateToStep(5);
+    if (e.key === 'ArrowLeft') navigateToStep(3);
+  });
+</script>
+</body>
+</html>

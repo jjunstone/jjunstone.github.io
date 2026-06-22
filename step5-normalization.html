@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Step 5 - 데이터 무결성 보장 (정규화) | Data Architecture Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/static/pretendard.css">
+  <style>
+    :root {
+      --paper: #ead8aa;
+      --paper-light: #f8e9c4;
+      --paper-warm: #ddc48f;
+      --line: rgba(38, 68, 88, .18);
+      --ink: #17130f;
+      --ink-soft: #33291f;
+      --navy: #173c78;
+      --navy-soft: #315b92;
+      --maroon: #7c261f;
+      --maroon-soft: #9a3a32;
+      --olive: #4e5533;
+      --gold: #9a7729;
+      --paper-shadow: rgba(44, 28, 9, .24);
+      --font-hand: "Pretendard", "Noto Sans KR", "Malgun Gothic", sans-serif;
+    }
+
+    * { box-sizing: border-box; letter-spacing: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-hand);
+      background: radial-gradient(circle at 12% 10%, rgba(255,255,255,.34), transparent 30%),
+                  linear-gradient(135deg, #c9a66b, #ead6a2 46%, #bd955b);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    ul { margin: 0; padding: 0; list-style: none; }
+    svg { display: block; }
+    ::selection { background: var(--gold); color: #fff; }
+
+    /* ── NOTEBOOK ── */
+    .notebook {
+      position: relative;
+      width: min(100%, 1080px);
+      margin: 0 auto;
+      padding: 72px 54px 48px 86px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 23% 18%, rgba(118,76,29,.13) 0 1px, transparent 1.6px) 0 0/38px 38px,
+        radial-gradient(circle at 78% 62%, rgba(70,46,22,.10) 0 1px, transparent 1.4px) 12px 4px/46px 46px,
+        repeating-linear-gradient(to bottom, transparent 0 35px, var(--line) 36px 37px),
+        linear-gradient(90deg, transparent 0 50px, rgba(112,82,39,.18) 51px 52px, transparent 53px),
+        linear-gradient(180deg, var(--paper-light), var(--paper) 45%, var(--paper-warm));
+      box-shadow: 0 18px 42px var(--paper-shadow);
+    }
+    .notebook::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(83,53,22,.12), transparent 16%, transparent 84%, rgba(83,53,22,.08)),
+        radial-gradient(circle at 35% 9%, rgba(67,41,14,.12), transparent 2px),
+        radial-gradient(circle at 67% 71%, rgba(67,41,14,.11), transparent 2px);
+      mix-blend-mode: multiply;
+    }
+    .spiral {
+      position: absolute;
+      left: 0; top: 0; bottom: 0; width: 42px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='42' height='40'%3E%3Cellipse cx='9' cy='20' rx='12' ry='9' fill='none' stroke='%23201510' stroke-width='4'/%3E%3Cellipse cx='9' cy='20' rx='7' ry='5' fill='none' stroke='%2382652f' stroke-width='2' opacity='.45'/%3E%3C/svg%3E");
+      background-repeat: repeat-y;
+      background-size: 42px 40px;
+      opacity: .9;
+      filter: drop-shadow(1px 1px 1px rgba(0,0,0,.22));
+    }
+    main { position: relative; z-index: 1; }
+
+    /* ── HEADER ── */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 36px;
+    }
+    .home-link {
+      font-size: 0.95rem;
+      color: var(--navy);
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .home-link:hover { opacity: 1; }
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+    }
+    .step-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px; height: 28px;
+      background: var(--navy);
+      color: white;
+      border-radius: 50%;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+/* ════════════════════ SIDE NAVIGATION ════════════════════ */
+    .side-nav {
+      position: fixed;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 20px;
+      z-index: 99;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 20px 0 0 20px;
+      box-shadow: -4px 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-dot {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.7);
+      border: 2px solid var(--navy);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-hand);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--navy);
+      position: relative;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      overflow: hidden;
+    }
+
+    .nav-dot::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .nav-dot:hover {
+      transform: scale(1.15);
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 8px 24px rgba(23, 60, 120, 0.25);
+    }
+
+    .nav-dot:hover::before {
+      opacity: 1;
+    }
+
+    .nav-dot.active {
+      background: linear-gradient(135deg, var(--navy), var(--navy-soft));
+      color: white;
+      box-shadow: 0 12px 32px rgba(23, 60, 120, 0.4);
+      scale: 1.1;
+    }
+
+    .nav-dot.active::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.3);
+    }
+
+    .nav-tooltip {
+      position: absolute;
+      right: 60px;
+      top: 50%;
+      transform: translateY(-50%) translateX(20px);
+      background: rgba(23, 60, 120, 0.95);
+      color: white;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      font-family: var(--font-hand);
+    }
+
+    .nav-dot:hover .nav-tooltip {
+      opacity: 1;
+      transform: translateY(-50%) translateX(0);
+    }
+
+    /* ════════════════════ SCROLL REVEAL ANIMATION ════════════════════ */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    section {
+      margin-bottom: 52px;
+    }
+
+    .section-label {
+      font-family: var(--font-hand);
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin: 0 0 24px 0;
+      color: var(--navy);
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-label::after {
+      content: "";
+      position: absolute;
+      left: -8px;
+      right: -12px;
+      bottom: -8px;
+      height: 6px;
+      background: linear-gradient(currentColor, currentColor) 0 2px / 100% 2px no-repeat,
+                  linear-gradient(currentColor, currentColor) 6px 6px / 86% 2px no-repeat;
+      opacity: 0.9;
+      transform: rotate(-1.3deg);
+    }
+
+    .reveal {
+      opacity: 0;
+      animation: fadeInUp 0.6s ease forwards;
+    }
+
+    /* ── TITLE ── */
+    .title-section { margin-bottom: 36px; }
+    h1 {
+      margin: 0 0 12px;
+      font-size: 2.2rem;
+      color: var(--navy);
+      line-height: 1.3;
+      font-weight: 700;
+    }
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--maroon);
+      font-weight: 500;
+      margin: 0;
+    }
+    .description {
+      margin-top: 16px;
+      font-size: 0.95rem;
+      color: var(--ink-soft);
+      line-height: 1.7;
+      max-width: 720px;
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      margin-bottom: 52px;
+      opacity: 0;
+      animation: fadeInUp 0.6s ease forwards;
+    }
+    section:nth-child(1) { animation-delay: 0.1s; }
+    section:nth-child(2) { animation-delay: 0.2s; }
+    section:nth-child(3) { animation-delay: 0.3s; }
+    section:nth-child(4) { animation-delay: 0.4s; }
+    section:nth-child(5) { animation-delay: 0.5s; }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .section-label {
+      font-size: 1.3rem;
+      color: var(--navy);
+      font-weight: 700;
+      margin: 0 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--navy);
+      display: inline-block;
+    }
+
+    /* ── NORMALIZATION STEP ── */
+    .norm-step {
+      padding: 18px;
+      background: rgba(255,255,255,0.7);
+      border-radius: 8px;
+      border-left: 4px solid;
+      margin: 16px 0;
+      transition: transform 0.25s ease;
+    }
+    .norm-step:hover { transform: translateX(4px); }
+    .norm-step.first { border-left-color: var(--navy); }
+    .norm-step.second { border-left-color: var(--maroon); }
+    .norm-step.third { border-left-color: var(--olive); }
+    .norm-step.bcnf { border-left-color: var(--gold); }
+
+    .step-title {
+      font-weight: 700;
+      color: var(--navy);
+      margin: 0 0 12px;
+      font-size: 1rem;
+    }
+    .step-issue {
+      background: rgba(199, 38, 31, 0.08);
+      padding: 10px;
+      border-radius: 4px;
+      margin: 10px 0;
+      font-size: 0.9rem;
+      color: var(--maroon);
+      font-weight: 600;
+    }
+    .step-solution {
+      background: rgba(78, 85, 51, 0.08);
+      padding: 10px;
+      border-radius: 4px;
+      margin: 10px 0;
+      font-size: 0.9rem;
+      color: var(--olive);
+    }
+    .step-example {
+      background: rgba(23,60,120,0.08);
+      padding: 10px;
+      border-radius: 4px;
+      margin: 10px 0;
+      font-size: 0.85rem;
+      color: var(--ink);
+      font-family: 'Courier New', monospace;
+      line-height: 1.5;
+    }
+
+    /* ── BEFORE/AFTER TABLE ── */
+    .ba-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      background: white;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      font-size: 0.9rem;
+    }
+    .ba-table th {
+      background: rgba(23,60,120,0.1);
+      padding: 10px;
+      text-align: left;
+      font-weight: 700;
+      color: var(--navy);
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+    .ba-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+    .ba-table tr:hover { background: rgba(0,0,0,0.02); }
+    .before-col { background: rgba(199,38,31,0.04); }
+    .after-col { background: rgba(78,85,51,0.04); }
+
+    /* ── INTEGRITY CARDS ── */
+    .integrity-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .integrity-card {
+      padding: 16px;
+      background: rgba(255,255,255,0.7);
+      border-radius: 8px;
+      border-left: 4px solid;
+    }
+    .integrity-card.entity { border-left-color: var(--navy); }
+    .integrity-card.referential { border-left-color: var(--maroon); }
+    .integrity-card.domain { border-left-color: var(--gold); }
+
+    .card-title {
+      font-weight: 700;
+      color: var(--navy);
+      margin: 0 0 8px;
+      font-size: 0.95rem;
+    }
+    .card-desc {
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* ── INSIGHT BOX ── */
+    .insight-box {
+      padding: 16px;
+      background: rgba(255,255,255,0.6);
+      border-radius: 6px;
+      border-left: 4px solid var(--navy);
+      margin: 16px 0;
+    }
+    .insight-title {
+      margin: 0 0 8px;
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 0.95rem;
+    }
+    .insight-text {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      line-height: 1.7;
+    }
+
+    /* ── STEP NAV ── */
+    .step-nav {
+      display: flex;
+      gap: 16px;
+      margin-top: 48px;
+      padding-top: 32px;
+      border-top: 2px solid rgba(0,0,0,0.08);
+    }
+    .nav-button {
+      padding: 12px 24px;
+      border: 2px solid var(--navy);
+      background: white;
+      color: var(--navy);
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.25s ease;
+      font-family: var(--font-hand);
+    }
+    .nav-button:hover {
+      background: var(--navy);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(23,60,120,0.2);
+    }
+    .nav-button.prev { order: -1; }
+  </style>
+</head>
+<body>
+  <!-- SIDE NAVIGATION -->
+  <nav class="side-nav">
+    <div class="nav-dot" data-step="1" onclick="navigateToStep(1)">
+      1
+      <div class="nav-tooltip">전략 기반 메타 모델링</div>
+    </div>
+    <div class="nav-dot" data-step="2" onclick="navigateToStep(2)">
+      2
+      <div class="nav-tooltip">전사적 청사진 수립</div>
+    </div>
+    <div class="nav-dot" data-step="3" onclick="navigateToStep(3)">
+      3
+      <div class="nav-tooltip">주제 영역 정의</div>
+    </div>
+    <div class="nav-dot" data-step="4" onclick="navigateToStep(4)">
+      4
+      <div class="nav-tooltip">고난도 논리 모델링</div>
+    </div>
+    <div class="nav-dot" data-step="5" onclick="navigateToStep(5)">
+      5
+      <div class="nav-tooltip">데이터 정규화</div>
+    </div>
+    <div class="nav-dot" data-step="6" onclick="navigateToStep(6)">
+      6
+      <div class="nav-tooltip">물리적 최적화</div>
+    </div>
+    <div class="nav-dot active" data-step="7" onclick="navigateToStep(7)">
+      7
+      <div class="nav-tooltip">데이터 거버넌스</div>
+    </div>
+  </nav>
+<div class="notebook">
+  <div class="spiral"></div>
+
+  <main>
+    <!-- HEADER -->
+    <div class="header">
+      <div class="home-link" onclick="goHome()">← 홈</div>
+      <div class="step-indicator">
+        <span class="step-badge">5</span>
+        <span>데이터 무결성 보장</span>
+      </div>
+    </div>
+
+    <!-- TITLE SECTION -->
+    <div class="title-section">
+      <h1>데이터 무결성 보장</h1>
+      <p class="subtitle">Normalization &ndash; 정규화를 통한 이상 현상 제거</p>
+      <p class="description">
+        4단계까지 설계된 논리 모델을 이제 정규화 단계를 거쳐 <strong>최적의 논리적 위치</strong>에 배치합니다. 
+        데이터 중복을 제거하고 함수적 종속성을 명확히 하여, 
+        입출력 시 발생할 수 있는 <strong>이상 현상(Anomaly)</strong>을 체계적으로 차단합니다.
+      </p>
+    </div>
+
+    <!-- 섹션 1: 정규화의 본질 -->
+    <section>
+      <h2 class="section-label">정규화의 목표와 이상 현상</h2>
+
+      <div style="padding: 16px; background: rgba(255,255,255,0.6); border-radius: 6px; border: 1px solid rgba(0,0,0,0.08); margin-bottom: 20px;">
+        <p style="margin: 0; color: var(--ink-soft); font-size: 0.95rem; line-height: 1.7;">
+          <strong style="color: var(--navy);">정규화란?</strong> 데이터를 <strong>최적의 논리적 위치</strong>에 배치하여 
+          데이터 구조의 정확성, 일관성, 단순성, 비중복성을 확보하는 과정입니다.<br><br>
+          <strong style="color: var(--maroon);">제거해야 할 이상 현상</strong><br>
+          • <strong>삽입 이상:</strong> 새 데이터 입력 시 불필요한 속성이 필수로 요구되는 상황<br>
+          • <strong>수정 이상:</strong> 특정 데이터 수정 시 연관된 모든 행을 함께 수정해야 하는 상황<br>
+          • <strong>삭제 이상:</strong> 데이터 삭제 시 의도하지 않은 다른 정보까지 손실되는 상황
+        </p>
+      </div>
+    </section>
+
+    <!-- 섹션 2: 1차 정규형 (1NF) -->
+    <section>
+      <h2 class="section-label">1단계: 제1정규형 (1NF) &ndash; 반복 그룹 제거</h2>
+
+      <div class="norm-step first">
+        <p class="step-title">① 원자값(Atomic Value) 원칙</p>
+        <div class="step-issue">
+          ❌ 문제: 하나의 속성에 여러 값이 들어가거나 반복되는 구조
+        </div>
+        <p style="margin: 8px 0; font-size: 0.9rem; color: var(--ink);">
+          증권 예시: 고객이 여러 관심종목을 쉼표로 분리하여 저장 
+          <span style="font-family: monospace; background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 3px;">
+            관심종목: 삼성전자, LG전자, SK하이닉스
+          </span>
+        </p>
+        <table class="ba-table">
+          <thead>
+            <tr>
+              <th class="before-col">❌ Before (1NF 위반)</th>
+              <th class="after-col">✅ After (1NF 준수)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="before-col">
+                <strong>고객_관심</strong><br>
+                고객ID | 관심종목(반복)<br>
+                1001 | 삼성, LG, SK<br>
+                1002 | 현대, 기아
+              </td>
+              <td class="after-col">
+                <strong>고객</strong><br>
+                고객ID | 이름<br>
+                1001 | 김씨<br>
+                1002 | 이씨<br>
+                <br>
+                <strong>고객_관심종목</strong><br>
+                고객ID | 종목코드<br>
+                1001 | 005930<br>
+                1001 | 066570<br>
+                1002 | 005380
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="step-solution">
+          ✅ 해결: 반복 속성을 별도의 엔터티로 분리하여 관심종목 수에 제한 없음
+        </div>
+      </div>
+    </section>
+
+    <!-- 섹션 3: 2차 정규형 (2NF) -->
+    <section>
+      <h2 class="section-label">2단계: 제2정규형 (2NF) &ndash; 부분 함수 종속 제거</h2>
+
+      <div class="norm-step second">
+        <p class="step-title">② 기본키 전체에 대한 완전 종속</p>
+        <div class="step-issue">
+          ❌ 문제: 복합 기본키 중 일부에만 종속되는 속성 존재
+        </div>
+        <p style="margin: 8px 0; font-size: 0.9rem; color: var(--ink);">
+          증권 예시: 계좌번호 + 자산코드로 구성된 복합키 테이블에서, 
+          자산명은 자산코드에만 종속됨
+        </p>
+        <table class="ba-table">
+          <thead>
+            <tr>
+              <th class="before-col">❌ Before (2NF 위반)</th>
+              <th class="after-col">✅ After (2NF 준수)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="before-col">
+                <strong>계좌_자산</strong><br>
+                (계좌ID, 자산코드) | 자산명 | 수량<br>
+                (A001, 005930) | 삼성전자 | 100<br>
+                (A001, 066570) | LG전자 | 50<br>
+                (A002, 005930) | 삼성전자 | 200<br>
+                <br>
+                → 삼성전자 이름 반복!
+              </td>
+              <td class="after-col">
+                <strong>계좌_자산</strong><br>
+                (계좌ID, 자산코드) | 수량<br>
+                (A001, 005930) | 100<br>
+                (A001, 066570) | 50<br>
+                (A002, 005930) | 200<br>
+                <br>
+                <strong>자산_마스터</strong><br>
+                자산코드 | 자산명<br>
+                005930 | 삼성전자<br>
+                066570 | LG전자
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="step-solution">
+          ✅ 해결: 자산 정보를 분리하여 중복 저장 제거 및 수정 이상 방지
+        </div>
+      </div>
+    </section>
+
+    <!-- 섹션 4: 3차 정규형 (3NF) -->
+    <section>
+      <h2 class="section-label">3단계: 제3정규형 (3NF) &ndash; 이행 함수 종속 제거</h2>
+
+      <div class="norm-step third">
+        <p class="step-title">③ 기본키가 아닌 속성들 간의 종속성 제거</p>
+        <div class="step-issue">
+          ❌ 문제: 일반 속성들 사이에 종속 관계 존재 (지점명 → 지점주소)
+        </div>
+        <p style="margin: 8px 0; font-size: 0.9rem; color: var(--ink);">
+          증권 예시: 계좌 테이블에서 지점명과 지점주소가 같이 있으면, 
+          지점명 변경 시 모든 계좌 레코드를 수정해야 함 (수정 이상)
+        </p>
+        <table class="ba-table">
+          <thead>
+            <tr>
+              <th class="before-col">❌ Before (3NF 위반)</th>
+              <th class="after-col">✅ After (3NF 준수)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="before-col">
+                <strong>계좌</strong><br>
+                계좌ID | 고객ID | 지점코드 | <u>지점명</u> | <u>지점주소</u><br>
+                A001 | 1001 | 01 | 강남 | 강남구...<br>
+                A002 | 1002 | 01 | 강남 | 강남구...<br>
+                <br>
+                → 지점명, 주소 반복!
+              </td>
+              <td class="after-col">
+                <strong>계좌</strong><br>
+                계좌ID | 고객ID | 지점코드<br>
+                A001 | 1001 | 01<br>
+                A002 | 1002 | 01<br>
+                <br>
+                <strong>지점_마스터</strong><br>
+                지점코드 | 지점명 | 지점주소<br>
+                01 | 강남 | 강남구...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="step-solution">
+          ✅ 해결: 지점 정보를 분리하여 이행 종속성 제거 및 정합성 확보
+        </div>
+      </div>
+
+      <div class="norm-step bcnf">
+        <p class="step-title">④ BCNF (Boyce-Codd Normal Form) &ndash 선택사항</p>
+        <p style="margin: 8px 0; font-size: 0.9rem; color: var(--ink-soft); line-height: 1.6;">
+          모든 결정자(Determinant)가 후보키가 되도록 하는 더 엄격한 정규화입니다. 
+          실무에서는 3NF까지 일반적으로 적용하며, 특수한 경우에만 BCNF를 추가로 수행합니다.
+        </p>
+      </div>
+    </section>
+
+    <!-- 섹션 5: 데이터 무결성 3원칙 -->
+    <section>
+      <h2 class="section-label">정규화와 함께 강제되는 무결성 규칙</h2>
+
+      <div class="integrity-grid">
+        <div class="integrity-card entity">
+          <p class="card-title">개체 무결성 (Entity Integrity)</p>
+          <p class="card-desc">
+            모든 엔터티는 반드시 유일한 <strong>기본키(PK)</strong>를 가지며, 이 값은 NULL이 될 수 없습니다.
+          </p>
+          <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.85rem; color: #666; font-family: monospace;">
+            ORDER.ORDER_ID (PK, NOT NULL)
+          </div>
+        </div>
+
+        <div class="integrity-card referential">
+          <p class="card-title">참조 무결성 (Referential Integrity)</p>
+          <p class="card-desc">
+            외래키(FK) 값은 참조하는 테이블의 PK에 존재하거나 NULL이어야 합니다.
+          </p>
+          <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.85rem; color: #666; font-family: monospace;">
+            EXECUTION.ORDER_ID FK → ORDER.ORDER_ID
+          </div>
+        </div>
+
+        <div class="integrity-card domain">
+          <p class="card-title">도메인 무결성 (Domain Integrity)</p>
+          <p class="card-desc">
+            각 속성은 정의된 도메인(데이터 타입, 범위, 형식)을 따릅니다.
+          </p>
+          <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.85rem; color: #666; font-family: monospace;">
+            ORDER.STATUS ∈ {PENDING, EXECUTED, CANCELLED}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 섹션 6: 종합 정리 -->
+    <section>
+      <h2 class="section-label">정규화의 영향 및 의의</h2>
+
+      <div class="insight-box">
+        <p class="insight-title">📊 정규화 전후 비교</p>
+        <div style="margin-top: 12px; font-size: 0.9rem; color: var(--ink); line-height: 1.8;">
+          <strong style="color: var(--maroon);">Before (비정규화):</strong> 
+          테이블 적음, 조회 빠름, 하지만 중복 많고 수정 시 모순 발생 가능<br>
+          <br>
+          <strong style="color: var(--olive);">After (정규화 완료):</strong> 
+          테이블 많음, 조회 시 조인 필요, 하지만 중복 제거되고 무결성 강제됨
+        </div>
+      </div>
+
+      <div class="insight-box" style="border-left-color: var(--maroon); margin-top: 16px;">
+        <p class="insight-title">🎯 아키텍트의 통찰</p>
+        <p class="insight-text">
+          정규화는 단순히 테이블을 쪼개는 기술이 아닙니다. 
+          <strong>비즈니스 규칙을 데이터 구조 자체로 강제</strong>하는 과정으로, 
+          이를 통해 애플리케이션 로직에 의존하지 않고도 
+          데이터의 정합성을 체계적으로 보장할 수 있게 됩니다.
+        </p>
+      </div>
+
+      <div class="insight-box" style="border-left-color: var(--gold); margin-top: 16px;">
+        <p class="insight-title">🔄 다음 단계로의 연결</p>
+        <p class="insight-text">
+          이제 <strong>6단계: 물리적 최적화 및 성능 전략</strong>에서 
+          이상적인 정규화 모델을 실제 성능과 운영 환경에 맞게 조율합니다. 
+          유도 속성, 반정규화, 인덱스 전략 등을 통해 
+          무결성과 성능 사이의 균형을 잡게 됩니다.
+        </p>
+      </div>
+    </section>
+
+    <!-- 네비게이션 버튼 -->
+    <div class="step-nav">
+      <button class="nav-button prev" onclick="navigateToStep(4)">← 이전 단계</button>
+      <button class="nav-button" onclick="navigateToStep(6)">다음 단계 →</button>
+    </div>
+  </main>
+</div>
+
+<script>
+    function navigateToStep(step) {
+      const steps = {
+        1: 'step1-strategy-meta-modeling.html',
+        2: 'step2-enterprise-architecture.html',
+        3: 'step3-subject-area.html',
+        4: 'step4-logical-modeling.html',
+        5: 'step5-normalization.html',
+        6: 'step6-physical-optimization.html',
+        7: 'step7-data-governance.html'
+      };
+
+      // Update active nav dot with smooth transition
+      document.querySelectorAll('.nav-dot').forEach(dot => {
+        dot.classList.remove('active');
+      });
+      document.querySelector(`[data-step="${step}"]`).classList.add('active');
+
+      // Smooth page transition
+      document.body.style.opacity = '0';
+      setTimeout(() => {
+        window.location.href = steps[step];
+      }, 300);
+    }
+
+  function goHome() {
+    document.body.style.opacity = '0';
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 300);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.body.style.opacity = '1';
+    document.body.style.transition = 'opacity 0.3s ease';
+    
+    // Set active nav dot
+    document.querySelector('[data-step="5"]').classList.add('active');
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') navigateToStep(6);
+    if (e.key === 'ArrowLeft') navigateToStep(4);
+  });
+</script>
+</body>
+</html>
