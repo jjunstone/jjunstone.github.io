@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>이준석 | Azure Platform Engineer</title>
+<title>이준석 | IT Engineer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
@@ -26,8 +26,8 @@
     --ink-soft:#33291f;
     --navy:#173c78;
     --navy-soft:#315b92;
-    --maroon:#6b7280;
-    --maroon-soft:#94a3b8;
+    --maroon:#7c261f;
+    --maroon-soft:#9a3a32;
     --olive:#4e5533;
     --gold:#9a7729;
     --paper-shadow:rgba(44,28,9,.24);
@@ -42,7 +42,7 @@
   body{
     margin:0;
     color:var(--ink);
-    font-family:var(--font-main);
+    font-family:var(--font-hand);
     background:
       radial-gradient(circle at 12% 10%, rgba(255,255,255,.34), transparent 30%),
       linear-gradient(135deg, #c9a66b, #ead6a2 46%, #bd955b);
@@ -66,9 +66,9 @@
   .notebook{
     position:relative;
     width:min(100%,1080px);
-    min-height:auto;
+    min-height:1580px;
     margin:0 auto;
-    padding:60px 48px 48px 82px;
+    padding:72px 54px 48px 86px;
     overflow:hidden;
     background:
       radial-gradient(circle at 23% 18%, rgba(118,76,29,.13) 0 1px, transparent 1.6px) 0 0/38px 38px,
@@ -111,280 +111,233 @@
     justify-content:space-between;
     align-items:flex-start;
     gap:24px;
-    margin-bottom:20px;
+    margin-bottom:42px;
   }
 
-  .top-left .eyebrow{
-    font-family:var(--font-accent);
+  .eyebrow{
+    font-family:var(--font-script);
     font-weight:700;
-    font-size:1.08rem;
+    font-size:1.32rem;
     line-height:1;
-    margin:0 0 8px;
-    color:var(--navy);
-    text-transform:uppercase;
-    letter-spacing:1px;
+    margin:0 0 12px 8px;
+    transform:rotate(-1deg);
   }
 
   .name{
-    font-family:var(--font-main);
+    font-family:var(--font-hand);
     font-weight:400;
-    font-size:5rem;
+    font-size:5.2rem;
     line-height:.9;
     margin:0;
     position:relative;
     display:inline-block;
+    transform:rotate(-1deg);
+  }
+
+  .name::after,
+  .top-right .line-final::after,
+  .hero-line.underline::after,
+  .circle span::after,
+  .section-label::after,
+  .quote .underline::after{
+    content:"";
+    position:absolute;
+    height:8px;
+    background:
+      linear-gradient(currentColor,currentColor) 0 2px/100% 2px no-repeat,
+      linear-gradient(currentColor,currentColor) 6px 6px/86% 2px no-repeat;
+    opacity:.9;
+    transform:rotate(-1.3deg);
   }
 
   .name::after{
-    content:"";
-    position:absolute;
-    left:0;
-    right:-18px;
-    bottom:-10px;
-    height:6px;
-    background:
-      linear-gradient(var(--navy),var(--navy)) 0 2px/100% 2px no-repeat,
-      linear-gradient(var(--navy),var(--navy)) 6px 4px/84% 2px no-repeat;
+    left:-8px;
+    right:-24px;
+    bottom:-12px;
+    color:var(--navy);
   }
 
   .top-right{
-    font-family:var(--font-main);
-    font-size:1.12rem;
-    line-height:1.48;
-    text-align:right;
-    max-width:340px;
+    font-family:var(--font-hand);
+    font-size:1.35rem;
+    line-height:1.65;
+    text-align:left;
+    max-width:286px;
+    color:#102a52;
+    transform:rotate(-1deg);
   }
 
   .top-right p{ margin:0; }
-
-  .quote-box{
-    border:2px solid var(--navy);
-    border-radius:6px;
-    padding:12px 16px;
-    background:rgba(23,60,120,.06);
-    font-size:1.04rem;
-    line-height:1.45;
-    text-align:left;
-    max-width:380px;
+  .top-right .line-final{
+    position:relative;
+    display:inline-block;
+    padding-bottom:8px;
   }
 
-  .quote-box .label{
+  .top-right .line-final::after{
+    left:-4px;
+    right:-38px;
+    bottom:0;
     color:var(--navy);
-    font-weight:600;
-    font-size:.9rem;
-    margin:0 0 4px;
-    text-transform:uppercase;
-    letter-spacing:.5px;
-  }
-
-  .quote-box p{
-    margin:0;
-    color:var(--ink);
   }
 
   .star{ color:var(--navy); }
+  .star.icon{
+    width:1em;
+    height:1em;
+    display:inline-block;
+    vertical-align:-2px;
+  }
 
   .hero{
     text-align:center;
-    margin:18px 0 22px;
+    margin:24px 0 28px;
+    transform:rotate(-.3deg);
   }
 
   .hero-line{
-    font-family:var(--font-accent);
+    font-family:var(--font-script);
     font-weight:400;
-    font-size:2.8rem;
+    font-size:3.15rem;
     margin:0;
-    line-height:1.08;
+    line-height:1.02;
   }
 
   .hero-line.underline{
     position:relative;
     display:inline-block;
-    color:var(--navy);
+    margin-top:4px;
   }
 
   .hero-line.underline::after{
-    content:"";
-    position:absolute;
-    left:0;
-    right:0;
+    left:-2px;
+    right:10px;
     bottom:-8px;
-    height:4px;
-    background:linear-gradient(var(--navy),var(--navy)) 0 0/100% 100% no-repeat;
+    color:var(--navy);
   }
 
   .diagram{
     display:grid;
-    grid-template-columns:1fr 280px 1fr;
-    gap:22px;
-    align-items:flex-start;
+    grid-template-columns:300px 36px minmax(230px,1fr) 36px 300px;
+    gap:18px;
+    align-items:center;
     margin-bottom:28px;
   }
 
   .card{
+    min-height:424px;
     border:2px solid currentColor;
     border-radius:2px;
-    padding:0;
-    background:rgba(255,248,224,.15);
+    padding:20px 20px 18px;
+    background:rgba(255,248,224,.2);
     display:flex;
     flex-direction:column;
-    overflow:hidden;
   }
 
-  .card-navy{ color:var(--navy); }
-  .card-maroon{ color:var(--maroon); }
+  .card-navy{ color:var(--navy); transform:rotate(-.5deg); }
+  .card-maroon{ color:var(--maroon); transform:rotate(.4deg); }
 
-  .card-header{
-    color:white;
-    padding:10px 14px;
-    font-family:var(--font-accent);
-    font-size:1rem;
-    font-weight:700;
-    text-align:center;
-    text-transform:uppercase;
-    letter-spacing:1px;
-    border-bottom:2px solid;
-    border-bottom-color:inherit;
-  }
-
-  .card-navy .card-header{
-    background:var(--navy);
-    border-bottom-color:var(--navy);
-  }
-
-  .card-maroon .card-header{
-    background:var(--maroon);
-    border-bottom-color:var(--maroon);
-  }
-
-  .card-body{
-    padding:18px 16px;
+  .card-icon{
+    order:1;
     display:flex;
-    flex-direction:column;
-    flex:1;
-    gap:12px;
-    justify-content:flex-start;
-  }
-
-  .card-title{
-    font-family:var(--font-accent);
-    font-weight:700;
-    font-size:1.4rem;
-    line-height:1;
-    margin:0;
-    color:currentColor;
-    text-align:center;
-  }
-
-  .card-subtitle{
-    font-size:1rem;
-    line-height:1.2;
-    margin:0;
-    padding:0 0 10px;
-    text-align:center;
-    border-bottom:1.6px solid currentColor;
-    color:var(--ink);
-  }
-
-  .card-items{
-    display:grid;
-    gap:12px;
-    margin:0;
-    margin-bottom:auto;
-  }
-
-  .card-item{
-    display:grid;
-    grid-template-columns:32px 1fr;
-    gap:10px;
-    align-items:flex-start;
-  }
-
-  .card-item-icon{
-    width:32px;
-    height:32px;
-    display:flex;
-    align-items:center;
     justify-content:center;
+    align-items:center;
+    min-height:90px;
+    margin:4px 0 8px;
+  }
+
+  .card-icon .icon{
+    width:86px;
+    height:86px;
     color:currentColor;
-    flex-shrink:0;
   }
 
-  .card-item-icon svg{
-    width:28px;
-    height:28px;
+  .card-icon.multi{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+    min-height:90px;
   }
 
-  .card-item-text{
-    font-size:1rem;
-    line-height:1.35;
+  .card-icon.multi .icon{
+    width:56px;
+    height:56px;
+    margin:auto;
+  }
+
+  .card h2{
+    order:0;
+    font-family:var(--font-script);
+    font-weight:700;
+    font-size:1.55rem;
+    line-height:1;
+    margin:0 0 18px;
+    padding-bottom:10px;
+    text-align:center;
+    border-bottom:2px solid currentColor;
+  }
+
+  .card .tags{
+    order:2;
+    font-size:1.2rem;
+    line-height:1.15;
+    margin:0 0 16px;
+    padding:0 0 14px;
+    text-align:center;
+    border-bottom:1.5px solid currentColor;
+  }
+
+  .card ul{
+    order:3;
     color:var(--ink);
+    margin:0 0 18px;
+    flex:1;
   }
 
-  .card-item-text strong{
-    color:currentColor;
-    font-weight:600;
-    display:block;
-    margin-bottom:2px;
+  .card li{
+    font-size:1.06rem;
+    line-height:1.6;
+    padding-left:1.1em;
+    position:relative;
+    margin:5px 0;
   }
 
-  .card-item-text span{
-    display:block;
-    font-size:.92rem;
-    color:rgba(23,19,15,.75);
+  .card li::before{
+    content:"•";
+    position:absolute;
+    left:0;
+    top:0;
+    color:var(--ink);
   }
 
   .cta{
+    order:4;
     display:flex;
     align-items:center;
     justify-content:center;
     gap:8px;
     width:100%;
-    min-height:52px;
-    font-family:var(--font-accent);
+    min-height:48px;
+    font-family:var(--font-script);
     font-weight:700;
-    font-size:1.2rem;
-    line-height:1;
+    font-size:1.18rem;
+    line-height:1.1;
     text-align:center;
-    padding:14px 14px;
+    padding:12px 14px;
     border-radius:6px;
-    transition:transform .18s ease, background .18s ease, box-shadow .18s ease;
-    border:2.2px solid white;
-    color:white;
-    margin-top:auto;
-    box-shadow:0 4px 12px rgba(0,0,0,.2);
-    letter-spacing:.5px;
+    transition:transform .18s ease, background .18s ease;
+    border:2px solid currentColor;
+    background:rgba(255,248,224,.24);
   }
 
-  .card-navy .cta{
-    background:var(--navy);
-  }
-
-  .card-maroon .cta{
-    background:var(--maroon);
-  }
-  .role-chips{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-top:14px;
-  }
-  .role-chips span{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    padding:6px 12px;
-    border:1.5px solid var(--navy);
-    border-radius:999px;
-    font-family:var(--font-accent);
-    font-size:.95rem;
-    color:var(--navy);
-    background:rgba(23,60,120,.06);
-  }
   .cta:hover{
-    transform:translateY(-4px);
-    filter:brightness(1.08);
-    box-shadow:0 8px 20px rgba(0,0,0,.3);
+    transform:translateY(-3px) rotate(-.4deg);
+    background:rgba(255,248,224,.58);
+  }
+
+  .cta:focus-visible{
+    outline:3px solid var(--gold);
+    outline-offset:3px;
   }
 
   .structure-core{
@@ -464,6 +417,16 @@
     transform:rotate(-1deg);
   }
 
+  .arrow-in{
+    align-self:center;
+    justify-self:center;
+    color:var(--ink);
+    font-family:var(--font-script);
+    font-weight:700;
+    font-size:2.4rem;
+    padding-top:42px;
+  }
+
   .flow{ margin:20px 0 26px; }
 
   .section-label{
@@ -489,61 +452,65 @@
     font-weight:600 !important;
   }
 
+
   .note{
     position:relative;
-    border:1.8px solid rgba(22,18,13,.7);
+    border:1.8px solid rgba(22,18,13,.75);
     border-radius:2px;
-    padding:16px 40px;
-    margin:16px auto 22px;
-    max-width:600px;
-    background:rgba(255,248,224,.14);
+    padding:18px 44px;
+    margin:18px auto 24px;
+    max-width:560px;
+    transform:rotate(.2deg);
+    background:rgba(255,248,224,.16);
   }
 
   .note p{
-    font-size:1.12rem;
-    line-height:1.58;
+    font-size:1.25rem;
+    line-height:1.62;
     margin:0;
-    text-align:center;
+    text-align:left;
   }
 
   .note .star.icon{
     position:absolute;
-    top:-12px;
-    right:14px;
+    top:-13px;
+    right:13px;
     width:24px;
     height:24px;
+    color:var(--ink);
+    background:var(--paper);
   }
 
   .columns{
     display:grid;
     grid-template-columns:repeat(3,1fr);
-    gap:20px;
-    margin:16px 0 24px;
+    gap:24px;
+    margin:18px 0 28px;
   }
 
   .col{
-    min-height:auto;
+    min-height:364px;
     border:2px solid var(--ink);
     border-radius:2px;
-    background:rgba(255,248,224,.1);
-    padding:16px 16px 14px;
+    background:rgba(255,248,224,.14);
+    padding:18px 20px;
     display:flex;
     flex-direction:column;
   }
 
-  .col:nth-child(1){ border-color:var(--navy); }
-  .col:nth-child(2){ border-color:var(--olive); }
-  .col:nth-child(3){ border-color:var(--maroon); }
+  .col:nth-child(1){ border-color:var(--navy); transform:rotate(-.35deg); }
+  .col:nth-child(2){ border-color:var(--olive); transform:rotate(.22deg); }
+  .col:nth-child(3){ border-color:var(--maroon); transform:rotate(.35deg); }
 
   .col-title{
     display:block;
     text-align:center;
-    font-family:var(--font-accent);
+    font-family:var(--font-script);
     font-weight:700;
-    font-size:1.2rem;
-    line-height:1.02;
-    margin:0 0 14px;
-    padding-bottom:8px;
+    font-size:1.36rem;
+    line-height:1.05;
+    margin:0 0 20px;
+    padding-bottom:9px;
     border-bottom:1.8px solid currentColor;
   }
 
@@ -555,53 +522,51 @@
     display:flex;
     justify-content:center;
     align-items:center;
-    min-height:50px;
-    margin:-2px 0 12px;
+    min-height:58px;
+    margin:-2px 0 14px;
     color:currentColor;
   }
 
   .col-lead .icon{
-    width:50px;
-    height:50px;
+    width:58px;
+    height:58px;
   }
 
   .item-list{
     display:grid;
-    gap:12px;
-    margin-top:0;
+    gap:14px;
+    margin-top:2px;
   }
 
   .item{
     display:grid;
-    grid-template-columns:18px 1fr 46px;
-    gap:8px;
-    align-items:flex-start;
-    min-height:auto;
+    grid-template-columns:22px 1fr 58px;
+    gap:10px;
+    align-items:center;
+    min-height:54px;
   }
 
   .item-marker{
-    width:16px;
-    height:16px;
-    border:1.6px solid currentColor;
+    width:18px;
+    height:18px;
+    border:2px solid currentColor;
     border-radius:2px;
     display:flex;
     align-items:center;
     justify-content:center;
-    font-family:var(--font-accent);
-    font-size:.85rem;
+    font-family:var(--font-script);
+    font-size:1rem;
     line-height:1;
-    margin-top:4px;
-    color:currentColor;
   }
 
   .item.done .item-marker{
     border:none;
-    font-size:1.1rem;
+    font-size:1.25rem;
   }
 
   .item-text{
     min-width:0;
-    font-size:.99rem;
+    font-size:1.08rem;
     line-height:1.28;
     color:var(--ink);
     word-break:keep-all;
@@ -609,16 +574,16 @@
 
   .item-caption{
     display:block;
-    margin-top:2px;
+    margin-top:3px;
     font-family:var(--font-korean);
-    font-size:.7rem;
-    line-height:1.2;
-    color:rgba(23,19,15,.7);
+    font-size:.75rem;
+    line-height:1.25;
+    color:rgba(23,19,15,.72);
   }
 
   .item-icon{
-    width:46px;
-    height:42px;
+    width:58px;
+    height:50px;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -626,412 +591,367 @@
   }
 
   .item-icon .icon{
-    width:42px;
-    height:38px;
+    width:52px;
+    height:46px;
   }
 
   .quote{
     text-align:center;
-    padding:0;
-    margin:14px 0 0;
+    padding:6px 0 0;
   }
 
   .quote p{
-    font-family:var(--font-accent);
-    font-size:1.7rem;
-    line-height:1.12;
+    font-family:var(--font-script);
+    font-size:2rem;
+    line-height:1.15;
     margin:0;
   }
 
   .quote .underline{
+    position:relative;
+    display:inline-block;
+  }
+
+  .quote .underline::after{
+    left:0;
+    right:0;
+    bottom:-6px;
+    height:7px;
     color:var(--maroon);
   }
 
-  .sticky-note{
-    position:fixed;
-    bottom:24px;
-    right:24px;
-    background:#f9f3b8;
-    border:1.6px solid rgba(0,0,0,.12);
-    border-radius:4px;
-    padding:12px 14px;
-    font-family:var(--font-accent);
-    font-size:.95rem;
-    line-height:1.2;
-    text-align:center;
-    box-shadow:0 4px 12px rgba(0,0,0,.15);
-    z-index:100;
+  .da-platform{
+    margin:26px 0 30px;
+    padding:24px 0 4px;
+    border-top:2px solid rgba(23,19,15,.28);
   }
 
-  .sticky-note-line{
-    display:block;
-    margin:2px 0;
+  .da-heading{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:8px;
+    margin:0 0 18px;
+    text-align:left;
+  }
+
+  .da-kicker{
+    font-family:var(--font-script);
+    font-size:1.2rem;
+    font-weight:700;
+    color:var(--maroon);
+    margin:0;
+  }
+
+  .da-heading h2{
+    font-family:var(--font-script);
+    font-size:2.35rem;
+    line-height:1.05;
+    margin:0;
+    color:var(--ink);
+  }
+
+  .da-heading p:last-child{
+    font-size:1.14rem;
+    line-height:1.55;
+    margin:0;
+    max-width:760px;
+  }
+
+  .da-statement{
+    border:1.8px solid rgba(124,38,31,.75);
+    border-radius:2px;
+    color:var(--maroon);
+    background:rgba(255,248,224,.18);
+    padding:14px 18px;
+    margin:0 0 20px;
+    font-size:1.18rem;
+    line-height:1.45;
+    transform:rotate(-.15deg);
+  }
+
+  .da-steps{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+    margin:0 0 22px;
+  }
+
+  .da-stage{
+    border:2px solid currentColor;
+    border-radius:2px;
+    background:rgba(255,248,224,.13);
+    padding:18px 18px 16px;
+  }
+
+  .da-stage:nth-child(1){ color:var(--navy); transform:rotate(-.25deg); }
+  .da-stage:nth-child(2){ color:var(--maroon); transform:rotate(.2deg); }
+
+  .da-step{
+    font-family:var(--font-script);
+    font-size:1.05rem;
+    font-weight:700;
+    line-height:1;
+    margin:0 0 8px;
+    color:currentColor;
+  }
+
+  .da-stage h3,
+  .zachman-block h3{
+    font-family:var(--font-script);
+    font-size:1.65rem;
+    line-height:1.05;
+    margin:0 0 8px;
+    color:currentColor;
+  }
+
+  .da-stage-lead{
+    font-size:1.04rem;
+    line-height:1.45;
+    margin:0 0 14px;
+    color:var(--ink);
+  }
+
+  .da-facts{
+    display:grid;
+    gap:9px;
+    margin:0 0 14px;
+  }
+
+  .da-fact{
+    display:grid;
+    grid-template-columns:96px 1fr;
+    gap:12px;
+    align-items:start;
+    color:var(--ink);
+    font-size:.98rem;
+    line-height:1.35;
+  }
+
+  .da-fact strong{
+    color:currentColor;
+    font-family:var(--font-script);
+    font-size:1rem;
+  }
+
+  .da-chain{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:8px;
+    color:var(--ink);
+    margin:12px 0 0;
+  }
+
+  .da-chip{
+    border:1.6px solid currentColor;
+    border-radius:999px;
+    padding:5px 9px 4px;
+    font-size:.88rem;
+    line-height:1;
+    background:rgba(255,248,224,.2);
+  }
+
+  .da-arrow{
+    font-family:var(--font-script);
+    font-size:1.2rem;
+    color:currentColor;
+  }
+
+  .da-consistency{
+    display:grid;
+    gap:10px;
+    margin-top:14px;
+  }
+
+  .da-consistency p{
+    position:relative;
+    margin:0;
+    padding-left:18px;
+    color:var(--ink);
+    font-size:1rem;
+    line-height:1.42;
+  }
+
+  .da-consistency p::before{
+    content:"•";
+    position:absolute;
+    left:0;
+    top:0;
+    color:currentColor;
+  }
+
+  .zachman-block{
+    color:var(--olive);
+    margin:4px 0 22px;
+  }
+
+  .zachman-title-row{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:14px;
+    margin:0 0 12px;
+  }
+
+  .zachman-title-row p{
+    margin:0;
+    color:var(--ink);
+    font-size:1rem;
+    line-height:1.35;
+    max-width:500px;
+  }
+
+  .zachman-wrap{
+    overflow-x:auto;
+    padding-bottom:4px;
+  }
+
+  .zachman-grid{
+    display:grid;
+    grid-template-columns:100px repeat(6, minmax(110px,1fr));
+    border:1.8px solid rgba(23,19,15,.7);
+    min-width:860px;
+    background:rgba(255,248,224,.1);
+  }
+
+  .z-cell{
+    min-height:54px;
+    border-right:1px solid rgba(23,19,15,.38);
+    border-bottom:1px solid rgba(23,19,15,.34);
+    padding:8px 7px;
+    font-family:var(--font-korean);
+    font-size:.82rem;
+    line-height:1.25;
+    color:var(--ink);
+  }
+
+  .z-cell:nth-child(7n){
+    border-right:none;
+  }
+
+  .z-head,
+  .z-row{
+    font-family:var(--font-script);
+    font-size:.93rem;
+    font-weight:700;
+    color:currentColor;
+    background:rgba(255,248,224,.26);
+  }
+
+  .z-head{
+    text-align:center;
+  }
+
+  .z-row{
+    display:flex;
+    align-items:center;
+  }
+
+  .architect-note{
+    position:relative;
+    border:1.8px solid rgba(23,19,15,.72);
+    border-radius:2px;
+    background:rgba(255,248,224,.15);
+    padding:16px 20px;
+    margin:18px auto 4px;
+    max-width:740px;
+    transform:rotate(.12deg);
+  }
+
+  .architect-note p{
+    margin:0;
+    font-size:1.08rem;
+    line-height:1.58;
+  }
+
+  .architect-note strong{
+    color:var(--maroon);
+    font-weight:400;
   }
 
   @media (max-width:1080px){
     .notebook{ width:100%; }
   }
 
-  @media (max-width:1000px){
+  @media (max-width:940px){
     .notebook{
-      padding:48px 36px 40px 68px;
+      padding:54px 28px 42px 66px;
+      min-height:0;
     }
-    .top{ margin-bottom:18px; flex-direction:column; gap:16px; }
-    .name{ font-size:4.2rem; }
-    .hero-line{ font-size:2.4rem; }
+    .top{ margin-bottom:28px; }
+    .name{ font-size:4.4rem; }
+    .hero-line{ font-size:2.75rem; }
     .diagram{
       grid-template-columns:1fr;
-      gap:18px;
+      gap:22px;
     }
-    .structure-center{ display:none; }
+    .card{ width:100%; min-height:auto; }
+    .arrow-in{ display:none; }
     .columns{ grid-template-columns:1fr; }
-    .flow{ overflow-x:auto; padding-bottom:8px; }
-    .flow svg{ min-width:900px; }
-  }
-
-  @media (max-width:640px){
-    .notebook{ padding:40px 20px 36px 56px; }
-    .top{ flex-direction:column; gap:14px; }
-    .top-right{ font-size:.95rem; text-align:left; }
-    .eyebrow{ font-size:.95rem; }
-    .name{ font-size:3.2rem; }
-    .hero-line{ font-size:2rem; }
-    .circle{
-      width:180px;
-      height:180px;
+    .col{ min-height:auto; }
+    .da-steps{ grid-template-columns:1fr; }
+    .zachman-title-row{
+      display:block;
     }
-    .card-title{ font-size:1.15rem; }
-    .card-item-text{ font-size:.95rem; }
-    .note{ padding:14px 30px; }
-    .note p{ font-size:1rem; }
-    .quote p{ font-size:1.4rem; }
-  }
-.flow{
-  margin:20px 0 26px;
-}
-
-.section-label{
-  font-family:var(--font-main);
-  font-size:1.4rem;
-  line-height:1;
-  margin:0 0 14px;
-  color:var(--ink);
-  display:block;
-}
-
-.growth-flow{
-  display:grid;
-  grid-template-columns:repeat(6,minmax(0,1fr));
-  gap:12px;
-  align-items:stretch;
-  position:relative;
-}
-
-.growth-flow::before{
-  content:"";
-  position:absolute;
-  left:18px;
-  right:18px;
-  top:22px;
-  height:1px;
-  background:linear-gradient(
-    90deg,
-    rgba(23,60,120,.18),
-    rgba(23,60,120,.35),
-    rgba(23,60,120,.18)
-  );
-  pointer-events:none;
-}
-
-.growth-step{
-  min-width:0;
-  border:1.8px solid rgba(23,60,120,.35);
-  border-radius:14px;
-  background:rgba(255,248,224,.24);
-  padding:14px 10px 12px;
-  text-align:center;
-  box-shadow:0 3px 10px rgba(0,0,0,.06);
-  position:relative;
-  z-index:1;
-  backdrop-filter:blur(2px);
-}
-
-.growth-step-end{
-  border-color:rgba(124,38,31,.45);
-}
-
-.growth-icon{
-  width:34px;
-  height:34px;
-  margin:0 auto 8px;
-  color:var(--navy);
-}
-
-.growth-step-end .growth-icon{
-  color:var(--maroon);
-}
-
-.growth-icon .icon{
-  width:34px;
-  height:34px;
-}
-
-.growth-title{
-  font-family:var(--font-accent);
-  font-size:1.02rem;
-  color:var(--ink);
-  line-height:1.12;
-}
-
-.growth-sub{
-  margin-top:5px;
-  font-family:var(--font-korean);
-  font-size:.8rem;
-  line-height:1.35;
-  color:rgba(23,19,15,.76);
-  word-break:keep-all;
-}
-
-@media (max-width:1100px){
-  .growth-flow{
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:10px;
+    .flow{ overflow-x:auto; padding-bottom:8px; }
+    .flow svg{ min-width:980px; }
   }
 
-  .growth-flow::before{
-    display:none;
-  }
-}
-
-@media (max-width:640px){
-  .growth-flow{
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:8px;
-  }
-
-  .growth-title{
-    font-size:.95rem;
-  }
-
-  .growth-sub{
-    font-size:.77rem;
-  }
-}
-</style>
-
-<style id="font-unify-overrides">
-  :root{
-    --font-main:"Pretendard","Gowun Dodum","Malgun Gothic",sans-serif;
-    --font-name:"KyoboHand","Gowun Dodum","Pretendard","Malgun Gothic",sans-serif;
-    --font-accent:"Kalam","Segoe Print","KyoboHand",cursive;
-    --navy:#234f8a;
-    --olive:#5c6472;
-    --maroon:#8a4f47;
-  }
-
-  body{
-    font-family:var(--font-main) !important;
-    letter-spacing:-0.025em;
-  }
-
-  .top-left .eyebrow,
-  .quote-box,
-  .quote-box .label,
-  .card-header,
-  .card-title,
-  .card-subtitle,
-  .card-item-text,
-  .card-item-text strong,
-  .card-item-text span,
-  .section-label,
-  .col-title,
-  .item-text,
-  .item-caption,
-  .growth-title,
-  .growth-sub,
-  .note p,
-  .top-right,
-  .top-right p,
-  .role-chips span,
-  .cta,
-  .sticky-note{
-    font-family:var(--font-main) !important;
-  }
-
-  .name{
-    font-family:var(--font-name) !important;
-    font-weight:400;
-    letter-spacing:-0.035em;
-  }
-
-  .hero-line,
-  .quote p{
-    font-family:var(--font-accent) !important;
-  }
-
-  .circle-text-main,
-  .circle-text-sub{
-    font-family:var(--font-main) !important;
-  }
-
-  .top-right .quote-box{
-    border-color:rgba(35,79,138,.65);
-    background:rgba(35,79,138,.06);
-    box-shadow:0 6px 18px rgba(20,34,54,.06);
-  }
-
-  .top-right .quote-box .label{
-    letter-spacing:.12em;
-  }
-
-  .hero{
-    margin:16px 0 24px;
-  }
-
-  .hero-line{
-    font-size:2.3rem;
-    line-height:1.02;
-  }
-
-  .hero-line.underline::after{
-    height:3px;
-    bottom:-7px;
-  }
-
-  .role-chips span{
-    border-color:rgba(35,79,138,.25);
-    background:rgba(35,79,138,.07);
-    color:var(--navy);
-    font-size:.9rem;
-    font-weight:700;
-  }
-
-  .card{
-    border-width:1.8px;
-    background:rgba(255,248,224,.18);
-  }
-
-  .card-header{
-    font-size:.88rem;
-    font-weight:800;
-    letter-spacing:.14em;
-  }
-
-  .card-title{
-    font-size:1.5rem;
-    font-weight:800;
-    letter-spacing:-0.04em;
-  }
-
-  .card-subtitle{
-    font-size:.95rem;
-    letter-spacing:-0.01em;
-  }
-
-  .card-item-text strong{
-    font-size:1.02rem;
-    font-weight:700;
-    letter-spacing:-0.02em;
-  }
-
-  .card-item-text span,
-  .item-caption,
-  .growth-sub,
-  .note p{
-    color:rgba(23,19,15,.74);
-  }
-
-  .section-label,
-  .col-title{
-    font-weight:800;
-    letter-spacing:.09em;
-  }
-
-  .col-title{
-    font-size:1.05rem;
-  }
-
-  .item-text{
-    font-size:.98rem;
-    line-height:1.3;
-    font-weight:600;
-  }
-
-  .item-marker{
-    border-color:currentColor;
-  }
-
-  .growth-step{
-    border-color:rgba(35,79,138,.22);
-    background:rgba(255,248,224,.3);
-    box-shadow:0 5px 14px rgba(0,0,0,.05);
-  }
-
-  .growth-step-end{
-    border-color:rgba(138,79,71,.28);
-  }
-
-  .growth-title{
-    font-size:1rem;
-    font-weight:700;
-  }
-
-  .growth-sub{
-    font-size:.79rem;
-  }
-
-  .note{
-    border-color:rgba(23,19,15,.5);
-    background:rgba(255,248,224,.16);
-    max-width:660px;
-  }
-
-  .note p{
-    font-size:1.02rem;
-    line-height:1.7;
-  }
-
-  .quote p{
-    font-size:1.55rem;
-    line-height:1.18;
-  }
-
-  .sticky-note{
-    display:none !important;
-  }
-
-  @media (max-width:640px){
-    .hero-line{ font-size:1.95rem; }
-    .circle{ width:176px; height:176px; }
-    .quote p{ font-size:1.28rem; }
+  @media (max-width:600px){
+    .notebook{ padding:42px 18px 36px 54px; }
+    .top{
+      flex-direction:column;
+      gap:20px;
+    }
+    .top-right{ font-size:1.12rem; }
+    .eyebrow{ font-size:1.1rem; }
+    .name{ font-size:3.55rem; }
+    .hero-line{ font-size:2.24rem; }
+    .circle{
+      width:218px;
+      height:218px;
+    }
+    .circle span{ font-size:3.36rem; }
+    .caption{ font-size:1.72rem; }
+    .card h2{ font-size:1.34rem; }
+    .card li{ font-size:1rem; }
+    .note{ padding:18px 22px; }
+    .note p{ font-size:1.08rem; }
+    .da-heading h2{ font-size:1.85rem; }
+    .da-statement{ font-size:1.02rem; }
+    .da-stage{ padding:16px 14px; }
+    .da-fact{
+      grid-template-columns:1fr;
+      gap:2px;
+    }
+    .architect-note{ padding:14px 16px; }
+    .architect-note p{ font-size:1rem; }
+    .item{
+      grid-template-columns:22px 1fr 46px;
+      gap:8px;
+    }
+    .item-icon{
+      width:46px;
+      height:44px;
+    }
+    .item-icon .icon{
+      width:42px;
+      height:40px;
+    }
+    .quote p{ font-size:1.62rem; }
   }
 </style>
-
 </head>
 <body>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-cloud" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8.5 18.5a3.8 3.8 0 0 1-.5-7.6 5.3 5.3 0 0 1 10.2-1.8 4 4 0 0 1-.7 7.9 4 4 0 0 1-.6 0H8.8a3 3 0 0 1-.3 0z"/>
+    <path d="M12.5 17l2.3-5.2 2.3 5.2z" fill="currentColor" stroke="none"/>
+  </symbol>
   <symbol id="i-azure" viewBox="0 0 28 28">
     <path d="M13.5 3.2 5.1 22.4h7.2l1.4-3.9h5.8l-6.2-7.2 3.9-8.1z" fill="currentColor"/>
     <path d="M18.5 5.7 23.4 22.4h-9.8l6.2-3.7-3.6-4.2z" fill="currentColor" opacity=".72"/>
-  </symbol>
-  <symbol id="i-person" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="14" cy="10" r="4"/><path d="M8 22c0-3.3 2.7-6 6-6s6 2.7 6 6"/>
-  </symbol>
-  <symbol id="i-shield" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M4 6l10-4 10 4v8c0 6-8 8-10 8s-10-2-10-8z"/>
-  </symbol>
-  <symbol id="i-cog" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="14" cy="14" r="5"/><path d="M14 2v4M14 22v4M2 14h4M22 14h4M6.2 6.2l2.8 2.8M18.8 18.8l2.8 2.8M21.8 6.2l-2.8 2.8M9.2 18.8l-2.8 2.8"/>
-  </symbol>
-  <symbol id="i-cloud" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M8.5 18.5a3.8 3.8 0 0 1-.5-7.6 5.3 5.3 0 0 1 10.2-1.8 4 4 0 0 1-.7 7.9H8.8c-.1 0-.2 0-.3 0z"/>
-  </symbol>
-  <symbol id="i-building" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="4" y="6" width="20" height="18" rx="1.5"/><path d="M14 6v18"/><path d="M4 12h20M4 18h20"/><circle cx="8" cy="9" r="1.2" fill="currentColor"/><circle cx="14" cy="9" r="1.2" fill="currentColor"/><circle cx="20" cy="9" r="1.2" fill="currentColor"/>
-  </symbol>
-  <symbol id="i-database" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <ellipse cx="14" cy="7" rx="9.5" ry="3.3"/><path d="M4.5 7v14c0 1.8 4.3 3.3 9.5 3.3s9.5-1.5 9.5-3.3V7"/><path d="M4.5 14.3c0 1.8 4.3 3.3 9.5 3.3s9.5-1.5 9.5-3.3"/>
   </symbol>
   <symbol id="i-table" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <rect x="4" y="6" width="20" height="16" rx="1.5"/><path d="M4 12h20M4 18h20M13 6v16"/>
@@ -1040,9 +960,8 @@
     <rect x="10" y="4" width="8" height="6" rx="1"/><rect x="2" y="18" width="8" height="6" rx="1"/><rect x="18" y="18" width="8" height="6" rx="1"/>
     <path d="M14 10v4M14 14H6v4M14 14h8v4"/>
   </symbol>
-  <symbol id="i-network" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="6" cy="6" r="2.6"/><circle cx="22" cy="6" r="2.6"/><circle cx="14" cy="14" r="2.6"/><circle cx="6" cy="22" r="2.6"/><circle cx="22" cy="22" r="2.6"/>
-    <path d="M8.2 7.6l4 4.8M19.8 7.6l-4 4.8M11.6 16.6l-3.6 3.6M16.4 16.6l3.6 3.6"/>
+  <symbol id="i-database" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <ellipse cx="14" cy="7" rx="9.5" ry="3.3"/><path d="M4.5 7v14c0 1.8 4.3 3.3 9.5 3.3s9.5-1.5 9.5-3.3V7"/><path d="M4.5 14.3c0 1.8 4.3 3.3 9.5 3.3s9.5-1.5 9.5-3.3"/>
   </symbol>
   <symbol id="i-server" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <rect x="4" y="4" width="20" height="6" rx="1.2"/><rect x="4" y="13" width="20" height="6" rx="1.2"/><rect x="4" y="22" width="20" height="3" rx="1"/>
@@ -1054,14 +973,34 @@
   <symbol id="i-ff" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M4 6l9 8-9 8z"/><path d="M14 6l9 8-9 8z"/>
   </symbol>
+  <symbol id="i-personlock" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="10.5" cy="9" r="4.2"/><path d="M3 24c0-5.2 4-8.4 7.5-8.4S18 18.8 18 24"/>
+    <rect x="17" y="13.5" width="9.5" height="7.5" rx="1.2"/><path d="M19 13.5v-2.3a2.7 2.7 0 0 1 5.4 0v2.3"/>
+  </symbol>
   <symbol id="i-dashboard" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <rect x="3" y="4" width="22" height="16" rx="1.5"/><path d="M7 16l3.5-5 3 3 5.5-7"/><path d="M3 24h22"/>
   </symbol>
   <symbol id="i-monitor" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="3" y="4" width="22" height="14" rx="1.5"/><path d="M10 22h8M14 18v4"/><circle cx="9" cy="10" r="2"/><circle cx="17" cy="10" r="2"/><path d="M5 15c.5-2 2-3 4-3s3.5 1 4 3M15 15c.5-2 2-3 4-3s3.5 1 4 3"/>
+    <rect x="3" y="4" width="22" height="14" rx="1.5"/><path d="M10 22h8M14 18v4"/>
+    <circle cx="9" cy="10" r="2"/><circle cx="17" cy="10" r="2"/>
+    <path d="M5 15c.5-2 2-3 4-3s3.5 1 4 3M15 15c.5-2 2-3 4-3s3.5 1 4 3"/>
   </symbol>
   <symbol id="i-soccer" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="2" y="6" width="24" height="16" rx="1.5"/><circle cx="14" cy="14" r="3.6"/><path d="M14 6v16"/><rect x="2" y="10" width="5" height="8"/><rect x="21" y="10" width="5" height="8"/>
+    <rect x="2" y="6" width="24" height="16" rx="1.5"/><circle cx="14" cy="14" r="3.6"/><path d="M14 6v16"/>
+    <rect x="2" y="10" width="5" height="8"/><rect x="21" y="10" width="5" height="8"/>
+  </symbol>
+  <symbol id="i-network" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="6" cy="6" r="2.6"/><circle cx="22" cy="6" r="2.6"/><circle cx="14" cy="14" r="2.6"/><circle cx="6" cy="22" r="2.6"/><circle cx="22" cy="22" r="2.6"/>
+    <path d="M8.2 7.6l4 4.8M19.8 7.6l-4 4.8M11.6 16.6l-3.6 3.6M16.4 16.6l3.6 3.6"/>
+  </symbol>
+  <symbol id="i-personai" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="10.5" cy="9" r="4.2"/><path d="M3 24c0-5.2 4-8.4 7.5-8.4S18 18.8 18 24"/>
+    <rect x="17" y="14.5" width="9.5" height="7.5" rx="1.5"/>
+    <text x="21.7" y="20" font-size="6" font-family="Arial, sans-serif" font-weight="700" fill="currentColor" stroke="none" text-anchor="middle">AI</text>
+  </symbol>
+  <symbol id="i-map" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="5" width="6" height="6" rx="1"/><rect x="19" y="5" width="6" height="6" rx="1"/><rect x="11" y="17" width="6" height="6" rx="1"/>
+    <path d="M9 8h10M6 11v4a3 3 0 0 0 3 3h2M22 11v4a3 3 0 0 1-3 3h-2"/>
   </symbol>
   <symbol id="i-star" viewBox="0 0 24 24">
     <path d="M12 2.5l2.6 6.9 7.4.5-5.7 4.8 1.9 7.3L12 17.8 5.8 21.9l1.9-7.3-5.7-4.8 7.4-.5z" fill="currentColor" stroke="none"/>
@@ -1073,60 +1012,37 @@
 
   <main>
     <header class="top">
-      <div class="top-left">
-        <p class="eyebrow">AZURE PLATFORM ENGINEER</p>
+      <div>
+        <p class="eyebrow">IT ENGINEER</p>
         <h1 class="name">이준석</h1>
-        <div class="role-chips">
-          <span>운영</span>
-          <span>자동화</span>
-          <span>거버넌스</span>
-          <span>구조화</span>
-        </div>
       </div>
       <div class="top-right">
-        <div class="quote-box">
-          <p class="label">PROFILE</p>
-          <p>운영 기반에서 시작해<br>Azure 구조를 이해하고,<br>자동화와 표준화로 실행 가능한 플랫폼 관점을 쌓습니다.</p>
-        </div>
+        <p>운영에서 시작해,</p>
+        <p>구조를 이해하고,</p>
+        <p class="line-final">자동화로 해결하는 사람. <svg class="icon star" viewBox="0 0 24 24"><use href="#i-star"/></svg></p>
       </div>
     </header>
 
     <section class="hero" aria-label="portfolio statement">
-      <p class="hero-line">Operate.</p>
-      <p class="hero-line underline">Automate. Structure.</p>
+      <p class="hero-line">Technology changes.</p>
+      <p class="hero-line underline">Structure remains.</p>
     </section>
 
     <section class="diagram" aria-label="core structure diagram">
-      <article class="card card-navy">
-        <div class="card-header">PLATFORM FOUNDATIONS</div>
-        <div class="card-body">
-          <h2 class="card-title">AZURE OPERATIONS</h2>
-          <p class="card-subtitle">운영 / 자동화 / 보안 / 거버넌스</p>
-          <ul class="card-items">
-            <li class="card-item">
-              <div class="card-item-icon"><svg class="icon" viewBox="0 0 28 28"><use href="#i-person"/></svg></div>
-              <div class="card-item-text"><strong>Identity 중심 구조</strong><span>RBAC, Governance</span></div>
-            </li>
-            <li class="card-item">
-              <div class="card-item-icon"><svg class="icon" viewBox="0 0 28 28"><use href="#i-shield"/></svg></div>
-              <div class="card-item-text"><strong>보안 정책 및 관리</strong><span>Key Vault, Defender, 정책</span></div>
-            </li>
-            <li class="card-item">
-              <div class="card-item-icon"><svg class="icon" viewBox="0 0 28 28"><use href="#i-cog"/></svg></div>
-              <div class="card-item-text"><strong>자동화 및 운영 효율화</strong><span>Power Automate, IaC, Scripts</span></div>
-            </li>
-            <li class="card-item">
-              <div class="card-item-icon"><svg class="icon" viewBox="0 0 28 28"><use href="#i-cloud"/></svg></div>
-              <div class="card-item-text"><strong>인프라 아키텍처 설계</strong><span>Landing Zone, 네트워크, 모니터링</span></div>
-            </li>
-            <li class="card-item">
-              <div class="card-item-icon"><svg class="icon" viewBox="0 0 28 28"><use href="#i-building"/></svg></div>
-              <div class="card-item-text"><strong>거버넌스 & 컴플라이언스</strong><span>정책, 태그, 비용 관리</span></div>
-            </li>
-          </ul>
-          <a class="cta" href="azure_knowledge_map.html">→ AZURE PLATFORM</a>
-        </div>
+      <article class="card card-navy" id="azure">
+        <div class="card-icon"><svg class="icon" viewBox="0 0 28 28"><use href="#i-azure"/></svg></div>
+        <h2>AZURE ENVIRONMENT</h2>
+        <p class="tags">운영 / 자동화 / 보안</p>
+        <ul>
+          <li>Identity 중심 구조</li>
+          <li>서비스는 왜 이렇게 나뉘어 있을까?</li>
+          <li>자동화는 어떻게 설계할까?</li>
+          <li>사람과 시스템은 어떻게 연결될까?</li>
+        </ul>
+        <a class="cta" href="azure-knowledge-platform.html"><span aria-hidden="true">→</span> AZURE PLATFORM</a>
       </article>
+
+      <span class="arrow-in" aria-hidden="true">→</span>
 
       <div class="structure-core">
         <svg class="motion" viewBox="0 0 100 28" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -1136,11 +1052,16 @@
         <p class="caption">Understanding<br>how things connect.</p>
       </div>
 
-      <article class="card card-maroon">
+      <span class="arrow-in" aria-hidden="true">←</span>
+
+      <article class="card card-maroon" id="data-architecture">
+        <div class="card-icon multi">
         <div class="card-header">ARCHITECTURE THINKING</div>
         <div class="card-body">
           <h2 class="card-title">ARCHITECTURE STUDIES</h2>
           <p class="card-subtitle">구조를 이해하고 설계 관점을 넓히기 위한 탐구</p>
+        <h2>DATA ARCHITECTURE</h2>
+        <p class="tags">모델링 / 설계 / 분석</p>
           <ul class="card-items">
             <li class="card-item">
               <div class="card-item-icon"><svg class="icon" viewBox="0 0 28 28"><use href="#i-table"/></svg></div>
@@ -1163,8 +1084,7 @@
               <div class="card-item-text"><strong>구조를 어떻게 관리할까?</strong><span>Metadata, Governance</span></div>
             </li>
           </ul>
-          <a class="cta" href="data-architecture-platform.html">→ ARCHITECTURE STUDIES</a>
-        </div>
+        <a class="cta" href="data-architecture-platform.html"><span aria-hidden="true">→</span>ARCHITECTURE STUDIES</a>
       </article>
     </section>
 
@@ -1229,6 +1149,7 @@
       결국 구조를 먼저 보는 관점이<br>
       가장 근본적인 해결 방식임을 배웠다.</p>
     </section>
+
 
     <section class="columns" aria-label="portfolio items">
       <article class="col" id="built">
@@ -1319,11 +1240,10 @@
     </section>
 
     <footer class="quote">
-      <p>&ldquo; I don't just use technology.<br>I try to understand the <span class="underline">structure</span> behind it. &rdquo;</p>
+      <p>&ldquo; I don't just use technology.<br>I try to understand the <span class="underline">structure</span> behind it. &rdquo; <svg class="icon star" viewBox="0 0 24 24" style="display:inline-block;vertical-align:-2px"><use href="#i-star"/></svg></p>
     </footer>
   </main>
 </div>
-
 
 </body>
 </html>
