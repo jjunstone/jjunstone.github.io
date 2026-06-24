@@ -640,13 +640,13 @@
       <!-- 헤더 -->
       <div class="header">
         <div class="title-block">
-          <div class="eyebrow">전사 데이터 아키텍처</div>
-          <h1 class="main-title">Data Architecture Platform</h1>
-          <p class="subtitle">증권 도메인 기반 전사 데이터 아키텍처 설계 연구</p>
+          <div class="eyebrow">Architecture Thinking</div>
+          <h1 class="main-title">Architecture Studies</h1>
+          <p class="subtitle">구조를 이해하고 설계 관점을 넓히기 위한 아키텍처 탐구</p>
           <div class="badges">
-            <span class="badge">Zachman Framework</span>
-            <span class="badge">ISP Methodology</span>
-            <span class="badge">Securities Domain</span>
+            <span class="badge">Data Modeling</span>
+            <span class="badge">ERD · Governance</span>
+            <span class="badge">Architecture Design</span>
           </div>
         </div>
         <a class="home-link" href="index.html">← 홈</a>
@@ -654,9 +654,8 @@
 
       <!-- Section 1: Zachman 매트릭스 -->
       <section>
-        <h2 class="section-label">Zachman Framework 6×6</h2>
-        <p style="color: var(--ink-soft); font-size: 0.95rem; margin-top: -8px;">클릭하면 각 셀의 산출물 예시를 확인할 수 있습니다.</p>
-        <div class="zachman-container">
+        <h2 class="section-label">왜 이 구조인가 — 아키텍처의 뼈대</h2>
+        <p style="color: var(--ink-soft); font-size: 0.95rem; margin-top: -8px;">Zachman Framework — 관점(Who/What/How...)과 추상화 수준(Planner→User)으로 시스템을 분해하는 방법. 셀을 클릭하면 각 관점의 설계 산출물을 확인할 수 있습니다.</p>        <div class="zachman-container">
           <div class="zachman-grid">
             <!-- 헤더 행 -->
             <div class="zachman-cell zachman-header">Perspective</div>
@@ -726,9 +725,8 @@
 
       <!-- Section 2: 7단계 타임라인 -->
       <section class="timeline-container">
-        <h2 class="section-label">7단계 데이터 아키텍처 로드맵</h2>
-        <p style="color: var(--ink-soft); font-size: 0.95rem; margin-top: -8px;">전략에서 운영까지, 데이터 아키텍처의 완전한 여정</p>
-        
+        <h2 class="section-label">어떻게 탐구하는가 — 7단계 설계 여정</h2>
+        <p style="color: var(--ink-soft); font-size: 0.95rem; margin-top: -8px;">전략 수립에서 거버넌스까지, 데이터 아키텍처가 구체화되는 7단계. 각 단계를 클릭하면 핵심 질문과 설계 목표를 확인할 수 있습니다.</p>        
         <div class="timeline-wrapper">
           <svg class="timeline-svg" viewBox="0 0 1400 280" xmlns="http://www.w3.org/2000/svg">
             <!-- 그룹 배경 -->
@@ -827,9 +825,8 @@
 
       <!-- Section 3: 전략의 사슬 (Chain of Strategy) -->
       <section id="strategy-chain-section">
-        <h2 class="section-label">전략의 사슬 (Chain of Strategy)</h2>
-        <p style="color:var(--ink-soft);font-size:.95rem;margin-top:-8px;">비즈니스 목표가 어떻게 데이터 엔터티로 구체화되는가 — 아키텍처의 존재 이유(Why) · 노드를 클릭하면 상세 내용을 볼 수 있습니다</p>
-
+        <h2 class="section-label">전략과 데이터는 어떻게 연결되는가</h2>
+        <p style="color:var(--ink-soft);font-size:.95rem;margin-top:-8px;">조직의 목표 → 문제점 → 핵심 성공 요인 → 엔터티. 비즈니스 언어가 데이터 구조로 번역되는 과정을 추적합니다. 노드를 클릭하면 각 연결의 의미를 확인할 수 있습니다.</p>
         <svg class="strategy-chain-svg" viewBox="0 0 1000 185" xmlns="http://www.w3.org/2000/svg" style="margin:20px 0">
 
           <!-- Animated connection paths -->
@@ -911,9 +908,8 @@
 
       <!-- Section 4: 5대 주제 영역 -->
       <section>
-        <h2 class="section-label">5대 주제 영역 (Subject Area)</h2>
-        <p style="color:var(--ink-soft);font-size:.95rem;margin-top:-8px;">영역 간 결합도(Low Coupling) ↓ · 영역 내 응집도(High Cohesion) ↑ — 클릭하면 의존 관계를 확인할 수 있습니다</p>
-
+        <h2 class="section-label">데이터는 어떻게 나뉘는가 — 주제 영역</h2>
+        <p style="color:var(--ink-soft);font-size:.95rem;margin-top:-8px;">연관된 엔터티를 하나의 영역으로 묶고, 영역 간 의존은 최소화한다. Low Coupling · High Cohesion — 클릭하면 영역 간 의존 관계를 확인할 수 있습니다.</p>
         <!-- 뷰 토글 -->
         <div class="view-toggle">
           <button class="view-btn active" id="btn-card">카드 보기</button>
@@ -979,39 +975,39 @@
         </div>
       </section>
 
-      <!-- Section 5: 아키텍트의 철학 -->
+      <!-- Section 5: 이 탐구의 의미 -->
       <section>
-        <h2 class="section-label">아키텍트의 철학</h2>
+        <h2 class="section-label">이 탐구의 의미</h2>
         <div class="philosophy-grid">
           <div class="philo-card">
             <div class="philo-icon">🔗</div>
-            <div class="philo-title">전략-데이터 정합성</div>
-            <div class="philo-desc">모든 데이터 엔터티는 비즈니스 전략의 목표를 달성하기 위해 존재한다. 이유 없는 테이블은 없다.</div>
+            <div class="philo-title">구조가 먼저다</div>
+            <div class="philo-desc">기능을 만들기 전에 데이터가 어떻게 생기고, 어디에 속하고, 어떻게 연결되는지를 먼저 묻는다.</div>
           </div>
           <div class="philo-card">
             <div class="philo-icon">🏛</div>
-            <div class="philo-title">무결성 우선 설계</div>
-            <div class="philo-desc">단순한 저장소가 아니라, 비즈니스 규칙이 시스템적으로 강제되는 지능형 아키텍처를 추구한다.</div>
+            <div class="philo-title">이유 없는 테이블은 없다</div>
+            <div class="philo-desc">모든 엔터티는 비즈니스 목표와 연결된다. 그 연결을 설명할 수 없다면 설계가 아직 덜 된 것이다.</div>
           </div>
           <div class="philo-card">
             <div class="philo-icon">♻️</div>
-            <div class="philo-title">지속 가능한 아키텍처</div>
-            <div class="philo-desc">설계도로 끝나는 아키텍처가 아닌, 거버넌스로 완성되어 변화에도 살아남는 구조를 만든다.</div>
-          </div>
+            <div class="philo-title">설계는 관리로 완성된다</div>
+            <div class="philo-desc">아무리 정교한 모델도 거버넌스 없이는 시간이 지나면 무너진다. 구조는 유지되어야 살아있다.</div>          </div>
         </div>
         <div class="philosophy-divider"></div>
         <div class="philosophy">
-          <p class="philosophy-quote">데이터 아키텍처는 기술 설계가 아니라<br>비즈니스 전략의 번역이다.</p>
+          <p class="philosophy-quote">구조를 이해하는 것이<br>문제를 해결하는 가장 근본적인 방법이다.</p>
         </div>
       </section>
 
       <!-- 하단 네비게이션 -->
-      <footer class="footer-nav">
-        <div class="footer-text">전사 데이터 아키텍처 이해도 포트폴리오</div>
-        <div class="nav-buttons">
-          <a class="nav-btn" href="index.html">← 홈으로</a>
-        </div>
-      </footer>
+    <footer class="footer-nav">
+      <div class="footer-text">Architecture Studies · 설계 관점을 탐구하는 포트폴리오</div>
+      <div class="nav-buttons">
+        <a class="nav-btn" href="index.html">← 홈으로</a>
+        <a class="nav-btn" href="step1-strategy-meta-modeling.html" style="background: var(--maroon);">Step 1부터 시작 →</a>
+      </div>
+    </footer>
     </main>
   </div>
 
