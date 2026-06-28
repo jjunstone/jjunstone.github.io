@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Step 5 - 데이터 무결성 보장 (정규화) | Data Architecture Platform</title>
+  <title>Step 5 - 물리 설계 및 성능 전략 | Data Architecture Platform</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
@@ -42,7 +42,6 @@
     svg { display: block; }
     ::selection { background: var(--gold); color: #fff; }
 
-    /* ── NOTEBOOK ── */
     .notebook {
       position: relative;
       width: min(100%, 1080px);
@@ -85,7 +84,7 @@
       justify-content: space-between;
       align-items: flex-start;
       gap: 24px;
-      margin-bottom: 36px;
+      margin-bottom: 42px;
     }
     .home-link {
       font-size: 0.95rem;
@@ -95,26 +94,29 @@
       transition: opacity 0.2s;
     }
     .home-link:hover { opacity: 1; }
-    .step-indicator {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.9rem;
-      color: var(--ink-soft);
+    .title-block { flex: 1; }
+    .eyebrow {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin: 0 0 8px 0;
+      color: var(--navy);
     }
-    .step-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 28px; height: 28px;
-      background: var(--navy);
-      color: white;
-      border-radius: 50%;
-      font-weight: 600;
-      font-size: 0.85rem;
+    .main-title {
+      font-size: 2.8rem;
+      line-height: 0.95;
+      margin: 0;
+      transform: rotate(-1deg);
+      color: var(--ink);
+    }
+    .subtitle {
+      font-size: 1rem;
+      line-height: 1.6;
+      margin: 16px 0 0 0;
+      color: var(--ink-soft);
+      max-width: 600px;
     }
 
-/* ════════════════════ SIDE NAVIGATION ════════════════════ */
+    /* ════════════════════ SIDE NAVIGATION ════════════════════ */
     .side-nav {
       position: fixed;
       right: 0;
@@ -130,7 +132,6 @@
       border-radius: 20px 0 0 20px;
       box-shadow: -4px 8px 24px rgba(0, 0, 0, 0.1);
     }
-
     .nav-dot {
       width: 48px;
       height: 48px;
@@ -141,7 +142,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: var(--font-hand);
       font-size: 1.2rem;
       font-weight: 700;
       color: var(--navy);
@@ -149,7 +149,6 @@
       transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       overflow: hidden;
     }
-
     .nav-dot::before {
       content: "";
       position: absolute;
@@ -158,24 +157,18 @@
       opacity: 0;
       transition: opacity 0.3s ease;
     }
-
     .nav-dot:hover {
       transform: scale(1.15);
       background: rgba(255, 255, 255, 0.95);
       box-shadow: 0 8px 24px rgba(23, 60, 120, 0.25);
     }
-
-    .nav-dot:hover::before {
-      opacity: 1;
-    }
-
+    .nav-dot:hover::before { opacity: 1; }
     .nav-dot.active {
       background: linear-gradient(135deg, var(--navy), var(--navy-soft));
       color: white;
       box-shadow: 0 12px 32px rgba(23, 60, 120, 0.4);
       scale: 1.1;
     }
-
     .nav-dot.active::after {
       content: "";
       position: absolute;
@@ -183,7 +176,6 @@
       border-radius: 50%;
       box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.3);
     }
-
     .nav-tooltip {
       position: absolute;
       right: 60px;
@@ -198,24 +190,16 @@
       opacity: 0;
       pointer-events: none;
       transition: all 0.3s ease;
-      font-family: var(--font-hand);
     }
-
     .nav-dot:hover .nav-tooltip {
       opacity: 1;
       transform: translateY(-50%) translateX(0);
     }
 
-    /* ════════════════════ SCROLL REVEAL ANIMATION ════════════════════ */
+    /* ════════════════════ SCROLL REVEAL ════════════════════ */
     @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     section {
@@ -223,7 +207,6 @@
     }
 
     .section-label {
-      font-family: var(--font-hand);
       font-weight: 700;
       font-size: 1.2rem;
       margin: 0 0 24px 0;
@@ -250,174 +233,174 @@
       animation: fadeInUp 0.6s ease forwards;
     }
 
-    /* ── TITLE ── */
-    .title-section { margin-bottom: 36px; }
-    h1 {
-      margin: 0 0 12px;
-      font-size: 2.2rem;
-      color: var(--navy);
-      line-height: 1.3;
-      font-weight: 700;
-    }
-    .subtitle {
-      font-size: 1.1rem;
-      color: var(--maroon);
-      font-weight: 500;
-      margin: 0;
-    }
-    .description {
-      margin-top: 16px;
-      font-size: 0.95rem;
-      color: var(--ink-soft);
-      line-height: 1.7;
-      max-width: 720px;
-    }
-
-    /* ── SECTIONS ── */
-    section {
-      margin-bottom: 52px;
-      opacity: 0;
-      animation: fadeInUp 0.6s ease forwards;
-    }
-    section:nth-child(1) { animation-delay: 0.1s; }
-    section:nth-child(2) { animation-delay: 0.2s; }
-    section:nth-child(3) { animation-delay: 0.3s; }
-    section:nth-child(4) { animation-delay: 0.4s; }
-    section:nth-child(5) { animation-delay: 0.5s; }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .section-label {
-      font-size: 1.3rem;
-      color: var(--navy);
-      font-weight: 700;
-      margin: 0 0 16px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid var(--navy);
-      display: inline-block;
-    }
-
-    /* ── NORMALIZATION STEP ── */
-    .norm-step {
-      padding: 18px;
-      background: rgba(255,255,255,0.7);
-      border-radius: 8px;
-      border-left: 4px solid;
-      margin: 16px 0;
-      transition: transform 0.25s ease;
-    }
-    .norm-step:hover { transform: translateX(4px); }
-    .norm-step.first { border-left-color: var(--navy); }
-    .norm-step.second { border-left-color: var(--maroon); }
-    .norm-step.third { border-left-color: var(--olive); }
-    .norm-step.bcnf { border-left-color: var(--gold); }
-
-    .step-title {
-      font-weight: 700;
-      color: var(--navy);
-      margin: 0 0 12px;
-      font-size: 1rem;
-    }
-    .step-issue {
-      background: rgba(199, 38, 31, 0.08);
-      padding: 10px;
-      border-radius: 4px;
-      margin: 10px 0;
-      font-size: 0.9rem;
-      color: var(--maroon);
-      font-weight: 600;
-    }
-    .step-solution {
-      background: rgba(78, 85, 51, 0.08);
-      padding: 10px;
-      border-radius: 4px;
-      margin: 10px 0;
-      font-size: 0.9rem;
-      color: var(--olive);
-    }
-    .step-example {
-      background: rgba(23,60,120,0.08);
-      padding: 10px;
-      border-radius: 4px;
-      margin: 10px 0;
-      font-size: 0.85rem;
-      color: var(--ink);
-      font-family: 'Courier New', monospace;
-      line-height: 1.5;
-    }
-
-    /* ── BEFORE/AFTER TABLE ── */
-    .ba-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 12px 0;
-      background: white;
-      border-radius: 6px;
-      overflow: hidden;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-      font-size: 0.9rem;
-    }
-    .ba-table th {
-      background: rgba(23,60,120,0.1);
-      padding: 10px;
-      text-align: left;
-      font-weight: 700;
-      color: var(--navy);
-      border-bottom: 1px solid rgba(0,0,0,0.1);
-    }
-    .ba-table td {
-      padding: 8px 10px;
-      border-bottom: 1px solid rgba(0,0,0,0.08);
-    }
-    .ba-table tr:hover { background: rgba(0,0,0,0.02); }
-    .before-col { background: rgba(199,38,31,0.04); }
-    .after-col { background: rgba(78,85,51,0.04); }
-
-    /* ── INTEGRITY CARDS ── */
-    .integrity-grid {
+    /* ── 카드 그리드 ── */
+    .concept-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 16px;
-      margin: 20px 0;
+      margin: 24px 0;
     }
-    .integrity-card {
-      padding: 16px;
-      background: rgba(255,255,255,0.7);
-      border-radius: 8px;
-      border-left: 4px solid;
-    }
-    .integrity-card.entity { border-left-color: var(--navy); }
-    .integrity-card.referential { border-left-color: var(--maroon); }
-    .integrity-card.domain { border-left-color: var(--gold); }
 
-    .card-title {
+    .concept-card {
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 8px;
+      border-left: 4px solid var(--navy);
+      transition: transform 0.25s ease;
+    }
+
+    .concept-card:hover { transform: translateX(4px); }
+
+    .concept-title {
       font-weight: 700;
       color: var(--navy);
       margin: 0 0 8px;
       font-size: 0.95rem;
     }
-    .card-desc {
+
+    .concept-desc {
       font-size: 0.9rem;
       color: var(--ink-soft);
       line-height: 1.6;
       margin: 0;
     }
 
-    /* ── INSIGHT BOX ── */
-    .insight-box {
-      padding: 16px;
-      background: rgba(255,255,255,0.6);
-      border-radius: 6px;
-      border-left: 4px solid var(--navy);
-      margin: 16px 0;
+    /* ── 전략 테이블 ── */
+    .strategy-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     }
-    .insight-title {
-      margin: 0 0 8px;
+
+    .strategy-table th {
+      background: linear-gradient(135deg, var(--navy), var(--navy-soft));
+      color: white;
+      padding: 14px;
+      text-align: left;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .strategy-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+    }
+
+    .strategy-table tr:hover { background: rgba(0, 0, 0, 0.02); }
+    .strategy-table tr:last-child td { border-bottom: none; }
+
+    /* ── 강조 박스 ── */
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(23,60,120,0.08), rgba(156,58,50,0.04));
+      border: 2px solid var(--line);
+      border-left: 4px solid var(--navy);
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .highlight-title {
+      font-size: 1rem;
       font-weight: 700;
       color: var(--navy);
+      margin: 0 0 12px 0;
+    }
+
+    .highlight-text {
+      font-size: 0.95rem;
+      color: var(--ink-soft);
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    .tradeoff-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      background: var(--gold);
+      color: white;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin: 4px 4px 4px 0;
+    }
+
+    /* ── 코드 블록 ── */
+    .code-block {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 20px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .code-block strong { color: #66d9ef; font-weight: normal; }
+    .code-block em { color: #a6e22e; font-style: normal; }
+
+    /* ── 계층 다이어그램 ── */
+    .layer-diagram {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin: 20px 0;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .layer {
+      padding: 16px;
+      text-align: center;
+      font-weight: 600;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      color: white;
+    }
+
+    .layer-1 { background: rgba(23, 60, 120, 0.8); }
+    .layer-2 { background: rgba(124, 38, 31, 0.8); }
+    .layer-3 { background: rgba(78, 85, 51, 0.8); }
+    .layer-4 { background: rgba(154, 119, 41, 0.8); }
+
+    .layer:last-child { border-bottom: none; }
+
+    .layer-label {
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .layer-desc {
+      font-size: 0.8rem;
+      opacity: 0.9;
+      font-weight: normal;
+      margin-top: 4px;
+    }
+
+    /* ── 인사이트 박스 ── */
+    .insight-box {
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 8px;
+      border-left: 4px solid;
+      margin: 16px 0;
+    }
+
+    .insight-title {
+      font-weight: 700;
+      margin: 0 0 8px;
+      color: var(--ink);
       font-size: 0.95rem;
     }
+
     .insight-text {
       margin: 0;
       font-size: 0.9rem;
@@ -425,33 +408,13 @@
       line-height: 1.7;
     }
 
-    /* ── STEP NAV ── */
-    .step-nav {
-      display: flex;
-      gap: 16px;
-      margin-top: 48px;
-      padding-top: 32px;
-      border-top: 2px solid rgba(0,0,0,0.08);
+    /* ── 반응형 ── */
+    @media (max-width: 768px) {
+      .notebook { padding: 48px 32px 32px 64px; }
+      .concept-grid { grid-template-columns: 1fr; }
+      .main-title { font-size: 2.2rem; }
+      .code-block { font-size: 0.75rem; }
     }
-    .nav-button {
-      padding: 12px 24px;
-      border: 2px solid var(--navy);
-      background: white;
-      color: var(--navy);
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.95rem;
-      transition: all 0.25s ease;
-      font-family: var(--font-hand);
-    }
-    .nav-button:hover {
-      background: var(--navy);
-      color: white;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(23,60,120,0.2);
-    }
-    .nav-button.prev { order: -1; }
   </style>
 </head>
 <body>
@@ -459,315 +422,464 @@
   <nav class="side-nav">
     <div class="nav-dot" data-step="1" onclick="navigateToStep(1)">
       1
-      <div class="nav-tooltip">전략 기반 메타 모델링</div>
+      <div class="nav-tooltip">전략 메타 모델링</div>
     </div>
     <div class="nav-dot" data-step="2" onclick="navigateToStep(2)">
       2
-      <div class="nav-tooltip">전사적 청사진 수립</div>
+      <div class="nav-tooltip">주제 영역 분할</div>
     </div>
     <div class="nav-dot" data-step="3" onclick="navigateToStep(3)">
       3
-      <div class="nav-tooltip">주제 영역 정의</div>
+      <div class="nav-tooltip">CRUD 매트릭스</div>
     </div>
     <div class="nav-dot" data-step="4" onclick="navigateToStep(4)">
       4
-      <div class="nav-tooltip">고난도 논리 모델링</div>
+      <div class="nav-tooltip">논리 모델링</div>
     </div>
-    <div class="nav-dot" data-step="5" onclick="navigateToStep(5)">
+    <div class="nav-dot active" data-step="5" onclick="navigateToStep(5)">
       5
-      <div class="nav-tooltip">데이터 정규화</div>
+      <div class="nav-tooltip">물리 설계</div>
     </div>
     <div class="nav-dot" data-step="6" onclick="navigateToStep(6)">
       6
-      <div class="nav-tooltip">물리적 최적화</div>
-    </div>
-    <div class="nav-dot active" data-step="7" onclick="navigateToStep(7)">
-      7
-      <div class="nav-tooltip">데이터 거버넌스</div>
+      <div class="nav-tooltip">거버넌스</div>
     </div>
   </nav>
-<div class="notebook">
-  <div class="spiral"></div>
 
-  <main>
-    <!-- HEADER -->
-    <div class="header">
-      <div class="home-link" onclick="goHome()">← 홈</div>
-      <div class="step-indicator">
-        <span class="step-badge">5</span>
-        <span>데이터 무결성 보장</span>
-      </div>
-    </div>
+  <div class="notebook">
+    <div class="spiral"></div>
+    <main>
 
-    <!-- TITLE SECTION -->
-    <div class="title-section">
-      <h1>데이터 무결성 보장</h1>
-      <p class="subtitle">Normalization &ndash; 정규화를 통한 이상 현상 제거</p>
-      <p class="description">
-        4단계까지 설계된 논리 모델을 이제 정규화 단계를 거쳐 <strong>최적의 논리적 위치</strong>에 배치합니다. 
-        데이터 중복을 제거하고 함수적 종속성을 명확히 하여, 
-        입출력 시 발생할 수 있는 <strong>이상 현상(Anomaly)</strong>을 체계적으로 차단합니다.
-      </p>
-    </div>
-
-    <!-- 섹션 1: 정규화의 본질 -->
-    <section>
-      <h2 class="section-label">정규화의 목표와 이상 현상</h2>
-
-      <div style="padding: 16px; background: rgba(255,255,255,0.6); border-radius: 6px; border: 1px solid rgba(0,0,0,0.08); margin-bottom: 20px;">
-        <p style="margin: 0; color: var(--ink-soft); font-size: 0.95rem; line-height: 1.7;">
-          <strong style="color: var(--navy);">정규화란?</strong> 데이터를 <strong>최적의 논리적 위치</strong>에 배치하여 
-          데이터 구조의 정확성, 일관성, 단순성, 비중복성을 확보하는 과정입니다.<br><br>
-          <strong style="color: var(--maroon);">제거해야 할 이상 현상</strong><br>
-          • <strong>삽입 이상:</strong> 새 데이터 입력 시 불필요한 속성이 필수로 요구되는 상황<br>
-          • <strong>수정 이상:</strong> 특정 데이터 수정 시 연관된 모든 행을 함께 수정해야 하는 상황<br>
-          • <strong>삭제 이상:</strong> 데이터 삭제 시 의도하지 않은 다른 정보까지 손실되는 상황
-        </p>
-      </div>
-    </section>
-
-    <!-- 섹션 2: 1차 정규형 (1NF) -->
-    <section>
-      <h2 class="section-label">1단계: 제1정규형 (1NF) &ndash; 반복 그룹 제거</h2>
-
-      <div class="norm-step first">
-        <p class="step-title">① 원자값(Atomic Value) 원칙</p>
-        <div class="step-issue">
-          ❌ 문제: 하나의 속성에 여러 값이 들어가거나 반복되는 구조
+      <!-- HEADER -->
+      <header class="header">
+        <a class="home-link" onclick="goHome()">← 메인으로</a>
+        <div class="title-block">
+          <p class="eyebrow">Step 5 of 6</p>
+          <h1 class="main-title">물리 설계 및<br>성능 전략</h1>
+          <p class="subtitle">Physical Design & Performance Trade-off</p>
+          <p style="font-size: 0.95rem; color: var(--ink-soft); line-height: 1.7; margin: 12px 0 0 0; max-width: 700px;">
+            4단계까지 완성된 이상적인 논리 모델을 실제 운영 가능한 최적의 물리 구조로 변환합니다. 
+            <strong>데이터 무결성과 조회 성능</strong> 사이의 균형을 정교하게 조율하여, 
+            초당 수만 건의 트랜잭션을 처리할 수 있는 고성능 금융 시스템을 완성합니다.
+          </p>
         </div>
-        <p style="margin: 8px 0; font-size: 0.9rem; color: var(--ink);">
-          증권 예시: 고객이 여러 관심종목을 쉼표로 분리하여 저장 
-          <span style="font-family: monospace; background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 3px;">
-            관심종목: 삼성전자, LG전자, SK하이닉스
-          </span>
+      </header>
+
+      <!-- 섹션 1: 논리 → 물리 변환 -->
+      <section class="reveal">
+        <h2 class="section-label">① 논리 모델의 물리 테이블 변환</h2>
+        <p style="color: var(--ink-soft); line-height: 1.8; margin-bottom: 20px;">
+          논리 데이터 모델의 구성 요소를 실제 데이터베이스의 물리적 오브젝트로 매핑하는 과정입니다. 
+          이는 단순한 표기법의 변환이 아니라, <strong>성능과 안정성을 모두 고려한 전략적 설계</strong>입니다.
         </p>
-        <table class="ba-table">
+
+        <div class="concept-grid">
+          <div class="concept-card">
+            <p class="concept-title">엔터티 → 테이블</p>
+            <p class="concept-desc">
+              논리적 실체를 물리적 저장 공간으로 전환합니다.
+              <br><br>
+              ASSET, EXECUTION, LEDGER 등 각 엔터티는 정확히 하나의 테이블이 됩니다.
+            </p>
+          </div>
+
+          <div class="concept-card">
+            <p class="concept-title">속성 → 칼럼 + 타입</p>
+            <p class="concept-desc">
+              속성을 칼럼으로 변환하며, 데이터 성격에 맞는 타입과 길이를 지정합니다.
+              <br><br>
+              <code>VARCHAR(100), DECIMAL(18,0), DATE, CHAR(12)</code>
+            </p>
+          </div>
+
+          <div class="concept-card">
+            <p class="concept-title">식별자 → 기본키 & 인덱스</p>
+            <p class="concept-desc">
+              주 식별자를 기본키로, 검색 경로를 인덱스로 구현합니다.
+              <br><br>
+              NOT NULL 강제, 유일성 보장, 접근 성능 최적화
+            </p>
+          </div>
+
+          <div class="concept-card">
+            <p class="concept-title">표준 명명 규칙 적용</p>
+            <p class="concept-desc">
+              모든 DB 오브젝트에 일관된 명명을 적용합니다.
+              <br><br>
+              테이블: 목적어_용도<br>
+              인덱스: IX_테이블_칼럼
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 섹션 2: 반정규화 전략 -->
+      <section class="reveal">
+        <h2 class="section-label">② 성능 향상을 위한 반정규화 전략</h2>
+        <p style="color: var(--ink-soft); line-height: 1.8; margin-bottom: 20px;">
+          조회 성능을 극대화하기 위해 정규화 원칙을 전략적으로 완화하고 <strong>목표하에 중복을 허용</strong>합니다. 
+          금융 시스템의 실시간 성능 요구를 만족시키는 핵심 설계입니다.
+        </p>
+
+        <div class="highlight-box">
+          <p class="highlight-title">⚡ 전략 1: 유도 속성(Derived Attribute) 도입</p>
+          <p class="highlight-text">
+            빈번한 계산이 필요한 경우, 매번 SUM/AVG를 실행하지 않고 미리 계산된 값을 별도 칼럼에 저장합니다.
+            <br><br>
+            <strong>예시:</strong> [계좌]의 '일일 총 자산액'을 매일 밤 배치로 미리 계산해두면, 
+            실시간 조회 시 대량의 [계좌별 보유자산] 테이블을 조인하지 않아도 됩니다.
+            <br><span class="tradeoff-badge">성능: 100배 이상 개선 ↑</span>
+          </p>
+        </div>
+
+        <div class="highlight-box">
+          <p class="highlight-title">📊 전략 2: 테이블의 수직/수평 분할</p>
+          <p class="highlight-text">
+            <strong>수직 분할(Vertical Split):</strong> 
+            자주 쓰이는 '기본 정보'와 거의 조회되지 않는 '부가정보'를 분리합니다.
+            블록당 레코드 수를 늘려 I/O 효율을 극대화합니다.
+            <br><br>
+            <strong>수평 분할(Horizontal Split):</strong> 
+            매월 발생하는 [거래 원장] 데이터를 월별로 분할 저장하여, 
+            특정 기간 조회 시 불필요한 데이터 스캔을 줄입니다.
+          </p>
+        </div>
+
+        <div class="highlight-box">
+          <p class="highlight-title">🔄 전략 3: 중복 칼럼 배치 (트리거로 일관성 유지)</p>
+          <p class="highlight-text">
+            조인(Join) 횟수를 줄이기 위해 참조가 빈번한 칼럼을 관련 테이블에 중복 배치합니다.
+            <br><br>
+            <strong>예시:</strong> [거래 내역]을 조회할 때마다 [고객] 테이블과 조인하는 대신, 
+            [거래 내역]에 '고객명', '계좌명'을 중복 보유하면 조인 비용을 완전히 제거합니다.
+            <br><strong>⚠️ 주의:</strong> 트리거(TRIGGER)로 중복 데이터 간 일관성을 자동 관리합니다.
+          </p>
+        </div>
+      </section>
+
+      <!-- 섹션 3: 인덱스 전략 -->
+      <section class="reveal">
+        <h2 class="section-label">③ 인덱스 전략 및 검색 경로 최적화</h2>
+        <p style="color: var(--ink-soft); line-height: 1.8; margin-bottom: 20px;">
+          데이터를 가장 빠르고 효율적으로 찾아가기 위한 하드웨어 및 소프트웨어적 경로를 설계합니다.
+        </p>
+
+        <table class="strategy-table">
           <thead>
             <tr>
-              <th class="before-col">❌ Before (1NF 위반)</th>
-              <th class="after-col">✅ After (1NF 준수)</th>
+              <th>인덱스 유형</th>
+              <th>적용 조건</th>
+              <th>투자증권 예시</th>
+              <th>성능 개선</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td class="before-col">
-                <strong>고객_관심</strong><br>
-                고객ID | 관심종목(반복)<br>
-                1001 | 삼성, LG, SK<br>
-                1002 | 현대, 기아
-              </td>
-              <td class="after-col">
-                <strong>고객</strong><br>
-                고객ID | 이름<br>
-                1001 | 김씨<br>
-                1002 | 이씨<br>
-                <br>
-                <strong>고객_관심종목</strong><br>
-                고객ID | 종목코드<br>
-                1001 | 005930<br>
-                1001 | 066570<br>
-                1002 | 005380
-              </td>
+              <td><strong>B+ Tree</strong></td>
+              <td>범위 조회, 정렬 필요</td>
+              <td>거래일자 범위 조회 (2024-01-01 ~ 2024-01-31)</td>
+              <td>~1000배</td>
+            </tr>
+            <tr>
+              <td><strong>Bitmap</strong></td>
+              <td>값의 종류가 적은 속성</td>
+              <td>자산유형 (주식/채권/파생상품)</td>
+              <td>~100배</td>
+            </tr>
+            <tr>
+              <td><strong>Reverse Key</strong></td>
+              <td>순차 증가 PK의 경합 방지</td>
+              <td>거래번호 시퀀셜 PK</td>
+              <td>~50배</td>
+            </tr>
+            <tr>
+              <td><strong>Hash</strong></td>
+              <td>동등 조건 검색만 필요</td>
+              <td>고객ID로 정확히 조회 (= 연산)</td>
+              <td>~500배</td>
             </tr>
           </tbody>
         </table>
-        <div class="step-solution">
-          ✅ 해결: 반복 속성을 별도의 엔터티로 분리하여 관심종목 수에 제한 없음
-        </div>
-      </div>
-    </section>
 
-    <!-- 섹션 3: 2차 정규형 (2NF) -->
-    <section>
-      <h2 class="section-label">2단계: 제2정규형 (2NF) &ndash; 부분 함수 종속 제거</h2>
+        <div class="concept-grid" style="margin-top: 24px;">
+          <div class="concept-card">
+            <p class="concept-title">결합 인덱스 순서 최적화</p>
+            <p class="concept-desc">
+              SELECT에서 WHERE 조건과 일치하는 칼럼을 왼쪽부터 배치합니다.
+              <br><br>
+              INDEX(계좌ID, 거래일자) — 선택도 높은 것부터 배치
+            </p>
+          </div>
 
-      <div class="norm-step second">
-        <p class="step-title">② 기본키 전체에 대한 완전 종속</p>
-        <div class="step-issue">
-          ❌ 문제: 복합 기본키 중 일부에만 종속되는 속성 존재
+          <div class="concept-card">
+            <p class="concept-title">커버링 인덱스</p>
+            <p class="concept-desc">
+              인덱스만으로 쿼리를 완료할 수 있게 필요한 칼럼을 모두 포함합니다.
+              <br><br>
+              원본 테이블 접근 제거 → 성능 극대화
+            </p>
+          </div>
         </div>
-        <p style="margin: 8px 0; font-size: 0.9rem; color: var(--ink);">
-          증권 예시: 계좌번호 + 자산코드로 구성된 복합키 테이블에서, 
-          자산명은 자산코드에만 종속됨
+      </section>
+
+      <!-- 섹션 4: 파티셔닝 전략 -->
+      <section class="reveal">
+        <h2 class="section-label">④ 파티셔닝 및 대용량 데이터 관리</h2>
+        <p style="color: var(--ink-soft); line-height: 1.8; margin-bottom: 20px;">
+          대형 테이블을 논리적 기준에 따라 물리적으로 분할하여 관리와 성능을 동시에 확보합니다.
         </p>
-        <table class="ba-table">
-          <thead>
-            <tr>
-              <th class="before-col">❌ Before (2NF 위반)</th>
-              <th class="after-col">✅ After (2NF 준수)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="before-col">
-                <strong>계좌_자산</strong><br>
-                (계좌ID, 자산코드) | 자산명 | 수량<br>
-                (A001, 005930) | 삼성전자 | 100<br>
-                (A001, 066570) | LG전자 | 50<br>
-                (A002, 005930) | 삼성전자 | 200<br>
-                <br>
-                → 삼성전자 이름 반복!
-              </td>
-              <td class="after-col">
-                <strong>계좌_자산</strong><br>
-                (계좌ID, 자산코드) | 수량<br>
-                (A001, 005930) | 100<br>
-                (A001, 066570) | 50<br>
-                (A002, 005930) | 200<br>
-                <br>
-                <strong>자산_마스터</strong><br>
-                자산코드 | 자산명<br>
-                005930 | 삼성전자<br>
-                066570 | LG전자
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="step-solution">
-          ✅ 해결: 자산 정보를 분리하여 중복 저장 제거 및 수정 이상 방지
-        </div>
-      </div>
-    </section>
 
-    <!-- 섹션 4: 3차 정규형 (3NF) -->
-    <section>
-      <h2 class="section-label">3단계: 제3정규형 (3NF) &ndash; 이행 함수 종속 제거</h2>
+        <div class="concept-grid">
+          <div class="concept-card">
+            <p class="concept-title">📅 Range 파티셔닝</p>
+            <p class="concept-desc">
+              날짜나 수치 범위로 분할합니다.
+              <br><br>
+              [TRADE_LOG]를 월별로 분할:
+              TRADE_LOG_202401, TRADE_LOG_202402...
+            </p>
+          </div>
 
-      <div class="norm-step third">
-        <p class="step-title">③ 기본키가 아닌 속성들 간의 종속성 제거</p>
-        <div class="step-issue">
-          ❌ 문제: 일반 속성들 사이에 종속 관계 존재 (지점명 → 지점주소)
-        </div>
-        <p style="margin: 8px 0; font-size: 0.9rem; color: var(--ink);">
-          증권 예시: 계좌 테이블에서 지점명과 지점주소가 같이 있으면, 
-          지점명 변경 시 모든 계좌 레코드를 수정해야 함 (수정 이상)
-        </p>
-        <table class="ba-table">
-          <thead>
-            <tr>
-              <th class="before-col">❌ Before (3NF 위반)</th>
-              <th class="after-col">✅ After (3NF 준수)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="before-col">
-                <strong>계좌</strong><br>
-                계좌ID | 고객ID | 지점코드 | <u>지점명</u> | <u>지점주소</u><br>
-                A001 | 1001 | 01 | 강남 | 강남구...<br>
-                A002 | 1002 | 01 | 강남 | 강남구...<br>
-                <br>
-                → 지점명, 주소 반복!
-              </td>
-              <td class="after-col">
-                <strong>계좌</strong><br>
-                계좌ID | 고객ID | 지점코드<br>
-                A001 | 1001 | 01<br>
-                A002 | 1002 | 01<br>
-                <br>
-                <strong>지점_마스터</strong><br>
-                지점코드 | 지점명 | 지점주소<br>
-                01 | 강남 | 강남구...
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="step-solution">
-          ✅ 해결: 지점 정보를 분리하여 이행 종속성 제거 및 정합성 확보
-        </div>
-      </div>
+          <div class="concept-card">
+            <p class="concept-title">📍 List 파티셔닝</p>
+            <p class="concept-desc">
+              특정 값의 목록으로 분할합니다.
+              <br><br>
+              [계좌]를 지점별로 분할:
+              ACCOUNT_Seoul, ACCOUNT_Busan...
+            </p>
+          </div>
 
-      <div class="norm-step bcnf">
-        <p class="step-title">④ BCNF (Boyce-Codd Normal Form) &ndash 선택사항</p>
-        <p style="margin: 8px 0; font-size: 0.9rem; color: var(--ink-soft); line-height: 1.6;">
-          모든 결정자(Determinant)가 후보키가 되도록 하는 더 엄격한 정규화입니다. 
-          실무에서는 3NF까지 일반적으로 적용하며, 특수한 경우에만 BCNF를 추가로 수행합니다.
-        </p>
-      </div>
-    </section>
+          <div class="concept-card">
+            <p class="concept-title">🔀 Hash 파티셔닝</p>
+            <p class="concept-desc">
+              해시 함수로 균등 분산합니다.
+              <br><br>
+              고객ID를 4개 파티션에 해시로 분산:
+              균등한 데이터 분포 보장
+            </p>
+          </div>
 
-    <!-- 섹션 5: 데이터 무결성 3원칙 -->
-    <section>
-      <h2 class="section-label">정규화와 함께 강제되는 무결성 규칙</h2>
-
-      <div class="integrity-grid">
-        <div class="integrity-card entity">
-          <p class="card-title">개체 무결성 (Entity Integrity)</p>
-          <p class="card-desc">
-            모든 엔터티는 반드시 유일한 <strong>기본키(PK)</strong>를 가지며, 이 값은 NULL이 될 수 없습니다.
-          </p>
-          <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.85rem; color: #666; font-family: monospace;">
-            ORDER.ORDER_ID (PK, NOT NULL)
+          <div class="concept-card">
+            <p class="concept-title">🔗 Composite 파티셔닝</p>
+            <p class="concept-desc">
+              여러 기준을 조합합니다.
+              <br><br>
+              먼저 Range(월), 그 다음 List(지점)으로 2단계 분할
+            </p>
           </div>
         </div>
 
-        <div class="integrity-card referential">
-          <p class="card-title">참조 무결성 (Referential Integrity)</p>
-          <p class="card-desc">
-            외래키(FK) 값은 참조하는 테이블의 PK에 존재하거나 NULL이어야 합니다.
+        <div class="highlight-box">
+          <p class="highlight-title">💡 파티셔닝의 효과</p>
+          <p class="highlight-text">
+            월별로 분할된 [TRADE_LOG]에서 "2024-01의 거래"를 조회하면,
+            TRADE_LOG_202401 테이블만 스캔하고 나머지는 접근하지 않습니다.
+            → I/O 비용 99% 감소, 조회 속도 100배 개선
           </p>
-          <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.85rem; color: #666; font-family: monospace;">
-            EXECUTION.ORDER_ID FK → ORDER.ORDER_ID
+        </div>
+      </section>
+
+      <!-- 섹션 5: DDL 코드 샘플 -->
+      <section class="reveal">
+        <h2 class="section-label">⑤ 실제 DDL(Data Definition Language) 샘플</h2>
+        <p style="color: var(--ink-soft); line-height: 1.8; margin-bottom: 20px;">
+          논리 모델을 물리 데이터베이스로 구현하는 실제 SQL 코드입니다. 
+          선분 이력(SCD Type 2)과 무결성 제약을 포함합니다.
+        </p>
+
+        <div class="code-block">-- <strong>선분 이력 예시: PRICE_HISTORY (SCD Type 2)</strong>
+CREATE TABLE PRICE_HISTORY (
+    ASSET_ID     <em>CHAR(12)</em>       NOT NULL,
+    <em>PRICE_DATE   DATE</em>           NOT NULL,
+    <em>VALID_FROM   DATE</em>           NOT NULL,
+    <em>VALID_TO     DATE</em>           NOT NULL DEFAULT '9999-12-31',
+    CLOSE_PRICE  DECIMAL(18, 0) NOT NULL,
+    CURRENCY     CHAR(3)        NOT NULL DEFAULT 'KRW',
+    CONSTRAINT PK_PRICE_HIST PRIMARY KEY (ASSET_ID, VALID_FROM),
+    CONSTRAINT FK_PRICE_ASSET FOREIGN KEY (ASSET_ID)
+        REFERENCES ASSET_MST(ASSET_ID) ON DELETE RESTRICT,
+    CONSTRAINT CK_VALID_RANGE CHECK (VALID_FROM &lt;= VALID_TO),
+    CONSTRAINT CK_PRICE_POS   CHECK (CLOSE_PRICE &gt; 0)
+);
+
+-- <strong>인덱스 생성</strong>
+CREATE INDEX IX_PRICE_DATE ON PRICE_HISTORY(ASSET_ID, PRICE_DATE);
+CREATE INDEX IX_VALID_PERIOD ON PRICE_HISTORY(ASSET_ID, VALID_FROM, VALID_TO);
+
+-- <strong>파티셔닝: 월별 Range</strong>
+ALTER TABLE PRICE_HISTORY PARTITION BY RANGE (YEAR_MONTH(PRICE_DATE)) (
+    PARTITION p202401 VALUES LESS THAN (202402),
+    PARTITION p202402 VALUES LESS THAN (202403),
+    PARTITION pmax VALUES LESS THAN MAXVALUE
+);
+        </div>
+
+        <div class="highlight-box">
+          <p class="highlight-title">📝 코드 해석</p>
+          <p class="highlight-text">
+            <strong>VALID_FROM/VALID_TO:</strong> 선분 이력으로 특정 시점의 가격을 복원 가능
+            <br><strong>CHECK 제약:</strong> VALID_FROM ≤ VALID_TO, PRICE > 0를 DB 엔진이 강제
+            <br><strong>FOREIGN KEY ON DELETE RESTRICT:</strong> 상품 삭제 시 가격 이력이 있으면 방지
+            <br><strong>복합 PK:</strong> (ASSET_ID, VALID_FROM)로 각 자산의 각 시기를 유일하게 식별
+            <br><strong>파티셔닝:</strong> 월별로 자동 분할되어 조회 성능 극대화
+          </p>
+        </div>
+      </section>
+
+      <!-- 섹션 6: 무결성 제약 구현 -->
+      <section class="reveal">
+        <h2 class="section-label">⑥ 무결성 제약의 물리적 구현</h2>
+        <p style="color: var(--ink-soft); line-height: 1.8; margin-bottom: 20px;">
+          논리 모델에서 정의된 엔터티 간 관계와 규칙을 DBMS 엔진 차원에서 강제합니다.
+        </p>
+
+        <div class="concept-grid">
+          <div class="concept-card" style="border-left-color: #2ecc71;">
+            <p class="concept-title">개체 무결성</p>
+            <p class="concept-desc">
+              모든 엔터티는 유일한 기본키를 가져야 합니다.
+              <br><br>
+              PRIMARY KEY 제약으로 Null 불허, 중복 불허 자동 강제
+            </p>
+          </div>
+
+          <div class="concept-card" style="border-left-color: #3498db;">
+            <p class="concept-title">참조 무결성</p>
+            <p class="concept-desc">
+              외래키는 상위 엔터티 PK에만 존재합니다.
+              <br><br>
+              FOREIGN KEY 제약으로 고아 레코드(Orphan Record) 자동 방지
+            </p>
+          </div>
+
+          <div class="concept-card" style="border-left-color: #f39c12;">
+            <p class="concept-title">도메인 무결성</p>
+            <p class="concept-desc">
+              속성은 정의된 타입과 범위를 따릅니다.
+              <br><br>
+              CHECK CONSTRAINT로 값 범위 강제 (예: 주문구분 IN ('매수', '매도'))
+            </p>
+          </div>
+
+          <div class="concept-card" style="border-left-color: #e74c3c;">
+            <p class="concept-title">비즈니스 규칙</p>
+            <p class="concept-desc">
+              복잡한 로직은 트리거/저장프로시저로 구현합니다.
+              <br><br>
+              예: 체결 시 포지션 자동 갱신, 거래액 자동 계산
+            </p>
           </div>
         </div>
 
-        <div class="integrity-card domain">
-          <p class="card-title">도메인 무결성 (Domain Integrity)</p>
-          <p class="card-desc">
-            각 속성은 정의된 도메인(데이터 타입, 범위, 형식)을 따릅니다.
+        <div class="highlight-box">
+          <p class="highlight-title">🛡️ 금융 도메인 제약 예시</p>
+          <p class="highlight-text">
+            <strong>[주문] → [계좌]:</strong> Restrict — 존재하지 않는 계좌로 주문 방지
+            <br><strong>[계좌] → [고객]:</strong> Cascade — 고객 삭제 시 계좌도 함께 정리
+            <br><strong>[거래] → [상품]:</strong> Restrict — 상장폐지 상품으로 신규 거래 불가
+            <br><strong>[거래액]:</strong> CHECK(금액 ≥ 0) — 음수 금액 원천 차단
+            <br><br>
+            이러한 규칙들을 DBMS 엔진에서 강제함으로써, 
+            <strong>애플리케이션 개발자가 실수하더라도 데이터 정합성이 자동으로 보장</strong>됩니다.
           </p>
-          <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.85rem; color: #666; font-family: monospace;">
-            ORDER.STATUS ∈ {PENDING, EXECUTED, CANCELLED}
+        </div>
+      </section>
+
+      <!-- 섹션 7: 디스크 분산 배치 -->
+      <section class="reveal">
+        <h2 class="section-label">⑦ 디스크 분산 배치 및 I/O 최적화</h2>
+        <p style="color: var(--ink-soft); line-height: 1.8; margin-bottom: 20px;">
+          I/O 병목 현상을 방지하기 위해 물리 디스크를 전략적으로 분산합니다. 
+          초당 수만 건의 동시 트랜잭션을 처리하기 위한 필수 설계입니다.
+        </p>
+
+        <div class="layer-diagram">
+          <div class="layer layer-1">
+            <div class="layer-label">🖥️ 시스템 테이블스페이스 (System Tablespace)</div>
+            <div class="layer-desc">OS 파일, DBMS 카탈로그, 제어 파일</div>
+          </div>
+          <div class="layer layer-2">
+            <div class="layer-label">📊 데이터 테이블스페이스 (Data Tablespace)</div>
+            <div class="layer-desc">비즈니스 데이터: ASSET, EXECUTION, LEDGER 등</div>
+          </div>
+          <div class="layer layer-3">
+            <div class="layer-label">📝 로그 테이블스페이스 (Log Tablespace)</div>
+            <div class="layer-desc">트랜잭션 로그, REDO/UNDO 로그 (순차 쓰기용)</div>
+          </div>
+          <div class="layer layer-4">
+            <div class="layer-label">⚡ 임시 테이블스페이스 (Temp Tablespace)</div>
+            <div class="layer-desc">정렬, 해시 조인, 그룹핑 등 작업 영역</div>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- 섹션 6: 종합 정리 -->
-    <section>
-      <h2 class="section-label">정규화의 영향 및 의의</h2>
-
-      <div class="insight-box">
-        <p class="insight-title">📊 정규화 전후 비교</p>
-        <div style="margin-top: 12px; font-size: 0.9rem; color: var(--ink); line-height: 1.8;">
-          <strong style="color: var(--maroon);">Before (비정규화):</strong> 
-          테이블 적음, 조회 빠름, 하지만 중복 많고 수정 시 모순 발생 가능<br>
-          <br>
-          <strong style="color: var(--olive);">After (정규화 완료):</strong> 
-          테이블 많음, 조회 시 조인 필요, 하지만 중복 제거되고 무결성 강제됨
+        <div style="padding: 16px; background: rgba(23,60,120,0.06); border-radius: 6px; margin-top: 20px; border-left: 4px solid var(--navy);">
+          <p style="margin: 0; font-size: 0.9rem; color: var(--ink); line-height: 1.8;">
+            <strong style="color: var(--navy);">최적 구성:</strong> 각 테이블스페이스를 별도의 물리 디스크(또는 RAID 그룹)에 배치합니다.
+            <br><br>
+            <strong style="color: var(--navy);">효과:</strong> 시스템 I/O가 데이터 조회를 블로킹하지 않고, 
+            로그 쓰기가 데이터 읽기 경로와 겹치지 않아 동시성 극대화.
+            <br><br>
+            <strong style="color: var(--navy);">현실 예시:</strong> 초당 10,000건 거래 처리 시, 
+            각 물리 디스크가 독립적으로 작동하면 처리량이 3~4배 증가합니다.
+          </p>
         </div>
-      </div>
+      </section>
 
-      <div class="insight-box" style="border-left-color: var(--maroon); margin-top: 16px;">
-        <p class="insight-title">🎯 아키텍트의 통찰</p>
-        <p class="insight-text">
-          정규화는 단순히 테이블을 쪼개는 기술이 아닙니다. 
-          <strong>비즈니스 규칙을 데이터 구조 자체로 강제</strong>하는 과정으로, 
-          이를 통해 애플리케이션 로직에 의존하지 않고도 
-          데이터의 정합성을 체계적으로 보장할 수 있게 됩니다.
-        </p>
-      </div>
+      <!-- 섹션 8: 마무리 -->
+      <section class="reveal">
+        <h2 class="section-label">이 단계의 아키텍처 가치</h2>
 
-      <div class="insight-box" style="border-left-color: var(--gold); margin-top: 16px;">
-        <p class="insight-title">🔄 다음 단계로의 연결</p>
-        <p class="insight-text">
-          이제 <strong>6단계: 물리적 최적화 및 성능 전략</strong>에서 
-          이상적인 정규화 모델을 실제 성능과 운영 환경에 맞게 조율합니다. 
-          유도 속성, 반정규화, 인덱스 전략 등을 통해 
-          무결성과 성능 사이의 균형을 잡게 됩니다.
-        </p>
-      </div>
-    </section>
+        <div class="insight-box" style="border-left-color: var(--navy);">
+          <p class="insight-title">📌 성능과 무결성의 균형</p>
+          <p class="insight-text">
+            이론적인 3차 정규화 모델(Step 4)은 데이터 정합성을 보장하지만, 
+            초당 수만 건의 트랜잭션이 발생하는 금융 시스템에서는 조회 성능 저하를 야기할 수 있습니다.
+            <br><br>
+            Step 5에서는 유도 속성 도입, 전략적 반정규화, 인덱스 최적화, 파티셔닝을 통해 
+            조회 성능을 100배 이상 개선하는 동시에, 
+            트리거와 제약조건으로 중복 데이터의 일관성을 자동 유지하는 
+            <strong>지능형 물리 아키텍처</strong>를 설계합니다.
+          </p>
+        </div>
 
-    <!-- 네비게이션 버튼 -->
-    <div class="step-nav">
-      <button class="nav-button prev" onclick="navigateToStep(4)">← 이전 단계</button>
-      <button class="nav-button" onclick="navigateToStep(6)">다음 단계 →</button>
-    </div>
-  </main>
-</div>
+        <div class="insight-box" style="border-left-color: var(--maroon); margin-top: 16px;">
+          <p class="insight-title">🎯 다음 단계로의 연결</p>
+          <p class="insight-text">
+            이 5단계에서 구축된 고성능 물리 모델이 완성되었으므로, 
+            마지막 <strong>6단계: 데이터 거버넌스 및 표준화</strong>에서 
+            이 구조를 어떻게 지속 가능하게 관리할지 논의할 준비가 완료되었습니다.
+            <br><br>
+            5단계는 "어떻게 빠르고 안정적으로 구현할 것인가"를 정의했고, 
+            6단계에서는 "어떻게 장기적으로 관리하고 진화시킬 것인가"를 보여줍니다.
+          </p>
+        </div>
+      </section>
 
-<script>
+    </main>
+  </div>
+
+  <script>
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    function initRevealAnimation() {
+      document.querySelectorAll('.reveal').forEach(el => {
+        observer.observe(el);
+      });
+    }
+
     function navigateToStep(step) {
       const steps = {
         1: 'step1-strategy-meta-modeling.html',
@@ -775,42 +887,37 @@
         3: 'step3-subject-area.html',
         4: 'step4-logical-modeling.html',
         5: 'step5-normalization.html',
-        6: 'step6-physical-optimization.html',
-        7: 'step7-data-governance.html'
+        6: 'step6-physical-optimization.html'
       };
 
-      // Update active nav dot with smooth transition
       document.querySelectorAll('.nav-dot').forEach(dot => {
         dot.classList.remove('active');
       });
       document.querySelector(`[data-step="${step}"]`).classList.add('active');
 
-      // Smooth page transition
       document.body.style.opacity = '0';
       setTimeout(() => {
         window.location.href = steps[step];
       }, 300);
     }
 
-  function goHome() {
-    document.body.style.opacity = '0';
-    setTimeout(() => {
-      window.location.href = 'index.html';
-    }, 300);
-  }
+    function goHome() {
+      document.body.style.opacity = '0';
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 300);
+    }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    document.body.style.opacity = '1';
-    document.body.style.transition = 'opacity 0.3s ease';
-    
-    // Set active nav dot
-    document.querySelector('[data-step="5"]').classList.add('active');
-  });
+    document.addEventListener('DOMContentLoaded', () => {
+      initRevealAnimation();
+      document.body.style.opacity = '1';
+      document.body.style.transition = 'opacity 0.3s ease';
+    });
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight') navigateToStep(6);
-    if (e.key === 'ArrowLeft') navigateToStep(4);
-  });
-</script>
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') navigateToStep(6);
+      if (e.key === 'ArrowLeft') navigateToStep(4);
+    });
+  </script>
 </body>
 </html>
