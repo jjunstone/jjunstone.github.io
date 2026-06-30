@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Architecture Library - Enterprise Platform Engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    :root {
+      --topbar-h: 52px;
+      /* Light mode */
+      --bg-light: #f8fafc;
+      --bg-panel-light: #ffffff;
+      --border-light: #e2e8f0;
+      --text-light-mode: #0f172a;
+      --text-muted-light: #64748b;
+      --text-light-muted: #94a3b8;
+      /* Dark mode */
+      --bg-dark: #0f172a;
+      --bg-panel-dark: #1e293b;
+      --border-dark: rgba(255,255,255,.1);
+      --text-dark-mode: #f1f5f9;
+      --text-muted-dark: #94a3b8;
+      --text-light-dark: #64748b;
+      /* Common */
+      --accent: #3b82f6;
+      --accent-light: #eff6ff;
+      
+      /* Specific to this page */
+      --accent2: #06b6d4;
+      --good: #10b981;
+      --shadow: 0 24px 60px rgba(0, 0, 0, .45);
+      --radius: 22px;
+      
+      /* Default to dark */
+      --bg: var(--bg-dark);
+      --bg2: #1e293b;
+      --text: var(--text-dark-mode);
+      --muted: var(--text-muted-dark);
+    }
+
+    html.light-mode {
+      --bg: var(--bg-light);
+      --bg2: #f1f5f9;
+      --text: var(--text-light-mode);
+      --muted: var(--text-muted-light);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: "Pretendard", "Segoe UI", system-ui, sans-serif;
+      color: var(--text);
+      background: radial-gradient(ellipse at 18% 18%, rgba(79, 179, 255, .16) 0%, transparent 40%),
+                  radial-gradient(ellipse at 82% 14%, rgba(124, 219, 255, .12) 0%, transparent 35%),
+                  radial-gradient(ellipse at 72% 88%, rgba(94, 234, 212, .09) 0%, transparent 38%),
+                  linear-gradient(170deg, #070f1e 0%, #050d1a 55%, #060e1d 100%);
+    }
+
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(50px);
+      opacity: .18;
+      pointer-events: none;
+      animation: drift 14s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    .orb-a {
+      width: 300px;
+      height: 300px;
+      left: -60px;
+      top: 0;
+      background: #2a9fff;
+    }
+
+    .orb-b {
+      width: 240px;
+      height: 240px;
+      right: 8%;
+      top: 8%;
+      background: #6fe0ff;
+      animation-delay: -5s;
+    }
+
+    .orb-c {
+      width: 340px;
+      height: 340px;
+      right: 2%;
+      bottom: -80px;
+      background: #1dcfb3;
+      animation-delay: -9s;
+    }
+
+    @keyframes drift {
+      0%, 100% {
+        transform: translateY(0) translateX(0) scale(1);
+      }
+      50% {
+        transform: translateY(-22px) translateX(12px) scale(1.04);
+      }
+    }
+
+    /* ── Header ── */
+    .topbar {
+      position: fixed; top: 0; left: 0; right: 0; height: var(--topbar-h);
+      background: var(--bg-panel); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; z-index: 100; padding: 0 32px;
+      transition: background-color .3s, border-color .3s;
+    }
+
+    .topbar-brand {
+      display: flex; align-items: center; gap: 10px; margin-right: 44px; flex-shrink: 0;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      display: grid; place-items: center; font-size: 16px; color: white;
+      box-shadow: 0 2px 10px rgba(59,130,246,.4);
+    }
+
+    .brand-info { line-height: 1.2; }
+    .brand-name { font-size: 15px; font-weight: 700; color: var(--text); transition: color .3s; }
+    .brand-role { font-size: 11px; color: var(--text-light); transition: color .3s; }
+
+    .topbar-nav { display: flex; align-items: center; gap: 2px; flex: 1; }
+
+    .tnav {
+      padding: 6px 16px; border-radius: 6px; font-size: 14px; font-weight: 500;
+      color: var(--text-light); cursor: pointer; transition: .15s;
+      text-decoration: none; border: none; background: transparent; font-family: inherit;
+      position: relative;
+    }
+
+    .tnav:hover { color: var(--text); }
+
+    .tnav.active { color: var(--accent); font-weight: 600; }
+
+    .tnav.active::after {
+      content: ''; position: absolute; bottom: -17px; left: 16px; right: 16px;
+      height: 2px; background: var(--accent); border-radius: 1px;
+    }
+    
+    .topbar-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+    
+    .theme-toggle {
+      width: 36px; 
+      height: 36px; 
+      border-radius: 7px; 
+      border: 1px solid var(--border);
+      background: transparent; 
+      display: grid; 
+      place-items: center; 
+      cursor: pointer;
+      color: var(--text-light); 
+      transition: .2s; 
+      font-family: inherit;
+    }
+    
+    .theme-toggle:hover { 
+      color: var(--text); 
+      border-color: var(--accent);
+    }
+    
+    .theme-toggle svg { 
+      width: 18px; 
+      height: 18px; 
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: calc(32px + var(--topbar-h)) 24px 32px 24px;
+    }
+
+    .page-header {
+      margin-bottom: 32px;
+    }
+
+    .page-header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .page-header p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── Filters ── */
+    .filter-section {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, .07);
+      background: rgba(255, 255, 255, .03);
+      color: var(--muted);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all .2s;
+      font-weight: 500;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      border-color: rgba(79, 179, 255, .45);
+      background: rgba(79, 179, 255, .08);
+      color: var(--text);
+    }
+
+    /* ── Category Section ── */
+    .category-section {
+      margin-bottom: 48px;
+    }
+
+    .category-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text);
+    }
+
+    .category-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .category-dot.identity { color: #f87171; }
+    .category-dot.security { color: #fbbf24; }
+    .category-dot.network { color: #60a5fa; }
+    .category-dot.infrastructure { color: #34d399; }
+    .category-dot.data-ai { color: #c084fc; }
+    .category-dot.automation { color: #22d3ee; }
+    .category-dot.workplace { color: #fb923c; }
+    .category-dot.other { color: #a78bfa; }
+
+    /* ── Architecture Grid ── */
+    .architecture-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .arch-card {
+      background: rgba(8, 15, 27, .44);
+      border: 1px solid rgba(255, 255, 255, .065);
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .arch-card:hover {
+      border-color: rgba(79, 179, 255, .3);
+      background: rgba(8, 15, 27, .65);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .3);
+    }
+
+    .arch-card-image {
+      width: 100%;
+      height: 160px;
+      background: linear-gradient(135deg, rgba(79, 179, 255, .1), rgba(94, 234, 212, .1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid rgba(255, 255, 255, .065);
+    }
+
+    .arch-card-image img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 8px;
+    }
+
+    .arch-card-image.placeholder {
+      font-size: 48px;
+      color: rgba(255, 255, 255, .2);
+    }
+
+    .arch-card-content {
+      padding: 16px;
+    }
+
+    .arch-card-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .arch-card-desc {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .arch-card-services {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .service-badge {
+      font-size: 10px;
+      background: rgba(79, 179, 255, .1);
+      border: 1px solid rgba(79, 179, 255, .2);
+      border-radius: 4px;
+      padding: 4px 8px;
+      color: #4fb3ff;
+    }
+
+    .arch-card-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: rgba(255, 255, 255, .4);
+      border-top: 1px solid rgba(255, 255, 255, .05);
+      padding-top: 8px;
+    }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 7, 14, .8);
+      backdrop-filter: blur(10px);
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      padding: 24px;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal-panel {
+      position: relative;
+      width: min(900px, 100%);
+      max-height: 90vh;
+      overflow-y: auto;
+      background: linear-gradient(180deg, rgba(14, 24, 44, .97), rgba(8, 15, 28, .98));
+      border: 1px solid rgba(255, 255, 255, .09);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 32px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, .08);
+      background: rgba(255, 255, 255, .04);
+      color: var(--muted);
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .2s;
+    }
+
+    .modal-close:hover {
+      color: var(--text);
+      border-color: rgba(255, 255, 255, .2);
+      background: rgba(255, 255, 255, .08);
+    }
+
+    .modal-image {
+      width: 100%;
+      max-height: 400px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      object-fit: cover;
+    }
+
+    .modal-image.placeholder {
+      background: linear-gradient(135deg, rgba(79, 179, 255, .1), rgba(94, 234, 212, .1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 64px;
+      color: rgba(255, 255, 255, .1);
+    }
+
+    .modal-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .modal-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .modal-section {
+      margin-bottom: 20px;
+    }
+
+    .modal-section-title {
+      font-size: 12px;
+      color: #c9a66b;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 8px;
+    }
+
+    .modal-services {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .modal-service {
+      background: rgba(79, 179, 255, .1);
+      border: 1px solid rgba(79, 179, 255, .2);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 12px;
+      color: #4fb3ff;
+    }
+
+    @media (max-width: 768px) {
+      .architecture-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-panel {
+        padding: 24px 18px;
+      }
+
+      .nav {
+        gap: 0;
+        font-size: 12px;
+      }
+
+      .nav-item {
+        padding: 8px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="orb orb-c"></div>
+
+  <!-- Header -->
+  <header class="topbar">
+    <a href="index.html" class="topbar-brand" title="홈으로 돌아가기">
+      <div class="logo-icon">☁</div>
+      <div class="brand-info">
+        <div class="brand-name">Junseok Lee</div>
+        <div class="brand-role">Enterprise Platform Engineer</div>
+      </div>
+    </a>
+    
+    <nav class="topbar-nav">
+      <a href="index.html" class="tnav" id="nav-home">Home</a>
+      <a href="projects.html" class="tnav" id="nav-projects">Projects</a>
+      <a href="technology-map.html" class="tnav" id="nav-techmap">Technology Map</a>
+      <a href="architecture-library.html" class="tnav" id="nav-arch">Architecture Library</a>
+    </nav>
+    
+    <div class="topbar-right">
+      <button class="theme-toggle" id="theme-toggle" title="라이트/다크 모드 전환" aria-label="Toggle light/dark mode">
+        <svg class="sun-icon" fill="currentColor" viewBox="0 0 24 24" style="display:none;">
+          <circle cx="12" cy="12" r="5"/>
+          <path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m5.08 5.08l4.24 4.24M1 12h6m6 0h6m-16.78 7.78l4.24-4.24m5.08-5.08l4.24-4.24"/>
+        </svg>
+        <svg class="moon-icon" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="page-header">
+      <h1>Architecture Library</h1>
+      <p>다양한 엔터프라이즈 아키텍처 사례와 설계 템플릿. 각 아키텍처는 실제 업무에서 경험한 운영 과제를 해결하기 위해 설계되었습니다.</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="filter-section">
+      <button class="filter-btn active" data-category="all">전체</button>
+      <button class="filter-btn" data-category="identity">Identity</button>
+      <button class="filter-btn" data-category="security">Security</button>
+      <button class="filter-btn" data-category="network">Network</button>
+      <button class="filter-btn" data-category="infrastructure">Infrastructure</button>
+      <button class="filter-btn" data-category="data-ai">Data & AI</button>
+      <button class="filter-btn" data-category="automation">Automation</button>
+      <button class="filter-btn" data-category="workplace">Workplace</button>
+    </div>
+
+    <!-- Identity (5) -->
+    <div class="category-section" data-category="identity">
+      <div class="category-title">
+        <span class="category-dot identity"></span>
+        Identity Governance (5)
+      </div>
+      <div class="architecture-grid">
+        
+        <!-- 1 -->
+        <div class="arch-card" data-id="1">
+          <div class="arch-card-image placeholder">📊</div>
+          <div class="arch-card-content">
+            <div class="arch-card-title">Hybrid Identity Architecture</div>
+            <div class="arch-card-desc">온프레미스 Active Directory를 Microsoft Entra ID와 동기화하여 클라우드와 온프레미스 환경에서 통일된 ID 관리</div>
+            <div class="arch-card-services">
+              <span class="service-badge">Entra ID Connect</span>
+              <span class="service-badge">AD</span>
+              <span class="service-badge">Sync</span>
+            </div>
+            <div class="arch-card-meta">
+              <span>📅 2025.05.15</span>
+              <span>👁️ 245</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2 -->
+        <div class="arch-card" data-id="2">
+          <div class="arch-card-image placeholder">🔐</div>
+          <div class="arch-card-content">
+            <div class="arch-card-title">Entra ID with Conditional Access</div>
+            <div class="arch-card-desc">사용자의 위치, 디바이스, 위험도를 기반으로 동적인 접근 제어. Zero Trust 보안의 핵심</div>
+            <div class="arch-card-services">
+              <span class="service-badge">Conditional Access</span>
+              <span class="service-badge">MFA</span>
+              <span class="service-badge">Risk Detection</span>
+            </div>
+            <div class="arch-card-meta">
+              <span>📅 2025.05.10</span>
+              <span>👁️ 198</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 -->
+        <div class="arch-card" data-id="3">
+          <div class="arch-card-image placeholder">👥</div>
+          <div class="arch-card-content">
+            <div class="arch-card-title">RBAC & PIM Structure</div>
+            <div class="arch-card-desc">역할 기반 접근 제어(RBAC)와 Privileged Identity Management(PIM)를 통한 정밀한 권한 관리 및 감시</div>
+            <div class="arch-card-services">
+              <span class="service-badge">RBAC</span>
+              <span class="service-badge">PIM</span>
+              <span class="service-badge">Access Review</span>
+            </div>
+            <div class="arch-card-meta">
+              <span>📅 2025.05.08</span>
+              <span>👁️ 167</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 -->
+        <div class="arch-card" data-id="4">
+          <div class="arch-card-image placeholder">🔑</div>
+          <div class="arch-card-content">
+            <div class="arch-card-title">Passwordless Authentication</div>
+            <div class="arch-card-desc">비밀번호 없는 인증 방식(Windows Hello, FIDO2, Authenticator)으로 보안 강화 및 사용자 편의성 증대</div>
+            <div class="arch-card-services">
+              <span class="service-badge">Windows Hello</span>
+              <span class="service-badge">FIDO2</span>
+              <span class="service-badge">Authenticator</span>
+            </div>
+            <div class="arch-card-meta">
+              <span>📅 2025.05.05</span>
+              <span>👁️ 142</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5 -->
+        <div class="arch-card" data-id="5">
+          <div class="arch-card-image placeholder">🌍</div>
+          <div class="arch-card-content">
+            <div class="arch-card-title">Multi-tenant Identity Management</div>
+            <div class="arch-card-desc">여러 테넌트 간 ID 통합, 외부 협력사 접근 제어, B2B 협업 시나리오에서의 안전한 ID 관리</div>
+            <div class="arch-card-services">
+              <span class="service-badge">B2B Collaboration</span>
+              <span class="service-badge">External ID</span>
+              <span class="service-badge">Entitlement Mgmt</span>
+            </div>
+            <div class="arch-card-meta">
+              <span>📅 2025.05.01</span>
+              <span>👁️ 118</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Security (4) -->
+    <div class="category-section" data-category="security">
+      <div class="category-title">
+        <span class="category-dot security"></span>
+        Security Operations (4)
+      </div>
+      <div class="architecture-grid">
+
+        <!-- 6 -->
+        <div class="arch-card" data-id="6">
+          <div class="arch-card-image placeholder">🛡️</div>
+          <div class="arch-card-content">
+            <div class="arch-card-title">Zero Trust Network Architecture</div>
+            <div class="arch-card-desc">모든 접근을 신뢰하지 않고 검증. ID, 디바이스, 애플리케이션, 네트워크, 데이터 5가지 축에서 지속적 검증</div>
+            <div class="arch-card-services">
+              <span class="service-badge">Zero Trust</span>
+              <span class="service-badge">Firewall</span>
+              <span class="service-badge">Private Link</span>
+            </div>
+            <div class="arch-card-meta">
+              <span>📅 2025.05.10</span>
+              <span>👁️ 312</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7 -->
+        <div class="arch-card" data-id="7">
+          <div class="arch-card-image placeholder">🚨</div>
+          <div class="arch-card-content">
+            <div class="arch-card-title">Azure Sentinel Detection & Response</div>
+            <div class="arch-card-desc">중앙화된 로그 수집, KQL 기반 위협 탐지 규칙, Playbook을 통한 자동 대응 및 사건 관리</div>
+            <div class="arch-card-services">
+              <span class="service-badge">Sentinel</span>
+              <span class="service-badge">KQL</span>
+              <span class="service-badge">Playbook</span>
+            </div>
+            <div class="arch-card-meta">
+              <span>📅 2025.04.25</span>
+              <span>👁️ 289</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8 -->
+        <div class="arch-card" data-id="8">
+          <div class="arch-card-image placeholder">🔒</div>
+          <div class="arch-card-content">
+            <div class="arch-card-title">DLP & Data Protection Strategy</div>
+            <div class="arch-card-desc">민감 정보 자동 분류, 데이터 암호화, 접근 제어를 통한 데이터 손실 방지 및 규정 준수</div>
+            <div class="arch-card-services">
+              <span class="service-badge">DLP</span>
+              <span class="service-badge">Sensitivity Labels</span>
+              <span class="service-badge">Purview</span>
+            </div>
+            <div class="arch-card-meta">
+              <span>📅 2025.04.20</span>
+              <span>👁️ 203</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9 -->
+        <div class="arch-card" data-id="9">
+          <div class="arch-card-image placeholder">📋</div>
+          <div class="arch-card-content">
+            <div class="arch-card-title">Compliance & Audit Logging</div>
+            <div class="arch-card-desc">모든 작업의 감시 로그 기록, 규정 준수 증명, 포렌식 분석 및 사내 정책 위반 탐지</div>
+            <div class="arch-card-services">
+              <span class="service-badge">Audit Log</span>
+              <span class="service-badge">Log Analytics</span>
+              <span class="service-badge">Compliance Manager</span>
+            </div>
+            <div class="arch-card-meta">
+              <span>📅 2025.04.15</span>
+              <span>👁️ 156</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Network (4) -->
+    <div class="category-section" data-category="network">
+      <div class="category-title">
+        <span class="category-dot network"></span>
+        Network & Connectivity (4)
+      </div>
+      <div class="architecture-grid">
+
+        <!-- 10 -->
+        <div class="arch-card" data-id="10">
+          <div class="arch-card-image placeholder">🕸️</div>
+          <div class="arch-card-content">
+            <div class="arch-card-title">Hub & Spoke Network Topology</div>
+            <div class="arch-card-desc">중앙 Hub에서 모든 트래픽을 통제하는 구조. 보안 강화, 비용 최적화, 정책 일원화가 가능한 표준 아키텍처</div>
+            <div class="arch-card-services">
+              <span class="service-badge">VNet</span>
+              <span class="service-badge">Firewall</span>
+              <span class="service-badge">Route Table</span>
+            </div>
+            <div class="arch-card-meta">
+              <span>📅 2025.05.08</span>
+              <span>👁️ 267</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 11 -->
+        <div class="arch-card" data-id="11">
+          <div class="arch-card-image placeholder">🔗</div>
+          <div class="arch-card-content">
+            <div class="arch-card-title">ExpressRoute & VPN Gateway</div>
+            <div class="arch-card-desc">온프레미스와 Azure 간 보안 연결. VPN은 초기 단계, ExpressRoute는 안정화 단계에서 선택 가능</div>
+            <div class="arch-card-services">
+              <span class="service-badge">ExpressRoute</span>
+              <span class="service-badge">VPN Gateway</span>
+              <span class="service-badge">Gateway Subnet</span>
+            </div>
+            <div class="arch-card-meta">
+              <span>📅 2025.05.05</span>
+              <span>👁️ 234</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 12 -->
+        <div class="arch-card" data-id="12">
+          <div class="arch-card-image placeholder">🔌</div>
+          <div class="arch-card-content">
+            <div class="arch-card-title">Private Endpoint & Service Endpoints</div>
+            <div class="arch-card-desc">PaaS 서비스(Storage, SQL, Key Vault)를 프라이빗 네트워크에서만 접근 가능하게 제한. 데이터 유출 방지</div>
+            <div class="arch-card-services">
+              <span class="service-badge">Private Endpoint</span>
+              <span class="service-badge">Service Endpoint</span>
+              <span class="service-badge">Private DNS</span>
+            </div>
+            <div class="arch-card-meta">
+              <span>📅 2025.05.02</span>
+              <span>👁️ 189</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 13 -->
+        <div class="arch-card" data-id="13">
+          <div class="arch-card-image placeholder">🚨</div>
+          <div class="arch-card-content">
+            <div class="arch-card-title">Azure Firewall Rules Engine</div>
+            <div class="arch-card-desc">중앙 집중식 방화벽. 애플리케이션 규칙, 네트워크 규칙, NAT 규칙을 통한 정밀한 트래픽 제어</div>
+            <div class="arch-card-services">
+              <span class="service-badge">Azure Firewall</span>
+              <span class="service-badge">App Rules</span>
+              <span class="service-badge">Threat Intelligence</span>
+            </div>
+            <div class="arch-card-meta">
+              <span>📅 2025.04.28</span>
+              <span>👁️ 167</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Infrastructure (4) -->
+    <div class="category-section" data-category="infrastructure">
+      <div class="category-title">
+        <span class="category-dot infrastructure"></span>
+        Infrastructure & Management (4)
+      </div>
+      <div class="architecture-grid">
+
+        <!-- 14 -->
+        <div class="arch-card" data-id="14">
+          <div class="arch-card-image placeholder">🏗️</div>
+          <div class="arch-card-content">
+            <div class="arch-card-title">Landing Zone Design</div>
+            <div class="arch-card-desc">Microsoft CAF 기반 Azure 기초 플랫폼. Management Group, Subscription, 정책 상속 구조로 엔터프라이즈급 거버넌스</div>
+            <div class="arch-card-services">
+              <span class="service-badge">Management Group</span>
+              <span class="service-badge">Subscription</span>
+              <span class="service-badge">Azure Policy</span>
+            </div>
+            <div class="arch-card-meta">
+              <span>📅 2025.05.01</span>
+              <span>👁️ 245</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 15 -->
+        <div class="arch-card" data-id="15">
+          <div class="arch-card-image placeholder">🌐</div>
+          <div class="arch-card-content">
+            <div class="arch-card-title">Hybrid Infrastructure with Azure Arc</div>
+            <div class="arch-card-desc">온프레미스, 다중 클라우드, 엣지 환경의 리소스를 Azure처럼 관리. 통일된 거버넌스와 모니터링</div>
+            <div class="arch-card-services">
+              <span class="service-badge">Azure Arc</span>
+              <span class="service-badge">Hybrid Management</span>
+              <span class="service-badge">Unified Control</span>
+            </div>
+            <div class="arch-card-meta">
+              <span>📅 2025.04.25</span>
+              <span>👁️ 201</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 16 -->
+        <div class="arch-card" data-id="16">
+          <div class="arch-card-image placeholder">🔄</div>
+          <div class="arch-card-content">
+            <div class="arch-card-title">Disaster Recovery Architecture</div>
+            <div class="arch-card-desc">Multi-region, 자동 페일오버, RTO/RPO 목표 달성. Site Recovery로 자동화된 DR 운영</div>
+            <div class="arch-card-services">
+              <span class="service-badge">Site Recovery</span>
+              <span class="service-badge">Multi-region</span>
+              <span class="service-badge">Failover Automation</span>
+            </div>
+            <div class="arch-card-meta">
+              <span>📅 2025.04.20</span>
+              <span>👁️ 178</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 17 -->
+        <div class="arch-card" data-id="17">
+          <div class="arch-card-image placeholder">💾</div>
+          <div class="arch-card-content">
+            <div class="arch-card-title">Backup & Business Continuity</div>
+            <div class="arch-card-desc">Recovery Services Vault를 통한 중앙화된 백업 관리. 온프레미스/클라우드 자원의 통합 보호</div>
+            <div class="arch-card-services">
+              <span class="service-badge">Backup Vault</span>
+              <span class="service-badge">Recovery Point</span>
+              <span class="service-badge">Retention Policy</span>
+            </div>
+            <div class="arch-card-meta">
+              <span>📅 2025.04.15</span>
+              <span>👁️ 144</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data & AI (2) -->
+    <div class="category-section" data-category="data-ai">
+      <div class="category-title">
+        <span class="category-dot data-ai"></span>
+        Data & AI (2)
+      </div>
+      <div class="architecture-grid">
+
+        <!-- 18 -->
+        <div class="arch-card" data-id="18">
+          <div class="arch-card-image placeholder">📊</div>
+          <div class="arch-card-content">
+            <div class="arch-card-title">Modern Data Platform Architecture</div>
+            <div class="arch-card-desc">데이터 수집, 저장, 처리, 분석의 전체 파이프라인. Synapse Analytics로 통합된 분석 플랫폼</div>
+            <div class="arch-card-services">
+              <span class="service-badge">Synapse Analytics</span>
+              <span class="service-badge">Data Lake</span>
+              <span class="service-badge">Power BI</span>
+            </div>
+            <div class="arch-card-meta">
+              <span>📅 2025.04.10</span>
+              <span>👁️ 212</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 19 -->
+        <div class="arch-card" data-id="19">
+          <div class="arch-card-image placeholder">🤖</div>
+          <div class="arch-card-content">
+            <div class="arch-card-title">AI Search with RAG Pattern</div>
+            <div class="arch-card-desc">Azure AI Search의 벡터 검색과 Azure OpenAI의 생성형 AI를 결합한 RAG(Retrieval-Augmented Generation) 패턴</div>
+            <div class="arch-card-services">
+              <span class="service-badge">AI Search</span>
+              <span class="service-badge">Azure OpenAI</span>
+              <span class="service-badge">Vector Search</span>
+            </div>
+            <div class="arch-card-meta">
+              <span>📅 2025.04.05</span>
+              <span>👁️ 189</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Automation (2) -->
+    <div class="category-section" data-category="automation">
+      <div class="category-title">
+        <span class="category-dot automation"></span>
+        Automation & DevOps (2)
+      </div>
+      <div class="architecture-grid">
+
+        <!-- 20 -->
+        <div class="arch-card" data-id="20">
+          <div class="arch-card-image placeholder">⚙️</div>
+          <div class="arch-card-content">
+            <div class="arch-card-title">Power Automate Reference Architecture</div>
+            <div class="arch-card-desc">반복적인 업무 자동화, 시스템 간 통합, AI Builder와의 결합으로 지능형 자동화 구현</div>
+            <div class="arch-card-services">
+              <span class="service-badge">Power Automate</span>
+              <span class="service-badge">AI Builder</span>
+              <span class="service-badge">Process Mining</span>
+            </div>
+            <div class="arch-card-meta">
+              <span>📅 2025.04.28</span>
+              <span>👁️ 167</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 21 -->
+        <div class="arch-card" data-id="21">
+          <div class="arch-card-image placeholder">🔄</div>
+          <div class="arch-card-content">
+            <div class="arch-card-title">Azure DevOps CI/CD Pipeline</div>
+            <div class="arch-card-desc">코드 커밋부터 프로덕션 배포까지의 자동화. Terraform/Bicep으로 IaC 기반 인프라 배포</div>
+            <div class="arch-card-services">
+              <span class="service-badge">DevOps</span>
+              <span class="service-badge">CI/CD</span>
+              <span class="service-badge">Infrastructure as Code</span>
+            </div>
+            <div class="arch-card-meta">
+              <span>📅 2025.04.20</span>
+              <span>👁️ 143</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Workplace (2) -->
+    <div class="category-section" data-category="workplace">
+      <div class="category-title">
+        <span class="category-dot workplace"></span>
+        Workplace & Collaboration (2)
+      </div>
+      <div class="architecture-grid">
+
+        <!-- 22 -->
+        <div class="arch-card" data-id="22">
+          <div class="arch-card-image placeholder">💼</div>
+          <div class="arch-card-content">
+            <div class="arch-card-title">Microsoft 365 Integration</div>
+            <div class="arch-card-desc">Teams, Exchange, SharePoint의 통합 커뮤니케이션 및 협업 플랫폼. Entra ID와의 ID 연동</div>
+            <div class="arch-card-services">
+              <span class="service-badge">Teams</span>
+              <span class="service-badge">SharePoint</span>
+              <span class="service-badge">Exchange Online</span>
+            </div>
+            <div class="arch-card-meta">
+              <span>📅 2025.04.12</span>
+              <span>👁️ 156</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 23 -->
+        <div class="arch-card" data-id="23">
+          <div class="arch-card-image placeholder">🔒</div>
+          <div class="arch-card-content">
+            <div class="arch-card-title">Secure Client Collaboration</div>
+            <div class="arch-card-desc">외부 협력사와의 안전한 협업. B2B ID 관리, 조건부 접근, 데이터 보호를 통한 보안 강화</div>
+            <div class="arch-card-services">
+              <span class="service-badge">B2B Collaboration</span>
+              <span class="service-badge">Guest Access</span>
+              <span class="service-badge">DLP Policy</span>
+            </div>
+            <div class="arch-card-meta">
+              <span>📅 2025.04.08</span>
+              <span>👁️ 123</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Other (1) -->
+    <div class="category-section" data-category="other">
+      <div class="category-title">
+        <span class="category-dot other"></span>
+        Enterprise Strategy (1)
+      </div>
+      <div class="architecture-grid">
+
+        <!-- 24 -->
+        <div class="arch-card" data-id="24">
+          <div class="arch-card-image placeholder">📈</div>
+          <div class="arch-card-content">
+            <div class="arch-card-title">Cost Optimization & FinOps</div>
+            <div class="arch-card-desc">Azure 비용 분석, Reserved Instance/Savings Plan, 자동 리소스 최적화를 통한 월 20-30% 비용 절감</div>
+            <div class="arch-card-services">
+              <span class="service-badge">Cost Management</span>
+              <span class="service-badge">Advisor</span>
+              <span class="service-badge">FinOps</span>
+            </div>
+            <div class="arch-card-meta">
+              <span>📅 2025.04.01</span>
+              <span>👁️ 198</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal-panel">
+      <span class="modal-close" onclick="closeModal()">&times;</span>
+      <img id="modalImage" class="modal-image placeholder" alt="Architecture">
+      <h2 class="modal-title" id="modalTitle">Title</h2>
+      <p class="modal-desc" id="modalDesc">Description</p>
+      
+      <div class="modal-section">
+        <div class="modal-section-title">Azure Services Used</div>
+        <div class="modal-services" id="modalServices"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 아키텍처 데이터
+    const architectures = {
+      1: {
+        title: "Hybrid Identity Architecture",
+        desc: "온프레미스 Active Directory를 Microsoft Entra ID와 동기화하여 클라우드와 온프레미스 환경에서 통일된 ID 관리을 구현합니다. Entra ID Connect를 통한 디렉터리 동기화, 클라우드 전용 사용자 지원, 비밀번호 쓰기 저장(Password Writeback) 등의 기능으로 하이브리드 환경을 완벽히 제어합니다.",
+        services: ["Entra ID Connect", "Azure AD", "Synchronization", "Hybrid Identity", "Directory Sync"]
+      },
+      2: {
+        title: "Entra ID with Conditional Access",
+        desc: "사용자의 위치, 디바이스 상태, 로그인 위험도를 실시간으로 분석하여 동적인 접근 제어를 수행합니다. Zero Trust 보안 모델의 핵심으로, 모든 접근을 신뢰하지 않고 검증합니다. MFA 요구사항, 디바이스 준수 상태, 위험 기반 차단 등을 정책으로 설정합니다.",
+        services: ["Conditional Access", "MFA", "Risk Detection", "Token Protection", "Authentication Methods"]
+      },
+      3: {
+        title: "RBAC & PIM Structure",
+        desc: "Azure 역할 기반 접근 제어(RBAC)로 세밀한 권한을 할당하고, Privileged Identity Management(PIM)로 관리자 권한의 Just-In-Time(JIT) 활성화와 감사를 구현합니다. 권한 상승의 모든 작업이 기록되며, Access Review로 주기적으로 권한을 재검증합니다.",
+        services: ["RBAC", "PIM", "Role Assignment", "Access Review", "Privileged Access"]
+      },
+      4: {
+        title: "Passwordless Authentication",
+        desc: "비밀번호 없는 인증 방식으로 보안을 강화합니다. Windows Hello for Business, FIDO2 보안 키, Microsoft Authenticator 앱 등의 방식을 지원하여 피싱 공격을 근본적으로 차단합니다. 사용자 편의성도 동시에 향상됩니다.",
+        services: ["Windows Hello", "FIDO2", "Authenticator App", "Passwordless Sign-in", "Biometric Auth"]
+      },
+      5: {
+        title: "Multi-tenant Identity Management",
+        desc: "여러 조직 테넌트 간의 ID 통합 관리, 외부 협력사 B2B 접근, 계약직/임직원 간 권한 분리를 수행합니다. Entitlement Management로 자동화된 계정 프로비저닝/해제를 구현하고, Access Review로 불필요한 권한을 자동 제거합니다.",
+        services: ["B2B Collaboration", "External Identity", "Entitlement Management", "Access Packages", "Guest Accounts"]
+      },
+      6: {
+        title: "Zero Trust Network Architecture",
+        desc: "경계 기반 보안을 버리고 모든 접근을 신뢰하지 않으며 검증합니다. 신원(Identity), 디바이스(Device), 애플리케이션(Application), 네트워크(Network), 데이터(Data) 5가지 축에서 연속적으로 검증하며, Private Endpoint와 Service Endpoint로 PaaS 서비스를 격리합니다.",
+        services: ["Zero Trust", "Azure Firewall", "Private Link", "Network Segmentation", "Traffic Inspection"]
+      },
+      7: {
+        title: "Azure Sentinel Detection & Response",
+        desc: "클라우드 네이티브 SIEM으로 온프레미스와 클라우드의 모든 로그를 중앙화합니다. KQL(Kusto Query Language)로 위협 탐지 규칙을 정의하고, Playbook을 통해 자동 대응(격리, 차단, 알림)을 수행합니다. 사고 발생 시 조사 시간을 획기적으로 단축합니다.",
+        services: ["Sentinel", "KQL", "Playbooks", "Analytics Rules", "Incident Management"]
+      },
+      8: {
+        title: "DLP & Data Protection Strategy",
+        desc: "민감한 정보(고객정보, 재무정보, 의료정보 등)를 자동으로 식별하고 분류합니다. Sensitivity Labels로 문서를 태그하고, DLP 정책으로 외부 공유를 방지합니다. Purview를 통해 전체 데이터 자산을 통제하고, 규정 준수를 증명합니다.",
+        services: ["DLP", "Sensitivity Labels", "Purview", "Data Classification", "Encryption"]
+      },
+      9: {
+        title: "Compliance & Audit Logging",
+        desc: "모든 사용자 작업, 관리자 활동, 데이터 접근을 감시 로그에 기록합니다. Audit Log에서 특정 작업을 검색하고, Log Analytics에서 고급 분석을 수행합니다. Compliance Manager로 규정 준수 상태를 추적하고 증명합니다.",
+        services: ["Audit Logging", "Log Analytics", "Compliance Manager", "Advanced Audit", "Activity Reports"]
+      },
+      10: {
+        title: "Hub & Spoke Network Topology",
+        desc: "중앙 Hub에서 모든 트래픽을 통제하는 구조입니다. 각 부서/팀의 워크로드는 Spoke에 배치되고, Hub의 방화벽을 거쳐서만 통신합니다. 이를 통해 보안 정책을 일원화하고, 비용을 최적화하며, 네트워크 확장을 용이하게 합니다.",
+        services: ["VNet", "Firewall", "Route Table", "Network Peering", "Gateway Subnet"]
+      },
+      11: {
+        title: "ExpressRoute & VPN Gateway",
+        desc: "온프레미스와 Azure 간 보안 연결을 구현합니다. VPN Gateway는 초기 단계에서 비용 효율적으로 연결하고, ExpressRoute는 안정화 단계에서 전용선을 통해 대역폭과 지연시간을 보장합니다. 두 방식을 조합하면 고가용성을 제공합니다.",
+        services: ["ExpressRoute", "VPN Gateway", "Site-to-Site VPN", "Point-to-Site VPN", "Redundancy"]
+      },
+      12: {
+        title: "Private Endpoint & Service Endpoints",
+        desc: "Azure Storage, SQL Database, Key Vault 등의 PaaS 서비스를 프라이빗 네트워크에서만 접근 가능하도록 제한합니다. Public Endpoint를 비활성화하여 인터넷 노출을 완전히 차단하고, 프라이빗 IP를 통해서만 연결되게 합니다. 데이터 유출 위험을 획기적으로 감소시킵니다.",
+        services: ["Private Endpoint", "Service Endpoint", "Private DNS", "Network Isolation", "Data Protection"]
+      },
+      13: {
+        title: "Azure Firewall Rules Engine",
+        desc: "중앙 집중식 방화벽으로 모든 동-서, 남-북 트래픽을 검사합니다. 애플리케이션 규칙(FQDN 기반), 네트워크 규칙(IP/포트 기반), NAT 규칙을 통한 정밀한 제어가 가능합니다. Threat Intelligence로 알려진 악성 IP/도메인을 자동으로 차단합니다.",
+        services: ["Azure Firewall", "Application Rules", "Network Rules", "NAT Rules", "Threat Intelligence"]
+      },
+      14: {
+        title: "Landing Zone Design",
+        desc: "Microsoft Cloud Adoption Framework(CAF)를 기반으로 한 Azure 기초 플랫폼입니다. Management Group으로 계층 구조를 만들고, Subscription을 역할별로 분리하며, Azure Policy로 표준을 강제합니다. 모든 신규 Subscription이 자동으로 정책을 상속받아 엔터프라이즈급 거버넌스를 구현합니다.",
+        services: ["Management Group", "Subscription", "Resource Group", "Azure Policy", "Blueprints"]
+      },
+      15: {
+        title: "Hybrid Infrastructure with Azure Arc",
+        desc: "온프레미스, AWS, GCP 등 다양한 환경의 리소스를 Azure처럼 관리합니다. Azure Arc-enabled servers로 모든 머신을 등록하고, 통일된 정책, 모니터링, 업데이트 관리를 수행합니다. Azure Portal에서 멀티 클라우드/온프레미스 환경을 한눈에 제어합니다.",
+        services: ["Azure Arc", "Arc-enabled Servers", "Azure Policy", "Update Management", "Monitoring"]
+      },
+      16: {
+        title: "Disaster Recovery Architecture",
+        desc: "데이터 센터 장애 시 자동으로 다른 지역으로 페일오버합니다. Azure Site Recovery로 온프레미스/클라우드 VM을 보호하고, 자동 페일오버 테스트를 정기적으로 수행합니다. RTO(복구 시간 목표), RPO(복구 지점 목표)를 사전에 정의하고 달성합니다.",
+        services: ["Site Recovery", "Multi-region", "Failover Automation", "Recovery Plans", "Replication"]
+      },
+      17: {
+        title: "Backup & Business Continuity",
+        desc: "모든 데이터(VM, 데이터베이스, 파일)를 중앙 Vault에 백업합니다. 온프레미스와 클라우드 리소스를 통합 관리하고, 다양한 보관 정책(일일, 주간, 월간, 연간)을 적용합니다. 랜섬웨어 공격에도 데이터를 복구할 수 있도록 불변 백업을 활성화합니다.",
+        services: ["Backup Vault", "Recovery Points", "Retention Policies", "Cross-region Backup", "Immutable Backup"]
+      },
+      18: {
+        title: "Modern Data Platform Architecture",
+        desc: "데이터 수집(Ingestion), 저장(Storage), 처리(Processing), 분석(Analytics)의 전체 파이프라인을 Azure에서 구현합니다. Azure Synapse Analytics로 데이터 웨어하우스와 빅데이터 분석을 통합하고, Power BI로 인사이트를 시각화합니다.",
+        services: ["Synapse Analytics", "Data Lake", "Power BI", "Spark", "Data Factory"]
+      },
+      19: {
+        title: "AI Search with RAG Pattern",
+        desc: "Azure AI Search의 벡터 검색으로 의미 기반 검색을 수행하고, Azure OpenAI의 생성형 AI와 결합합니다. 사용자의 질문에 대해 지식베이스에서 관련 문서를 검색한 후, GPT가 정답을 생성하는 RAG(Retrieval-Augmented Generation) 패턴입니다. 자신감 있는 답변과 출처 명시가 가능합니다.",
+        services: ["AI Search", "Azure OpenAI", "Vector Search", "Embedding", "Semantic Search"]
+      },
+      20: {
+        title: "Power Automate Reference Architecture",
+        desc: "반복적인 업무를 자동화합니다. 시스템 간 데이터 동기화, 승인 워크플로우, 알림 전송 등을 Flow로 구현합니다. AI Builder를 결합하면 문서 인식, 예측 모델, 프로세스 마이닝까지 가능합니다. 이를 통해 수작업을 획기적으로 줄이고 휴먼에러를 제거합니다.",
+        services: ["Power Automate", "AI Builder", "Process Advisor", "Cloud Flows", "Desktop Flows"]
+      },
+      21: {
+        title: "Azure DevOps CI/CD Pipeline",
+        desc: "코드 커밋부터 프로덕션 배포까지 완전히 자동화합니다. Azure Repos에서 코드를 관리하고, Azure Pipelines에서 빌드/테스트를 자동화하며, Release Pipeline으로 배포를 자동화합니다. Infrastructure as Code(Terraform/Bicep)로 인프라도 함께 배포합니다.",
+        services: ["DevOps", "Azure Repos", "Azure Pipelines", "Infrastructure as Code", "Artifact Repository"]
+      },
+      22: {
+        title: "Microsoft 365 Integration",
+        desc: "Teams, SharePoint, Exchange Online으로 통합 커뮤니케이션 및 협업 환경을 구축합니다. Entra ID와의 ID 연동으로 SSO를 지원하고, 조건부 접근 정책으로 보안을 강화합니다. Teams는 음성/영상 회의, 파일 공유, 앱 통합의 중심이 됩니다.",
+        services: ["Teams", "SharePoint Online", "Exchange Online", "OneDrive", "Microsoft 365 Apps"]
+      },
+      23: {
+        title: "Secure Client Collaboration",
+        desc: "외부 협력사(고객사, 공급사, 파트너사)와 안전하게 협업합니다. B2B Identity로 협력사 사용자를 게스트로 초대하고, 조건부 접근 정책으로 디바이스나 위치를 제한합니다. DLP 정책으로 민감 정보의 외출을 방지하고, Access Review로 정기적으로 권한을 검토합니다.",
+        services: ["B2B Collaboration", "Guest Access", "DLP Policy", "Conditional Access", "Access Review"]
+      },
+      24: {
+        title: "Cost Optimization & FinOps",
+        desc: "Azure 비용을 투명하게 파악하고 최적화합니다. Cost Management로 비용 분석을 수행하고, Advisor로 권고사항을 받습니다. Reserved Instance와 Savings Plan으로 선불 할인을 받고, 자동 종료 정책으로 유휴 리소스를 제거합니다. FinOps 문화를 도입하여 구독별, 팀별 책임을 명확히 합니다.",
+        services: ["Cost Management", "Advisor", "Reserved Instance", "Savings Plan", "Budgets & Alerts"]
+      }
+    };
+
+    // 필터링
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const category = this.dataset.category;
+        
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        
+        document.querySelectorAll('.category-section').forEach(section => {
+          const sectionCategory = section.dataset.category;
+          if (category === 'all' || sectionCategory === category) {
+            section.style.display = 'block';
+          } else {
+            section.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // 모달 열기
+    document.querySelectorAll('.arch-card').forEach(card => {
+      card.addEventListener('click', function() {
+        const id = this.dataset.id;
+        const data = architectures[id];
+        
+        if (data) {
+          document.getElementById('modalTitle').textContent = data.title;
+          document.getElementById('modalDesc').textContent = data.desc;
+          document.getElementById('modalImage').alt = data.title;
+          
+          const servicesHtml = data.services.map(s => `<span class="modal-service">${s}</span>`).join('');
+          document.getElementById('modalServices').innerHTML = servicesHtml;
+          
+          document.getElementById('modal').classList.add('show');
+        }
+      });
+    });
+
+    // 모달 닫기
+    function closeModal() {
+      document.getElementById('modal').classList.remove('show');
+    }
+
+    document.getElementById('modal').addEventListener('click', (e) => {
+      if (e.target.id === 'modal') closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // 딥링크: ?cat=security 로 진입 시 해당 필터 자동 선택 + 스크롤
+    (function initFromQuery(){
+      const params = new URLSearchParams(window.location.search);
+      const cat = params.get('cat');
+      if (!cat) return;
+      const btn = document.querySelector(`.filter-btn[data-category="${cat}"]`);
+      if (btn) {
+        btn.click();
+        const section = document.querySelector(`.category-section[data-category="${cat}"]`);
+        if (section) {
+          setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+        }
+      }
+    })();
+    
+    // 라이트/다크 모드 토글 로직
+    (function() {
+      const html = document.documentElement;
+      const theme = localStorage.getItem('theme') || 'dark';
+      const toggle = document.getElementById('theme-toggle');
+      const sunIcon = toggle?.querySelector('.sun-icon');
+      const moonIcon = toggle?.querySelector('.moon-icon');
+      
+      function setTheme(t) {
+        if (t === 'light') {
+          html.classList.add('light-mode');
+          localStorage.setItem('theme', 'light');
+          if (sunIcon && moonIcon) {
+            sunIcon.style.display = 'block';
+            moonIcon.style.display = 'none';
+          }
+        } else {
+          html.classList.remove('light-mode');
+          localStorage.setItem('theme', 'dark');
+          if (sunIcon && moonIcon) {
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
+          }
+        }
+      }
+      
+      setTheme(theme);
+      toggle?.addEventListener('click', () => {
+        const current = localStorage.getItem('theme') || 'dark';
+        setTheme(current === 'dark' ? 'light' : 'dark');
+      });
+      
+      // 현재 페이지 네비게이션 활성화
+      const path = window.location.pathname.split('/').pop() || 'index.html';
+      document.querySelectorAll('.topbar-nav .tnav').forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === path || (path === '' && href === 'index.html')) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
