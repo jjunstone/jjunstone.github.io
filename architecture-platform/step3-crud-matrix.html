@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Step 3 — CRUD 매트릭스 | Architecture Studies</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/static/pretendard.css">
+  <style>
+    @font-face {
+      font-family:"KyoboHand";
+      src:url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307@1.1/KyoboHandwriting2023wsa.woff2") format("woff2");
+      font-weight:400;font-style:normal;font-display:swap;
+    }
+    :root {
+      --paper:#ead8aa;--paper-light:#f8e9c4;--paper-warm:#ddc48f;
+      --line:rgba(38,68,88,.18);--ink:#17130f;--ink-soft:#33291f;
+      --navy:#173c78;--maroon:#7c261f;--olive:#4e5533;--gold:#9a7729;
+      --paper-shadow:rgba(44,28,9,.24);
+      --font-hand:"Pretendard","Noto Sans KR","Malgun Gothic",sans-serif;
+      --font-script:"Pretendard","Noto Sans KR","Malgun Gothic",sans-serif;
+    }
+    *{box-sizing:border-box;letter-spacing:0;}
+    html{scroll-behavior:smooth;}
+    body{
+      margin:0;color:var(--ink);font-family:var(--font-hand);
+      background:radial-gradient(circle at 12% 10%,rgba(255,255,255,.34),transparent 30%),
+                 linear-gradient(135deg,#c9a66b,#ead6a2 46%,#bd955b);
+      min-height:100vh;overflow-x:hidden;opacity:0;transition:opacity .3s ease;
+    }
+    a{color:inherit;text-decoration:none;}
+    svg{display:block;}::selection{background:var(--gold);color:#fff;}
+
+    .notebook{
+      position:relative;width:min(100%,1080px);margin:0 auto;
+      padding:72px 54px 48px 86px;overflow:hidden;
+      background:
+        radial-gradient(circle at 23% 18%,rgba(118,76,29,.13) 0 1px,transparent 1.6px) 0 0/38px 38px,
+        radial-gradient(circle at 78% 62%,rgba(70,46,22,.10) 0 1px,transparent 1.4px) 12px 4px/46px 46px,
+        repeating-linear-gradient(to bottom,transparent 0 35px,var(--line) 36px 37px),
+        linear-gradient(90deg,transparent 0 50px,rgba(112,82,39,.18) 51px 52px,transparent 53px),
+        linear-gradient(180deg,var(--paper-light),var(--paper) 45%,var(--paper-warm));
+      box-shadow:0 18px 42px var(--paper-shadow);
+    }
+    .notebook::before{
+      content:"";position:absolute;inset:0;pointer-events:none;
+      background:
+        linear-gradient(90deg,rgba(83,53,22,.12),transparent 16%,transparent 84%,rgba(83,53,22,.08)),
+        radial-gradient(circle at 35% 9%,rgba(67,41,14,.12),transparent 2px),
+        radial-gradient(circle at 67% 71%,rgba(67,41,14,.11),transparent 2px);
+      mix-blend-mode:multiply;
+    }
+    .spiral{
+      position:absolute;left:0;top:0;bottom:0;width:42px;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='42' height='40'%3E%3Cellipse cx='9' cy='20' rx='12' ry='9' fill='none' stroke='%23201510' stroke-width='4'/%3E%3Cellipse cx='9' cy='20' rx='7' ry='5' fill='none' stroke='%2382652f' stroke-width='2' opacity='.45'/%3E%3C/svg%3E");
+      background-repeat:repeat-y;background-size:42px 40px;
+      opacity:.9;filter:drop-shadow(1px 1px 1px rgba(0,0,0,.22));
+    }
+    main{position:relative;z-index:1;}
+
+    .header{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:42px;}
+    .home-link{font-size:.95rem;color:var(--navy);cursor:pointer;opacity:.7;transition:opacity .2s;}
+    .home-link:hover{opacity:1;}
+    .step-badge{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:var(--navy);color:white;border-radius:50%;font-weight:600;font-size:.85rem;}
+
+    .title-block{flex:1;margin-bottom:42px;}
+    .eyebrow{font-weight:700;font-size:1.1rem;margin:0 0 8px;color:var(--navy);}
+    .main-title{font-size:2.8rem;line-height:.95;margin:0;transform:rotate(-1deg);color:var(--ink);}
+    .subtitle-text{font-size:1rem;line-height:1.6;margin:16px 0 0;color:var(--ink-soft);max-width:620px;}
+
+    .nav-dots{display:flex;gap:12px;margin-bottom:48px;flex-wrap:wrap;}
+    .nav-dot{width:32px;height:32px;border-radius:50%;background:rgba(23,60,120,.1);border:2px solid rgba(23,60,120,.3);cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--navy);font-weight:600;}
+    .nav-dot:hover{background:rgba(23,60,120,.2);transform:scale(1.1);}
+    .nav-dot.active{background:var(--navy);color:white;border-color:var(--navy);box-shadow:0 4px 12px rgba(23,60,120,.3);}
+
+    section{margin-bottom:56px;}
+    .section-label{font-weight:700;font-size:1.2rem;margin:0 0 24px;color:var(--navy);position:relative;display:inline-block;}
+    .section-label::after{content:"";position:absolute;left:-8px;right:-12px;bottom:-8px;height:6px;
+      background:linear-gradient(currentColor,currentColor) 0 2px/100% 2px no-repeat,
+                 linear-gradient(currentColor,currentColor) 6px 6px/86% 2px no-repeat;
+      opacity:.9;transform:rotate(-1.3deg);}
+
+    .reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease;}
+    .reveal.animate{opacity:1;transform:translateY(0);}
+
+    /* CRUD TYPE CARDS w/ ICON */
+    .crud-type-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:20px 0;}
+    .crud-type-card{padding:18px 16px;border-radius:10px;border-top:4px solid;background:rgba(255,255,255,.6);cursor:pointer;transition:all .25s;text-align:center;user-select:none;}
+    .crud-type-card:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(0,0,0,.1);}
+    .crud-type-card.type-active{background:rgba(255,255,255,.95);box-shadow:0 4px 16px rgba(0,0,0,.12);transform:translateY(-3px);}
+    .crud-icon-wrap{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;}
+    .card-c .crud-icon-wrap{background:rgba(23,60,120,.1);color:var(--navy);}
+    .card-r .crud-icon-wrap{background:rgba(78,85,51,.1);color:var(--olive);}
+    .card-u .crud-icon-wrap{background:rgba(154,119,41,.1);color:var(--gold);}
+    .card-d .crud-icon-wrap{background:rgba(124,38,31,.1);color:var(--maroon);}
+    .crud-letter{font-size:1.05rem;font-weight:900;line-height:1;margin-bottom:6px;}
+    .card-c .crud-letter{color:var(--navy);}
+    .card-r .crud-letter{color:var(--olive);}
+    .card-u .crud-letter{color:var(--gold);}
+    .card-d .crud-letter{color:var(--maroon);}
+    .crud-type-name{font-weight:700;font-size:.88rem;margin:0 0 6px;}
+    .crud-type-desc{font-size:.79rem;color:var(--ink-soft);line-height:1.55;margin:0;}
+    .card-c{border-top-color:var(--navy);}
+    .card-r{border-top-color:var(--olive);}
+    .card-u{border-top-color:var(--gold);}
+    .card-d{border-top-color:var(--maroon);}
+
+    /* FILTER BAR */
+    .filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center;}
+    .filter-label{font-size:.82rem;color:var(--ink-soft);font-weight:600;margin-right:4px;}
+    .filter-btn{padding:6px 14px;border-radius:20px;border:2px solid rgba(0,0,0,.12);background:rgba(255,255,255,.65);cursor:pointer;font-size:.82rem;font-weight:600;transition:all .2s;font-family:var(--font-hand);color:var(--ink-soft);}
+    .filter-btn:hover{background:rgba(255,255,255,.9);}
+    .filter-btn.active{color:white;}
+    .fb-all.active{background:var(--ink-soft);border-color:var(--ink-soft);}
+    .fb-c.active{background:var(--navy);border-color:var(--navy);}
+    .fb-r.active{background:var(--olive);border-color:var(--olive);}
+    .fb-u.active{background:var(--gold);border-color:var(--gold);}
+
+    /* MATRIX TABLE */
+    .matrix-scroll{overflow-x:auto;border-radius:8px;background:rgba(255,255,255,.7);box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    .matrix-table{border-collapse:collapse;min-width:760px;width:100%;font-size:.8rem;}
+    .matrix-table th,.matrix-table td{border:1px solid rgba(0,0,0,.07);text-align:center;vertical-align:middle;}
+    .sa-hd{padding:7px 4px;font-weight:700;font-size:.78rem;color:white;letter-spacing:.03em;}
+    .sa-hd.sa-asset{background:var(--navy);}
+    .sa-hd.sa-trade{background:var(--maroon);}
+    .sa-hd.sa-risk{background:var(--olive);}
+    .sa-hd.sa-ledger{background:var(--gold);}
+    .en-hd{padding:5px 2px;font-size:.72rem;font-weight:700;cursor:pointer;transition:background .2s;white-space:nowrap;}
+    .en-hd.sa-asset{background:rgba(23,60,120,.08);color:var(--navy);}
+    .en-hd.sa-trade{background:rgba(124,38,31,.07);color:var(--maroon);}
+    .en-hd.sa-risk{background:rgba(78,85,51,.07);color:var(--olive);}
+    .en-hd.sa-ledger{background:rgba(154,119,41,.08);color:var(--gold);}
+    .en-hd:hover{filter:brightness(.9);}
+    .en-sub{display:block;font-size:.62rem;font-weight:400;opacity:.7;margin-top:1px;}
+    .en-hd.col-hi{filter:brightness(.88)!important;outline:2px solid rgba(0,0,0,.15);}
+
+    .fn-col{padding:9px 12px;text-align:left;min-width:148px;max-width:148px;white-space:normal;position:sticky;left:0;z-index:2;background:#f5e6c4;border-right:2px solid rgba(0,0,0,.12);cursor:pointer;transition:background .2s;}
+    .fn-col:hover{background:#eedbb0;}
+    .fn-col.row-selected{background:#e4d0a0;}
+    .fn-num{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:var(--navy);color:white;border-radius:50%;font-size:.65rem;font-weight:700;margin-right:6px;flex-shrink:0;}
+    .fn-name{font-weight:600;font-size:.78rem;color:var(--ink);line-height:1.35;}
+    .fn-eng{font-size:.65rem;color:var(--ink-soft);display:block;margin-top:2px;}
+
+    .crud-cell{padding:7px 4px;font-weight:700;font-size:.82rem;transition:opacity .25s,background .2s;}
+    .crud-cell.dimmed{opacity:.1;}
+    .crud-cell[data-val='C']{background:rgba(23,60,120,.1);color:var(--navy);}
+    .crud-cell[data-val='R']{background:rgba(78,85,51,.08);color:var(--olive);}
+    .crud-cell[data-val='U']{background:rgba(154,119,41,.1);color:var(--gold);}
+    .crud-cell[data-val='-']{color:rgba(0,0,0,.18);font-weight:400;}
+    .crud-cell.col-hi{outline:2px solid rgba(0,0,0,.1);}
+    tr.row-selected .crud-cell{background-color:rgba(255,255,255,.35)!important;}
+    tr.row-selected .crud-cell[data-val='C']{background:rgba(23,60,120,.18)!important;}
+    tr.row-selected .crud-cell[data-val='R']{background:rgba(78,85,51,.13)!important;}
+    tr.row-selected .crud-cell[data-val='U']{background:rgba(154,119,41,.16)!important;}
+
+    /* FUNCTION DETAIL PANEL */
+    .func-detail{max-height:0;overflow:hidden;transition:max-height .4s ease;}
+    .func-detail.open{max-height:200px;}
+    .func-detail-inner{padding:16px 20px;margin-top:8px;background:rgba(255,255,255,.88);border-radius:8px;border-left:4px solid var(--navy);}
+    .fd-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+    .fd-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:var(--navy);color:white;border-radius:50%;font-weight:700;font-size:.8rem;flex-shrink:0;}
+    .fd-title{font-weight:700;color:var(--navy);font-size:.95rem;}
+    .fd-desc{font-size:.87rem;color:var(--ink-soft);line-height:1.7;margin:0 0 10px;}
+    .fd-tags{display:flex;gap:6px;flex-wrap:wrap;}
+    .fd-tag{padding:2px 8px;border-radius:4px;font-size:.74rem;font-weight:600;}
+    .tag-c{background:rgba(23,60,120,.12);color:var(--navy);}
+    .tag-r{background:rgba(78,85,51,.1);color:var(--olive);}
+    .tag-u{background:rgba(154,119,41,.1);color:var(--gold);}
+
+    /* RADIAL OWNERSHIP */
+    .radial-wrap{background:rgba(255,255,255,.6);border-radius:10px;padding:20px;display:flex;justify-content:center;}
+    .radial-node{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(.3);transition:opacity .5s cubic-bezier(.34,1.56,.64,1),transform .5s cubic-bezier(.34,1.56,.64,1);cursor:pointer;}
+    .radial-node.revealed{opacity:1;transform:scale(1);}
+    .radial-node:hover .rn-circle{filter:brightness(1.15);}
+    .radial-node.rn-active .rn-circle{stroke:var(--ink);stroke-width:3;}
+    .radial-node.rn-pulse .rn-circle{animation:rnPulse 1.1s ease;}
+    @keyframes rnPulse{0%{filter:drop-shadow(0 0 0 rgba(23,60,120,.5));}50%{filter:drop-shadow(0 0 8px rgba(23,60,120,.7));}100%{filter:drop-shadow(0 0 0 rgba(23,60,120,0));}}
+    #radial-center{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(.5);transition:opacity .5s ease,transform .5s cubic-bezier(.34,1.56,.64,1);}
+    #radial-center.revealed{opacity:1;transform:scale(1);}
+    .radial-info{margin-top:6px;padding:11px 16px;background:rgba(23,60,120,.07);border-radius:6px;border-left:3px solid var(--navy);font-size:.85rem;color:var(--ink-soft);min-height:20px;text-align:center;}
+    .radial-info b{color:var(--navy);}
+    .radial-hint{text-align:center;font-size:.78rem;color:rgba(0,0,0,.4);margin-top:4px;font-style:italic;}
+
+    /* FLOW WAVE */
+    .flow-wrap{background:rgba(255,255,255,.6);border-radius:10px;padding:16px 8px;overflow-x:auto;}
+    .flow-svg-inner{min-width:760px;}
+    .flow-path-draw{stroke-dasharray:1400;stroke-dashoffset:1400;transition:stroke-dashoffset 1.8s cubic-bezier(.4,0,.2,1);}
+    .flow-path-draw.drawn{stroke-dashoffset:0;}
+    .flow-node-g{opacity:0;transform-box:fill-box;transform-origin:center;transform:translateY(8px);transition:opacity .45s ease,transform .45s ease;cursor:pointer;}
+    .flow-node-g.revealed{opacity:1;transform:translateY(0);}
+    .flow-node-g:hover .flow-circle{filter:brightness(1.08);}
+    .flow-node-g.flow-active .flow-circle{stroke:var(--maroon);fill:rgba(124,38,31,.07);}
+    .flow-node-g.flow-active .flow-num{fill:var(--maroon);}
+    .flow-detail{display:none;max-width:100%;padding:14px 18px;background:rgba(255,255,255,.88);border-radius:8px;margin-top:12px;border-left:4px solid var(--navy);animation:fadeIn .3s ease;}
+    .flow-detail.visible{display:block;}
+    .flow-detail-title{font-weight:700;color:var(--navy);margin:0 0 6px;font-size:.9rem;}
+    .flow-detail-desc{font-size:.85rem;color:var(--ink-soft);line-height:1.7;margin:0;}
+
+    /* DIAGONAL HEATMAP */
+    .diag-wrap{background:rgba(255,255,255,.6);border-radius:10px;padding:18px;display:flex;flex-direction:column;align-items:center;gap:10px;}
+    .diag-caption{font-size:.83rem;color:var(--ink-soft);text-align:center;max-width:480px;line-height:1.65;}
+    .diag-svg-box{overflow-x:auto;max-width:100%;}
+    .diag-cell{transition:opacity .2s;}
+    .diag-cell:hover{opacity:.75;}
+
+    /* SA CLUSTERING */
+    .cluster-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;}
+    .cluster-card{padding:18px;border-radius:8px;background:rgba(255,255,255,.65);border-top:4px solid;cursor:pointer;transition:all .25s;}
+    .cluster-card:hover{background:rgba(255,255,255,.85);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.08);}
+    .cluster-card.cc-active{background:rgba(255,255,255,.95);box-shadow:0 4px 16px rgba(0,0,0,.12);}
+    .cc-asset{border-top-color:var(--navy);}
+    .cc-trade{border-top-color:var(--maroon);}
+    .cc-risk{border-top-color:var(--olive);}
+    .cc-ledger{border-top-color:var(--gold);}
+    .cc-sa-name{font-weight:700;font-size:.92rem;margin:0 0 10px;}
+    .cc-asset .cc-sa-name{color:var(--navy);}
+    .cc-trade .cc-sa-name{color:var(--maroon);}
+    .cc-risk  .cc-sa-name{color:var(--olive);}
+    .cc-ledger .cc-sa-name{color:var(--gold);}
+    .cc-entities{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
+    .cc-entity-tag{padding:2px 8px;border-radius:4px;font-size:.74rem;font-weight:600;}
+    .cc-asset .cc-entity-tag{background:rgba(23,60,120,.1);color:var(--navy);}
+    .cc-trade .cc-entity-tag{background:rgba(124,38,31,.1);color:var(--maroon);}
+    .cc-risk  .cc-entity-tag{background:rgba(78,85,51,.1);color:var(--olive);}
+    .cc-ledger .cc-entity-tag{background:rgba(154,119,41,.1);color:var(--gold);}
+    .cc-funcs{font-size:.78rem;color:var(--ink-soft);line-height:1.6;}
+    .cc-principle{font-size:.78rem;color:var(--ink-soft);margin-top:8px;padding-top:8px;border-top:1px dashed rgba(0,0,0,.12);font-style:italic;}
+
+    /* INSIGHT */
+    .insight-box{padding:16px;background:rgba(255,255,255,.6);border-radius:6px;border-left:4px solid var(--navy);margin:16px 0;}
+    .insight-title{margin:0 0 8px;font-weight:700;color:var(--navy);font-size:.93rem;}
+    .insight-text{margin:0;font-size:.88rem;color:var(--ink-soft);line-height:1.7;}
+
+    /* STEP NAV */
+    .step-nav{display:flex;gap:16px;margin-top:48px;padding-top:32px;border-top:2px solid rgba(0,0,0,.08);}
+    .nav-button{padding:12px 24px;border:2px solid var(--navy);background:white;color:var(--navy);border-radius:6px;cursor:pointer;font-weight:600;font-size:.93rem;transition:all .25s;font-family:var(--font-hand);}
+    .nav-button:hover{background:var(--navy);color:white;transform:translateY(-2px);box-shadow:0 4px 12px rgba(23,60,120,.2);}
+    .nav-button.prev{order:-1;}
+
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  </style>
+</head>
+<body>
+<div class="notebook">
+  <div class="spiral"></div>
+  <main>
+
+    <!-- HEADER -->
+    <div class="header">
+      <div class="home-link" onclick="goHome()">← 홈</div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:.9rem;color:var(--ink-soft);">
+        <span class="step-badge">3</span>
+        <span>CRUD 매트릭스</span>
+      </div>
+    </div>
+
+    <!-- NAV DOTS -->
+    <div class="nav-dots">
+      <div class="nav-dot" data-step="1" onclick="navigateToStep(1)">1</div>
+      <div class="nav-dot" data-step="2" onclick="navigateToStep(2)">2</div>
+      <div class="nav-dot" data-step="3" onclick="navigateToStep(3)">3</div>
+      <div class="nav-dot" data-step="4" onclick="navigateToStep(4)">4</div>
+      <div class="nav-dot" data-step="5" onclick="navigateToStep(5)">5</div>
+      <div class="nav-dot" data-step="6" onclick="navigateToStep(6)">6</div>
+    </div>
+
+    <!-- TITLE -->
+    <div class="title-block">
+      <p class="eyebrow">Step 3 / 6</p>
+      <h1 class="main-title">CRUD 매트릭스</h1>
+      <p class="subtitle-text">2단계에서 분할된 4개 주제 영역의 엔터티들이 어떤 업무 기능에 의해 생성(C)·조회(R)·수정(U)·삭제(D)되는지 매핑한다. 모든 데이터의 생성 소유권을 검증하고 기능–데이터 간 논리적 완결성을 증명한다.</p>
+    </div>
+
+    <!-- SEC 1: CRUD 개념 -->
+    <section class="reveal">
+      <h2 class="section-label">CRUD 분석의 본질</h2>
+      <p style="color:var(--ink-soft);font-size:.9rem;line-height:1.7;margin-bottom:20px;">
+        아키텍처적으로 가장 중요한 원칙: <strong>모든 엔터티는 반드시 하나 이상의 기능에 의해 생성(C)되어야 한다.</strong> 생성 주체가 없는 엔터티는 설계 오류를 의미한다. 카드를 클릭하면 해당 연산만 매트릭스에서 강조된다.
+      </p>
+      <div class="crud-type-grid">
+        <div class="crud-type-card card-c" onclick="clickTypeCard('C',this)">
+          <div class="crud-icon-wrap">
+            <svg viewBox="0 0 28 28" width="24" height="24"><circle cx="14" cy="14" r="3" fill="currentColor"/><line x1="14" y1="2" x2="14" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="14" y1="21" x2="14" y2="26" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="2" y1="14" x2="7" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="21" y1="14" x2="26" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="5.5" y1="5.5" x2="9" y2="9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="19" y1="19" x2="22.5" y2="22.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="22.5" y1="5.5" x2="19" y2="9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="9" y1="19" x2="5.5" y2="22.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <p class="crud-letter">C — Create</p>
+          <p class="crud-type-name">생성</p>
+          <p class="crud-type-desc">데이터 존재를 시작하는 행위. 소유권을 결정하는 핵심 연산.</p>
+        </div>
+        <div class="crud-type-card card-r" onclick="clickTypeCard('R',this)">
+          <div class="crud-icon-wrap">
+            <svg viewBox="0 0 28 28" width="24" height="24"><path d="M2,14 Q14,4 26,14 Q14,24 2,14 Z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="14" cy="14" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="14" cy="14" r="1.6" fill="currentColor"/></svg>
+          </div>
+          <p class="crud-letter">R — Read</p>
+          <p class="crud-type-name">조회</p>
+          <p class="crud-type-desc">다른 기능의 의사결정을 위해 읽는 행위. SA 간 의존성의 핵심.</p>
+        </div>
+        <div class="crud-type-card card-u" onclick="clickTypeCard('U',this)">
+          <div class="crud-icon-wrap">
+            <svg viewBox="0 0 28 28" width="24" height="24"><path d="M23,9 A10,10 0 1 1 21,6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><polygon points="17,2 24,5 18,9" fill="currentColor"/></svg>
+          </div>
+          <p class="crud-letter">U — Update</p>
+          <p class="crud-type-name">수정</p>
+          <p class="crud-type-desc">상태를 갱신하는 행위. 이력 모델링(선분 이력)과 직결됨.</p>
+        </div>
+        <div class="crud-type-card card-d" onclick="clickTypeCard('D',this)">
+          <div class="crud-icon-wrap">
+            <svg viewBox="0 0 28 28" width="24" height="24"><rect x="4" y="11" width="20" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/><rect x="2" y="5" width="24" height="6" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/><line x1="11" y1="17" x2="17" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <p class="crud-letter">D — Delete</p>
+          <p class="crud-type-name">삭제(논리)</p>
+          <p class="crud-type-desc">생명주기 종료. 금융 시스템에서는 물리 삭제 대신 논리 삭제·아카이브가 원칙.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEC 2: CRUD 매트릭스 -->
+    <section class="reveal">
+      <h2 class="section-label">7 × 12 CRUD 매트릭스</h2>
+      <p style="color:var(--ink-soft);font-size:.87rem;margin-bottom:16px;">기능명(행)을 클릭하면 상세 설명이 펼쳐진다. 열 헤더를 클릭하면 해당 엔터티 열이 강조된다.</p>
+
+      <div class="filter-bar">
+        <span class="filter-label">필터:</span>
+        <button class="filter-btn fb-all active" onclick="applyFilter('all',this)">전체 보기</button>
+        <button class="filter-btn fb-c" onclick="applyFilter('C',this)">C만 보기 (소유권)</button>
+        <button class="filter-btn fb-r" onclick="applyFilter('R',this)">R 포함</button>
+        <button class="filter-btn fb-u" onclick="applyFilter('U',this)">U 포함</button>
+      </div>
+
+      <div class="matrix-scroll">
+        <table class="matrix-table" id="crud-table"></table>
+      </div>
+
+      <div class="func-detail" id="func-detail">
+        <div class="func-detail-inner">
+          <div class="fd-header">
+            <span class="fd-num" id="fd-num">1</span>
+            <span class="fd-title" id="fd-title"></span>
+          </div>
+          <p class="fd-desc" id="fd-desc"></p>
+          <div class="fd-tags" id="fd-tags"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEC 3: 생성 소유권 검증 — RADIAL -->
+    <section class="reveal" id="ownership-section">
+      <h2 class="section-label">핵심 검증: 생성 소유권 (12 / 12)</h2>
+      <p style="color:var(--ink-soft);font-size:.87rem;margin-bottom:16px;">
+        전체 12개 엔터티 모두 정확히 하나 이상의 기능에 의해 C(Create)되어야 한다. 생성 주체가 없는 '고아 엔터티(Orphan Entity)'는 설계 누락을 의미한다. 점을 클릭하면 생성 주체가 아래에 표시된다.
+      </p>
+      <div class="radial-wrap">
+        <svg id="radial-svg" viewBox="0 0 560 560" style="width:100%;max-width:460px;height:auto;"></svg>
+      </div>
+      <div class="radial-info" id="radial-info">노드를 클릭하면 해당 엔터티의 생성 주체가 여기에 표시됩니다.</div>
+      <p class="radial-hint">색상: 🔵 자산 관리 · 🔴 거래 관리 · 🟢 위험 관리 · 🟡 원장 관리</p>
+    </section>
+
+    <!-- SEC 4: 생성 순서도 — WAVE -->
+    <section class="reveal">
+      <h2 class="section-label">데이터 생성 순서도</h2>
+      <p style="color:var(--ink-soft);font-size:.87rem;margin-bottom:16px;">
+        C(Create) 연산을 업무 흐름 순서로 정렬하면 데이터가 어떤 순서로 탄생하는지 드러난다. 노드를 클릭하면 해당 단계의 설명이 펼쳐진다.
+      </p>
+      <div class="flow-wrap">
+        <div class="flow-svg-inner">
+          <svg id="flow-svg" viewBox="0 0 900 300" style="width:100%;height:auto;"></svg>
+        </div>
+      </div>
+      <div class="flow-detail" id="flow-detail">
+        <p class="flow-detail-title" id="flow-detail-title"></p>
+        <p class="flow-detail-desc" id="flow-detail-desc"></p>
+      </div>
+    </section>
+
+    <!-- SEC 5: SA 클러스터링 -->
+    <section class="reveal">
+      <h2 class="section-label">SA별 소유권 클러스터링</h2>
+      <p style="color:var(--ink-soft);font-size:.87rem;margin-bottom:18px;">
+        C(Create) 연산을 대각선 방향으로 정렬(Clustering)하면 독립적인 업무 모듈이 자연스럽게 분리된다. 아래는 실제 매트릭스의 C셀만 추출한 패턴이다 — 칸에 마우스를 올리면 어떤 기능×엔터티인지 보인다.
+      </p>
+      <div class="diag-wrap">
+        <div class="diag-svg-box">
+          <svg id="diag-svg" viewBox="0 0 320 165" style="width:100%;max-width:420px;height:auto;"></svg>
+        </div>
+        <p class="diag-caption">왼쪽 위(① 마스터 관리)에서 오른쪽 아래(⑦ 원장 마감)로 이어지는 계단형 패턴이 보인다. 이것이 업무 프로세스 순서와 데이터 소유권이 일치한다는 시각적 증거다.</p>
+      </div>
+
+      <div class="cluster-grid" style="margin-top:18px;">
+        <div class="cluster-card cc-asset" onclick="highlightSA('asset',this)">
+          <p class="cc-sa-name">📦 자산 관리 SA</p>
+          <div class="cc-entities">
+            <span class="cc-entity-tag">ASSET</span>
+            <span class="cc-entity-tag">ASSET_CLASS</span>
+            <span class="cc-entity-tag">MARKET_DATA</span>
+          </div>
+          <div class="cc-funcs">① 상품/한도 마스터 관리 → ASSET, ASSET_CLASS<br>② 시장 시세 수신 → MARKET_DATA</div>
+          <div class="cc-principle">타 SA는 R(참조)만 수행 → Low Coupling 유지</div>
+        </div>
+        <div class="cluster-card cc-trade" onclick="highlightSA('trade',this)">
+          <p class="cc-sa-name">🔄 거래 관리 SA</p>
+          <div class="cc-entities">
+            <span class="cc-entity-tag">ORDER</span>
+            <span class="cc-entity-tag">EXECUTION</span>
+            <span class="cc-entity-tag">SETTLEMENT</span>
+          </div>
+          <div class="cc-funcs">③ 매매 주문 접수 → ORDER<br>④ 주문 체결 처리 → EXECUTION<br>⑤ 정산 처리 → SETTLEMENT</div>
+          <div class="cc-principle">주문→체결→정산 거래 생명주기 순서대로 생성</div>
+        </div>
+        <div class="cluster-card cc-risk" onclick="highlightSA('risk',this)">
+          <p class="cc-sa-name">⚠️ 위험 관리 SA</p>
+          <div class="cc-entities">
+            <span class="cc-entity-tag">POSITION</span>
+            <span class="cc-entity-tag">RISK_LIMIT</span>
+            <span class="cc-entity-tag">P&amp;L</span>
+          </div>
+          <div class="cc-funcs">① 상품/한도 마스터 관리 → RISK_LIMIT<br>④ 주문 체결 처리 → POSITION<br>⑥ 자산 가격 평가 → P&amp;L</div>
+          <div class="cc-principle">거래·시세 데이터에 의존 (R) → 계산 후 생성</div>
+        </div>
+        <div class="cluster-card cc-ledger" onclick="highlightSA('ledger',this)">
+          <p class="cc-sa-name">📋 원장 관리 SA</p>
+          <div class="cc-entities">
+            <span class="cc-entity-tag">LEDGER</span>
+            <span class="cc-entity-tag">TXN_LOG</span>
+            <span class="cc-entity-tag">PRICE_HIST</span>
+          </div>
+          <div class="cc-funcs">② 시장 시세 수신 → PRICE_HISTORY<br>④⑤⑦ 다수 기능 → TXN_LOG (모든 이벤트 기록)<br>⑦ 원장 마감 → LEDGER</div>
+          <div class="cc-principle">모든 SA의 이벤트를 누적 → 이력 관리 중심</div>
+        </div>
+      </div>
+      <div style="margin-top:14px;padding:10px 16px;background:rgba(255,255,255,.6);border-radius:6px;font-size:.85rem;color:var(--ink-soft);">
+        ✓ <strong>설계 검증:</strong> 4개 SA 간 데이터 소유권이 명확히 분리되어 있으며 SA 간 교차 소유는 없다. 참조 의존성(R)은 존재하나 소유권(C)은 단방향으로 유지 — 2단계의 Low Coupling 원칙이 기능-데이터 매핑 레벨에서도 성립한다.
+      </div>
+    </section>
+
+    <!-- SEC 6: 의미 -->
+    <section class="reveal">
+      <h2 class="section-label">이 단계가 증명하는 것</h2>
+      <div class="insight-box" style="border-left-color:var(--navy);">
+        <p class="insight-title">📌 CRUD 분석이 증명하는 것</p>
+        <p class="insight-text">"데이터가 어디에 있어야 하는가"를 넘어 "데이터가 어떻게 태어나고, 누가 그 생명에 책임지는가"를 정의하는 과정이다. 생성 소유권의 명확화는 이후 데이터 거버넌스(6단계)의 기술적 근거가 되며, 시스템의 모듈화(Modularity) 수준을 수치로 증명한다.</p>
+      </div>
+      <div class="insight-box" style="border-left-color:var(--maroon);margin-top:12px;">
+        <p class="insight-title">🎯 Step 4 — 논리 모델로의 연결</p>
+        <p class="insight-text">CRUD 분석으로 데이터–프로세스 정합성이 검증되었다. 이제 4단계: 논리 모델 &amp; 정규화에서 이 12개 엔터티들 사이의 복잡한 관계 — 슈퍼/서브타입, 재귀 관계, 선분 이력 — 를 정교한 ERD로 표현한다.</p>
+      </div>
+    </section>
+
+    <!-- NAV -->
+    <div class="step-nav">
+      <button class="nav-button prev" onclick="navigateToStep(2)">← Step 2: 주제 영역 분할</button>
+      <button class="nav-button"      onclick="navigateToStep(4)">Step 4: 논리 모델 →</button>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ── CORE DATA ─────────────────────────────────────────────────────────
+const FUNCTIONS = [
+  { id:1, name:"상품/한도 마스터 관리", eng:"Product / Limit Master",
+    desc:"자산 마스터(ASSET, ASSET_CLASS)와 위험 한도(RISK_LIMIT)를 최초로 생성하고 표준화하는 기능. 이 단계의 산출물이 이후 모든 업무의 기준 데이터가 된다.",
+    cells:['C','C','-','-','-','-','-','C','-','-','-','-'] },
+  { id:2, name:"시장 시세 수신", eng:"Market Data Reception",
+    desc:"외부 시장으로부터 실시간 시세(MARKET_DATA)와 가격 이력(PRICE_HISTORY)을 수신하여 저장한다. 자산 정보를 참조하여 수신한 시세를 자산 단위로 분류한다.",
+    cells:['R','-','C','-','-','-','-','-','-','-','-','C'] },
+  { id:3, name:"매매 주문 접수", eng:"Order Entry",
+    desc:"투자자의 매수/매도 주문(ORDER)을 접수한다. 자산 정보·시세·포지션·한도를 참조하여 주문 유효성을 검증한다. 한도 초과 주문은 이 단계에서 차단된다.",
+    cells:['R','R','R','C','-','-','R','R','-','-','-','-'] },
+  { id:4, name:"주문 체결 처리", eng:"Trade Execution",
+    desc:"주문이 시장에서 체결될 때 실행된다. 체결(EXECUTION)·포지션(POSITION)·거래로그(TXN_LOG)를 생성하고 주문 상태를 EXECUTED로 갱신한다. 이 기능이 핵심 허브 역할을 한다.",
+    cells:['R','-','R','U','C','-','C','R','-','-','C','-'] },
+  { id:5, name:"정산 처리", eng:"Settlement",
+    desc:"체결된 거래의 실제 자금·자산 이전을 처리하는 정산(SETTLEMENT)을 생성한다. 포지션을 최종 확정(U)하고 정산 관련 거래 로그를 기록한다.",
+    cells:['-','-','-','R','R','C','U','-','-','-','C','-'] },
+  { id:6, name:"자산 가격 평가", eng:"Asset Valuation",
+    desc:"보유 자산의 시장 가격으로 손익(P&L)을 계산·생성한다. 가격 이력(PRICE_HISTORY)을 최신 시가로 갱신하여 선분 이력 새 행을 삽입한다.",
+    cells:['R','R','R','-','-','-','-','-','C','-','-','U'] },
+  { id:7, name:"원장 마감", eng:"Ledger Closing",
+    desc:"일일 배치 마감 시 모든 거래를 집계하여 원장(LEDGER)을 생성한다. 거래 이력·포지션·손익을 최종 확정(U)하고 감사 기록을 남긴다. 수정 불가 레코드로 생성된다.",
+    cells:['R','-','-','R','R','R','U','-','U','C','C','-'] },
+];
+
+const ENTITIES = [
+  {key:'ASSET',       name:'ASSET',  sa:'asset',  saLabel:'자산 관리 SA', sub:'상품 마스터'},
+  {key:'ASSET_CLASS', name:'AC',     sa:'asset',  saLabel:'자산 관리 SA', sub:'상품 분류'},
+  {key:'MARKET_DATA', name:'MD',     sa:'asset',  saLabel:'자산 관리 SA', sub:'시장 데이터'},
+  {key:'ORDER',       name:'ORDER',  sa:'trade',  saLabel:'거래 관리 SA', sub:'주문'},
+  {key:'EXECUTION',   name:'EXEC',   sa:'trade',  saLabel:'거래 관리 SA', sub:'체결'},
+  {key:'SETTLEMENT',  name:'SETL',   sa:'trade',  saLabel:'거래 관리 SA', sub:'정산'},
+  {key:'POSITION',    name:'POS',    sa:'risk',   saLabel:'위험 관리 SA', sub:'포지션'},
+  {key:'RISK_LIMIT',  name:'RL',     sa:'risk',   saLabel:'위험 관리 SA', sub:'위험 한도'},
+  {key:'PNL',         name:'P&L',    sa:'risk',   saLabel:'위험 관리 SA', sub:'손익'},
+  {key:'LEDGER',      name:'LEDGER', sa:'ledger', saLabel:'원장 관리 SA', sub:'원장'},
+  {key:'TXN_LOG',     name:'TXN',    sa:'ledger', saLabel:'원장 관리 SA', sub:'거래 로그'},
+  {key:'PRICE_HIST',  name:'PH',     sa:'ledger', saLabel:'원장 관리 SA', sub:'가격 이력'},
+];
+
+const CREATOR_MAP = {
+  ASSET:'① 상품/한도 마스터 관리', ASSET_CLASS:'① 상품/한도 마스터 관리', MARKET_DATA:'② 시장 시세 수신',
+  ORDER:'③ 매매 주문 접수', EXECUTION:'④ 주문 체결 처리', SETTLEMENT:'⑤ 정산 처리',
+  POSITION:'④ 주문 체결 처리', RISK_LIMIT:'① 상품/한도 마스터 관리', PNL:'⑥ 자산 가격 평가',
+  LEDGER:'⑦ 원장 마감', TXN_LOG:'④⑤⑦ 다수 기능 (모든 이벤트 기록)', PRICE_HIST:'② 시장 시세 수신'
+};
+
+const SA_COLORS = { asset:'#173c78', trade:'#7c261f', risk:'#4e5533', ledger:'#9a7729' };
+const SA_BG     = { asset:'rgba(23,60,120,.12)', trade:'rgba(124,38,31,.12)', risk:'rgba(78,85,51,.12)', ledger:'rgba(154,119,41,.12)' };
+
+const FLOW = [
+  { step:1, fn:'상품/한도 마스터 관리', creates:['ASSET','AC','RL'],   sa:['asset','asset','risk'] },
+  { step:2, fn:'시장 시세 수신',       creates:['MD','PH'],            sa:['asset','ledger'] },
+  { step:3, fn:'매매 주문 접수',       creates:['ORDER'],              sa:['trade'] },
+  { step:4, fn:'주문 체결 처리',       creates:['EXEC','POS','TXN'],   sa:['trade','risk','ledger'] },
+  { step:5, fn:'정산 처리',            creates:['SETL','TXN'],         sa:['trade','ledger'] },
+  { step:6, fn:'자산 가격 평가',       creates:['P&L'],                sa:['risk'] },
+  { step:7, fn:'원장 마감',            creates:['LEDGER','TXN'],       sa:['ledger','ledger'] },
+];
+
+// ── BUILD MATRIX TABLE ───────────────────────────────────────────────
+function buildMatrix() {
+  const table = document.getElementById('crud-table');
+  let html = '<thead>';
+  html += '<tr><th class="fn-col" style="z-index:3;background:#f5e6c4;border-right:2px solid rgba(0,0,0,.12);"></th>';
+  const saGroups = [
+    {name:'자산 관리 SA', cls:'sa-asset', span:3},{name:'거래 관리 SA', cls:'sa-trade', span:3},
+    {name:'위험 관리 SA', cls:'sa-risk',  span:3},{name:'원장 관리 SA', cls:'sa-ledger',span:3},
+  ];
+  saGroups.forEach(g => { html += '<th colspan="' + g.span + '" class="sa-hd ' + g.cls + '">' + g.name + '</th>'; });
+  html += '</tr>';
+  html += '<tr><th class="fn-col" style="z-index:3;background:#f5e6c4;font-size:.7rem;color:var(--ink-soft);font-weight:600;border-right:2px solid rgba(0,0,0,.12);">업무 기능</th>';
+  ENTITIES.forEach((e, ei) => {
+    html += '<th class="en-hd sa-' + e.sa + '" data-ei="' + ei + '" onclick="toggleColHighlight(' + ei + ')" title="' + e.key + ' — ' + e.saLabel + '">' + e.name + '<span class="en-sub">' + e.sub + '</span></th>';
+  });
+  html += '</tr></thead><tbody>';
+  FUNCTIONS.forEach((f, fi) => {
+    html += '<tr class="func-row" id="row-' + fi + '" onclick="clickRow(' + fi + ')">';
+    html += '<td class="fn-col" id="fn-col-' + fi + '"><span class="fn-num">' + f.id + '</span><span class="fn-name">' + f.name + '<span class="fn-eng">' + f.eng + '</span></span></td>';
+    f.cells.forEach((v, ei) => {
+      html += '<td class="crud-cell sa-' + ENTITIES[ei].sa + '" data-val="' + v + '" data-fi="' + fi + '" data-ei="' + ei + '">' + v + '</td>';
+    });
+    html += '</tr>';
+  });
+  html += '</tbody>';
+  table.innerHTML = html;
+}
+
+let currentFilter = 'all';
+function applyFilter(type, btn) {
+  currentFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.crud-type-card').forEach(c => c.classList.remove('type-active'));
+  document.querySelectorAll('.crud-cell').forEach(cell => {
+    const v = cell.getAttribute('data-val');
+    cell.classList.toggle('dimmed', type !== 'all' && v !== type);
+  });
+}
+
+function clickTypeCard(type, card) {
+  const was = card.classList.contains('type-active');
+  document.querySelectorAll('.crud-type-card').forEach(c => c.classList.remove('type-active'));
+  if (!was) {
+    card.classList.add('type-active');
+    document.querySelectorAll('.crud-cell').forEach(cell => cell.classList.toggle('dimmed', cell.getAttribute('data-val') !== type));
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    const map = {'C':'.fb-c','R':'.fb-r','U':'.fb-u'};
+    if (map[type]) document.querySelector(map[type]).classList.add('active');
+    document.getElementById('crud-table').scrollIntoView({behavior:'smooth', block:'nearest'});
+  } else {
+    document.querySelectorAll('.crud-cell').forEach(c => c.classList.remove('dimmed'));
+    document.querySelector('.fb-all').classList.add('active');
+  }
+}
+
+let activeCol = -1;
+function toggleColHighlight(ei) {
+  document.querySelectorAll('.crud-cell.col-hi, .en-hd.col-hi').forEach(el => el.classList.remove('col-hi'));
+  if (activeCol === ei) { activeCol = -1; return; }
+  activeCol = ei;
+  document.querySelectorAll('.crud-cell[data-ei="' + ei + '"]').forEach(c => c.classList.add('col-hi'));
+  document.querySelectorAll('.en-hd[data-ei="' + ei + '"]').forEach(h => h.classList.add('col-hi'));
+}
+
+let activeRow = -1;
+function clickRow(fi) {
+  const detail = document.getElementById('func-detail');
+  if (activeRow === fi) {
+    document.querySelectorAll('.func-row').forEach(r => r.classList.remove('row-selected'));
+    document.querySelectorAll('.fn-col').forEach(c => c.classList.remove('row-selected'));
+    detail.classList.remove('open'); activeRow = -1; return;
+  }
+  document.querySelectorAll('.func-row').forEach(r => r.classList.remove('row-selected'));
+  document.querySelectorAll('.fn-col').forEach(c => c.classList.remove('row-selected'));
+  document.getElementById('row-' + fi).classList.add('row-selected');
+  document.getElementById('fn-col-' + fi).classList.add('row-selected');
+  const f = FUNCTIONS[fi];
+  document.getElementById('fd-num').textContent = f.id;
+  document.getElementById('fd-title').textContent = f.name + ' — ' + f.eng;
+  document.getElementById('fd-desc').textContent = f.desc;
+  const creates=[],reads=[],updates=[];
+  f.cells.forEach((v, ei) => { if(v==='C')creates.push(ENTITIES[ei].key); else if(v==='R')reads.push(ENTITIES[ei].key); else if(v==='U')updates.push(ENTITIES[ei].key); });
+  let tags = '';
+  creates.forEach(e => tags += '<span class="fd-tag tag-c">C: ' + e + '</span>');
+  reads.forEach(e => tags += '<span class="fd-tag tag-r">R: ' + e + '</span>');
+  updates.forEach(e => tags += '<span class="fd-tag tag-u">U: ' + e + '</span>');
+  document.getElementById('fd-tags').innerHTML = tags;
+  detail.classList.add('open'); activeRow = fi;
+}
+
+// ── RADIAL OWNERSHIP DIAGRAM ────────────────────────────────────────
+function buildRadialOwnership() {
+  const cx=280, cy=280, R=185, R2=228;
+  let svg = '';
+  ENTITIES.forEach((e, i) => {
+    const angle = (-90 + i*30) * Math.PI/180;
+    const x = cx + R*Math.cos(angle), y = cy + R*Math.sin(angle);
+    const lx = cx + R2*Math.cos(angle), ly = cy + R2*Math.sin(angle);
+    let anchor = 'middle';
+    if (lx > cx+12) anchor='start'; else if (lx < cx-12) anchor='end';
+    const color = SA_COLORS[e.sa];
+    svg += `<g class="radial-node" data-idx="${i}" data-key="${e.key}" data-sa="${e.sa}" onclick="clickRadialNode('${e.key}')">`;
+    svg += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="${color}" stroke-width="1.3" opacity=".4"/>`;
+    svg += `<circle class="rn-circle" cx="${x}" cy="${y}" r="9" fill="${color}" stroke="white" stroke-width="2"/>`;
+    svg += `<text x="${lx}" y="${ly+3}" text-anchor="${anchor}" font-size="11" font-weight="700" fill="${color}">${e.name}</text>`;
+    svg += `</g>`;
+  });
+  svg += `<g id="radial-center">
+    <circle cx="${cx}" cy="${cy}" r="76" fill="white" stroke="#173c78" stroke-width="2.5"/>
+    <text x="${cx}" y="${cy-6}" text-anchor="middle" font-size="26" font-weight="800" fill="#173c78">12 / 12</text>
+    <text x="${cx}" y="${cy+16}" text-anchor="middle" font-size="9.5" fill="#4e5533" font-weight="700">✓ 생성 소유권 확인</text>
+    <text x="${cx}" y="${cy+30}" text-anchor="middle" font-size="8.5" fill="#33291f">고아 엔터티 없음</text>
+  </g>`;
+  document.getElementById('radial-svg').innerHTML = svg;
+}
+
+function clickRadialNode(key) {
+  document.querySelectorAll('.radial-node').forEach(n => n.classList.remove('rn-active'));
+  const node = document.querySelector(`.radial-node[data-key="${key}"]`);
+  if (node) node.classList.add('rn-active');
+  const ent = ENTITIES.find(e => e.key === key);
+  const creator = CREATOR_MAP[key] || '';
+  document.getElementById('radial-info').innerHTML = `<b>${ent.key}</b> ← 생성: ${creator}`;
+}
+
+function setupRadialObserver() {
+  const section = document.getElementById('ownership-section');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const nodes = document.querySelectorAll('.radial-node');
+        nodes.forEach((n, i) => setTimeout(() => n.classList.add('revealed'), i*65));
+        setTimeout(() => document.getElementById('radial-center').classList.add('revealed'), nodes.length*65 + 150);
+        obs.disconnect();
+      }
+    });
+  }, {threshold:.25});
+  if (section) obs.observe(section);
+}
+
+// ── FLOW WAVE DIAGRAM ────────────────────────────────────────────────
+function buildFlowWave() {
+  const xs = [70,197,323,450,577,703,830];
+  const ys = [160,100,220,100,220,100,160];
+  const dirs = ['below','below','above','below','above','below','above'];
+  const points = xs.map((x,i) => ({x, y: ys[i]}));
+
+  let pathD = `M${points[0].x},${points[0].y}`;
+  for (let i=0;i<points.length-1;i++){
+    const p0=points[i], p1=points[i+1];
+    const midX=(p0.x+p1.x)/2;
+    pathD += ` C${midX},${p0.y} ${midX},${p1.y} ${p1.x},${p1.y}`;
+  }
+
+  let svg = `<path id="flow-path" class="flow-path-draw" d="${pathD}" fill="none" stroke="#9a7729" stroke-width="2.5" stroke-linecap="round"/>`;
+
+  FLOW.forEach((f, i) => {
+    const {x,y} = points[i];
+    const dir = dirs[i];
+    const stemY1 = dir==='below' ? y+22 : y-22;
+    const stemY2 = dir==='below' ? y+45 : y-45;
+    const boxTop = dir==='below' ? stemY2 : stemY2-24;
+    const textY = boxTop + 16;
+
+    let tspans = f.creates.map((ent,j) => {
+      const c = SA_COLORS[f.sa[j]];
+      const sep = j>0 ? '<tspan fill="#33291f" font-weight="400"> · </tspan>' : '';
+      return sep + `<tspan fill="${c}">${ent}</tspan>`;
+    }).join('');
+
+    svg += `<g class="flow-node-g" data-idx="${i}" onclick="clickFlowNode(${i})">`;
+    svg += `<line x1="${x}" y1="${stemY1}" x2="${x}" y2="${stemY2}" stroke="#9a7729" stroke-width="1.3" opacity=".5"/>`;
+    svg += `<rect x="${x-60}" y="${boxTop}" width="120" height="24" rx="12" fill="white" stroke="rgba(0,0,0,.12)" stroke-width="1.3"/>`;
+    svg += `<text x="${x}" y="${textY}" text-anchor="middle" font-size="9" font-weight="700">${tspans}</text>`;
+    svg += `<circle class="flow-circle" cx="${x}" cy="${y}" r="21" fill="white" stroke="#173c78" stroke-width="2.5"/>`;
+    svg += `<text class="flow-num" x="${x}" y="${y+5}" text-anchor="middle" font-size="14" font-weight="800" fill="#173c78">${f.step}</text>`;
+    svg += `</g>`;
+  });
+
+  document.getElementById('flow-svg').innerHTML = svg;
+}
+
+let activeFlowIdx = -1;
+function clickFlowNode(i) {
+  const detail = document.getElementById('flow-detail');
+  document.querySelectorAll('.flow-node-g').forEach(n => n.classList.remove('flow-active'));
+  if (activeFlowIdx === i) { detail.classList.remove('visible'); activeFlowIdx=-1; return; }
+  document.querySelector(`.flow-node-g[data-idx="${i}"]`).classList.add('flow-active');
+  const f = FLOW[i], fn = FUNCTIONS[i];
+  document.getElementById('flow-detail-title').textContent = 'STEP ' + f.step + ' — ' + f.fn;
+  document.getElementById('flow-detail-desc').textContent = fn.desc;
+  detail.classList.add('visible');
+  document.querySelectorAll('.func-row').forEach(r => r.classList.remove('row-selected'));
+  document.querySelectorAll('.fn-col').forEach(c => c.classList.remove('row-selected'));
+  const row = document.getElementById('row-'+i), col = document.getElementById('fn-col-'+i);
+  if (row) row.classList.add('row-selected');
+  if (col) col.classList.add('row-selected');
+  activeFlowIdx = i;
+}
+
+function setupFlowObserver() {
+  const path = document.getElementById('flow-path');
+  const wrap = document.querySelector('.flow-wrap');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        path.classList.add('drawn');
+        const nodes = document.querySelectorAll('.flow-node-g');
+        nodes.forEach((n,i) => setTimeout(() => n.classList.add('revealed'), 280 + i*230));
+        obs.disconnect();
+      }
+    });
+  }, {threshold:.25});
+  if (wrap) obs.observe(wrap);
+}
+
+// ── DIAGONAL HEATMAP ─────────────────────────────────────────────────
+function buildDiagonalHeatmap() {
+  const cellW=22, cellH=18, mLeft=34, mTop=8;
+  let svg = '';
+  FUNCTIONS.forEach((f, ri) => {
+    svg += `<text x="${mLeft-8}" y="${mTop+ri*cellH+13}" text-anchor="end" font-size="8" font-weight="700" fill="#33291f">F${f.id}</text>`;
+    f.cells.forEach((v, ci) => {
+      const x = mLeft + ci*cellW, y = mTop + ri*cellH;
+      const isC = v === 'C';
+      const color = isC ? SA_COLORS[ENTITIES[ci].sa] : 'rgba(0,0,0,.05)';
+      svg += `<rect class="diag-cell" x="${x}" y="${y}" width="${cellW-2}" height="${cellH-2}" rx="2" fill="${color}"><title>F${f.id} (${f.name}) × ${ENTITIES[ci].key} = ${v}</title></rect>`;
+    });
+  });
+  svg += `<text x="${mLeft}" y="${mTop+7*cellH+12}" font-size="7.5" fill="#33291f" font-style="italic">기능 (F1→F7, 위→아래) × 엔터티 (ASSET→PH, 왼쪽→오른쪽)</text>`;
+  document.getElementById('diag-svg').innerHTML = svg;
+}
+
+// ── SA CLUSTER HIGHLIGHT ─────────────────────────────────────────────
+let activeSA = '';
+function highlightSA(sa, card) {
+  document.querySelectorAll('.cluster-card').forEach(c => c.classList.remove('cc-active'));
+  if (activeSA === sa) {
+    document.querySelectorAll('.crud-cell').forEach(c => c.classList.remove('dimmed'));
+    document.querySelector('.fb-all').classList.add('active');
+    document.querySelectorAll('.filter-btn').forEach(b => { if (!b.classList.contains('fb-all')) b.classList.remove('active'); });
+    activeSA = ''; return;
+  }
+  card.classList.add('cc-active');
+  activeSA = sa;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.crud-cell').forEach(cell => {
+    const ei = parseInt(cell.getAttribute('data-ei'));
+    const v  = cell.getAttribute('data-val');
+    cell.classList.toggle('dimmed', !(ENTITIES[ei].sa === sa && v === 'C'));
+  });
+  document.querySelectorAll(`.radial-node[data-sa="${sa}"]`).forEach(n => {
+    n.classList.add('rn-pulse');
+    setTimeout(() => n.classList.remove('rn-pulse'), 1100);
+  });
+  document.getElementById('crud-table').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────────────
+function navigateToStep(step) {
+  const map = {1:'step1-strategy-meta-modeling.html',2:'step2-subject-area.html',3:'step3-crud-matrix.html',4:'step4-logical-modeling.html',5:'step5-physical-design.html',6:'step6-governance.html'};
+  document.body.style.opacity = '0';
+  setTimeout(() => { window.location.href = map[step]; }, 280);
+}
+function goHome() {
+  document.body.style.opacity = '0';
+  setTimeout(() => { window.location.href = 'index.html'; }, 280);
+}
+
+// ── SCROLL REVEAL ─────────────────────────────────────────────────────
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('animate'); revealObs.unobserve(e.target); } });
+}, {threshold:.08, rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+// ── INIT ──────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  document.body.style.opacity = '1';
+  const dot = document.querySelector('[data-step="3"]');
+  if (dot) dot.classList.add('active');
+
+  buildMatrix();
+  buildRadialOwnership();
+  buildFlowWave();
+  buildDiagonalHeatmap();
+  setupRadialObserver();
+  setupFlowObserver();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') navigateToStep(4);
+  if (e.key === 'ArrowLeft')  navigateToStep(2);
+});
+</script>
+</body>
+</html>

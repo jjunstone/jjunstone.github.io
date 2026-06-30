@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Step 2 — 주제 영역 정의 및 분할 | Architecture Studies</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/static/pretendard.css">
+  <style>
+    @font-face {
+      font-family:"KyoboHand";
+      src:url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307@1.1/KyoboHandwriting2023wsa.woff2") format("woff2");
+      font-weight:400;font-style:normal;font-display:swap;
+    }
+    :root {
+      --paper:#ead8aa;--paper-light:#f8e9c4;--paper-warm:#ddc48f;
+      --line:rgba(38,68,88,.18);--ink:#17130f;--ink-soft:#33291f;
+      --navy:#173c78;--maroon:#7c261f;--olive:#4e5533;--gold:#9a7729;
+      --paper-shadow:rgba(44,28,9,.24);
+      --font-hand:"Pretendard","Noto Sans KR","Malgun Gothic",sans-serif;
+      --font-script:"Pretendard","Noto Sans KR","Malgun Gothic",sans-serif;
+    }
+    *{box-sizing:border-box;letter-spacing:0;}
+    html{scroll-behavior:smooth;}
+    body{
+      margin:0;color:var(--ink);font-family:var(--font-hand);
+      background:radial-gradient(circle at 12% 10%,rgba(255,255,255,.34),transparent 30%),
+                 linear-gradient(135deg,#c9a66b,#ead6a2 46%,#bd955b);
+      min-height:100vh;overflow-x:hidden;opacity:0;transition:opacity .3s ease;
+    }
+    a{color:inherit;text-decoration:none;}
+    svg{display:block;}::selection{background:var(--gold);color:#fff;}
+
+    .notebook{
+      position:relative;width:min(100%,1080px);margin:0 auto;
+      padding:72px 54px 48px 86px;overflow:hidden;
+      background:
+        radial-gradient(circle at 23% 18%,rgba(118,76,29,.13) 0 1px,transparent 1.6px) 0 0/38px 38px,
+        radial-gradient(circle at 78% 62%,rgba(70,46,22,.10) 0 1px,transparent 1.4px) 12px 4px/46px 46px,
+        repeating-linear-gradient(to bottom,transparent 0 35px,var(--line) 36px 37px),
+        linear-gradient(90deg,transparent 0 50px,rgba(112,82,39,.18) 51px 52px,transparent 53px),
+        linear-gradient(180deg,var(--paper-light),var(--paper) 45%,var(--paper-warm));
+      box-shadow:0 18px 42px var(--paper-shadow);
+    }
+    .notebook::before{
+      content:"";position:absolute;inset:0;pointer-events:none;
+      background:
+        linear-gradient(90deg,rgba(83,53,22,.12),transparent 16%,transparent 84%,rgba(83,53,22,.08)),
+        radial-gradient(circle at 35% 9%,rgba(67,41,14,.12),transparent 2px),
+        radial-gradient(circle at 67% 71%,rgba(67,41,14,.11),transparent 2px);
+      mix-blend-mode:multiply;
+    }
+    .spiral{
+      position:absolute;left:0;top:0;bottom:0;width:42px;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='42' height='40'%3E%3Cellipse cx='9' cy='20' rx='12' ry='9' fill='none' stroke='%23201510' stroke-width='4'/%3E%3Cellipse cx='9' cy='20' rx='7' ry='5' fill='none' stroke='%2382652f' stroke-width='2' opacity='.45'/%3E%3C/svg%3E");
+      background-repeat:repeat-y;background-size:42px 40px;
+      opacity:.9;filter:drop-shadow(1px 1px 1px rgba(0,0,0,.22));
+    }
+    main{position:relative;z-index:1;}
+
+    .header{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:42px;}
+    .home-link{font-size:.95rem;color:var(--navy);cursor:pointer;opacity:.7;transition:opacity .2s;}
+    .home-link:hover{opacity:1;}
+    .step-badge{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:var(--navy);color:white;border-radius:50%;font-weight:600;font-size:.85rem;}
+
+    .title-block{flex:1;margin-bottom:42px;}
+    .eyebrow{font-weight:700;font-size:1.1rem;margin:0 0 8px;color:var(--navy);}
+    .main-title{font-size:2.8rem;line-height:.95;margin:0;transform:rotate(-1deg);color:var(--ink);}
+    .subtitle-text{font-size:1rem;line-height:1.6;margin:16px 0 0;color:var(--ink-soft);max-width:620px;}
+
+    .nav-dots{display:flex;gap:12px;margin-bottom:48px;flex-wrap:wrap;}
+    .nav-dot{width:32px;height:32px;border-radius:50%;background:rgba(23,60,120,.1);border:2px solid rgba(23,60,120,.3);cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--navy);font-weight:600;}
+    .nav-dot:hover{background:rgba(23,60,120,.2);transform:scale(1.1);}
+    .nav-dot.active{background:var(--navy);color:white;border-color:var(--navy);box-shadow:0 4px 12px rgba(23,60,120,.3);}
+
+    section{margin-bottom:56px;}
+    .section-label{font-weight:700;font-size:1.2rem;margin:0 0 24px;color:var(--navy);position:relative;display:inline-block;}
+    .section-label::after{content:"";position:absolute;left:-8px;right:-12px;bottom:-8px;height:6px;
+      background:linear-gradient(currentColor,currentColor) 0 2px/100% 2px no-repeat,
+                 linear-gradient(currentColor,currentColor) 6px 6px/86% 2px no-repeat;
+      opacity:.9;transform:rotate(-1.3deg);}
+
+    .reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease;}
+    .reveal.animate{opacity:1;transform:translateY(0);}
+
+    /* PRINCIPLE HIGHLIGHT */
+    .principle-highlight{display:flex;gap:12px;padding:16px 18px;background:rgba(154,119,41,.08);border-left:4px solid var(--gold);border-radius:6px;margin-top:16px;}
+    .ph-icon{font-size:1.3rem;flex-shrink:0;}
+    .ph-text{font-size:.88rem;color:var(--ink-soft);line-height:1.7;margin:0;}
+    .ph-text b{color:var(--gold);}
+
+    /* VIEW TOGGLE */
+    .view-toggle{display:flex;gap:8px;margin-bottom:18px;}
+    .vt-btn{padding:8px 18px;border-radius:20px;border:2px solid rgba(23,60,120,.25);background:rgba(255,255,255,.6);cursor:pointer;font-size:.85rem;font-weight:700;font-family:var(--font-hand);color:var(--navy);transition:all .22s;}
+    .vt-btn:hover{background:rgba(255,255,255,.85);}
+    .vt-btn.vt-active{background:var(--navy);color:white;border-color:var(--navy);box-shadow:0 3px 10px rgba(23,60,120,.25);}
+
+    /* SA CARDS */
+    .sa-card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;}
+    .sa-card{padding:20px;border-radius:10px;background:rgba(255,255,255,.6);border:2px solid transparent;cursor:pointer;transition:all .25s;}
+    .sa-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.1);background:rgba(255,255,255,.8);}
+    .sa-card.sa-selected{background:rgba(255,255,255,.95);box-shadow:0 8px 24px rgba(0,0,0,.13);transform:translateY(-3px);}
+    .sa-card.sa-pulse{animation:pulseBorder 1.1s ease;}
+    @keyframes pulseBorder{0%{box-shadow:0 0 0 0 rgba(23,60,120,.4);}70%{box-shadow:0 0 0 14px rgba(23,60,120,0);}100%{box-shadow:0 0 0 0 rgba(23,60,120,0);}}
+    .sac-asset{border-top:4px solid var(--navy);}
+    .sac-trade{border-top:4px solid var(--maroon);}
+    .sac-risk{border-top:4px solid var(--olive);}
+    .sac-ledger{border-top:4px solid var(--gold);}
+    .sac-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+    .sac-icon{font-size:1.6rem;}
+    .sac-count{font-size:.68rem;color:var(--ink-soft);background:rgba(0,0,0,.06);padding:2px 8px;border-radius:10px;}
+    .sac-name-kr{font-weight:700;font-size:1rem;margin:0 0 1px;color:var(--ink);}
+    .sac-name-en{font-size:.74rem;color:var(--ink-soft);margin:0 0 10px;}
+    .sac-purpose{font-size:.83rem;color:var(--ink-soft);line-height:1.6;margin:0 0 12px;}
+    .sac-entities{display:flex;flex-wrap:wrap;gap:5px;}
+    .sac-entity-tag{padding:2px 8px;border-radius:4px;font-size:.72rem;font-weight:600;}
+    .sac-asset .sac-entity-tag{background:rgba(23,60,120,.1);color:var(--navy);}
+    .sac-trade .sac-entity-tag{background:rgba(124,38,31,.1);color:var(--maroon);}
+    .sac-risk  .sac-entity-tag{background:rgba(78,85,51,.1);color:var(--olive);}
+    .sac-ledger .sac-entity-tag{background:rgba(154,119,41,.1);color:var(--gold);}
+    .sac-tap-hint{font-size:.68rem;color:rgba(0,0,0,.32);margin-top:10px;font-style:italic;}
+
+    /* SA DETAIL PANEL */
+    .sa-detail{display:none;margin-top:16px;padding:22px;background:rgba(255,255,255,.92);border-radius:10px;box-shadow:0 6px 22px rgba(0,0,0,.1);border-left:4px solid var(--navy);}
+    .sa-detail.visible{display:block;animation:fadeIn .3s ease;}
+    .sd-title{font-weight:700;font-size:1.05rem;color:var(--navy);margin:0 0 4px;}
+    .sd-title-en{font-size:.78rem;color:var(--ink-soft);margin:0 0 16px;}
+    .sd-field{margin-bottom:13px;}
+    .sd-field:last-child{margin-bottom:0;}
+    .sd-field-label{font-size:.72rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.04em;margin:0 0 4px;}
+    .sd-field-text{font-size:.86rem;color:var(--ink-soft);line-height:1.65;margin:0;}
+
+    /* NETWORK VIEW */
+    .network-wrap{background:rgba(255,255,255,.65);border-radius:10px;padding:18px;}
+    .network-info{margin-top:12px;padding:10px 14px;background:rgba(23,60,120,.07);border-radius:6px;border-left:3px solid var(--navy);font-size:.85rem;color:var(--ink-soft);min-height:38px;transition:all .2s;}
+    .network-info b{color:var(--navy);}
+    .network-legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;}
+    .nl-item{display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--ink-soft);}
+    .nl-swatch{width:20px;height:0;border-top:2px solid;}
+    .network-line{cursor:pointer;transition:stroke-width .15s,opacity .15s;}
+    .network-line:hover{opacity:1!important;}
+    .network-footnote{margin-top:10px;font-size:.78rem;color:var(--ink-soft);font-style:italic;}
+
+    /* COUPLE/COHESION INFO BOXES */
+    .prop-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px;}
+    @media(max-width:600px){.prop-grid{grid-template-columns:1fr;}}
+    .prop-box{padding:16px 18px;border-radius:8px;background:rgba(255,255,255,.6);border-left:4px solid;}
+    .prop-box.pb-low{border-left-color:var(--olive);}
+    .prop-box.pb-high{border-left-color:var(--navy);}
+    .prop-title{font-weight:700;font-size:.9rem;margin:0 0 8px;}
+    .pb-low .prop-title{color:var(--olive);}
+    .pb-high .prop-title{color:var(--navy);}
+    .prop-text{font-size:.85rem;color:var(--ink-soft);line-height:1.7;margin:0;}
+
+    /* GAUGES */
+    .gauge-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:22px 0;}
+    @media(max-width:600px){.gauge-row{grid-template-columns:1fr;}}
+    .gauge-block{background:rgba(255,255,255,.6);border-radius:8px;padding:16px 18px;}
+    .gauge-label-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
+    .gauge-name{font-weight:700;font-size:.88rem;}
+    .gauge-pct{font-weight:800;font-size:1.4rem;}
+    .gauge-pct.gp-cohesion{color:var(--olive);}
+    .gauge-pct.gp-coupling{color:var(--maroon);}
+    .gauge-track{height:13px;border-radius:8px;background:rgba(0,0,0,.08);overflow:hidden;}
+    .gauge-fill{height:100%;width:0%;border-radius:8px;transition:width 1.2s cubic-bezier(.16,1,.3,1);}
+    .gauge-fill.cohesion{background:linear-gradient(90deg,var(--olive),#7c8a52);}
+    .gauge-fill.coupling{background:linear-gradient(90deg,var(--maroon),#a8493d);}
+    .gauge-fill.filled.cohesion{width:95%;}
+    .gauge-fill.filled.coupling{width:15%;}
+    .gauge-desc{font-size:.78rem;color:var(--ink-soft);margin:8px 0 0;line-height:1.6;}
+
+    .result-list{margin-top:18px;background:rgba(255,255,255,.55);border-radius:8px;padding:6px;}
+    .result-item{display:flex;gap:10px;padding:10px 12px;border-radius:6px;cursor:pointer;transition:background .2s;align-items:flex-start;}
+    .result-item:hover{background:rgba(255,255,255,.6);}
+    .result-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+    .result-text{font-size:.85rem;color:var(--ink-soft);line-height:1.6;}
+    .result-text b{color:var(--ink);}
+
+    /* CRITERIA */
+    .criteria-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:18px;}
+    .criteria-card{padding:18px;background:rgba(255,255,255,.55);border-radius:8px;border-left:4px solid var(--gold);cursor:pointer;transition:all .25s;}
+    .criteria-card:hover{transform:translateX(4px);background:rgba(255,255,255,.75);}
+    .criteria-card.cr-active{background:rgba(255,255,255,.92);box-shadow:0 4px 16px rgba(0,0,0,.1);}
+    .cr-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:var(--gold);color:white;border-radius:50%;font-size:.74rem;font-weight:700;margin-bottom:8px;}
+    .cr-title{font-weight:700;font-size:.9rem;margin:0 0 6px;color:var(--ink);}
+    .cr-desc{font-size:.83rem;color:var(--ink-soft);line-height:1.6;margin:0;}
+    .cr-example{margin-top:10px;padding-top:10px;border-top:1px dashed rgba(0,0,0,.15);font-size:.8rem;color:#7c5427;font-style:italic;line-height:1.55;display:none;}
+    .criteria-card.cr-active .cr-example{display:block;animation:fadeIn .25s ease;}
+
+    /* INSIGHT */
+    .insight-box{padding:16px;background:rgba(255,255,255,.6);border-radius:6px;border-left:4px solid var(--navy);margin:16px 0;}
+    .insight-title{margin:0 0 8px;font-weight:700;color:var(--navy);font-size:.93rem;}
+    .insight-text{margin:0;font-size:.88rem;color:var(--ink-soft);line-height:1.7;}
+
+    /* STEP NAV */
+    .step-nav{display:flex;gap:16px;margin-top:48px;padding-top:32px;border-top:2px solid rgba(0,0,0,.08);}
+    .nav-button{padding:12px 24px;border:2px solid var(--navy);background:white;color:var(--navy);border-radius:6px;cursor:pointer;font-weight:600;font-size:.93rem;transition:all .25s;font-family:var(--font-hand);}
+    .nav-button:hover{background:var(--navy);color:white;transform:translateY(-2px);box-shadow:0 4px 12px rgba(23,60,120,.2);}
+    .nav-button.prev{order:-1;}
+
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  </style>
+</head>
+<body>
+<div class="notebook">
+  <div class="spiral"></div>
+  <main>
+
+    <!-- HEADER -->
+    <div class="header">
+      <div class="home-link" onclick="goHome()">← 홈</div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:.9rem;color:var(--ink-soft);">
+        <span class="step-badge">2</span>
+        <span>주제 영역 정의 및 분할</span>
+      </div>
+    </div>
+
+    <!-- NAV DOTS -->
+    <div class="nav-dots">
+      <div class="nav-dot" data-step="1" onclick="navigateToStep(1)">1</div>
+      <div class="nav-dot" data-step="2" onclick="navigateToStep(2)">2</div>
+      <div class="nav-dot" data-step="3" onclick="navigateToStep(3)">3</div>
+      <div class="nav-dot" data-step="4" onclick="navigateToStep(4)">4</div>
+      <div class="nav-dot" data-step="5" onclick="navigateToStep(5)">5</div>
+      <div class="nav-dot" data-step="6" onclick="navigateToStep(6)">6</div>
+    </div>
+
+    <!-- TITLE -->
+    <div class="title-block">
+      <p class="eyebrow">Step 2 / 6</p>
+      <h1 class="main-title">주제 영역<br>정의 및 분할</h1>
+      <p class="subtitle-text">1단계에서 도출된 핵심 엔터티들을 관리 가능한 크기의 논리적 그룹으로 조직한다. '분할과 정복(Divide &amp; Conquer)'의 원리를 데이터 구조에 적용하여, 결합도는 낮추고 응집도는 높이는 모듈화 설계를 실현한다.</p>
+    </div>
+
+    <!-- SEC 1: 개념 -->
+    <section class="reveal">
+      <h2 class="section-label">주제 영역(Subject Area)이란?</h2>
+      <p style="color:var(--ink-soft);font-size:.9rem;line-height:1.7;margin:0;">
+        주제 영역은 비즈니스 관점에서 논리적으로 연관된 엔터티들의 집합이다. 같은 주제 영역 내의 엔터티들은 높은 응집도(High Cohesion)를 유지하고, 다른 주제 영역과의 결합도(Coupling)는 최소화한다.
+      </p>
+      <div class="principle-highlight">
+        <span class="ph-icon">💡</span>
+        <p class="ph-text"><b>핵심 설계 원칙</b> — 각 주제 영역은 하나의 비즈니스 기능 또는 프로세스에 집중하며, 마이크로서비스 아키텍처의 도메인 경계(Domain Boundary)와 동일한 논리를 따른다.</p>
+      </div>
+    </section>
+
+    <!-- SEC 2: 4 SA -->
+    <section class="reveal">
+      <h2 class="section-label">금융 도메인의 주제 영역</h2>
+      <p style="color:var(--ink-soft);font-size:.87rem;margin-bottom:16px;">자산운용 업무를 4개의 핵심 주제 영역으로 분할했다. 카드를 클릭하면 상세 정보가, 관계 맵에서는 화살표를 클릭하면 의존성 설명이 나타난다.</p>
+
+      <div class="view-toggle">
+        <button class="vt-btn vt-active" id="vt-cards" onclick="switchView('cards')">카드 보기</button>
+        <button class="vt-btn" id="vt-network" onclick="switchView('network')">관계 맵 보기</button>
+      </div>
+
+      <!-- CARD VIEW -->
+      <div id="view-cards">
+        <div class="sa-card-grid">
+          <div class="sa-card sac-asset" data-sa="asset" onclick="toggleSA('asset')">
+            <div class="sac-head"><span class="sac-icon">📦</span><span class="sac-count">3 entities</span></div>
+            <p class="sac-name-kr">자산 관리 SA</p>
+            <p class="sac-name-en">Asset Management</p>
+            <p class="sac-purpose">투자 대상 금융상품의 표준화된 마스터 데이터 관리</p>
+            <div class="sac-entities">
+              <span class="sac-entity-tag">ASSET</span><span class="sac-entity-tag">ASSET_CLASS</span><span class="sac-entity-tag">MARKET_DATA</span>
+            </div>
+            <p class="sac-tap-hint">탭하여 상세 보기 ▾</p>
+          </div>
+          <div class="sa-card sac-trade" data-sa="trade" onclick="toggleSA('trade')">
+            <div class="sac-head"><span class="sac-icon">🔄</span><span class="sac-count">3 entities</span></div>
+            <p class="sac-name-kr">거래 관리 SA</p>
+            <p class="sac-name-en">Trading Management</p>
+            <p class="sac-purpose">주문 → 체결 → 정산으로 이어지는 완전한 거래 생명주기 관리</p>
+            <div class="sac-entities">
+              <span class="sac-entity-tag">ORDER</span><span class="sac-entity-tag">EXECUTION</span><span class="sac-entity-tag">SETTLEMENT</span>
+            </div>
+            <p class="sac-tap-hint">탭하여 상세 보기 ▾</p>
+          </div>
+          <div class="sa-card sac-risk" data-sa="risk" onclick="toggleSA('risk')">
+            <div class="sac-head"><span class="sac-icon">⚠️</span><span class="sac-count">3 entities</span></div>
+            <p class="sac-name-kr">위험 관리 SA</p>
+            <p class="sac-name-en">Risk Management</p>
+            <p class="sac-purpose">포트폴리오의 수익, 손실, 한도 현황을 실시간으로 추적 및 통제</p>
+            <div class="sac-entities">
+              <span class="sac-entity-tag">POSITION</span><span class="sac-entity-tag">RISK_LIMIT</span><span class="sac-entity-tag">P&amp;L</span>
+            </div>
+            <p class="sac-tap-hint">탭하여 상세 보기 ▾</p>
+          </div>
+          <div class="sa-card sac-ledger" data-sa="ledger" onclick="toggleSA('ledger')">
+            <div class="sac-head"><span class="sac-icon">📋</span><span class="sac-count">3 entities</span></div>
+            <p class="sac-name-kr">원장 관리 SA</p>
+            <p class="sac-name-en">Ledger Management</p>
+            <p class="sac-purpose">모든 거래의 시계열 이력을 선분 이력 기반으로 누적 관리</p>
+            <div class="sac-entities">
+              <span class="sac-entity-tag">LEDGER</span><span class="sac-entity-tag">TXN_LOG</span><span class="sac-entity-tag">PRICE_HIST</span>
+            </div>
+            <p class="sac-tap-hint">탭하여 상세 보기 ▾</p>
+          </div>
+        </div>
+
+        <div class="sa-detail" id="sa-detail">
+          <p class="sd-title" id="sdt-title"></p>
+          <p class="sd-title-en" id="sdt-title-en"></p>
+          <div class="sd-field"><p class="sd-field-label">설명</p><p class="sd-field-text" id="sdt-desc"></p></div>
+          <div class="sd-field"><p class="sd-field-label">목적</p><p class="sd-field-text" id="sdt-purpose"></p></div>
+          <div class="sd-field"><p class="sd-field-label">핵심 엔터티</p><p class="sd-field-text" id="sdt-entities"></p></div>
+          <div class="sd-field"><p class="sd-field-label">비즈니스 기능</p><p class="sd-field-text" id="sdt-funcs"></p></div>
+          <div class="sd-field"><p class="sd-field-label">다른 SA와의 연결</p><p class="sd-field-text" id="sdt-conn"></p></div>
+        </div>
+      </div>
+
+      <!-- NETWORK VIEW -->
+      <div id="view-network" style="display:none;">
+        <div class="network-wrap">
+          <svg id="network-svg" viewBox="0 0 700 400" style="width:100%;max-width:620px;margin:0 auto;height:auto;display:block;">
+            <!-- 자산 (top) -->
+            <rect x="280" y="18" width="140" height="64" rx="6" fill="white" stroke="#173c78" stroke-width="2"/>
+            <rect x="280" y="18" width="140" height="18" rx="6" fill="rgba(23,60,120,.14)"/>
+            <text x="350" y="31" text-anchor="middle" font-size="11" font-weight="700" fill="#173c78">📦 자산 관리 SA</text>
+            <text x="350" y="52" text-anchor="middle" font-size="8.5" fill="#33291f">ASSET · ASSET_CLASS</text>
+            <text x="350" y="64" text-anchor="middle" font-size="8.5" fill="#33291f">MARKET_DATA</text>
+            <text x="350" y="76" text-anchor="middle" font-size="7.5" fill="#9a7729" font-style="italic">참조만 받음 (Low Coupling)</text>
+
+            <!-- 거래 (left) -->
+            <rect x="30" y="166" width="150" height="64" rx="6" fill="white" stroke="#7c261f" stroke-width="2"/>
+            <rect x="30" y="166" width="150" height="18" rx="6" fill="rgba(124,38,31,.12)"/>
+            <text x="105" y="179" text-anchor="middle" font-size="11" font-weight="700" fill="#7c261f">🔄 거래 관리 SA</text>
+            <text x="105" y="200" text-anchor="middle" font-size="8.5" fill="#33291f">ORDER · EXECUTION</text>
+            <text x="105" y="212" text-anchor="middle" font-size="8.5" fill="#33291f">SETTLEMENT</text>
+            <text x="105" y="224" text-anchor="middle" font-size="7.5" fill="#9a7729" font-style="italic">중간 의존성</text>
+
+            <!-- 위험 (right) -->
+            <rect x="520" y="166" width="150" height="64" rx="6" fill="white" stroke="#4e5533" stroke-width="2"/>
+            <rect x="520" y="166" width="150" height="18" rx="6" fill="rgba(78,85,51,.12)"/>
+            <text x="595" y="179" text-anchor="middle" font-size="11" font-weight="700" fill="#4e5533">⚠️ 위험 관리 SA</text>
+            <text x="595" y="200" text-anchor="middle" font-size="8.5" fill="#33291f">POSITION · RISK_LIMIT</text>
+            <text x="595" y="212" text-anchor="middle" font-size="8.5" fill="#33291f">P&amp;L</text>
+            <text x="595" y="224" text-anchor="middle" font-size="7.5" fill="#9a7729" font-style="italic">읽기 의존성만 존재</text>
+
+            <!-- 원장 (bottom) -->
+            <rect x="280" y="312" width="140" height="64" rx="6" fill="white" stroke="#9a7729" stroke-width="2"/>
+            <rect x="280" y="312" width="140" height="18" rx="6" fill="rgba(154,119,41,.14)"/>
+            <text x="350" y="325" text-anchor="middle" font-size="11" font-weight="700" fill="#9a7729">📋 원장 관리 SA</text>
+            <text x="350" y="346" text-anchor="middle" font-size="8.5" fill="#33291f">LEDGER · TXN_LOG</text>
+            <text x="350" y="358" text-anchor="middle" font-size="8.5" fill="#33291f">PRICE_HISTORY</text>
+            <text x="350" y="370" text-anchor="middle" font-size="7.5" fill="#9a7729" font-style="italic">쓰기 의존성 높음 (의도)</text>
+
+            <!-- 거래→자산 (R) -->
+            <line class="network-line" x1="125" y1="166" x2="295" y2="86" stroke="#173c78" stroke-width="1.5" stroke-dasharray="5,3" opacity=".65" data-rel="거래 관리 SA → 자산 관리 SA · 참조(R) — 주문 접수 시 ASSET 정보를 조회하여 유효성을 검증한다"/>
+            <polygon points="291,90 304,84 296,96" fill="#173c78" opacity=".65"/>
+            <!-- 위험→자산 (R) -->
+            <line class="network-line" x1="575" y1="166" x2="405" y2="86" stroke="#173c78" stroke-width="1.5" stroke-dasharray="5,3" opacity=".65" data-rel="위험 관리 SA → 자산 관리 SA · 참조(R) — 자산 가격 평가 시 시장 정보를 조회한다"/>
+            <polygon points="409,90 396,84 404,96" fill="#173c78" opacity=".65"/>
+            <!-- 위험→거래 (R) -->
+            <line class="network-line" x1="520" y1="198" x2="180" y2="198" stroke="#4e5533" stroke-width="1.5" stroke-dasharray="5,3" opacity=".65" data-rel="위험 관리 SA → 거래 관리 SA · 참조(R) — 체결 정보를 기반으로 실시간 포지션과 손익을 계산한다 (읽기 전용 의존)"/>
+            <polygon points="184,193 172,198 184,203" fill="#4e5533" opacity=".65"/>
+            <!-- 거래→원장 (Write, thick) -->
+            <line class="network-line" x1="130" y1="230" x2="300" y2="320" stroke="#9a7729" stroke-width="2.6" data-rel="거래 관리 SA → 원장 관리 SA · 기록(Write) — 체결이 발생할 때마다 거래 로그와 원장 데이터가 누적된다"/>
+            <polygon points="294,308 304,318 290,323" fill="#9a7729"/>
+            <!-- 위험→원장 (Write, medium) -->
+            <line class="network-line" x1="570" y1="230" x2="400" y2="320" stroke="#9a7729" stroke-width="1.8" opacity=".75" data-rel="위험 관리 SA → 원장 관리 SA · 기록(Write) — 마감 시점에 포지션과 손익이 원장에 최종 확정 기록된다"/>
+            <polygon points="406,323 392,318 402,308" fill="#9a7729" opacity=".75"/>
+          </svg>
+          <div class="network-info" id="network-info">화살표 위에 마우스를 올리면 이 곳에 SA 간 의존 관계 설명이 나타납니다.</div>
+          <div class="network-legend">
+            <div class="nl-item"><div class="nl-swatch" style="border-top-color:#173c78;border-top-style:dashed;"></div>참조 (Read)</div>
+            <div class="nl-item"><div class="nl-swatch" style="border-top-color:#9a7729;border-top-width:3px;"></div>기록 (Write)</div>
+          </div>
+          <p class="network-footnote">※ 원장 관리 SA는 시세 수신 시 자산 관리 SA와 병행하여 PRICE_HISTORY를 생성한다 — 두 SA가 같은 기능에서 동시에 데이터를 생성하는 구조는 Step 3: CRUD 매트릭스에서 자세히 검증한다.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEC 3: Low Coupling / High Cohesion -->
+    <section class="reveal">
+      <h2 class="section-label">결합과 응집 — 두 가지 설계 목표</h2>
+      <div class="prop-grid">
+        <div class="prop-box pb-low">
+          <p class="prop-title">✓ 느슨한 결합 (Low Coupling)</p>
+          <p class="prop-text">각 SA는 독립적인 비즈니스 기능을 담당하며, 공유 엔터티는 최소화한다. 예: 자산 정보는 자산 관리 SA에서만 주도적으로 관리하고, 다른 SA는 참조만 수행한다.</p>
+        </div>
+        <div class="prop-box pb-high">
+          <p class="prop-title">✓ 높은 응집도 (High Cohesion)</p>
+          <p class="prop-text">각 SA 내의 엔터티들은 강한 비즈니스 연관성을 가진다. 예: 위험 관리 SA의 {포지션, 위험한도, P&amp;L}은 모두 포트폴리오의 위험 상태를 표현한다.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEC 4: 정량 분석 -->
+    <section class="reveal" id="gauge-section">
+      <h2 class="section-label">응집도 vs 결합도 정량 분석</h2>
+      <p style="color:var(--ink-soft);font-size:.87rem;margin-bottom:6px;">좋은 소프트웨어 아키텍처의 핵심은 높은 응집도와 낮은 결합도다. 이 원칙은 데이터 아키텍처에도 동일하게 적용된다.</p>
+
+      <div class="gauge-row">
+        <div class="gauge-block">
+          <div class="gauge-label-row">
+            <span class="gauge-name">🟢 응집도 (Cohesion)</span>
+            <span class="gauge-pct gp-cohesion">95%</span>
+          </div>
+          <div class="gauge-track"><div class="gauge-fill cohesion" id="gauge-cohesion"></div></div>
+          <p class="gauge-desc">같은 주제 영역 내 엔터티들이 얼마나 강하게 연관되어 있는가. 높을수록 좋다.</p>
+        </div>
+        <div class="gauge-block">
+          <div class="gauge-label-row">
+            <span class="gauge-name">🔴 결합도 (Coupling)</span>
+            <span class="gauge-pct gp-coupling">15%</span>
+          </div>
+          <div class="gauge-track"><div class="gauge-fill coupling" id="gauge-coupling"></div></div>
+          <p class="gauge-desc">다른 주제 영역에 얼마나 의존하는가. 낮을수록 좋다.</p>
+        </div>
+      </div>
+
+      <p style="font-weight:700;font-size:.88rem;color:var(--ink);margin:18px 0 0;">📊 분석 결과 <span style="font-weight:400;font-size:.78rem;color:var(--ink-soft);">— 클릭하면 해당 SA가 카드 보기에서 강조됩니다</span></p>
+      <div class="result-list">
+        <div class="result-item" onclick="pulseSA('asset')">
+          <span class="result-dot" style="background:var(--navy);"></span>
+          <span class="result-text"><b>자산 관리 SA</b> — 거래·위험·원장 SA와 느슨하게 연결 (참조 관계만 유지)</span>
+        </div>
+        <div class="result-item" onclick="pulseSA('trade')">
+          <span class="result-dot" style="background:var(--maroon);"></span>
+          <span class="result-text"><b>거래 관리 SA</b> — 자산·원장 SA와의 의존성 중간 수준 (거래 생성 → 원장 기록)</span>
+        </div>
+        <div class="result-item" onclick="pulseSA('risk')">
+          <span class="result-dot" style="background:var(--olive);"></span>
+          <span class="result-text"><b>위험 관리 SA</b> — 거래 정보를 참조하여 실시간 계산 (읽기 의존성만 존재)</span>
+        </div>
+        <div class="result-item" onclick="pulseSA('ledger')">
+          <span class="result-dot" style="background:var(--gold);"></span>
+          <span class="result-text"><b>원장 관리 SA</b> — 모든 SA의 거래 기록을 누적 (쓰기 의존성 높음, 설계 의도)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEC 5: 분할 기준 -->
+    <section class="reveal">
+      <h2 class="section-label">주제 영역 분할 기준</h2>
+      <p style="color:var(--ink-soft);font-size:.87rem;margin-bottom:6px;">카드를 클릭하면 구체적인 적용 예시가 펼쳐진다.</p>
+      <div class="criteria-grid">
+        <div class="criteria-card" onclick="toggleCriteria(this)">
+          <div class="cr-num">①</div>
+          <p class="cr-title">비즈니스 기능 중심</p>
+          <p class="cr-desc">각 SA는 하나의 명확한 비즈니스 기능을 담당하도록 설계된다.</p>
+          <p class="cr-example">"거래"라는 단일 기능에 ORDER·EXECUTION·SETTLEMENT를 모두 묶는다 — 데이터 타입이 아니라 업무 기능 기준으로 나눈다.</p>
+        </div>
+        <div class="criteria-card" onclick="toggleCriteria(this)">
+          <div class="cr-num">②</div>
+          <p class="cr-title">데이터 주권 명확화</p>
+          <p class="cr-desc">각 엔터티는 정확히 하나의 SA에서만 '소유'되며, 다른 SA는 참조만 수행한다.</p>
+          <p class="cr-example">ASSET은 오직 자산 관리 SA만 생성·수정한다. 거래 SA는 ASSET_ID를 참조만 할 뿐 직접 수정하지 않는다.</p>
+        </div>
+        <div class="criteria-card" onclick="toggleCriteria(this)">
+          <div class="cr-num">③</div>
+          <p class="cr-title">독립적 진화 가능</p>
+          <p class="cr-desc">한 SA의 변경이 다른 SA에 미치는 영향을 최소화하여 유연한 시스템 진화를 지원한다.</p>
+          <p class="cr-example">RISK_LIMIT 정책이 바뀌어도 거래·원장 SA의 테이블 구조는 영향받지 않는다 — 참조 인터페이스(ID)만 유지되면 된다.</p>
+        </div>
+        <div class="criteria-card" onclick="toggleCriteria(this)">
+          <div class="cr-num">④</div>
+          <p class="cr-title">팀 조직과 매핑</p>
+          <p class="cr-desc">각 SA는 하나의 팀(또는 팀의 일부)이 담당하는 조직 경계와 일치하도록 설계된다.</p>
+          <p class="cr-example">거래 관리 SA → 트레이딩 데스크, 위험 관리 SA → 리스크 관리팀이 전담한다 — 데이터 경계가 조직 경계를 그대로 반영한다.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEC 6: 마무리 -->
+    <section class="reveal">
+      <h2 class="section-label">이 단계가 만든 것</h2>
+      <div class="insight-box" style="border-left-color:var(--navy);">
+        <p class="insight-title">📌 모듈화 설계의 의미</p>
+        <p class="insight-text">1단계에서 식별된 엔터티들을 관리 가능한 단위로 분산시키는 과정이다. 이 분할이 명확할수록, 다음 단계에서 각 SA별로 독립적인 데이터 생성 소유권을 검증할 수 있다.</p>
+      </div>
+      <div class="insight-box" style="border-left-color:var(--maroon);margin-top:12px;">
+        <p class="insight-title">🎯 Step 3 — CRUD 매트릭스로의 연결</p>
+        <p class="insight-text">주제 영역 분할이 완료되었으므로, 다음은 각 SA 내의 엔터티가 정확히 어떤 기능에 의해 생성(C)·조회(R)·수정(U)·삭제(D)되는지 매핑하여 시스템의 논리적 완결성을 검증한다.</p>
+      </div>
+    </section>
+
+    <!-- NAV -->
+    <div class="step-nav">
+      <button class="nav-button prev" onclick="navigateToStep(1)">← Step 1: 전략 메타모델</button>
+      <button class="nav-button"      onclick="navigateToStep(3)">Step 3: CRUD 매트릭스 →</button>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ── SA DETAIL DATA ────────────────────────────────────────────────
+const SA_DATA = {
+  asset: {
+    title:"📦 자산 관리 SA", titleEn:"Asset Management",
+    desc:"투자 대상 금융상품의 표준화된 마스터 데이터를 관리하는 영역이다.",
+    purpose:"모든 거래의 기준이 되는 자산 정보를 단일 진실 공급원(Single Source of Truth)으로 유지한다.",
+    entities:"ASSET(상품), ASSET_CLASS(상품분류), MARKET_DATA(시장정보)",
+    funcs:"상품/한도 마스터 관리, 시장 시세 수신",
+    conn:"거래·위험·원장 SA로부터 참조(R)만 받는다. 능동적으로 다른 SA를 참조하지 않는 것이 Low Coupling의 핵심이다."
+  },
+  trade: {
+    title:"🔄 거래 관리 SA", titleEn:"Trading Management",
+    desc:"주문 → 체결 → 정산으로 이어지는 거래의 전체 생명주기를 관리하는 영역이다.",
+    purpose:"거래 행위 자체의 무결성과 순차성을 보장한다.",
+    entities:"ORDER(주문), EXECUTION(체결), SETTLEMENT(정산)",
+    funcs:"매매 주문 접수, 주문 체결 처리, 정산 처리",
+    conn:"자산 SA를 참조(R)하여 주문 유효성을 검증하고, 위험·원장 SA에 체결 결과를 전파(Write)한다."
+  },
+  risk: {
+    title:"⚠️ 위험 관리 SA", titleEn:"Risk Management",
+    desc:"포트폴리오의 수익, 손실, 한도 현황을 실시간으로 추적·통제하는 영역이다.",
+    purpose:"거래로 인한 리스크 노출을 즉시 가시화하여 한도 초과를 사전 차단한다.",
+    entities:"POSITION(포지션), RISK_LIMIT(위험한도), P&amp;L(손익)",
+    funcs:"자산 가격 평가 (한도 정책은 자산 SA와 공동 관리)",
+    conn:"거래 SA의 체결 정보를 참조(R)하여 실시간 계산한다 — 읽기 의존성만 존재하며 다른 SA의 데이터를 직접 생성하지 않는다."
+  },
+  ledger: {
+    title:"📋 원장 관리 SA", titleEn:"Ledger Management",
+    desc:"모든 거래의 시계열 이력을 선분 이력 기반으로 영구 누적 관리하는 영역이다.",
+    purpose:"특정 시점의 데이터를 정확히 복원 가능하게 하여 감사·규제 대응의 기반을 제공한다.",
+    entities:"LEDGER(원장), TRANSACTION_LOG(거래기록), PRICE_HISTORY(가격이력)",
+    funcs:"시장 시세 수신(가격 이력 생성), 원장 마감",
+    conn:"거래·위험 SA의 결과를 받아 누적(Write)한다 — 쓰기 의존성이 가장 높은 SA이며, 이는 설계 의도상 자연스러운 결과다."
+  }
+};
+
+// ── VIEW TOGGLE ───────────────────────────────────────────────────
+function switchView(view) {
+  document.getElementById('vt-cards').classList.toggle('vt-active', view === 'cards');
+  document.getElementById('vt-network').classList.toggle('vt-active', view === 'network');
+  document.getElementById('view-cards').style.display   = view === 'cards'   ? 'block' : 'none';
+  document.getElementById('view-network').style.display = view === 'network' ? 'block' : 'none';
+}
+
+// ── SA CARD TOGGLE ────────────────────────────────────────────────
+let activeSA = null;
+function toggleSA(key) {
+  const panel = document.getElementById('sa-detail');
+  const card  = document.querySelector(`.sa-card[data-sa="${key}"]`);
+
+  if (activeSA === key) {
+    card.classList.remove('sa-selected');
+    panel.classList.remove('visible');
+    activeSA = null;
+    return;
+  }
+  document.querySelectorAll('.sa-card').forEach(c => c.classList.remove('sa-selected'));
+  card.classList.add('sa-selected');
+  activeSA = key;
+
+  const d = SA_DATA[key];
+  document.getElementById('sdt-title').textContent = d.title;
+  document.getElementById('sdt-title-en').textContent = d.titleEn;
+  document.getElementById('sdt-desc').textContent = d.desc;
+  document.getElementById('sdt-purpose').textContent = d.purpose;
+  document.getElementById('sdt-entities').innerHTML = d.entities;
+  document.getElementById('sdt-funcs').textContent = d.funcs;
+  document.getElementById('sdt-conn').textContent = d.conn;
+
+  panel.classList.add('visible');
+  setTimeout(() => panel.scrollIntoView({behavior:'smooth', block:'nearest'}), 80);
+}
+
+// ── PULSE FROM ANALYSIS RESULT LIST ──────────────────────────────
+function pulseSA(key) {
+  switchView('cards');
+  setTimeout(() => {
+    const card = document.querySelector(`.sa-card[data-sa="${key}"]`);
+    if (!card) return;
+    card.scrollIntoView({behavior:'smooth', block:'center'});
+    card.classList.add('sa-pulse');
+    setTimeout(() => card.classList.remove('sa-pulse'), 1200);
+  }, 50);
+}
+
+// ── NETWORK LINE HOVER ────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const info = document.getElementById('network-info');
+  document.querySelectorAll('.network-line').forEach(line => {
+    const origWidth = line.getAttribute('stroke-width');
+    const origOpacity = line.getAttribute('opacity') || '1';
+    line.addEventListener('mouseenter', () => {
+      const rel = line.getAttribute('data-rel');
+      if (rel) {
+        info.innerHTML = `<b>▶</b> ${rel}`;
+        line.setAttribute('stroke-width', (parseFloat(origWidth) + 1.3).toString());
+      }
+    });
+    line.addEventListener('mouseleave', () => {
+      info.innerHTML = '화살표 위에 마우스를 올리면 이 곳에 SA 간 의존 관계 설명이 나타납니다.';
+      line.setAttribute('stroke-width', origWidth);
+      line.setAttribute('opacity', origOpacity);
+    });
+  });
+});
+
+// ── CRITERIA CARDS ────────────────────────────────────────────────
+function toggleCriteria(el) {
+  const was = el.classList.contains('cr-active');
+  document.querySelectorAll('.criteria-card').forEach(c => c.classList.remove('cr-active'));
+  if (!was) el.classList.add('cr-active');
+}
+
+// ── GAUGE ANIMATION ───────────────────────────────────────────────
+function setupGaugeObserver() {
+  const section = document.getElementById('gauge-section');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        document.getElementById('gauge-cohesion').classList.add('filled');
+        document.getElementById('gauge-coupling').classList.add('filled');
+        obs.disconnect();
+      }
+    });
+  }, {threshold:0.3});
+  if (section) obs.observe(section);
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────────
+function navigateToStep(step) {
+  const map = {
+    1:'step1-strategy-meta-modeling.html',
+    2:'step2-subject-area.html',
+    3:'step3-crud-matrix.html',
+    4:'step4-logical-modeling.html',
+    5:'step5-physical-design.html',
+    6:'step6-governance.html'
+  };
+  document.body.style.opacity = '0';
+  setTimeout(() => { window.location.href = map[step]; }, 280);
+}
+function goHome() {
+  document.body.style.opacity = '0';
+  setTimeout(() => { window.location.href = 'index.html'; }, 280);
+}
+
+// ── SCROLL REVEAL ─────────────────────────────────────────────────
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('animate'); revealObs.unobserve(e.target); } });
+}, {threshold:.08, rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+// ── INIT ──────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  document.body.style.opacity = '1';
+  const dot = document.querySelector('[data-step="2"]');
+  if (dot) dot.classList.add('active');
+  setupGaugeObserver();
+});
+
+// ── KEYBOARD ──────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') navigateToStep(3);
+  if (e.key === 'ArrowLeft')  navigateToStep(1);
+});
+</script>
+</body>
+</html>

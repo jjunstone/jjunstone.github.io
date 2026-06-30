@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Step 6 — 데이터 거버넌스 | Architecture Studies</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/static/pretendard.css">
+  <style>
+    @font-face {
+      font-family:"KyoboHand";
+      src:url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307@1.1/KyoboHandwriting2023wsa.woff2") format("woff2");
+      font-weight:400;font-style:normal;font-display:swap;
+    }
+    :root {
+      --paper:#ead8aa;--paper-light:#f8e9c4;--paper-warm:#ddc48f;
+      --line:rgba(38,68,88,.18);--ink:#17130f;--ink-soft:#33291f;
+      --navy:#173c78;--maroon:#7c261f;--olive:#4e5533;--gold:#9a7729;
+      --paper-shadow:rgba(44,28,9,.24);
+      --font-hand:"Pretendard","Noto Sans KR","Malgun Gothic",sans-serif;
+      --font-mono:"Consolas","D2Coding","SFMono-Regular",monospace;
+    }
+    *{box-sizing:border-box;letter-spacing:0;}
+    html{scroll-behavior:smooth;}
+    body{
+      margin:0;color:var(--ink);font-family:var(--font-hand);
+      background:radial-gradient(circle at 12% 10%,rgba(255,255,255,.34),transparent 30%),
+                 linear-gradient(135deg,#c9a66b,#ead6a2 46%,#bd955b);
+      min-height:100vh;overflow-x:hidden;opacity:0;transition:opacity .3s ease;
+    }
+    a{color:inherit;text-decoration:none;}
+    svg{display:block;}::selection{background:var(--gold);color:#fff;}
+
+    .notebook{
+      position:relative;width:min(100%,1080px);margin:0 auto;
+      padding:72px 54px 48px 86px;overflow:hidden;
+      background:
+        radial-gradient(circle at 23% 18%,rgba(118,76,29,.13) 0 1px,transparent 1.6px) 0 0/38px 38px,
+        radial-gradient(circle at 78% 62%,rgba(70,46,22,.10) 0 1px,transparent 1.4px) 12px 4px/46px 46px,
+        repeating-linear-gradient(to bottom,transparent 0 35px,var(--line) 36px 37px),
+        linear-gradient(90deg,transparent 0 50px,rgba(112,82,39,.18) 51px 52px,transparent 53px),
+        linear-gradient(180deg,var(--paper-light),var(--paper) 45%,var(--paper-warm));
+      box-shadow:0 18px 42px var(--paper-shadow);
+    }
+    .notebook::before{
+      content:"";position:absolute;inset:0;pointer-events:none;
+      background:
+        linear-gradient(90deg,rgba(83,53,22,.12),transparent 16%,transparent 84%,rgba(83,53,22,.08)),
+        radial-gradient(circle at 35% 9%,rgba(67,41,14,.12),transparent 2px),
+        radial-gradient(circle at 67% 71%,rgba(67,41,14,.11),transparent 2px);
+      mix-blend-mode:multiply;
+    }
+    .spiral{
+      position:absolute;left:0;top:0;bottom:0;width:42px;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='42' height='40'%3E%3Cellipse cx='9' cy='20' rx='12' ry='9' fill='none' stroke='%23201510' stroke-width='4'/%3E%3Cellipse cx='9' cy='20' rx='7' ry='5' fill='none' stroke='%2382652f' stroke-width='2' opacity='.45'/%3E%3C/svg%3E");
+      background-repeat:repeat-y;background-size:42px 40px;
+      opacity:.9;filter:drop-shadow(1px 1px 1px rgba(0,0,0,.22));
+    }
+    main{position:relative;z-index:1;}
+
+    .header{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:42px;}
+    .home-link{font-size:.95rem;color:var(--navy);cursor:pointer;opacity:.7;transition:opacity .2s;}
+    .home-link:hover{opacity:1;}
+    .step-badge{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:var(--navy);color:white;border-radius:50%;font-weight:600;font-size:.85rem;}
+
+    .title-block{flex:1;margin-bottom:42px;}
+    .eyebrow{font-weight:700;font-size:1.1rem;margin:0 0 8px;color:var(--navy);}
+    .main-title{font-size:2.8rem;line-height:.95;margin:0;transform:rotate(-1deg);color:var(--ink);}
+    .subtitle-text{font-size:1rem;line-height:1.6;margin:16px 0 0;color:var(--ink-soft);max-width:640px;}
+
+    .nav-dots{display:flex;gap:12px;margin-bottom:48px;flex-wrap:wrap;}
+    .nav-dot{width:32px;height:32px;border-radius:50%;background:rgba(23,60,120,.1);border:2px solid rgba(23,60,120,.3);cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--navy);font-weight:600;}
+    .nav-dot:hover{background:rgba(23,60,120,.2);transform:scale(1.1);}
+    .nav-dot.active{background:var(--navy);color:white;border-color:var(--navy);box-shadow:0 4px 12px rgba(23,60,120,.3);}
+
+    section{margin-bottom:56px;}
+    .section-label{font-weight:700;font-size:1.2rem;margin:0 0 24px;color:var(--navy);position:relative;display:inline-block;}
+    .section-label::after{content:"";position:absolute;left:-8px;right:-12px;bottom:-8px;height:6px;
+      background:linear-gradient(currentColor,currentColor) 0 2px/100% 2px no-repeat,
+                 linear-gradient(currentColor,currentColor) 6px 6px/86% 2px no-repeat;
+      opacity:.9;transform:rotate(-1.3deg);}
+
+    .reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease;}
+    .reveal.animate{opacity:1;transform:translateY(0);}
+
+    /* ── SEC 1: STANDARDIZATION CARDS ── */
+    .std-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;}
+    .std-card{padding:18px;border-radius:10px;background:rgba(255,255,255,.6);border-top:4px solid;cursor:pointer;transition:all .25s;}
+    .std-card:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(0,0,0,.09);}
+    .std-card.sc-active{background:rgba(255,255,255,.95);box-shadow:0 6px 18px rgba(0,0,0,.12);transform:translateY(-3px);}
+    .sc-1{border-top-color:var(--navy);}
+    .sc-2{border-top-color:var(--maroon);}
+    .sc-3{border-top-color:var(--olive);}
+    .sc-4{border-top-color:var(--gold);}
+    .sc-icon{font-size:1.5rem;margin-bottom:8px;}
+    .sc-title{font-weight:700;font-size:.9rem;margin:0 0 6px;}
+    .sc-1 .sc-title{color:var(--navy);}
+    .sc-2 .sc-title{color:var(--maroon);}
+    .sc-3 .sc-title{color:var(--olive);}
+    .sc-4 .sc-title{color:var(--gold);}
+    .sc-desc{font-size:.82rem;color:var(--ink-soft);line-height:1.6;margin:0;}
+    .sc-example{display:none;margin-top:11px;padding-top:11px;border-top:1px dashed rgba(0,0,0,.12);}
+    .std-card.sc-active .sc-example{display:block;animation:fadeIn .25s ease;}
+    .sc-ex-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin:0 0 5px;}
+    .sc-1 .sc-ex-label{color:var(--navy);}
+    .sc-2 .sc-ex-label{color:var(--maroon);}
+    .sc-3 .sc-ex-label{color:var(--olive);}
+    .sc-4 .sc-ex-label{color:var(--gold);}
+    .sc-ex-body{font-size:.8rem;color:var(--ink-soft);line-height:1.65;}
+    .sc-ex-tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.73rem;font-weight:600;margin:2px 2px 0 0;}
+    .sc-1 .sc-ex-tag{background:rgba(23,60,120,.1);color:var(--navy);}
+    .sc-2 .sc-ex-tag{background:rgba(124,38,31,.1);color:var(--maroon);}
+    .sc-3 .sc-ex-tag{background:rgba(78,85,51,.1);color:var(--olive);}
+    .sc-4 .sc-ex-tag{background:rgba(154,119,41,.1);color:var(--gold);}
+
+    /* ── SEC 2: METADATA CYCLE ── */
+    .cycle-outer{display:flex;justify-content:center;}
+    .cycle-path{stroke-dasharray:400;stroke-dashoffset:400;transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1);}
+    .cycle-path.drawn{stroke-dashoffset:0;}
+    .cycle-node{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(.4);transition:opacity .45s ease,transform .45s cubic-bezier(.34,1.56,.64,1);cursor:pointer;}
+    .cycle-node.revealed{opacity:1;transform:scale(1);}
+    .cycle-node:hover circle{filter:brightness(1.08);}
+    .cycle-node.cn-active circle{stroke:var(--ink)!important;stroke-width:3!important;}
+    .cycle-info{margin-top:12px;padding:11px 16px;background:rgba(23,60,120,.07);border-radius:6px;border-left:3px solid var(--navy);font-size:.85rem;color:var(--ink-soft);text-align:center;min-height:20px;}
+    .cycle-info b{color:var(--navy);}
+    .cycle-hint{text-align:center;font-size:.77rem;color:rgba(0,0,0,.35);margin-top:4px;font-style:italic;}
+
+    /* ── SEC 3: QUALITY RADAR ── */
+    .radar-wrap{display:flex;flex-direction:column;align-items:center;}
+    .radar-polygon{transition:d .8s;}
+    .radar-axis-label{font-size:11px;font-weight:700;}
+    .radar-legend{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;margin-top:14px;}
+    .rl-item{display:flex;align-items:center;gap:7px;font-size:.8rem;color:var(--ink-soft);}
+    .rl-dot{width:10px;height:10px;border-radius:50%;}
+    .quality-bars{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:9px;margin-top:18px;}
+    .q-bar-row{display:flex;align-items:center;gap:10px;}
+    .q-bar-label{width:66px;flex-shrink:0;font-size:.78rem;font-weight:600;color:var(--ink-soft);}
+    .q-bar-track{flex:1;height:9px;background:rgba(0,0,0,.07);border-radius:5px;overflow:hidden;}
+    .q-bar-fill{height:100%;width:0%;border-radius:5px;transition:width 1s cubic-bezier(.16,1,.3,1);}
+    .q-bar-fill.qb-done.q-acc{background:var(--navy);width:98%;}
+    .q-bar-fill.qb-done.q-com{background:var(--olive);width:95%;}
+    .q-bar-fill.qb-done.q-con{background:var(--maroon);width:99%;}
+    .q-bar-fill.qb-done.q-tim{background:var(--gold);width:90%;}
+    .q-bar-fill.qb-done.q-con2{background:var(--olive);width:96%;}
+    .q-bar-fill.qb-done.q-acc2{background:var(--navy);width:88%;}
+    .q-bar-val{font-size:.73rem;font-weight:700;width:30px;text-align:right;color:var(--ink-soft);}
+
+    /* ── SEC 4: OWNERSHIP TABLE ── */
+    .ownership-table{width:100%;border-collapse:collapse;border-radius:8px;overflow:hidden;font-size:.86rem;background:rgba(255,255,255,.65);}
+    .ownership-table thead th{padding:10px 14px;background:rgba(23,60,120,.1);color:var(--navy);font-weight:700;text-align:left;border-bottom:2px solid rgba(23,60,120,.2);}
+    .own-row{cursor:pointer;transition:background .2s;}
+    .own-row:hover td{background:rgba(255,255,255,.5);}
+    .own-row.own-expanded td{background:rgba(255,255,255,.8);}
+    .own-row td{padding:10px 14px;border-bottom:1px solid rgba(0,0,0,.06);vertical-align:middle;}
+    .own-detail-row{display:none;}
+    .own-detail-row.open{display:table-row;}
+    .own-detail-row td{padding:10px 18px 14px;background:rgba(255,255,255,.88);border-bottom:2px solid rgba(23,60,120,.1);}
+    .own-detail-inner{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;}
+    .own-detail-field{font-size:.82rem;}
+    .own-df-label{font-size:.7rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.03em;margin:0 0 3px;}
+    .own-df-text{color:var(--ink-soft);line-height:1.6;}
+    .own-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.72rem;font-weight:700;}
+    .ob-create{background:rgba(23,60,120,.1);color:var(--navy);}
+    .ob-read{background:rgba(78,85,51,.1);color:var(--olive);}
+    .ob-readonly{background:rgba(124,38,31,.1);color:var(--maroon);}
+    .own-chevron{transition:transform .3s;font-size:.7rem;color:rgba(0,0,0,.3);}
+    .own-row.own-expanded .own-chevron{transform:rotate(180deg);}
+
+    /* ── SEC 5: JOURNEY TIMELINE ── */
+    .journey-wrap{overflow-x:auto;padding:8px 0 16px;}
+    .journey-svg-inner{min-width:580px;}
+    .jn-node{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(.3);transition:opacity .5s cubic-bezier(.34,1.56,.64,1),transform .5s cubic-bezier(.34,1.56,.64,1);cursor:pointer;}
+    .jn-node.revealed{opacity:1;transform:scale(1);}
+    .jn-node:hover .jn-outer{filter:brightness(1.06);}
+    .jn-node.jn-active .jn-outer{stroke-width:3!important;}
+    .jn-node.jn-current{filter:drop-shadow(0 0 7px rgba(154,119,41,.6));}
+    .jn-progress{stroke-dasharray:800;stroke-dashoffset:800;transition:stroke-dashoffset 1.6s cubic-bezier(.4,0,.2,1);}
+    .jn-progress.drawn{stroke-dashoffset:0;}
+    .journey-detail{display:none;padding:16px 20px;background:rgba(255,255,255,.9);border-radius:8px;margin-top:12px;border-left:4px solid var(--navy);animation:fadeIn .3s ease;}
+    .journey-detail.visible{display:block;}
+    .jd-step{font-size:.75rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.04em;margin:0 0 4px;}
+    .jd-title{font-weight:700;color:var(--navy);font-size:.95rem;margin:0 0 10px;}
+    .jd-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .jd-field-label{font-size:.72rem;font-weight:700;color:var(--ink-soft);margin:0 0 3px;}
+    .jd-field-text{font-size:.83rem;color:var(--ink-soft);line-height:1.6;margin:0;}
+
+    /* ── SEC 6: CLOSING ── */
+    .closing-quote{margin:28px 0;padding:26px 28px;background:rgba(255,255,255,.7);border-radius:10px;position:relative;}
+    .closing-quote::before{content:'"';position:absolute;top:-16px;left:18px;font-size:5rem;color:var(--gold);opacity:.35;line-height:1;font-family:Georgia,serif;}
+    .cq-text{font-size:1.12rem;line-height:1.75;color:var(--ink);margin:0 0 10px;font-style:italic;padding-left:8px;}
+    .cq-source{font-size:.8rem;color:var(--ink-soft);text-align:right;}
+    .journey-summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:18px;}
+    .jsg-item{padding:12px 14px;border-radius:8px;background:rgba(255,255,255,.55);border-left:3px solid;}
+    .jsg-step{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin:0 0 3px;}
+    .jsg-q{font-weight:700;font-size:.82rem;color:var(--ink);margin:0 0 3px;}
+    .jsg-out{font-size:.77rem;color:var(--ink-soft);margin:0;}
+
+    /* INSIGHT */
+    .insight-box{padding:16px;background:rgba(255,255,255,.6);border-radius:6px;border-left:4px solid var(--navy);margin:16px 0;}
+    .insight-title{margin:0 0 8px;font-weight:700;color:var(--navy);font-size:.93rem;}
+    .insight-text{margin:0;font-size:.88rem;color:var(--ink-soft);line-height:1.7;}
+
+    /* STEP NAV */
+    .step-nav{display:flex;gap:16px;margin-top:48px;padding-top:32px;border-top:2px solid rgba(0,0,0,.08);}
+    .nav-button{padding:12px 24px;border:2px solid var(--navy);background:white;color:var(--navy);border-radius:6px;cursor:pointer;font-weight:600;font-size:.93rem;transition:all .25s;font-family:var(--font-hand);}
+    .nav-button:hover{background:var(--navy);color:white;transform:translateY(-2px);box-shadow:0 4px 12px rgba(23,60,120,.2);}
+    .nav-button.prev{order:-1;}
+
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+    @keyframes cycleGlow{0%,100%{filter:drop-shadow(0 0 3px rgba(154,119,41,.4));}50%{filter:drop-shadow(0 0 8px rgba(154,119,41,.7));}}
+    .jn-current{animation:cycleGlow 2.5s ease-in-out infinite;}
+  </style>
+</head>
+<body>
+<div class="notebook">
+  <div class="spiral"></div>
+  <main>
+
+    <!-- HEADER -->
+    <div class="header">
+      <div class="home-link" onclick="goHome()">← 홈</div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:.9rem;color:var(--ink-soft);">
+        <span class="step-badge">6</span>
+        <span>데이터 거버넌스</span>
+      </div>
+    </div>
+
+    <!-- NAV DOTS -->
+    <div class="nav-dots">
+      <div class="nav-dot" data-step="1" onclick="navigateToStep(1)">1</div>
+      <div class="nav-dot" data-step="2" onclick="navigateToStep(2)">2</div>
+      <div class="nav-dot" data-step="3" onclick="navigateToStep(3)">3</div>
+      <div class="nav-dot" data-step="4" onclick="navigateToStep(4)">4</div>
+      <div class="nav-dot" data-step="5" onclick="navigateToStep(5)">5</div>
+      <div class="nav-dot" data-step="6" onclick="navigateToStep(6)">6</div>
+    </div>
+
+    <!-- TITLE -->
+    <div class="title-block">
+      <p class="eyebrow">Step 6 / 6</p>
+      <h1 class="main-title">데이터<br>거버넌스</h1>
+      <p class="subtitle-text">1~5단계를 통해 구축된 데이터 구조가 시간이 흐름에 따라 파편화되거나 오염되지 않도록, 전사적인 차원의 지속 가능한 관리 체계를 수립한다. 아키텍처를 단순한 설계도로 남겨두지 않고 기업의 지식 자산으로 승화시키는 최종 단계다.</p>
+    </div>
+
+    <!-- SEC 1: 전사 표준화 -->
+    <section class="reveal">
+      <h2 class="section-label">① 전사 데이터 표준화 체계</h2>
+      <p style="color:var(--ink-soft);font-size:.87rem;margin-bottom:18px;">전사적으로 데이터의 명칭·정의·형식·규칙을 통일하여 의사소통의 혼란을 방지하고 시스템 간 정합성을 확보한다. 카드를 클릭하면 실제 예시가 펼쳐진다.</p>
+      <div class="std-grid">
+        <div class="std-card sc-1" onclick="toggleStd(0,this)">
+          <div class="sc-icon">📝</div>
+          <p class="sc-title">표준 단어 / 용어</p>
+          <p class="sc-desc">비즈니스에서 사용하는 단어를 조합하여 표준 용어를 정의하고 용어 사전에 등록한다.</p>
+          <div class="sc-example">
+            <p class="sc-ex-label">혼용 → 통일</p>
+            <div class="sc-ex-body">
+              <span class="sc-ex-tag">사다</span><span class="sc-ex-tag">구매</span><span class="sc-ex-tag">주문</span> →
+              <strong style="color:var(--navy);">매수</strong> 로 통일<br><br>
+              <span class="sc-ex-tag">결제</span><span class="sc-ex-tag">청산</span><span class="sc-ex-tag">인도</span> →
+              각각 정확한 의미로 분리 정의
+            </div>
+          </div>
+        </div>
+        <div class="std-card sc-2" onclick="toggleStd(1,this)">
+          <div class="sc-icon">🏷️</div>
+          <p class="sc-title">표준 도메인</p>
+          <p class="sc-desc">속성이 가질 수 있는 값의 범위, 데이터 타입, 길이를 표준화한다.</p>
+          <div class="sc-example">
+            <p class="sc-ex-label">도메인 정의 예시</p>
+            <div class="sc-ex-body">
+              금액 도메인 → <code style="font-size:.78rem;background:rgba(0,0,0,.06);padding:1px 5px;border-radius:3px;">DECIMAL(18,0)</code><br>
+              종목코드 → <code style="font-size:.78rem;background:rgba(0,0,0,.06);padding:1px 5px;border-radius:3px;">CHAR(12)</code><br>
+              날짜 → <code style="font-size:.78rem;background:rgba(0,0,0,.06);padding:1px 5px;border-radius:3px;">DATE</code><br><br>
+              → 단수 차이 오차 원천 차단, 시스템 간 정합성 자동 확보
+            </div>
+          </div>
+        </div>
+        <div class="std-card sc-3" onclick="toggleStd(2,this)">
+          <div class="sc-icon">🔤</div>
+          <p class="sc-title">표준 명명 규칙</p>
+          <p class="sc-desc">엔터티(테이블)와 속성(칼럼)의 이름을 짓는 일정한 규칙을 수립한다.</p>
+          <div class="sc-example">
+            <p class="sc-ex-label">명명 패턴</p>
+            <div class="sc-ex-body">
+              테이블: <code style="font-size:.78rem;background:rgba(0,0,0,.06);padding:1px 5px;border-radius:3px;">목적어_용도</code><br>
+              <span class="sc-ex-tag">ASSET_MST</span><span class="sc-ex-tag">TRADE_LOG</span><span class="sc-ex-tag">ACCOUNT_BAL</span><br><br>
+              칼럼: <code style="font-size:.78rem;background:rgba(0,0,0,.06);padding:1px 5px;border-radius:3px;">속성명_단위</code><br>
+              <span class="sc-ex-tag">PRICE_KRW</span><span class="sc-ex-tag">QTY_SHR</span>
+            </div>
+          </div>
+        </div>
+        <div class="std-card sc-4" onclick="toggleStd(3,this)">
+          <div class="sc-icon">📋</div>
+          <p class="sc-title">용어 사전 관리</p>
+          <p class="sc-desc">정의된 모든 용어·도메인·규칙을 중앙에서 관리하는 저장소를 구축한다.</p>
+          <div class="sc-example">
+            <p class="sc-ex-label">전사 효과</p>
+            <div class="sc-ex-body">
+              개발자 착각 방지 → 개발 오류 감소<br>
+              신규 입사자 온보딩 가속화<br>
+              시스템 연계 시 매핑 테이블 불필요<br><br>
+              → <strong style="color:var(--gold);">전사 표준 준수율 99% 목표</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEC 2: METADATA CYCLE -->
+    <section class="reveal" id="cycle-section">
+      <h2 class="section-label">② 메타데이터 저장소 — 4단계 순환</h2>
+      <p style="color:var(--ink-soft);font-size:.87rem;margin-bottom:16px;">거버넌스의 기술적 기반은 메타데이터(데이터에 대한 데이터)와 이를 저장하는 중앙 저장소다. 아래 사이클이 지속적으로 돌아야 아키텍처가 살아있다. 노드를 클릭하면 세부 내용이 나타난다.</p>
+      <div class="cycle-outer">
+        <svg viewBox="0 0 420 360" style="width:100%;max-width:380px;height:auto;" id="cycle-svg"></svg>
+      </div>
+      <div class="cycle-info" id="cycle-info">노드를 클릭하면 각 단계의 역할이 여기에 표시됩니다.</div>
+      <p class="cycle-hint">순환 구조: 수집 → 추적 → 분석 → 업데이트 → 수집 ...</p>
+    </section>
+
+    <!-- SEC 3: QUALITY RADAR -->
+    <section class="reveal" id="radar-section">
+      <h2 class="section-label">③ 데이터 품질 6원칙</h2>
+      <p style="color:var(--ink-soft);font-size:.87rem;margin-bottom:16px;">데이터 품질은 단일 지표로 측정할 수 없다. 6개 차원이 모두 높은 수준을 유지해야 진정한 데이터 품질이 확보된다. 스크롤하면 실측치가 채워진다.</p>
+      <div class="radar-wrap">
+        <svg viewBox="0 0 320 270" style="width:100%;max-width:340px;height:auto;" id="radar-svg"></svg>
+      </div>
+      <div class="quality-bars" id="quality-bars"></div>
+    </section>
+
+    <!-- SEC 4: OWNERSHIP TABLE -->
+    <section class="reveal">
+      <h2 class="section-label">④ 데이터 소유권 정의</h2>
+      <p style="color:var(--ink-soft);font-size:.87rem;margin-bottom:14px;">설계된 모델이 실제 운영 환경에서도 품질을 유지하고 있는지 주기적으로 검증하고, 데이터의 생성·수정·폐기 책임을 명확히 한다. 행을 클릭하면 상세 정보가 펼쳐진다.</p>
+      <table class="ownership-table">
+        <thead>
+          <tr>
+            <th>데이터 엔터티</th>
+            <th>소유 부서</th>
+            <th>권한</th>
+            <th>품질 기준</th>
+            <th style="width:24px;"></th>
+          </tr>
+        </thead>
+        <tbody id="own-tbody"></tbody>
+      </table>
+    </section>
+
+    <!-- SEC 5: JOURNEY TIMELINE -->
+    <section class="reveal" id="journey-section">
+      <h2 class="section-label">⑤ 전체 여정 돌아보기</h2>
+      <p style="color:var(--ink-soft);font-size:.87rem;margin-bottom:16px;">1단계부터 6단계까지 이어진 설계 여정이다. 각 단계 노드를 클릭하면 핵심 질문과 산출물을 확인할 수 있다.</p>
+      <div class="journey-wrap">
+        <div class="journey-svg-inner">
+          <svg viewBox="0 0 750 220" style="width:100%;height:auto;" id="journey-svg"></svg>
+        </div>
+      </div>
+      <div class="journey-detail" id="journey-detail">
+        <p class="jd-step" id="jd-step"></p>
+        <p class="jd-title" id="jd-title"></p>
+        <div class="jd-grid">
+          <div><p class="jd-field-label">핵심 질문</p><p class="jd-field-text" id="jd-q"></p></div>
+          <div><p class="jd-field-label">주요 산출물</p><p class="jd-field-text" id="jd-out"></p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEC 6: CLOSING -->
+    <section class="reveal">
+      <h2 class="section-label">⑥ 아키텍처의 완성</h2>
+      <div class="closing-quote">
+        <p class="cq-text">아키텍처는 설계도에 머물러서는 안 되며,<br>살아서 움직이는 유기체여야 한다.</p>
+        <p class="cq-source">— 데이터 거버넌스의 핵심 명제</p>
+      </div>
+      <div class="journey-summary-grid" id="summary-grid"></div>
+    </section>
+
+    <!-- SEC 7: 마무리 -->
+    <section class="reveal">
+      <div class="insight-box" style="border-left-color:var(--gold);">
+        <p class="insight-title">🏆 이 6단계의 본질: 전략의 영속화</p>
+        <p class="insight-text">1단계에서 정의한 비즈니스 목표와 4~5단계에서 구현한 정교한 데이터 모델은 거버넌스라는 울타리가 없다면 시간이 지나면서 다시 엉키게 된다. 표준화 → 메타 관리 → 품질 검증 → 조직적 대응으로 이어지는 이 순환 고리를 시스템화함으로써, 기업이 어떠한 비즈니스 환경 변화에도 흔들리지 않는 데이터 중심 경영(Data-Driven Management)의 토대가 완성된다.</p>
+      </div>
+    </section>
+
+    <!-- NAV -->
+    <div class="step-nav">
+      <button class="nav-button prev" onclick="navigateToStep(5)">← Step 5: 물리 설계</button>
+      <button class="nav-button" onclick="goHome()">홈으로 →</button>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ── STD CARDS ─────────────────────────────────────────────────────────
+function toggleStd(idx, card) {
+  const was = card.classList.contains('sc-active');
+  document.querySelectorAll('.std-card').forEach(c => c.classList.remove('sc-active'));
+  if (!was) card.classList.add('sc-active');
+}
+
+// ── METADATA CYCLE ────────────────────────────────────────────────────
+const CYCLE_NODES = [
+  { label:'메타 정보\n수집',     angle: -90, color:var_navy,   desc:'DB 오브젝트의 정의·용도·관계를 중앙 저장소에 등록한다. ERD, CRUD 매트릭스, 비즈니스 규칙, 제약 조건이 모두 메타데이터의 일부다.' },
+  { label:'추적 가능성\n확보',   angle:   0, color:var_maroon, desc:'업무 규칙이 변경될 때 영향을 받는 데이터와 프로세스를 즉시 파악한다. 비즈니스 목표 → 기능 → DB 칼럼까지 전 방향 추적이 가능해야 한다.' },
+  { label:'영향도\n분석',        angle:  90, color:var_olive,  desc:'신규 상품(신종 파생상품) 추가나 규제 변경 시 기존 엔터티와의 관계를 사전에 분석한다. 변경 영향도 분석 시간 90% 단축 효과.' },
+  { label:'지속적\n업데이트',    angle: 180, color:var_gold,   desc:'비즈니스 변화에 따라 메타데이터도 동시에 갱신하여 현행화를 유지한다. 메타데이터가 현실을 반영하지 못하면 거버넌스 전체가 무너진다.' },
+];
+const var_navy='#173c78', var_maroon='#7c261f', var_olive='#4e5533', var_gold='#9a7729';
+
+function buildCycleSVG() {
+  const cx=210, cy=180, R=116;
+  let svg = '';
+  // Circular arrows between nodes
+  const angles = [-90, 0, 90, 180];
+  const colors = [var_navy, var_maroon, var_olive, var_gold];
+  for (let i=0;i<4;i++) {
+    const a0 = (angles[i]+90)*Math.PI/180;
+    const a1 = (angles[(i+1)%4]+90)*Math.PI/180;
+    const startAngle = angles[i];
+    const endAngle   = angles[(i+1)%4];
+    const sa = (startAngle+20) * Math.PI/180;
+    const ea = (endAngle-20)   * Math.PI/180;
+    const x1=cx+R*Math.cos(sa*180/Math.PI*Math.PI/180), y1=cy+R*Math.sin(sa*180/Math.PI*Math.PI/180);
+    const x2=cx+R*Math.cos(ea*180/Math.PI*Math.PI/180), y2=cy+R*Math.sin(ea*180/Math.PI*Math.PI/180);
+    // Arc path
+    const lf = Math.abs(endAngle - startAngle) > 180 ? 1 : 0;
+    const sp = (endAngle > startAngle) ? 1 : 1;
+    // simplified: draw arc
+    const saDeg = startAngle + 30, eaDeg = endAngle - 30;
+    const saR = saDeg*Math.PI/180, eaR = eaDeg*Math.PI/180;
+    const px1=cx+R*Math.cos(saR), py1=cy+R*Math.sin(saR);
+    const px2=cx+R*Math.cos(eaR), py2=cy+R*Math.sin(eaR);
+    // sweep: always go clockwise (from lower angle to higher)
+    let largeArc = 0;
+    let pathD = `M${px1.toFixed(1)},${py1.toFixed(1)} A${R},${R} 0 0,1 ${px2.toFixed(1)},${py2.toFixed(1)}`;
+    // arrowhead
+    const arrAngle = eaDeg + 90;
+    const ax1 = px2 + 7*Math.cos((arrAngle-25)*Math.PI/180);
+    const ay1 = py2 + 7*Math.sin((arrAngle-25)*Math.PI/180);
+    const ax2 = px2 + 7*Math.cos((arrAngle+25)*Math.PI/180);
+    const ay2 = py2 + 7*Math.sin((arrAngle+25)*Math.PI/180);
+    svg += `<path class="cycle-path" id="cycle-arc-${i}" d="${pathD}" fill="none" stroke="${colors[i]}" stroke-width="2.8" stroke-linecap="round" opacity=".7"/>`;
+    svg += `<polygon points="${px2.toFixed(1)},${py2.toFixed(1)} ${ax1.toFixed(1)},${ay1.toFixed(1)} ${ax2.toFixed(1)},${ay2.toFixed(1)}" fill="${colors[i]}" opacity=".7"/>`;
+  }
+  // Nodes
+  CYCLE_NODES.forEach((n,i) => {
+    const ar = n.angle * Math.PI/180;
+    const nx = cx + R*Math.cos(ar), ny = cy + R*Math.sin(ar);
+    const lines = n.label.split('\n');
+    svg += `<g class="cycle-node" id="cn-${i}" data-idx="${i}" onclick="clickCycleNode(${i})">`;
+    svg += `<circle cx="${nx.toFixed(1)}" cy="${ny.toFixed(1)}" r="38" fill="${n.color}" opacity=".1" stroke="${n.color}" stroke-width="2"/>`;
+    svg += `<circle cx="${nx.toFixed(1)}" cy="${ny.toFixed(1)}" r="30" fill="white" stroke="${n.color}" stroke-width="2"/>`;
+    const textY = ny - (lines.length-1)*7;
+    lines.forEach((line,li) => {
+      svg += `<text x="${nx.toFixed(1)}" y="${(textY+li*14).toFixed(1)}" text-anchor="middle" font-size="9.5" font-weight="700" fill="${n.color}">${line}</text>`;
+    });
+    // Step number badge
+    svg += `<circle cx="${(nx+24).toFixed(1)}" cy="${(ny-24).toFixed(1)}" r="10" fill="${n.color}"/>`;
+    svg += `<text x="${(nx+24).toFixed(1)}" y="${(ny-24+4).toFixed(1)}" text-anchor="middle" font-size="9" font-weight="800" fill="white">${i+1}</text>`;
+    svg += `</g>`;
+  });
+  // Center label
+  svg += `<text x="${cx}" y="${cy-8}" text-anchor="middle" font-size="11.5" font-weight="700" fill="#33291f">메타데이터</text>`;
+  svg += `<text x="${cx}" y="${cy+8}" text-anchor="middle" font-size="11.5" font-weight="700" fill="#33291f">저장소</text>`;
+  svg += `<text x="${cx}" y="${cy+24}" text-anchor="middle" font-size="8.5" fill="#9a7729" font-style="italic">Repository</text>`;
+  document.getElementById('cycle-svg').innerHTML = svg;
+}
+
+let activeCycleNode = -1;
+function clickCycleNode(i) {
+  document.querySelectorAll('.cycle-node').forEach(n => n.classList.remove('cn-active'));
+  if (activeCycleNode === i) { document.getElementById('cycle-info').innerHTML='노드를 클릭하면 각 단계의 역할이 여기에 표시됩니다.'; activeCycleNode=-1; return; }
+  document.getElementById('cn-'+i).classList.add('cn-active');
+  document.getElementById('cycle-info').innerHTML = `<b>단계 ${i+1}:</b> ${CYCLE_NODES[i].desc}`;
+  activeCycleNode = i;
+}
+
+function setupCycleObserver() {
+  const section = document.getElementById('cycle-section');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        document.querySelectorAll('.cycle-path').forEach((p,i) => {
+          setTimeout(() => p.classList.add('drawn'), i*280);
+        });
+        document.querySelectorAll('.cycle-node').forEach((n,i) => {
+          setTimeout(() => n.classList.add('revealed'), i*180 + 200);
+        });
+        obs.disconnect();
+      }
+    });
+  }, {threshold:.25});
+  if (section) obs.observe(section);
+}
+
+// ── QUALITY RADAR ─────────────────────────────────────────────────────
+const QUALITY = [
+  {name:'정확성',  en:'Accuracy',     val:.98, color:var_navy},
+  {name:'완전성',  en:'Completeness', val:.95, color:var_olive},
+  {name:'준수성',  en:'Conformity',   val:.99, color:var_maroon},
+  {name:'최신성',  en:'Timeliness',   val:.90, color:var_gold},
+  {name:'일관성',  en:'Consistency',  val:.96, color:var_olive},
+  {name:'활용성',  en:'Accessibility',val:.88, color:var_navy},
+];
+const RADAR_CX=160, RADAR_CY=135, RADAR_R=90;
+
+function getRadarPt(i, val) {
+  const angle = (-90 + i*60) * Math.PI/180;
+  return [RADAR_CX + RADAR_R*val*Math.cos(angle), RADAR_CY + RADAR_R*val*Math.sin(angle)];
+}
+
+function buildRadarSVG() {
+  let svg = '';
+  // Grid circles
+  [.2,.4,.6,.8,1.0].forEach(scale => {
+    const pts = QUALITY.map((_,i) => getRadarPt(i, scale));
+    svg += `<polygon points="${pts.map(p=>p.map(v=>v.toFixed(1)).join(',')).join(' ')}" fill="none" stroke="rgba(0,0,0,.1)" stroke-width="${scale===1?1.5:.7}"/>`;
+  });
+  // Axis lines
+  QUALITY.forEach((_,i) => {
+    const [x,y] = getRadarPt(i, 1);
+    svg += `<line x1="${RADAR_CX}" y1="${RADAR_CY}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="rgba(0,0,0,.1)" stroke-width=".8"/>`;
+  });
+  // Data polygon (starts at center, animated out)
+  const dataPts = QUALITY.map((_,i) => [RADAR_CX, RADAR_CY]);
+  svg += `<polygon id="radar-data" points="${dataPts.map(p=>p.join(',')).join(' ')}" fill="rgba(23,60,120,.14)" stroke="var(--navy)" stroke-width="2"/>`;
+  // Labels
+  QUALITY.forEach((q,i) => {
+    const [lx,ly] = getRadarPt(i, 1.22);
+    let anchor = 'middle';
+    if (lx > RADAR_CX+8) anchor='start'; else if (lx < RADAR_CX-8) anchor='end';
+    svg += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="${anchor}" font-size="10.5" font-weight="700" fill="${q.color}">${q.name}</text>`;
+    svg += `<text x="${lx.toFixed(1)}" y="${(parseFloat(ly)+12).toFixed(1)}" text-anchor="${anchor}" font-size="8" fill="#33291f">${Math.round(q.val*100)}%</text>`;
+  });
+  document.getElementById('radar-svg').innerHTML = svg;
+
+  // Quality bars
+  const bars = document.getElementById('quality-bars');
+  const cls = ['q-acc','q-com','q-con','q-tim','q-con2','q-acc2'];
+  bars.innerHTML = QUALITY.map((q,i) => `
+    <div class="q-bar-row">
+      <span class="q-bar-label" style="color:${q.color}">${q.name}</span>
+      <div class="q-bar-track"><div class="q-bar-fill ${cls[i]}" id="qb-${i}"></div></div>
+      <span class="q-bar-val">${Math.round(q.val*100)}%</span>
+    </div>`).join('');
+}
+
+function animateRadar() {
+  const targetPts = QUALITY.map((_,i) => getRadarPt(i, QUALITY[i].val));
+  const polygon = document.getElementById('radar-data');
+  let prog = 0;
+  function easeOut(t) { return 1-(1-t)*(1-t)*(1-t); }
+  function step() {
+    prog = Math.min(1, prog+0.022);
+    const currentPts = targetPts.map(([tx,ty]) => [
+      RADAR_CX + (tx-RADAR_CX)*easeOut(prog),
+      RADAR_CY + (ty-RADAR_CY)*easeOut(prog)
+    ]);
+    polygon.setAttribute('points', currentPts.map(p=>p.map(v=>v.toFixed(1)).join(',')).join(' '));
+    if (prog < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+  document.querySelectorAll('.q-bar-fill').forEach(b => b.classList.add('qb-done'));
+}
+
+function setupRadarObserver() {
+  const section = document.getElementById('radar-section');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => { if (entry.isIntersecting) { animateRadar(); obs.disconnect(); } });
+  }, {threshold:.25});
+  if (section) obs.observe(section);
+}
+
+// ── OWNERSHIP TABLE ───────────────────────────────────────────────────
+const OWN_DATA = [
+  { entity:'고객 기본정보', dept:'영업 추진부', badge:'ob-create', rights:'생성, 수정, 폐기',
+    standard:'정확성 99.9%', frequency:'실시간 갱신', rule:'고객 삭제 시 계좌 CASCADE', audit:'연간 1회 감사' },
+  { entity:'투자 자산',     dept:'상품 개발팀', badge:'ob-create', rights:'생성, 변경',
+    standard:'시장 데이터 실시간 동기', frequency:'시장 시세 연동', rule:'상장폐지 상품 신규 거래 RESTRICT', audit:'분기별 검토' },
+  { entity:'거래 원장',     dept:'업무 지원부', badge:'ob-readonly', rights:'생성, 조회만(수정불가)',
+    standard:'거래 이력 100% 추적', frequency:'배치 마감 시 생성', rule:'원장은 append-only, DELETE 불가', audit:'매일 자동 정합성 검증' },
+  { entity:'계좌 잔액',     dept:'리스크 관리팀', badge:'ob-read', rights:'조회, 한도 통제',
+    standard:'T+0 실시간 정확성', frequency:'체결 즉시 갱신', rule:'한도 초과 시 자동 알림·차단', audit:'분기별 포지션 검증' },
+];
+
+function buildOwnershipTable() {
+  const tbody = document.getElementById('own-tbody');
+  tbody.innerHTML = OWN_DATA.map((row,i) => `
+    <tr class="own-row" onclick="toggleOwnRow(${i})">
+      <td><strong>${row.entity}</strong></td>
+      <td>${row.dept}</td>
+      <td><span class="own-badge ${row.badge}">${row.rights}</span></td>
+      <td style="font-size:.8rem;color:var(--ink-soft);">${row.standard}</td>
+      <td><span class="own-chevron">▼</span></td>
+    </tr>
+    <tr class="own-detail-row" id="own-detail-${i}">
+      <td colspan="5">
+        <div class="own-detail-inner">
+          <div class="own-detail-field"><p class="own-df-label">갱신 주기</p><p class="own-df-text">${row.frequency}</p></div>
+          <div class="own-detail-field"><p class="own-df-label">무결성 규칙</p><p class="own-df-text">${row.rule}</p></div>
+          <div class="own-detail-field"><p class="own-df-label">감사 주기</p><p class="own-df-text">${row.audit}</p></div>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+let activeOwnRow = -1;
+function toggleOwnRow(i) {
+  const det = document.getElementById('own-detail-'+i);
+  const rows = document.querySelectorAll('.own-row');
+  if (activeOwnRow === i) {
+    det.classList.remove('open');
+    rows[i].classList.remove('own-expanded');
+    activeOwnRow = -1; return;
+  }
+  document.querySelectorAll('.own-detail-row').forEach(r => r.classList.remove('open'));
+  document.querySelectorAll('.own-row').forEach(r => r.classList.remove('own-expanded'));
+  det.classList.add('open');
+  rows[i].classList.add('own-expanded');
+  activeOwnRow = i;
+}
+
+// ── JOURNEY TIMELINE ──────────────────────────────────────────────────
+const JOURNEY_STEPS = [
+  { label:'전략\n메타모델', q:'왜 이 데이터가\n존재해야 하는가?', out:'ISP 통합 메타모델\n전략의 사슬', color:var_navy },
+  { label:'주제 영역\n분할',    q:'어떻게 나눌 것인가?',           out:'4개 SA 정의\nLow Coupling 설계', color:var_maroon },
+  { label:'CRUD\n매트릭스',  q:'누가 데이터를\n소유하는가?',       out:'12/12 소유권 검증\n기능-데이터 정합성', color:var_olive },
+  { label:'논리 모델 &\n정규화',  q:'얼마나 정확하게\n구조화할 것인가?', out:'ERD 설계\n3NF 정규화', color:var_navy },
+  { label:'물리 설계',       q:'어떻게 빠르고\n안정적으로 구현?',  out:'인덱스·파티셔닝\nDDL·무결성 제약', color:var_gold },
+  { label:'거버넌스',        q:'어떻게 지속 가능하게\n관리할 것인가?', out:'표준화 체계\n메타데이터 관리', color:var_gold },
+];
+
+function buildJourneySVG() {
+  const xs = [62, 175, 288, 401, 514, 627];
+  const y = 120;
+  let svg = '';
+  // Progress line
+  svg += `<line x1="62" y1="${y}" x2="627" y2="${y}" stroke="rgba(0,0,0,.1)" stroke-width="4" stroke-linecap="round"/>`;
+  svg += `<line class="jn-progress" id="jn-progress" x1="62" y1="${y}" x2="627" y2="${y}" stroke="#9a7729" stroke-width="4" stroke-linecap="round"/>`;
+  JOURNEY_STEPS.forEach((s,i) => {
+    const x = xs[i];
+    const isCurrent = i === 5;
+    const labelLines = s.label.split('\n');
+    svg += `<g class="jn-node${isCurrent?' jn-current':''}" id="jn-${i}" data-idx="${i}" onclick="clickJourneyNode(${i})">`;
+    svg += `<circle class="jn-outer" cx="${x}" cy="${y}" r="${isCurrent?30:24}" fill="white" stroke="${s.color}" stroke-width="${isCurrent?3:2}"/>`;
+    svg += `<circle cx="${x}" cy="${y}" r="${isCurrent?22:16}" fill="${isCurrent?s.color:'rgba(154,119,41,.08)'}"/>`;
+    svg += `<text x="${x}" y="${y+5}" text-anchor="middle" font-size="${isCurrent?16:13}" font-weight="800" fill="${isCurrent?'white':s.color}">${i+1}</text>`;
+    const labelY = isCurrent ? y+50 : y+42;
+    labelLines.forEach((line,li) => {
+      svg += `<text x="${x}" y="${labelY+li*13}" text-anchor="middle" font-size="${isCurrent?10:9}" font-weight="700" fill="${s.color}">${line}</text>`;
+    });
+    if (isCurrent) svg += `<text x="${x}" y="${labelY+labelLines.length*13+2}" text-anchor="middle" font-size="8" fill="#9a7729" font-style="italic">← 현재</text>`;
+    svg += `</g>`;
+  });
+  document.getElementById('journey-svg').innerHTML = svg;
+}
+
+let activeJourneyNode = -1;
+function clickJourneyNode(i) {
+  const detail = document.getElementById('journey-detail');
+  document.querySelectorAll('.jn-node').forEach(n => n.classList.remove('jn-active'));
+  if (activeJourneyNode === i) { detail.classList.remove('visible'); activeJourneyNode=-1; return; }
+  document.getElementById('jn-'+i).classList.add('jn-active');
+  const s = JOURNEY_STEPS[i];
+  document.getElementById('jd-step').textContent = `STEP ${i+1} / 6`;
+  document.getElementById('jd-title').textContent = s.label.replace('\n', ' ');
+  document.getElementById('jd-q').textContent = s.q.replace('\n',' ');
+  document.getElementById('jd-out').textContent = s.out.replace('\n',' · ');
+  document.getElementById('journey-detail').style.borderLeftColor = s.color;
+  detail.classList.add('visible');
+  activeJourneyNode = i;
+}
+
+function setupJourneyObserver() {
+  const section = document.getElementById('journey-section');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        document.getElementById('jn-progress').classList.add('drawn');
+        document.querySelectorAll('.jn-node').forEach((n,i) => {
+          setTimeout(() => n.classList.add('revealed'), i*140);
+        });
+        obs.disconnect();
+      }
+    });
+  }, {threshold:.2});
+  if (section) obs.observe(section);
+}
+
+// ── JOURNEY SUMMARY GRID ──────────────────────────────────────────────
+const SUMMARY_COLORS = [var_navy, var_maroon, var_olive, var_navy, var_gold, var_gold];
+const SUMMARY = [
+  {step:'Step 1', q:'왜 이 데이터가 존재하는가?',      out:'전략의 사슬 · ISP 메타모델'},
+  {step:'Step 2', q:'어떻게 나눌 것인가?',             out:'주제 영역 4개 분할'},
+  {step:'Step 3', q:'누가 소유하는가?',                out:'CRUD 매트릭스 · 소유권 검증'},
+  {step:'Step 4', q:'얼마나 정확하게 구조화하는가?',   out:'ERD + 정규화 3NF'},
+  {step:'Step 5', q:'어떻게 빠르고 안정적으로 구현?', out:'인덱스 · DDL · 무결성'},
+  {step:'Step 6', q:'어떻게 지속 가능하게 관리?',      out:'표준화 · 거버넌스 사이클'},
+];
+function buildSummaryGrid() {
+  document.getElementById('summary-grid').innerHTML = SUMMARY.map((s,i) => `
+    <div class="jsg-item" style="border-left-color:${SUMMARY_COLORS[i]};${i===5?'background:rgba(255,255,255,.88);':''}">
+      <p class="jsg-step" style="color:${SUMMARY_COLORS[i]}">${s.step}</p>
+      <p class="jsg-q">${s.q}</p>
+      <p class="jsg-out">${s.out}</p>
+    </div>`).join('');
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────────────
+function navigateToStep(step) {
+  const map = {1:'step1-strategy-meta-modeling.html',2:'step2-subject-area.html',3:'step3-crud-matrix.html',4:'step4-logical-modeling.html',5:'step5-physical-design.html',6:'step6-governance.html'};
+  document.body.style.opacity = '0';
+  setTimeout(() => { window.location.href = map[step]; }, 280);
+}
+function goHome() {
+  document.body.style.opacity = '0';
+  setTimeout(() => { window.location.href = 'index.html'; }, 280);
+}
+
+// ── SCROLL REVEAL ─────────────────────────────────────────────────────
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('animate'); revealObs.unobserve(e.target); } });
+}, {threshold:.08, rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+// ── INIT ──────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  document.body.style.opacity = '1';
+  const dot = document.querySelector('[data-step="6"]');
+  if (dot) dot.classList.add('active');
+
+  buildCycleSVG();
+  buildRadarSVG();
+  buildOwnershipTable();
+  buildJourneySVG();
+  buildSummaryGrid();
+  setupCycleObserver();
+  setupRadarObserver();
+  setupJourneyObserver();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft') navigateToStep(5);
+});
+</script>
+</body>
+</html>
