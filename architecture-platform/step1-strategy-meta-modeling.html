@@ -1111,13 +1111,13 @@
 
     .reveal {
       opacity: 0;
-      animation: fadeInUp 0.8s ease forwards;
     }
+    .reveal.animate { animation: fadeInUp 0.6s ease forwards; }
 
-    .reveal.stagger-1 { animation-delay: 0.1s; }
-    .reveal.stagger-2 { animation-delay: 0.2s; }
-    .reveal.stagger-3 { animation-delay: 0.3s; }
-    .reveal.stagger-4 { animation-delay: 0.4s; }
+    .reveal.animate.stagger-1 { animation-delay: 0.1s; }
+    .reveal.animate.stagger-2 { animation-delay: 0.2s; }
+    .reveal.animate.stagger-3 { animation-delay: 0.3s; }
+    .reveal.animate.stagger-4 { animation-delay: 0.4s; }
 
     /* ════════════════════ ENHANCED PROCESS CARDS ════════════════════ */
     .process-card {
@@ -1438,6 +1438,32 @@
     .main-title-ln2::after{content:'';display:block;height:4px;width:64%;background:linear-gradient(90deg,var(--gold),transparent);border-radius:2px;margin-top:6px;}
     @media(max-width:680px){.side-nav{display:none;}.main-title{font-size:2.6rem!important;}}
 
+  
+    /* ─── TECH IMPACT CARDS ─── */
+    .tech-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;}
+    .tech-card{padding:16px;border-radius:7px;border-left:3px solid;transition:transform .2s,box-shadow .2s;}
+    .tech-card:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(0,0,0,.1);}
+    .tech-card-title{margin:0 0 8px;font-weight:700;font-size:.9rem;}
+    .tech-card-body{margin:0;font-size:.86rem;color:var(--ink-soft);line-height:1.6;}
+    .tc-navy{background:rgba(23,60,120,.07);border-left-color:var(--navy);}
+    .tc-navy .tech-card-title{color:var(--navy);}
+    .tc-olive{background:rgba(78,85,51,.07);border-left-color:var(--olive);}
+    .tc-olive .tech-card-title{color:var(--olive);}
+    .tc-maroon{background:rgba(124,38,31,.07);border-left-color:var(--maroon);}
+    .tc-maroon .tech-card-title{color:var(--maroon);}
+  
+    /* ─── META CARD INTERACTION ─── */
+    .meta-card{cursor:pointer;}
+    .meta-card:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.1);transition:transform .2s,box-shadow .2s;}
+    .meta-info-panel{margin-top:12px;padding:12px 16px;background:rgba(255,255,255,.8);border-radius:8px;border-left:3px solid var(--gold);font-size:.85rem;color:var(--ink-soft);display:none;line-height:1.7;}
+    .meta-info-panel.visible{display:block;animation:fadeInUp .25s ease forwards;}
+    .meta-info-panel b{color:var(--navy);}
+  
+    /* ─── STEP NAV ─── */
+    .step-nav{display:flex;gap:16px;margin-top:48px;padding-top:32px;border-top:2px solid rgba(0,0,0,.08);}
+    .nav-button{padding:12px 24px;border:2px solid var(--navy);background:white;color:var(--navy);border-radius:6px;cursor:pointer;font-weight:600;font-size:.93rem;transition:all .25s;font-family:var(--font-hand);}
+    .nav-button:hover{background:var(--navy);color:white;transform:translateY(-2px);box-shadow:0 4px 12px rgba(23,60,120,.2);}
+    .nav-button.prev{order:-1;}
   </style>
 </head>
 <body>
@@ -1463,48 +1489,19 @@
       </header>
 
       <!-- 타이틀 -->
-      <div style="margin-bottom:42px;">
+      <div class="title-block-s1" style="margin-bottom:42px;">
         <p class="eyebrow">Step 1 / 6</p>
-        <h1 class="main-title">전략 기반<br>메타 모델링</h1>
+        <span class="title-wm">01</span>
+        <h1 class="main-title">전략 기반<br><span class="main-title-ln2">메타 모델링</span></h1>
         <p class="subtitle">비즈니스 목표와 데이터 간의 논리적 연결 고리를 정의한다. 모든 데이터가 기업의 전략적 목표를 달성하기 위해 유기적으로 설계됨을 증명하는 첫 번째 단계.</p>
       </div>
-
-      <!-- 섹션 1: 4단계 프로세스 개요 -->
-      <section>
-        <h2 class="section-label reveal">이 단계의 핵심 구성 요소</h2>
-        <div class="process-container">
-          <div class="process-card reveal stagger-1">
-            <p class="process-number">1</p>
-            <h3 class="process-title">조직 & 목표</h3>
-            <p class="process-desc">아키텍처 설계의 주체와 경영 목표를 명시하여 설계의 방향성을 확립합니다.</p>
-          </div>
-
-          <div class="process-card reveal stagger-2">
-            <p class="process-number">2</p>
-            <h3 class="process-title">문제점 식별</h3>
-            <p class="process-desc">목표 달성을 방해하는 비즈니스적, 데이터적 장애물을 도출합니다.</p>
-          </div>
-
-          <div class="process-card reveal stagger-3">
-            <p class="process-number">3</p>
-            <h3 class="process-title">CSF 도출</h3>
-            <p class="process-desc">문제를 해결하고 목표를 달성하기 위한 핵심 성공 요인을 정의합니다.</p>
-          </div>
-
-          <div class="process-card reveal stagger-4">
-            <p class="process-number">4</p>
-            <h3 class="process-title">기술 영향 분석</h3>
-            <p class="process-desc">비즈니스 전략을 뒷받침할 기술 트렌드와 환경 변화를 분석합니다.</p>
-          </div>
-        </div>
-      </section>
 
       <!-- 섹션 2: 전략의 사슬 -->
       <section>
         <h2 class="section-label">전략의 사슬 (Chain of Strategy)</h2>
         <div class="strategy-chain-visual">
           <p style="margin: 0 0 20px; font-size: 0.9rem; color: var(--ink-soft); line-height: 1.6;">
-            비즈니스 전략이 어떻게 구체적인 데이터 엔터티로 변환되는 과정을 시각화합니다. 각 노드를 클릭하여 상세 내용을 확인하세요.
+            비즈니스 전략이 어떻게 구체적인 데이터 엔터티로 변환되는 과정을 시각화한다. 각 노드를 클릭하면 상세 내용을 확인할 수 있다.
           </p>
           <div class="chain-flow">
             <div class="chain-item">
@@ -1547,21 +1544,21 @@
       <section>
         <h2 class="section-label">핵심 성공 요인 (CSF) 상세</h2>
         <p style="color: var(--ink-soft); line-height: 1.7; margin-bottom: 20px;">
-          식별된 문제점을 해결하고 비즈니스 목표를 달성하기 위해 아키텍처가 반드시 해결해야 할 핵심 과제를 정의합니다. 이 CSF들이 이후 모든 설계 결정의 근거가 됩니다.
+          식별된 문제점을 해결하고 비즈니스 목표를 달성하기 위해 아키텍처가 반드시 해결해야 할 핵심 과제를 정의한다. 이 CSF들이 이후 모든 설계 결정의 근거가 된다.
         </p>
         <div class="csf-list">
           <div class="csf-item">
             <div class="csf-number">1</div>
             <div class="csf-text">
               <strong>전사 투자 자산 데이터 표준화</strong><br>
-              상이한 자산군(주식, 채권, 파생상품 등)을 하나의 논리적 체계로 통합할 수 있는 표준 도메인과 용어 체계 구축. 이를 통해 자산 유형별 데이터 파편화 문제를 근본적으로 해결합니다.
+              상이한 자산군(주식, 채권, 파생상품 등)을 하나의 논리적 체계로 통합할 수 있는 표준 도메인과 용어 체계 구축. 이를 통해 자산 유형별 데이터 파편화 문제를 근본적으로 해결한다.
             </div>
           </div>
           <div class="csf-item">
             <div class="csf-number">2</div>
             <div class="csf-text">
               <strong>시계열 선분 이력 관리 체계 구축</strong><br>
-              특정 시점의 자산 가치를 즉시 복원하고 수익률 변화 궤적을 추적할 수 있는 정교한 이력 모델링 확보. 배치 마감 후에도 어떤 과거 시점의 데이터도 정확하게 재현 가능하도록 설계합니다.
+              특정 시점의 자산 가치를 즉시 복원하고 수익률 변화 궤적을 추적할 수 있는 정교한 이력 모델링 확보. 배치 마감 후에도 어떤 과거 시점의 데이터도 정확하게 재현 가능하도록 설계한다.
             </div>
           </div>
         </div>
@@ -1571,7 +1568,7 @@
       <section>
         <h2 class="section-label">ISP 통합 메타 모델 (Integrated Meta Model)</h2>
         <p style="color: var(--ink-soft); line-height: 1.7; margin-bottom: 20px; max-width: 940px;">
-          위의 모든 분석 요소를 한 장의 도면으로 시각화하여, 데이터의 존재 이유(Why)를 입증합니다. 이 모델은 조직 → 목표 → 문제점 → CSF → 기능 → 엔터티로 이어지는 논리적 사슬을 보여줍니다.
+          위의 모든 분석 요소를 한 장의 도면으로 시각화하여, 데이터의 존재 이유(Why)를 입증한다. 이 모델은 조직 → 목표 → 문제점 → CSF → 기능 → 엔터티로 이어지는 논리적 사슬을 보여준다.
         </p>
 
         <div class="meta-model-container">
@@ -1588,7 +1585,7 @@
               <div class="meta-hub-chip">WHY</div>
               <div>
                 <p class="meta-hub-title">전략이 데이터로 수렴되는 중앙 축</p>
-                <p class="meta-hub-desc">조직 → 목표 → 문제점 → CSF가 하나의 사슬로 정리되고, 기능과 엔터티가 아래 계층으로 내려갑니다.</p>
+                <p class="meta-hub-desc">조직 → 목표 → 문제점 → CSF가 하나의 사슬로 정리되고, 기능과 엔터티가 아래 계층으로 내려간다.</p>
               </div>
             </div>
 
@@ -1634,8 +1631,8 @@ IT 전략 부서</p>
 
             <div class="meta-focus-band">
               <span class="meta-focus-label">중앙 강조</span>
-              <p class="meta-focus-title">CSF는 전략과 데이터 구조를 잇는 수렴점입니다</p>
-              <p class="meta-focus-desc">문제점을 해결하는 성공 요인이 기능으로 번역되고, 최종적으로 엔터티 설계로 이어집니다.</p>
+              <p class="meta-focus-title">CSF는 전략과 데이터 구조를 잇는 수렴점이다</p>
+              <p class="meta-focus-desc">문제점을 해결하는 성공 요인이 기능으로 번역되고, 최종적으로 엔터티 설계로 이어진다.</p>
             </div>
 
             <div class="meta-divider"></div>
@@ -1722,6 +1719,7 @@ LEDGER 기록</p>
               </div>
             </div>
 
+            <div class="meta-info-panel" id="meta-info-panel"></div>
             <div class="meta-legend" aria-label="범례">
               <span class="legend-item strategy"><span class="legend-swatch"></span>전략 요소</span>
               <span class="legend-item goal"><span class="legend-swatch"></span>목표/기능</span>
@@ -1735,7 +1733,7 @@ LEDGER 기록</p>
         <div class="insight-box">
           <p class="insight-title">💡 아키텍처의 본질</p>
           <p class="insight-text">
-            이 메타 모델을 통해 "이 데이터는 어떤 업무 기능을 수행하기 위해 존재하며, 궁극적으로 기업의 어떤 목표 달성에 기여하는가?"라는 <strong>데이터의 존재 이유(Why)</strong>를 아키텍처적으로 입증합니다.
+            이 메타 모델을 통해 "이 데이터는 어떤 업무 기능을 수행하기 위해 존재하며, 궁극적으로 기업의 어떤 목표 달성에 기여하는가?"라는 <strong>데이터의 존재 이유(Why)</strong>를 아키텍처적으로 입증한다.
           </p>
         </div>
       </section>
@@ -1744,22 +1742,20 @@ LEDGER 기록</p>
       <section>
         <h2 class="section-label">기술 영향 분석 (Tech Impact Analysis)</h2>
         <p style="color: var(--ink-soft); line-height: 1.7; margin-bottom: 20px;">
-          비즈니스 전략을 기술적으로 뒷받침할 최신 기술 트렌드와 환경 변화를 분석하여 아키텍처에 반영합니다.
+          비즈니스 전략을 기술적으로 뒷받침할 최신 기술 트렌드와 환경 변화를 분석하여 아키텍처에 반영한다.
         </p>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-          <div style="padding: 16px; background: rgba(23,60,120,0.08); border-radius: 6px; border-left: 3px solid #173c78;">
-            <p style="margin: 0 0 8px; font-weight: 600; color: #173c78; font-size: 0.95rem;">실시간 데이터 처리</p>
-            <p style="margin: 0; font-size: 0.9rem; color: var(--ink-soft); line-height: 1.6;">초당 수만 건의 트랜잭션을 지연 없이 처리할 수 있는 분산 DB 기술 및 스트리밍 처리 아키텍처 도입.</p>
+        <div class="tech-grid">
+          <div class="tech-card tc-navy">
+            <p class="tech-card-title">⚡ 실시간 데이터 처리</p>
+            <p class="tech-card-body">초당 수만 건의 트랜잭션을 지연 없이 처리할 수 있는 분산 DB 기술 및 스트리밍 처리 아키텍처 도입.</p>
           </div>
-
-          <div style="padding: 16px; background: rgba(78,85,51,0.08); border-radius: 6px; border-left: 3px solid #4e5533;">
-            <p style="margin: 0 0 8px; font-weight: 600; color: #4e5533; font-size: 0.95rem;">시장 데이터 연동</p>
-            <p style="margin: 0; font-size: 0.9rem; color: var(--ink-soft); line-height: 1.6;">외부 거래소 및 기준정보 제공자로부터 실시간 시세를 수신하고 동기화하는 API 기술 적용.</p>
+          <div class="tech-card tc-olive">
+            <p class="tech-card-title">🌐 시장 데이터 연동</p>
+            <p class="tech-card-body">외부 거래소 및 기준정보 제공자로부터 실시간 시세를 수신하고 동기화하는 API 기술 적용.</p>
           </div>
-
-          <div style="padding: 16px; background: rgba(124,38,31,0.08); border-radius: 6px; border-left: 3px solid #7c261f;">
-            <p style="margin: 0 0 8px; font-weight: 600; color: #7c261f; font-size: 0.95rem;">데이터 무결성 보증</p>
-            <p style="margin: 0; font-size: 0.9rem; color: var(--ink-soft); line-height: 1.6;">ACID 트랜잭션과 Check Constraint를 통해 금융 규정 준수 및 데이터 정합성을 엔진 차원에서 강제.</p>
+          <div class="tech-card tc-maroon">
+            <p class="tech-card-title">🔒 데이터 무결성 보증</p>
+            <p class="tech-card-body">ACID 트랜잭션과 Check Constraint를 통해 금융 규정 준수 및 데이터 정합성을 엔진 차원에서 강제.</p>
           </div>
         </div>
       </section>
@@ -1781,6 +1777,10 @@ LEDGER 기록</p>
           </p>
         </div>
       </section>
+      <div class="step-nav">
+        <button class="nav-button prev" onclick="goHome()">← 홈으로</button>
+        <button class="nav-button" onclick="navigateToStep(2)">Step 2: 주제 영역 분할 →</button>
+      </div>
     </main>
   </div>
 
@@ -1848,23 +1848,51 @@ LEDGER 기록</p>
           const chainKey = node.dataset.chain;
           const data = chainData[chainKey];
           if (!data) return;
-
           const panel = document.getElementById('chain-detail-panel');
+          // 토글: 같은 노드 재클릭 시 닫기
+          if (node.classList.contains('chain-active')) {
+            node.classList.remove('chain-active');
+            panel.classList.remove('visible');
+            return;
+          }
           document.getElementById('chain-detail-title').textContent = data.title;
           document.getElementById('chain-detail-sub').textContent = data.sub;
           document.getElementById('chain-detail-body').textContent = data.body;
           document.getElementById('chain-detail-example').textContent = data.ex;
-          
           panel.classList.add('visible');
-
-          // Active state
           document.querySelectorAll('.chain-node').forEach(n => n.classList.remove('chain-active'));
           node.classList.add('chain-active');
+          setTimeout(() => { panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 100);
+        });
+      });
+    }
 
-          // Smooth scroll to panel
-          setTimeout(() => {
-            panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          }, 100);
+    // ════════════════════ META CARD INTERACTION ════════════════════
+    const metaCardInfo = {
+      '조직': '<b>조직</b> — 아키텍처 설계의 이해관계자와 맥락을 정의한다. 자산운용 본부·리스크 관리팀·IT 전략 부서의 목표가 모든 설계의 출발점이 된다.',
+      '목표': '<b>목표</b> — 아키텍처가 달성해야 할 측정 가능한 비즈니스 목표. "전사 자산의 실시간 통합 가치 평가 및 수익률 최적화"가 이후 모든 설계 결정의 기준이 된다.',
+      '문제점': '<b>문제점</b> — 목표 달성을 방해하는 핵심 장애물. 자산 유형별 데이터 사일로(Data Silo)로 인한 정합성 붕괴와 의사결정 지연이 문제의 본질이다.',
+      'CSF': '<b>CSF</b> — 문제를 해결하고 목표를 달성하기 위한 필수 조건. 이 CSF들이 이후 주제 영역 분할·ERD 설계·정규화 등 모든 설계 결정의 근거가 된다.',
+    };
+    function bindMetaCards() {
+      const layers = document.querySelectorAll('.meta-layer');
+      if (!layers.length) return;
+      layers[0].querySelectorAll('.meta-card').forEach(card => {
+        const titleEl = card.querySelector('.meta-card-title');
+        if (!titleEl) return;
+        const key = titleEl.textContent.trim();
+        if (!metaCardInfo[key]) return;
+        card.addEventListener('click', () => {
+          const panel = document.getElementById('meta-info-panel');
+          if (card.classList.contains('focus') && panel.classList.contains('visible')) {
+            card.classList.remove('focus');
+            panel.classList.remove('visible');
+            return;
+          }
+          layers[0].querySelectorAll('.meta-card').forEach(c => c.classList.remove('focus'));
+          card.classList.add('focus');
+          panel.innerHTML = metaCardInfo[key];
+          panel.classList.add('visible');
         });
       });
     }
@@ -1892,6 +1920,7 @@ LEDGER 기록</p>
     document.addEventListener('DOMContentLoaded', () => {
       initRevealAnimation();
       bindChainNodes();
+      bindMetaCards();
       document.body.style.opacity = '1';
     });
 
