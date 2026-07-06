@@ -70,10 +70,7 @@
     .main-title{font-size:2.8rem;line-height:.95;margin:0;transform:rotate(-1deg);color:var(--ink);}
     .subtitle-text{font-size:1rem;line-height:1.6;margin:16px 0 0;color:var(--ink-soft);max-width:640px;}
 
-    .nav-dots{display:flex;gap:12px;margin-bottom:48px;flex-wrap:wrap;}
-    .nav-dot{width:32px;height:32px;border-radius:50%;background:rgba(23,60,120,.1);border:2px solid rgba(23,60,120,.3);cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--navy);font-weight:600;}
-    .nav-dot:hover{background:rgba(23,60,120,.2);transform:scale(1.1);}
-    .nav-dot.active{background:var(--navy);color:white;border-color:var(--navy);box-shadow:0 4px 12px rgba(23,60,120,.3);}
+
 
     section{margin-bottom:56px;}
     .section-label{font-weight:700;font-size:1.2rem;margin:0 0 24px;color:var(--navy);position:relative;display:inline-block;}
@@ -214,6 +211,10 @@
     .main-title-ln2::after{content:'';display:block;height:4px;width:64%;background:linear-gradient(90deg,var(--gold),transparent);border-radius:2px;margin-top:6px;}
     @media(max-width:680px){.side-nav{display:none;}.main-title{font-size:2.6rem!important;}}
 
+  
+    /* ─── INDEX WARNING ─── */
+    .pat-warning{background:rgba(124,38,31,.06);border-left:3px solid var(--maroon);padding:8px 12px;border-radius:4px;font-size:.8rem;color:var(--maroon);margin-top:10px;line-height:1.6;}
+    .pat-warning b{font-weight:700;}
   </style>
 </head>
 <body>
@@ -360,6 +361,7 @@
           <p class="pat-what">범위 조회·정렬이 필요할 때</p>
           <p class="pat-body">트리 구조로 데이터를 정렬된 상태로 유지한다. 루트에서 리프까지 O(log n)으로 탐색하고, 리프 노드끼리 연결되어 있어 범위 조회를 순차적으로 빠르게 처리한다. 가장 범용적인 인덱스 구조다.</p>
           <div class="pat-example">투자증권 예시: [주가 변동 이력]의 '거래일자' 범위 조회<br><code style="font-size:.74rem;">WHERE TRADE_DATE BETWEEN '2024-01-01' AND '2024-03-31'</code></div>
+        <div class="pat-warning"><b>⚠️ 쓰면 안 되는 경우:</b> 값의 종류가 매우 적은 컬럼 (예: 자산유형 3종류, 성별 2종류) — 이 경우 Bitmap 인덱스가 훨씬 효율적이다. 카디널리티가 낮을수록 B+Tree의 이점이 사라진다.</div>
         </div>
       </div>
 
@@ -371,7 +373,8 @@
         <div>
           <p class="pat-what">값의 종류가 적은(저카디널리티) 속성일 때</p>
           <p class="pat-body">각 값마다 비트맵(0/1 배열)을 만들어 행의 존재 여부를 표시한다. 값의 종류가 적을수록 비트맵이 작고 빨라진다. B-Tree와 반대로 카디널리티가 낮을수록 유리하다.</p>
-          <div class="pat-example">투자증권 예시: [자산] 테이블의 '자산유형' (주식/채권/파생상품 — 단 3종류)</div>
+          <div class="pat-example">투자증권 예시: [자산] 테이블의 '자산유형' (주식/채권/파생상품 — 단 3종류)
+        <div class="pat-warning"><b>⚠️ 쓰면 안 되는 경우:</b> 데이터가 자주 INSERT/UPDATE/DELETE되는 OLTP 환경 — Bitmap 재구성 비용이 높아 쓰기 성능이 급격히 저하된다. 실시간 거래 테이블에는 사용하지 않는다.</div></div>
         </div>
       </div>
 
@@ -409,7 +412,8 @@
         <div>
           <p class="pat-what">순차적으로 증가하는 PK를 동시에 많이 입력할 때</p>
           <p class="pat-body">일반 순차 키는 항상 같은(최신) B-Tree 노드에 몰려 쓰기 경합(Hot Block)이 발생한다. 키의 비트 순서를 뒤집어 저장하면 해시처럼 흩어져 경합 없이 분산 입력된다.</p>
-          <div class="pat-example">투자증권 예시: [거래번호] 같은 시퀀셜 PK의 동시 입력 경합 방지</div>
+          <div class="pat-example">투자증권 예시: [거래번호] 같은 시퀀셜 PK의 동시 입력 경합 방지
+        <div class="pat-warning"><b>⚠️ 쓰면 안 되는 경우:</b> 범위 조회(BETWEEN, >, &lt;)가 필요한 컬럼 — Reverse 인덱스는 물리적 순서를 역전시켜 범위 검색 시 풀스캔이 발생한다. 거래일자 범위 조회에는 사용하지 않는다.</div></div>
         </div>
       </div>
 
@@ -439,7 +443,8 @@
         <div>
           <p class="pat-what">정확히 일치하는 값(동등 조건)만 검색할 때</p>
           <p class="pat-body">키를 해시 함수에 통과시켜 정확히 하나의 버킷으로 직행한다. B-Tree처럼 여러 단계를 거치지 않고 O(1)에 가깝게 접근하지만, 범위 조회나 정렬에는 사용할 수 없다는 트레이드오프가 있다.</p>
-          <div class="pat-example">투자증권 예시: [고객ID]로 정확히 조회하는 경우</div>
+          <div class="pat-example">투자증권 예시: [고객ID]로 정확히 조회하는 경우
+        <div class="pat-warning"><b>⚠️ 쓰면 안 되는 경우:</b> 범위 조회·정렬(ORDER BY)·LIKE 연산이 필요한 경우 — Hash 인덱스는 정렬을 지원하지 않는다. 거래일자나 금액 범위 조회에는 B+Tree를 사용해야 한다.</div></div>
         </div>
       </div>
     </section>
@@ -509,12 +514,12 @@
         <div class="integrity-card ic1" onclick="toggleIntegrity(this)">
           <p class="ic-title">개체 무결성</p>
           <p class="ic-desc">모든 엔터티는 유일하게 식별 가능한 기본키를 가져야 한다.</p>
-          <div class="ic-code">PRIMARY KEY (ORDER_ID)<br>-- NOT NULL, 중복 불허 자동 강제</div>
+          <div class="ic-code">-- ORDER 테이블 PK 정의<br>CONSTRAINT PK_ORDER<br>  PRIMARY KEY (ORDER_ID)<br>-- ORDER_ID: NOT NULL + UNIQUE 자동 강제<br>-- 중복 주문 ID 원천 차단</div>
         </div>
         <div class="integrity-card ic2" onclick="toggleIntegrity(this)">
           <p class="ic-title">참조 무결성</p>
           <p class="ic-desc">외래키 값은 상위 엔터티의 기본키에만 존재해야 한다.</p>
-          <div class="ic-code">FOREIGN KEY (ORDER_ID)<br>  REFERENCES ORDER(ORDER_ID)<br>  ON DELETE RESTRICT</div>
+          <div class="ic-code">-- EXECUTION의 참조 무결성<br>CONSTRAINT FK_EXEC_ORDER<br>  FOREIGN KEY (ORDER_ID)<br>  REFERENCES ORDER_MST(ORDER_ID)<br>  ON DELETE RESTRICT<br>-- 존재하지 않는 주문의 체결 원천 차단</div>
         </div>
         <div class="integrity-card ic3" onclick="toggleIntegrity(this)">
           <p class="ic-title">도메인 무결성</p>
@@ -524,7 +529,7 @@
         <div class="integrity-card ic4" onclick="toggleIntegrity(this)">
           <p class="ic-title">비즈니스 규칙</p>
           <p class="ic-desc">도메인 로직을 DB 엔진 차원에서 구현한다.</p>
-          <div class="ic-code">CREATE TRIGGER trg_pos_upd<br>  AFTER INSERT ON EXECUTION ...</div>
+          <div class="ic-code">-- 반정규화 일관성 유지 트리거<br>CREATE TRIGGER trg_pos_upd<br>  AFTER INSERT ON EXECUTION<br>  FOR EACH ROW<br>BEGIN<br>  UPDATE POSITION<br>  SET QUANTITY = QUANTITY + NEW.EXEC_QTY,<br>      MARKET_VALUE = ...<br>  WHERE ASSET_ID = NEW.ASSET_ID;<br>END;</div>
         </div>
       </div>
 
@@ -635,10 +640,10 @@
 <script>
 // ── TRANSFORM ROWS ────────────────────────────────────────────────
 const TRANSFORM_DETAIL = [
-  '<b>엔터티 → 테이블</b><br>[투자 자산] → <code>ASSET_MST</code> · [거래 원장] → <code>TRADE_LOG</code> · [계좌] → <code>ACCOUNT</code>',
-  '<b>속성 → 칼럼</b><br>고객명 → <code>VARCHAR(100)</code> · 자산코드 → <code>CHAR(12)</code> · 거래액 → <code>DECIMAL(18,0)</code>',
-  '<b>식별자 → PK/인덱스</b><br>기본키는 고유성을 보장하고, 인덱스는 검색 경로를 최적화하며, NOT NULL 제약이 함께 강제된다.',
-  '<b>관계 → FK/제약</b><br>[주문]→[계좌] FK로 존재하지 않는 계좌로의 주문을 원천 차단한다 (RESTRICT).'
+  '<b>엔터티 → 테이블</b><br>[투자 자산] → <code>ASSET_MST</code> · [거래 원장] → <code>TRADE_LOG</code> · [계좌] → <code>ACCOUNT</code><br><em style="color:#7c5427;font-size:.82rem;">명명 원칙: _MST(마스터)·_LOG(로그)·_BAL(잔고) 접미사로 테이블 역할을 즉시 파악 가능하게 한다.</em>',
+  '<b>속성 → 칼럼</b><br>고객명 → <code>VARCHAR(100)</code> · 자산코드 → <code>CHAR(12)</code> · 거래액 → <code>DECIMAL(18,0)</code><br><em style="color:#7c5427;font-size:.82rem;">금액은 반드시 DECIMAL(18,0) 사용 — FLOAT/DOUBLE의 부동소수점 오차는 금융 계산에서 치명적이다.</em>',
+  '<b>식별자 → PK/인덱스</b><br>기본키는 고유성을 보장하고, 인덱스는 검색 경로를 최적화하며, NOT NULL 제약이 함께 강제된다.<br><em style="color:#7c5427;font-size:.82rem;">복합 PK (ASSET_ID, VALID_FROM)는 기본 인덱스를 자동 생성한다 — 별도 인덱스 불필요.</em>',
+  '<b>관계 → FK/제약</b><br>[주문]→[계좌] FK로 존재하지 않는 계좌로의 주문을 원천 차단한다 (RESTRICT).<br><em style="color:#7c5427;font-size:.82rem;">ON DELETE RESTRICT vs CASCADE 선택이 핵심 — 금융 데이터에서 CASCADE 삭제는 감사 추적을 파괴한다. 원칙적으로 RESTRICT.</em>'
 ];
 let activeTransform = -1;
 function toggleTransform(i, row) {

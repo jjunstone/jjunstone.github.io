@@ -70,10 +70,6 @@
     .main-title{font-size:2.8rem;line-height:.95;margin:0;transform:rotate(-1deg);color:var(--ink);}
     .subtitle-text{font-size:1rem;line-height:1.6;margin:16px 0 0;color:var(--ink-soft);max-width:620px;}
 
-    .nav-dots{display:flex;gap:12px;margin-bottom:48px;flex-wrap:wrap;}
-    .nav-dot{width:32px;height:32px;border-radius:50%;background:rgba(23,60,120,.1);border:2px solid rgba(23,60,120,.3);cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--navy);font-weight:600;}
-    .nav-dot:hover{background:rgba(23,60,120,.2);transform:scale(1.1);}
-    .nav-dot.active{background:var(--navy);color:white;border-color:var(--navy);box-shadow:0 4px 12px rgba(23,60,120,.3);}
 
     section{margin-bottom:56px;}
     .section-label{font-weight:700;font-size:1.2rem;margin:0 0 24px;color:var(--navy);position:relative;display:inline-block;}
@@ -220,6 +216,23 @@
     .main-title-ln2::after{content:'';display:block;height:4px;width:64%;background:linear-gradient(90deg,var(--gold),transparent);border-radius:2px;margin-top:6px;}
     @media(max-width:680px){.side-nav{display:none;}.main-title{font-size:2.6rem!important;}}
 
+  
+    /* ─── SA COUPLING BREAKDOWN ─── */
+    .sa-coupling-bd{margin-top:18px;background:rgba(255,255,255,.55);border-radius:8px;padding:14px 16px;}
+    .sab-heading{font-size:.8rem;font-weight:700;color:var(--ink);margin:0 0 12px;}
+    .sab-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+    .sab-row:last-child{margin-bottom:0;}
+    .sab-name{width:90px;flex-shrink:0;font-size:.78rem;font-weight:600;}
+    .sab-track{flex:1;height:8px;background:rgba(0,0,0,.07);border-radius:4px;overflow:hidden;}
+    .sab-bar{height:100%;border-radius:4px;width:0%;transition:width 1s cubic-bezier(.16,1,.3,1);}
+    .sab-bar.sb-low{background:var(--olive);}
+    .sab-bar.sb-mid{background:var(--gold);}
+    .sab-bar.sb-high{background:var(--navy);}
+    .sab-bar.filled.sb-low{width:10%;}
+    .sab-bar.filled.sb-mid{width:42%;}
+    .sab-bar.filled.sb-high{width:70%;}
+    .sab-val{font-size:.72rem;font-weight:700;width:32px;color:var(--ink-soft);text-align:right;flex-shrink:0;}
+    .sab-note{font-size:.72rem;color:var(--ink-soft);flex:1;}
   </style>
 </head>
 <body>
@@ -326,6 +339,7 @@
           <div class="sd-field"><p class="sd-field-label">핵심 엔터티</p><p class="sd-field-text" id="sdt-entities"></p></div>
           <div class="sd-field"><p class="sd-field-label">비즈니스 기능</p><p class="sd-field-text" id="sdt-funcs"></p></div>
           <div class="sd-field"><p class="sd-field-label">다른 SA와의 연결</p><p class="sd-field-text" id="sdt-conn"></p></div>
+          <div class="sd-field" style="padding-top:10px;border-top:1px dashed rgba(0,0,0,.1);margin-top:4px;"><p class="sd-field-label">이 엔터티들이 함께 있는 이유</p><p class="sd-field-text" id="sdt-cohesion" style="color:var(--navy);font-style:italic;"></p></div>
         </div>
       </div>
 
@@ -380,6 +394,10 @@
             <!-- 위험→원장 (Write, medium) -->
             <line class="network-line" x1="570" y1="230" x2="400" y2="320" stroke="#9a7729" stroke-width="1.8" opacity=".75" data-rel="위험 관리 SA → 원장 관리 SA · 기록(Write) — 마감 시점에 포지션과 손익이 원장에 최종 확정 기록된다"/>
             <polygon points="406,323 392,318 402,308" fill="#9a7729" opacity=".75"/>
+          <rect x="280" y="18" width="140" height="64" rx="6" fill="transparent" style="cursor:pointer" onclick="switchView('cards');setTimeout(()=>pulseSA('asset'),80)"/>
+          <rect x="30" y="166" width="150" height="64" rx="6" fill="transparent" style="cursor:pointer" onclick="switchView('cards');setTimeout(()=>pulseSA('trade'),80)"/>
+          <rect x="520" y="166" width="150" height="64" rx="6" fill="transparent" style="cursor:pointer" onclick="switchView('cards');setTimeout(()=>pulseSA('risk'),80)"/>
+          <rect x="280" y="312" width="140" height="64" rx="6" fill="transparent" style="cursor:pointer" onclick="switchView('cards');setTimeout(()=>pulseSA('ledger'),80)"/>
           </svg>
           <div class="network-info" id="network-info">화살표 위에 마우스를 올리면 이 곳에 SA 간 의존 관계 설명이 나타납니다.</div>
           <div class="network-legend">
@@ -449,6 +467,35 @@
           <span class="result-text"><b>원장 관리 SA</b> — 모든 SA의 거래 기록을 누적 (쓰기 의존성 높음, 설계 의도)</span>
         </div>
       </div>
+
+      <div class="sa-coupling-bd" id="sa-bd">
+        <p class="sab-heading">SA별 결합도 분해 — 수치의 근거</p>
+        <div class="sab-row">
+          <span class="sab-name" style="color:var(--navy)">📦 자산 관리</span>
+          <div class="sab-track"><div class="sab-bar sb-low" id="sab-1"></div></div>
+          <span class="sab-val">10%</span>
+          <span class="sab-note">참조만 받음 — 능동 의존 없음</span>
+        </div>
+        <div class="sab-row">
+          <span class="sab-name" style="color:var(--maroon)">🔄 거래 관리</span>
+          <div class="sab-track"><div class="sab-bar sb-mid" id="sab-2"></div></div>
+          <span class="sab-val">35%</span>
+          <span class="sab-note">자산 SA 참조(R) + 원장 SA 기록(W)</span>
+        </div>
+        <div class="sab-row">
+          <span class="sab-name" style="color:var(--olive)">⚠️ 위험 관리</span>
+          <div class="sab-track"><div class="sab-bar sb-mid" id="sab-3"></div></div>
+          <span class="sab-val">30%</span>
+          <span class="sab-note">거래·자산 읽기 의존만 존재</span>
+        </div>
+        <div class="sab-row">
+          <span class="sab-name" style="color:var(--gold)">📋 원장 관리</span>
+          <div class="sab-track"><div class="sab-bar sb-high" id="sab-4"></div></div>
+          <span class="sab-val">65%*</span>
+          <span class="sab-note" style="color:var(--gold);font-weight:600;">높음 — 의도된 설계 (모든 SA 결과 수집)</span>
+        </div>
+        <p style="font-size:.72rem;color:var(--ink-soft);margin:8px 0 0;font-style:italic;">* 원장 SA의 높은 결합도는 아키텍처적 의도다. 이력 관리 SA는 본질적으로 모든 트랜잭션을 누적하는 구조를 가진다.</p>
+      </div>
     </section>
 
     <!-- SEC 5: 분할 기준 -->
@@ -456,19 +503,19 @@
       <h2 class="section-label">주제 영역 분할 기준</h2>
       <p style="color:var(--ink-soft);font-size:.87rem;margin-bottom:6px;">카드를 클릭하면 구체적인 적용 예시가 펼쳐진다.</p>
       <div class="criteria-grid">
-        <div class="criteria-card" onclick="toggleCriteria(this)">
+        <div class="criteria-card" data-sa="trade" onclick="toggleCriteria(this)">
           <div class="cr-num">①</div>
           <p class="cr-title">비즈니스 기능 중심</p>
           <p class="cr-desc">각 SA는 하나의 명확한 비즈니스 기능을 담당하도록 설계된다.</p>
           <p class="cr-example">"거래"라는 단일 기능에 ORDER·EXECUTION·SETTLEMENT를 모두 묶는다 — 데이터 타입이 아니라 업무 기능 기준으로 나눈다.</p>
         </div>
-        <div class="criteria-card" onclick="toggleCriteria(this)">
+        <div class="criteria-card" data-sa="asset" onclick="toggleCriteria(this)">
           <div class="cr-num">②</div>
           <p class="cr-title">데이터 주권 명확화</p>
           <p class="cr-desc">각 엔터티는 정확히 하나의 SA에서만 '소유'되며, 다른 SA는 참조만 수행한다.</p>
           <p class="cr-example">ASSET은 오직 자산 관리 SA만 생성·수정한다. 거래 SA는 ASSET_ID를 참조만 할 뿐 직접 수정하지 않는다.</p>
         </div>
-        <div class="criteria-card" onclick="toggleCriteria(this)">
+        <div class="criteria-card" data-sa="risk" onclick="toggleCriteria(this)">
           <div class="cr-num">③</div>
           <p class="cr-title">독립적 진화 가능</p>
           <p class="cr-desc">한 SA의 변경이 다른 SA에 미치는 영향을 최소화하여 유연한 시스템 진화를 지원한다.</p>
@@ -514,7 +561,8 @@ const SA_DATA = {
     purpose:"모든 거래의 기준이 되는 자산 정보를 단일 진실 공급원(Single Source of Truth)으로 유지한다.",
     entities:"ASSET(상품), ASSET_CLASS(상품분류), MARKET_DATA(시장정보)",
     funcs:"상품/한도 마스터 관리, 시장 시세 수신",
-    conn:"거래·위험·원장 SA로부터 참조(R)만 받는다. 능동적으로 다른 SA를 참조하지 않는 것이 Low Coupling의 핵심이다."
+    conn:"거래·위험·원장 SA로부터 참조(R)만 받는다. 능동적으로 다른 SA를 참조하지 않는 것이 Low Coupling의 핵심이다.",
+    cohesion:"ASSET·ASSET_CLASS·MARKET_DATA는 모두 '이 투자 대상이 무엇인가'를 정의한다. 셋이 함께 없으면 자산의 분류·명칭·현재 시세를 단일 질문으로 대답할 수 없다."
   },
   trade: {
     title:"🔄 거래 관리 SA", titleEn:"Trading Management",
@@ -522,7 +570,8 @@ const SA_DATA = {
     purpose:"거래 행위 자체의 무결성과 순차성을 보장한다.",
     entities:"ORDER(주문), EXECUTION(체결), SETTLEMENT(정산)",
     funcs:"매매 주문 접수, 주문 체결 처리, 정산 처리",
-    conn:"자산 SA를 참조(R)하여 주문 유효성을 검증하고, 위험·원장 SA에 체결 결과를 전파(Write)한다."
+    conn:"자산 SA를 참조(R)하여 주문 유효성을 검증하고, 위험·원장 SA에 체결 결과를 전파(Write)한다.",
+    cohesion:"ORDER→EXECUTION→SETTLEMENT는 하나의 거래 생명주기를 순서대로 구성한다. 분리하면 거래의 시작·실행·완료를 하나의 흐름으로 추적할 수 없다."
   },
   risk: {
     title:"⚠️ 위험 관리 SA", titleEn:"Risk Management",
@@ -530,7 +579,8 @@ const SA_DATA = {
     purpose:"거래로 인한 리스크 노출을 즉시 가시화하여 한도 초과를 사전 차단한다.",
     entities:"POSITION(포지션), RISK_LIMIT(위험한도), P&amp;L(손익)",
     funcs:"자산 가격 평가 (한도 정책은 자산 SA와 공동 관리)",
-    conn:"거래 SA의 체결 정보를 참조(R)하여 실시간 계산한다 — 읽기 의존성만 존재하며 다른 SA의 데이터를 직접 생성하지 않는다."
+    conn:"거래 SA의 체결 정보를 참조(R)하여 실시간 계산한다 — 읽기 의존성만 존재하며 다른 SA의 데이터를 직접 생성하지 않는다.",
+    cohesion:"POSITION(현재 노출)·RISK_LIMIT(허용 한도)·P&L(성과)은 함께 있어야 '지금 위험 상태가 어떤가'를 대답할 수 있다. 셋 중 하나만 있으면 위험 관리가 불완전하다."
   },
   ledger: {
     title:"📋 원장 관리 SA", titleEn:"Ledger Management",
@@ -538,7 +588,8 @@ const SA_DATA = {
     purpose:"특정 시점의 데이터를 정확히 복원 가능하게 하여 감사·규제 대응의 기반을 제공한다.",
     entities:"LEDGER(원장), TRANSACTION_LOG(거래기록), PRICE_HISTORY(가격이력)",
     funcs:"시장 시세 수신(가격 이력 생성), 원장 마감",
-    conn:"거래·위험 SA의 결과를 받아 누적(Write)한다 — 쓰기 의존성이 가장 높은 SA이며, 이는 설계 의도상 자연스러운 결과다."
+    conn:"거래·위험 SA의 결과를 받아 누적(Write)한다 — 쓰기 의존성이 가장 높은 SA이며, 이는 설계 의도상 자연스러운 결과다.",
+    cohesion:"LEDGER(확정 기록)·TXN_LOG(실시간 기록)·PRICE_HISTORY(가격 이력)는 함께 있어야 과거 임의 시점의 상태를 완전히 복원할 수 있다. '이력 추적'이라는 단일 목적이 세 엔터티를 묶는다."
   }
 };
 
@@ -574,6 +625,7 @@ function toggleSA(key) {
   document.getElementById('sdt-entities').innerHTML = d.entities;
   document.getElementById('sdt-funcs').textContent = d.funcs;
   document.getElementById('sdt-conn').textContent = d.conn;
+  document.getElementById('sdt-cohesion').textContent = d.cohesion || '';
 
   panel.classList.add('visible');
   setTimeout(() => panel.scrollIntoView({behavior:'smooth', block:'nearest'}), 80);
@@ -616,10 +668,30 @@ document.addEventListener('DOMContentLoaded', () => {
 function toggleCriteria(el) {
   const was = el.classList.contains('cr-active');
   document.querySelectorAll('.criteria-card').forEach(c => c.classList.remove('cr-active'));
-  if (!was) el.classList.add('cr-active');
+  if (!was) {
+    el.classList.add('cr-active');
+    const sa = el.getAttribute('data-sa');
+    if (sa) { switchView('cards'); setTimeout(() => pulseSA(sa), 120); }
+  }
 }
 
 // ── GAUGE ANIMATION ───────────────────────────────────────────────
+function setupBdObserver() {
+  const bd = document.getElementById('sa-bd');
+  if (!bd) return;
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        ['sab-1','sab-2','sab-3','sab-4'].forEach((id,i) => {
+          setTimeout(() => { const el=document.getElementById(id); if(el) el.classList.add('filled'); }, i*160);
+        });
+        obs.disconnect();
+      }
+    });
+  }, {threshold:.3});
+  obs.observe(bd);
+}
+
 function setupGaugeObserver() {
   const section = document.getElementById('gauge-section');
   const obs = new IntersectionObserver(entries => {
@@ -664,6 +736,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const dot = document.querySelector('[data-step="2"]');
   if (dot) dot.classList.add('active');
   setupGaugeObserver();
+  setupBdObserver();
 });
 
 // ── KEYBOARD ──────────────────────────────────────────────────────

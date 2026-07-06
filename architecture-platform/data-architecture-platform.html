@@ -31,9 +31,9 @@
       --olive: #4e5533;
       --gold: #9a7729;
       --paper-shadow: rgba(44, 28, 9, .24);
-      --font-hand: "KyoboHand", "Gowun Dodum", "Pretendard", "Malgun Gothic", sans-serif;
-      --font-korean: "Gowun Dodum", "Pretendard", "Malgun Gothic", sans-serif;
-      --font-script: "Kalam", "KyoboHand", "Segoe Print", cursive;
+      --font-hand: "Pretendard", "Noto Sans KR", "Malgun Gothic", sans-serif;
+      --font-korean: "Pretendard", "Noto Sans KR", "Malgun Gothic", sans-serif;
+      --font-script: "Pretendard", "Noto Sans KR", "Malgun Gothic", sans-serif;
     }
 
     * {
@@ -631,9 +631,41 @@
         flex: 0 0 150px;
       }
     }
+
+    /* ─── SIDE NAV (step 1~6 페이지와 톤 통일) ─── */
+    .side-nav{position:fixed;right:0;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:9px;padding:16px 10px;z-index:999;background:rgba(234,216,170,.93);backdrop-filter:blur(10px);border-radius:14px 0 0 14px;box-shadow:-4px 6px 22px rgba(44,28,9,.2);border:1px solid rgba(154,119,41,.22);border-right:none;}
+    .snav-dot{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.55);border:2px solid rgba(23,60,120,.22);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:var(--navy);position:relative;transition:all .25s cubic-bezier(.34,1.56,.64,1);user-select:none;font-family:var(--font-hand);}
+    .snav-dot:hover{background:rgba(255,255,255,.92);transform:scale(1.12) translateX(-3px);box-shadow:-4px 4px 12px rgba(23,60,120,.18);}
+    .snav-dot.s-active{background:var(--navy);color:white;border-color:var(--navy);box-shadow:-4px 5px 14px rgba(23,60,120,.32);transform:scale(1.06);}
+    .snav-dot.s-active:hover{transform:scale(1.12) translateX(-3px);}
+    .snav-tip{position:absolute;right:46px;top:50%;transform:translateY(-50%) translateX(6px);background:rgba(23,60,120,.93);color:white;padding:5px 11px;border-radius:6px;font-size:.73rem;white-space:nowrap;opacity:0;pointer-events:none;transition:all .2s;font-family:var(--font-hand);}
+    .snav-tip::after{content:'';position:absolute;left:100%;top:50%;transform:translateY(-50%);border:5px solid transparent;border-left-color:rgba(23,60,120,.93);}
+    .snav-dot:hover .snav-tip{opacity:1;transform:translateY(-50%) translateX(0);}
+
+    /* ─── TITLE IMPACT (step 1~6과 동일 스케일) ─── */
+    .main-title{font-size:4.2rem!important;line-height:.88!important;letter-spacing:-.02em;}
+    .eyebrow{font-size:.9rem!important;letter-spacing:.1em!important;text-transform:uppercase;}
+
+    @media(max-width:680px){
+      .side-nav{display:none;}
+      .main-title{font-size:2.6rem!important;}
+    }
+
+    /* side-nav가 사라지는 모바일 폭에서는 플로팅 패널도 원래 여백으로 복귀 */
+    @media(max-width:680px){
+      #zachman-panel.floating-panel{right:20px;}
+    }
   </style>
 </head>
 <body>
+  <nav class="side-nav">
+    <div class="snav-dot" onclick="location.href='step1-strategy-meta-modeling.html'">1<span class="snav-tip">전략 메타모델</span></div>
+    <div class="snav-dot" onclick="location.href='step2-subject-area.html'">2<span class="snav-tip">주제 영역 분할</span></div>
+    <div class="snav-dot" onclick="location.href='step3-crud-matrix.html'">3<span class="snav-tip">CRUD 매트릭스</span></div>
+    <div class="snav-dot" onclick="location.href='step4-logical-modeling.html'">4<span class="snav-tip">논리 모델 & 정규화</span></div>
+    <div class="snav-dot" onclick="location.href='step5-physical-design.html'">5<span class="snav-tip">물리 설계</span></div>
+    <div class="snav-dot" onclick="location.href='step6-governance.html'">6<span class="snav-tip">데이터 거버넌스</span></div>
+  </nav>
   <div class="notebook">
     <div class="spiral"></div>
     <main>
@@ -1355,7 +1387,7 @@
       }
       .floating-panel {
         position: fixed;
-        right: 20px;
+        right: 80px;
         top: 50%;
         transform: translateY(-50%) translateX(20px);
         width: min(360px, calc(100vw - 40px));

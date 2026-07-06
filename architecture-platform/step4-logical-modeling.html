@@ -73,11 +73,7 @@
     .main-title{font-family:var(--font-hand);font-size:2.8rem;line-height:.95;margin:0;transform:rotate(-1deg);color:var(--ink);}
     .subtitle-text{font-size:1rem;line-height:1.6;margin:16px 0 0;color:var(--ink-soft);max-width:600px;}
 
-    /* NAV DOTS */
-    .nav-dots{display:flex;gap:12px;margin-bottom:48px;flex-wrap:wrap;}
-    .nav-dot{width:32px;height:32px;border-radius:50%;background:rgba(23,60,120,.1);border:2px solid rgba(23,60,120,.3);cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--navy);font-weight:600;}
-    .nav-dot:hover{background:rgba(23,60,120,.2);transform:scale(1.1);}
-    .nav-dot.active{background:var(--navy);color:white;border-color:var(--navy);box-shadow:0 4px 12px rgba(23,60,120,.3);}
+
 
     /* SECTION */
     section{margin-bottom:56px;}
@@ -234,6 +230,18 @@
     .main-title-ln2::after{content:'';display:block;height:4px;width:64%;background:linear-gradient(90deg,var(--gold),transparent);border-radius:2px;margin-top:6px;}
     @media(max-width:680px){.side-nav{display:none;}.main-title{font-size:2.6rem!important;}}
 
+  
+    /* ─── CODE COLORIZE ─── */
+    .cc-comment{color:#6b7489;font-style:italic;}
+    .cc-pk{color:var(--navy);font-weight:700;}
+    .cc-fk{color:var(--maroon);}
+    .cc-kw{color:var(--navy);font-weight:700;}
+    .cc-type{color:var(--gold);}
+    /* ─── ENTITY ARCH INSIGHT ─── */
+    .ed-arch{font-size:.83rem;color:var(--navy);font-style:italic;margin:10px 0 0;padding-top:10px;border-top:1px dashed rgba(0,0,0,.1);line-height:1.65;}
+    /* ─── REL-TABLE HOVER ─── */
+    .rel-table tbody tr{cursor:pointer;}
+    .rel-table tbody tr:hover td{background:rgba(23,60,120,.05);}
   </style>
 </head>
 <body>
@@ -334,6 +342,7 @@
         <p class="ed-title" id="ep-title"></p>
         <div class="ed-attrs" id="ep-attrs"></div>
         <p class="ed-rels"   id="ep-rels"></p>
+        <p class="ed-arch"   id="ep-arch" style="display:none;"></p>
       </div>
     </section>
 
@@ -695,6 +704,7 @@ SETTLEMENT -- 정산 (결제 완료)
     </section>
 
     <!-- ═══ PART B ═══ -->
+    <p style="color:var(--ink-soft);font-size:.88rem;line-height:1.7;margin:44px 0 0;padding:14px 18px;background:rgba(255,255,255,.55);border-radius:8px;border-left:3px solid rgba(154,119,41,.4);">논리 ERD는 엔터티 간 관계의 <strong>구조</strong>를 정의했다. 정규화는 그 구조 내 속성 배치가 함수 종속성의 법칙을 따르는지 <strong>수학적으로 검증</strong>한다. ERD가 "어떤 관계인가"를 보여준다면, 정규화는 "그 관계가 올바른가"를 증명한다.</p>
     <div class="part-divider"><span class="part-badge">PART B — 정규화</span></div>
 
     <!-- SEC 5: 이상 현상 -->
@@ -869,15 +879,15 @@ SETTLEMENT -- 정산 (결제 완료)
       <table class="rel-table">
         <thead><tr><th>관계</th><th>유형</th><th>설명</th></tr></thead>
         <tbody>
-          <tr><td><b style="color:var(--navy);">ASSET_CLASS → ASSET</b></td><td><span class="rel-badge rb-1n">1:N</span></td><td>한 분류에 여러 자산 (재귀 계층 포함)</td></tr>
-          <tr><td><b style="color:var(--navy);">ASSET → MARKET_DATA</b></td><td><span class="rel-badge rb-1n">1:N</span></td><td>자산 1개 = 여러 실시간 시세</td></tr>
-          <tr><td><b style="color:var(--navy);">ASSET → PRICE_HISTORY</b></td><td><span class="rel-badge rb-1n">1:N</span></td><td>자산 1개 = 여러 이력 행 (SCD Type 2)</td></tr>
-          <tr><td><b style="color:var(--maroon);">ORDER → EXECUTION</b></td><td><span class="rel-badge rb-1n">1:N</span></td><td>주문 1개 = 여러 체결 (분할 체결)</td></tr>
-          <tr><td><b style="color:var(--maroon);">EXECUTION → SETTLEMENT</b></td><td><span class="rel-badge rb-1n">1:N</span></td><td>체결 1개 = 여러 정산</td></tr>
-          <tr><td><b style="color:var(--olive);">EXECUTION → POSITION</b></td><td><span class="rel-badge rb-n1">N:갱신</span></td><td>체결 발생 → 포지션 생성/갱신 (잔고 반영)</td></tr>
-          <tr><td><b style="color:var(--olive);">POSITION → RISK_LIMIT</b></td><td><span class="rel-badge rb-n1">N:1</span></td><td>여러 포지션이 한 한도를 공유하여 통제받음</td></tr>
-          <tr><td><b style="color:var(--gold);">EXECUTION → LEDGER</b></td><td><span class="rel-badge rb-n1">N:집계</span></td><td>여러 체결 → 배치 마감 시 원장 1행으로 집계</td></tr>
-          <tr><td><b style="color:var(--gold);">EXECUTION → TXN_LOG</b></td><td><span class="rel-badge rb-1n">1:N</span></td><td>체결 즉시 실시간 기록 (append-only)</td></tr>
+          <tr onclick="showEntity('ASSET_CLASS')" title="ASSET_CLASS 상세 보기 →"><td><b style="color:var(--navy);">ASSET_CLASS → ASSET</b></td><td><span class="rel-badge rb-1n">1:N</span></td><td>한 분류에 여러 자산 (재귀 계층 포함)</td></tr>
+          <tr onclick="showEntity('MARKET_DATA')" title="MARKET_DATA 상세 보기 →"><td><b style="color:var(--navy);">ASSET → MARKET_DATA</b></td><td><span class="rel-badge rb-1n">1:N</span></td><td>자산 1개 = 여러 실시간 시세</td></tr>
+          <tr onclick="showEntity('PRICE_HIST')" title="PRICE_HIST 상세 보기 →"><td><b style="color:var(--navy);">ASSET → PRICE_HISTORY</b></td><td><span class="rel-badge rb-1n">1:N</span></td><td>자산 1개 = 여러 이력 행 (SCD Type 2)</td></tr>
+          <tr onclick="showEntity('EXECUTION')" title="EXECUTION 상세 보기 →"><td><b style="color:var(--maroon);">ORDER → EXECUTION</b></td><td><span class="rel-badge rb-1n">1:N</span></td><td>주문 1개 = 여러 체결 (분할 체결)</td></tr>
+          <tr onclick="showEntity('SETTLEMENT')" title="SETTLEMENT 상세 보기 →"><td><b style="color:var(--maroon);">EXECUTION → SETTLEMENT</b></td><td><span class="rel-badge rb-1n">1:N</span></td><td>체결 1개 = 여러 정산</td></tr>
+          <tr onclick="showEntity('POSITION')" title="POSITION 상세 보기 →"><td><b style="color:var(--olive);">EXECUTION → POSITION</b></td><td><span class="rel-badge rb-n1">N:갱신</span></td><td>체결 발생 → 포지션 생성/갱신 (잔고 반영)</td></tr>
+          <tr onclick="showEntity('RISK_LIMIT')" title="RISK_LIMIT 상세 보기 →"><td><b style="color:var(--olive);">POSITION → RISK_LIMIT</b></td><td><span class="rel-badge rb-n1">N:1</span></td><td>여러 포지션이 한 한도를 공유하여 통제받음</td></tr>
+          <tr onclick="showEntity('LEDGER')" title="LEDGER 상세 보기 →"><td><b style="color:var(--gold);">EXECUTION → LEDGER</b></td><td><span class="rel-badge rb-n1">N:집계</span></td><td>여러 체결 → 배치 마감 시 원장 1행으로 집계</td></tr>
+          <tr onclick="showEntity('TXN_LOG')" title="TXN_LOG 상세 보기 →"><td><b style="color:var(--gold);">EXECUTION → TXN_LOG</b></td><td><span class="rel-badge rb-1n">1:N</span></td><td>체결 즉시 실시간 기록 (append-only)</td></tr>
         </tbody>
       </table>
     </section>
@@ -907,18 +917,30 @@ SETTLEMENT -- 정산 (결제 완료)
 <script>
 // ── Entity DB ──────────────────────────────────────────────────────
 const EDB = {
-  ASSET:       {t:"ASSET — 표준 자산 마스터",                     a:[{l:"ASSET_ID",k:"pk"},{l:"CLASS_ID",k:"fk"},{l:"ASSET_NAME"},{l:"CURRENCY"},{l:"STATUS"}],        r:"ASSET_CLASS N:1 참조 · MARKET_DATA 1:N · PRICE_HISTORY 1:N (SCD Type 2) · ORDER에서 참조됨"},
-  ASSET_CLASS: {t:"ASSET_CLASS — 자산 분류 마스터",               a:[{l:"CLASS_ID",k:"pk"},{l:"PARENT_CLASS_ID",k:"fk"},{l:"CLASS_NAME"},{l:"CLASS_LEVEL"}],            r:"재귀 자기 참조: PARENT_CLASS_ID → CLASS_ID (계층 분류). ASSET 1:N"},
-  MARKET_DATA: {t:"MARKET_DATA — 실시간 시장 시세",               a:[{l:"DATA_ID",k:"pk"},{l:"ASSET_ID",k:"fk"},{l:"MARKET_PRICE"},{l:"PRICE_TIME"},{l:"SOURCE"}],       r:"ASSET N:1 (여러 시세 → 한 자산). 실시간 스트리밍 생성"},
-  ORDER:       {t:"ORDER — 매매 주문",                             a:[{l:"ORDER_ID",k:"pk"},{l:"ASSET_ID",k:"fk"},{l:"ORDER_QTY"},{l:"ORDER_PRICE"},{l:"STATUS"},{l:"ORDER_TIME"}], r:"ASSET N:1 참조 · EXECUTION 1:N (분할 체결 지원)"},
-  EXECUTION:   {t:"EXECUTION — 체결 (허브 엔터티)",               a:[{l:"EXEC_ID",k:"pk"},{l:"ORDER_ID",k:"fk"},{l:"EXEC_QTY"},{l:"EXEC_PRICE"},{l:"EXEC_TIME"}],         r:"ORDER N:1 · SETTLEMENT 1:N · POSITION 갱신 · LEDGER 집계 · TXN_LOG 기록 · P&L 산출 — 5개 엔터티와 연결된 핵심 허브"},
-  SETTLEMENT:  {t:"SETTLEMENT — 정산",                             a:[{l:"SETL_ID",k:"pk"},{l:"EXEC_ID",k:"fk"},{l:"SETL_DATE"},{l:"SETL_AMOUNT"},{l:"STATUS"}],           r:"EXECUTION N:1 (여러 정산 → 한 체결)"},
-  POSITION:    {t:"POSITION — 실시간 잔고 (포지션)",              a:[{l:"POS_ID",k:"pk"},{l:"EXEC_ID",k:"fk"},{l:"ASSET_ID",k:"fk"},{l:"QUANTITY"},{l:"AVG_PRICE"},{l:"MARKET_VALUE"}], r:"EXECUTION N:1 (체결이 포지션 생성/갱신) · RISK_LIMIT N:1"},
-  RISK_LIMIT:  {t:"RISK_LIMIT — 투자 위험 한도",                 a:[{l:"LIMIT_ID",k:"pk"},{l:"LIMIT_TYPE"},{l:"LIMIT_VALUE"},{l:"CURR_USAGE"},{l:"STATUS"}],                r:"POSITION N:1 (여러 포지션이 한 한도 공유) · CHECK: LIMIT_VALUE ≥ 0"},
-  PNL:         {t:"P&L — 손익 (역정규화 허용)",                  a:[{l:"PNL_ID",k:"pk"},{l:"EXEC_ID",k:"fk"},{l:"REALIZED_PNL"},{l:"UNREALIZED_PNL"},{l:"CALC_DATE"}],   r:"EXECUTION N:1 · 조회 성능을 위해 역정규화 적용. 트리거로 일관성 자동 유지"},
-  LEDGER:      {t:"LEDGER — 시계열 원장 (배치 마감)",            a:[{l:"LEDGER_ID",k:"pk"},{l:"EXEC_ID",k:"fk"},{l:"AMOUNT"},{l:"LEDGER_DATE"},{l:"CLOSE_YN"}],          r:"EXECUTION N:1 (여러 체결 → 집계) · 배치 마감 생성 · 수정 불가 (감사 추적 기준)"},
-  TXN_LOG:     {t:"TRANSACTION_LOG — 실시간 거래 로그",           a:[{l:"LOG_ID",k:"pk"},{l:"EXEC_ID",k:"fk"},{l:"LOG_TYPE"},{l:"LOG_TIME"},{l:"LOG_DETAIL"}],           r:"EXECUTION N:1 · 체결 즉시 실시간 기록 · append-only"},
-  PRICE_HIST:  {t:"PRICE_HISTORY — 가격 선분 이력 (SCD Type 2)", a:[{l:"ASSET_ID",k:"pk"},{l:"VALID_FROM",k:"pk"},{l:"VALID_TO"},{l:"CLOSE_PRICE"},{l:"CURRENCY"}], r:"ASSET N:1 · 복합 PK (ASSET_ID, VALID_FROM) · VALID_TO='9999-12-31' = 현재 행. 과거 시점 가격 정확 복원 가능"}
+  ASSET:       {t:"ASSET — 표준 자산 마스터",                     a:[{l:"ASSET_ID",k:"pk"},{l:"CLASS_ID",k:"fk"},{l:"ASSET_NAME"},{l:"CURRENCY"},{l:"STATUS"}],        r:"ASSET_CLASS N:1 참조 · MARKET_DATA 1:N · PRICE_HISTORY 1:N (SCD Type 2) · ORDER에서 참조됨",
+    arch:"SSOT 패턴 — 자산 정보를 단 한 곳에서만 소유하여 데이터 파편화를 원천 차단한다. R=5가 이 엔터티의 중심성을 증명한다."},
+  ASSET_CLASS: {t:"ASSET_CLASS — 자산 분류 마스터",               a:[{l:"CLASS_ID",k:"pk"},{l:"PARENT_CLASS_ID",k:"fk"},{l:"CLASS_NAME"},{l:"CLASS_LEVEL"}],            r:"재귀 자기 참조: PARENT_CLASS_ID → CLASS_ID (계층 분류). ASSET 1:N",
+    arch:"재귀 자기 참조 패턴 — PARENT_CLASS_ID FK가 자신을 참조하여 무한 깊이의 계층을 하나의 테이블로 표현한다."},
+  MARKET_DATA: {t:"MARKET_DATA — 실시간 시장 시세",               a:[{l:"DATA_ID",k:"pk"},{l:"ASSET_ID",k:"fk"},{l:"MARKET_PRICE"},{l:"PRICE_TIME"},{l:"SOURCE"}],       r:"ASSET N:1 (여러 시세 → 한 자산). 실시간 스트리밍 생성",
+    arch:"외부 연동 경계 엔터티 — 외부 시장과 내부 시스템의 경계에서 데이터를 수신·변환한다. 여기서 외부 형식이 내부 표준으로 정규화된다."},
+  ORDER:       {t:"ORDER — 매매 주문",                             a:[{l:"ORDER_ID",k:"pk"},{l:"ASSET_ID",k:"fk"},{l:"ORDER_QTY"},{l:"ORDER_PRICE"},{l:"STATUS"},{l:"ORDER_TIME"}], r:"ASSET N:1 참조 · EXECUTION 1:N (분할 체결 지원)",
+    arch:"State Machine 패턴 — STATUS가 PENDING→EXECUTED→CANCELLED를 추적한다. EXECUTION의 U 연산이 상태 전환을 담당한다."},
+  EXECUTION:   {t:"EXECUTION — 체결 (허브 엔터티)",               a:[{l:"EXEC_ID",k:"pk"},{l:"ORDER_ID",k:"fk"},{l:"EXEC_QTY"},{l:"EXEC_PRICE"},{l:"EXEC_TIME"}],         r:"ORDER N:1 · SETTLEMENT 1:N · POSITION 갱신 · LEDGER 집계 · TXN_LOG 기록 · P&L 산출 — 5개 엔터티와 연결된 핵심 허브",
+    arch:"허브 엔터티 패턴 — 5개 하위 엔터티를 파생시키는 중심점. EXECUTION의 무결성이 시스템 전체의 신뢰성을 결정한다."},
+  SETTLEMENT:  {t:"SETTLEMENT — 정산",                             a:[{l:"SETL_ID",k:"pk"},{l:"EXEC_ID",k:"fk"},{l:"SETL_DATE"},{l:"SETL_AMOUNT"},{l:"STATUS"}],           r:"EXECUTION N:1 (여러 정산 → 한 체결)",
+    arch:"불변 이력 패턴 — 정산 완료 후 수정 불가. 체결 취소와 정산 완료를 독립적으로 관리할 수 있어 복잡한 거래 실패 시나리오를 처리한다."},
+  POSITION:    {t:"POSITION — 실시간 잔고 (포지션)",              a:[{l:"POS_ID",k:"pk"},{l:"EXEC_ID",k:"fk"},{l:"ASSET_ID",k:"fk"},{l:"QUANTITY"},{l:"AVG_PRICE"},{l:"MARKET_VALUE"}], r:"EXECUTION N:1 (체결이 포지션 생성/갱신) · RISK_LIMIT N:1",
+    arch:"실시간 집계 패턴 — 매 체결마다 잔고를 갱신하는 Pre-aggregated View. EXECUTION을 매번 JOIN하는 대신 집계 결과를 유지하는 역정규화."},
+  RISK_LIMIT:  {t:"RISK_LIMIT — 투자 위험 한도",                 a:[{l:"LIMIT_ID",k:"pk"},{l:"LIMIT_TYPE"},{l:"LIMIT_VALUE"},{l:"CURR_USAGE"},{l:"STATUS"}],                r:"POSITION N:1 (여러 포지션이 한 한도 공유) · CHECK: LIMIT_VALUE ≥ 0",
+    arch:"DB 레벨 제약 패턴 — CHECK (LIMIT_VALUE ≥ 0)이 엔진 차원에서 음수 한도를 차단한다. 애플리케이션 버그와 무관하게 데이터 정합성이 유지된다."},
+  PNL:         {t:"P&L — 손익 (역정규화 허용)",                  a:[{l:"PNL_ID",k:"pk"},{l:"EXEC_ID",k:"fk"},{l:"REALIZED_PNL"},{l:"UNREALIZED_PNL"},{l:"CALC_DATE"}],   r:"EXECUTION N:1 · 조회 성능을 위해 역정규화 적용. 트리거로 일관성 자동 유지",
+    arch:"유도 속성 패턴 — 계산 가능한 값을 미리 저장하는 전략적 역정규화. 3NF 위반이지만 초당 수천 건 조회 성능을 위해 트리거 일관성 유지를 전제로 허용된다."},
+  LEDGER:      {t:"LEDGER — 시계열 원장 (배치 마감)",            a:[{l:"LEDGER_ID",k:"pk"},{l:"EXEC_ID",k:"fk"},{l:"AMOUNT"},{l:"LEDGER_DATE"},{l:"CLOSE_YN"}],          r:"EXECUTION N:1 (여러 체결 → 집계) · 배치 마감 생성 · 수정 불가 (감사 추적 기준)",
+    arch:"Append-Only 패턴 — 원장은 생성만 가능하고 수정·삭제 불가. 모든 배치 마감의 불변 기록으로 감사 추적의 최종 진실이다."},
+  TXN_LOG:     {t:"TRANSACTION_LOG — 실시간 거래 로그",           a:[{l:"LOG_ID",k:"pk"},{l:"EXEC_ID",k:"fk"},{l:"LOG_TYPE"},{l:"LOG_TIME"},{l:"LOG_DETAIL"}],           r:"EXECUTION N:1 · 체결 즉시 실시간 기록 · append-only",
+    arch:"이벤트 소싱(Event Sourcing) 패턴 — 모든 이벤트를 append-only로 기록. 과거 어느 시점의 상태든 이벤트 재생으로 복원 가능하다."},
+  PRICE_HIST:  {t:"PRICE_HISTORY — 가격 선분 이력 (SCD Type 2)", a:[{l:"ASSET_ID",k:"pk"},{l:"VALID_FROM",k:"pk"},{l:"VALID_TO"},{l:"CLOSE_PRICE"},{l:"CURRENCY"}], r:"ASSET N:1 · 복합 PK (ASSET_ID, VALID_FROM) · VALID_TO='9999-12-31' = 현재 행. 과거 시점 가격 정확 복원 가능",
+    arch:"SCD Type 2 패턴 — 행 수정 대신 VALID_TO 닫기 + 새 행 삽입. 금융 규제(감사 추적)의 핵심 요건을 데이터 구조 자체로 해결한다."}
 };
 
 function showEntity(key) {
@@ -938,8 +960,24 @@ function showEntity(key) {
     `<span class="ed-attr ${a.k||''}">${a.k==='pk'?'🔑 ':a.k==='fk'?'🔗 ':''}${a.l}</span>`
   ).join('');
   document.getElementById('ep-rels').innerHTML = `<strong style="color:var(--navy);">관계:</strong> ${d.r}`;
+  const archEl = document.getElementById('ep-arch');
+  if (archEl) { archEl.textContent = d.arch || ''; archEl.style.display = d.arch ? 'block' : 'none'; }
   panel.classList.add('visible');
   setTimeout(() => panel.scrollIntoView({behavior:'smooth',block:'nearest'}), 80);
+}
+
+
+// ── Code Block Colorizer ──────────────────────────────────────────────
+function colorizeCodeBlocks() {
+  document.querySelectorAll('.pat-code').forEach(el => {
+    let txt = el.innerHTML;
+    txt = txt.replace(/(--[^\n<]+)/g, '<span class="cc-comment">$1</span>');
+    txt = txt.replace(/\b(PK)\b/g, '<span class="cc-pk">$1</span>');
+    txt = txt.replace(/\b(FK PK|FK)\b/g, '<span class="cc-fk">$1</span>');
+    txt = txt.replace(/\b(WITH RECURSIVE|UNION ALL|SELECT|FROM|WHERE|JOIN|ON|CREATE TABLE|INSERT|UPDATE)\b/g, '<span class="cc-kw">$1</span>');
+    txt = txt.replace(/\b(DATE|CHAR|DECIMAL|VARCHAR|INTEGER)\b/g, '<span class="cc-type">$1</span>');
+    el.innerHTML = txt;
+  });
 }
 
 // ── Pattern Tabs ────────────────────────────────────────────────────
@@ -1011,6 +1049,7 @@ document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
 // ── Page entrance ───────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+  colorizeCodeBlocks();
   document.body.style.opacity = '1';
   const dot = document.querySelector('[data-step="4"]');
   if (dot) dot.classList.add('active');
