@@ -343,11 +343,11 @@
     }
 
     .pm-diagram-wrap {
-      width: min(320px, 100%); aspect-ratio: 9 / 16; margin: 0 auto;
+      width: min(640px, 100%); aspect-ratio: 16 / 10; margin: 0 auto;
       border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--bg);
       display: flex; align-items: center; justify-content: center;
     }
-    .pm-diagram-img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .pm-diagram-img { width: 100%; height: 100%; object-fit: contain; display: block; background: #f8fafc; }
     .pm-diagram-placeholder {
       width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
       gap: 8px; color: var(--text-light); font-size: 12px;
@@ -362,6 +362,9 @@
     .pm-stack-icon {
       width: 40px; height: 40px; border-radius: 10px; background: var(--bg); border: 1px solid var(--border);
       display: grid; place-items: center; font-size: 15px; font-weight: 700; color: var(--accent);
+    }
+    .pm-stack-icon img {
+      width: 26px; height: 26px; object-fit: contain; display: block;
     }
 
     .pm-check-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; }
@@ -386,11 +389,11 @@
 
 <!-- ── Topbar ── -->
 <header class="topbar">
-  <a class="topbar-brand" href="index.html" title="홈으로 돌아가기">
+  <a class="topbar-brand" href="../index.html" title="홈으로 돌아가기">
     <div class="logo-icon">☁</div>
     <div class="brand-info">
-      <div class="brand-name">Junseok Lee</div>
-      <div class="brand-role">Enterprise Platform Engineer</div>
+      <div class="brand-name">이준석</div>
+      <div class="brand-role">Azure Platform Engineer</div>
     </div>
   </a>
   
@@ -1216,6 +1219,266 @@ const icons = {
   </svg>`
 };
 
+const azureIconBase = '../etc/Azure_Public_Service_Icons/Icons/';
+const stackIcons = {
+  'Azure': azureIconBase + 'general/10001-icon-service-All-Resources.svg',
+  'Networking': azureIconBase + 'networking/10061-icon-service-Virtual-Networks.svg',
+  'Governance': azureIconBase + 'general/10011-icon-service-Management-Groups.svg',
+  'Terraform': azureIconBase + 'general/10009-icon-service-Templates.svg',
+  'Entra ID': azureIconBase + 'identity/10230-icon-service-Users.svg',
+  'Azure Policy': azureIconBase + 'management%20%2B%20governance/10316-icon-service-Policy.svg',
+  'Azure Firewall': azureIconBase + 'networking/10084-icon-service-Firewalls.svg',
+  'Azure OpenAI': azureIconBase + 'ai%20%2B%20machine%20learning/03438-icon-service-Azure-OpenAI.svg',
+  'Copilot Studio': azureIconBase + 'web/03335-icon-service-Power-Platform.svg',
+  'RAG': azureIconBase + 'ai%20%2B%20machine%20learning/10044-icon-service-Cognitive-Search.svg',
+  'Azure AI Search': azureIconBase + 'ai%20%2B%20machine%20learning/10044-icon-service-Cognitive-Search.svg',
+  'Power Automate': azureIconBase + 'web/03335-icon-service-Power-Platform.svg',
+  'Microsoft Forms': azureIconBase + 'general/10841-icon-service-Table.svg',
+  'Forms': azureIconBase + 'general/10841-icon-service-Table.svg',
+  'Power Automate Desktop': azureIconBase + 'management%20%2B%20governance/10311-icon-service-Managed-Desktop.svg',
+  'PAD': azureIconBase + 'management%20%2B%20governance/10311-icon-service-Managed-Desktop.svg',
+  'Entra Connect': azureIconBase + 'identity/02854-icon-service-Entra-Connect.svg',
+  'Conditional Access': azureIconBase + 'security/10233-icon-service-Conditional-Access.svg',
+  'Active Directory': azureIconBase + 'identity/10224-icon-service-Active-Directory-Connect-Health.svg',
+  'AD': azureIconBase + 'identity/10224-icon-service-Active-Directory-Connect-Health.svg',
+  'GPO': azureIconBase + 'management%20%2B%20governance/10316-icon-service-Policy.svg',
+  'RBAC': azureIconBase + 'identity/10340-icon-service-Entra-Identity-Roles-and-Administrators.svg',
+  'Microsoft Purview': azureIconBase + 'other/02931-icon-service-Compliance-Center.svg',
+  'Purview': azureIconBase + 'other/02931-icon-service-Compliance-Center.svg',
+  'DLP': azureIconBase + 'other/02931-icon-service-Compliance-Center.svg',
+  'Compliance Manager': azureIconBase + 'management%20%2B%20governance/00011-icon-service-Compliance.svg',
+  'Azure Arc': azureIconBase + 'management%20%2B%20governance/00756-icon-service-Azure-Arc.svg',
+  'Azure Backup': azureIconBase + 'other/02360-icon-service-Azure-Backup-Center.svg',
+  'Azure Site Recovery': azureIconBase + 'management%20%2B%20governance/00017-icon-service-Recovery-Services-Vaults.svg',
+  'Zero Trust': azureIconBase + 'security/10233-icon-service-Conditional-Access.svg',
+  'Private Endpoint': azureIconBase + 'networking/00427-icon-service-Private-Link.svg',
+  'Unattended RPA': azureIconBase + 'management%20%2B%20governance/10311-icon-service-Managed-Desktop.svg',
+  'Palo Alto': azureIconBase + 'networking/10084-icon-service-Firewalls.svg',
+  'NAC': azureIconBase + 'networking/10067-icon-service-Network-Security-Groups.svg',
+  'Firewall': azureIconBase + 'networking/10084-icon-service-Firewalls.svg',
+  'M365': azureIconBase + 'web/03335-icon-service-Power-Platform.svg',
+  'Power Platform': azureIconBase + 'web/03335-icon-service-Power-Platform.svg',
+  'SharePoint': azureIconBase + 'general/10803-icon-service-Folder-Website.svg',
+  'Teams': azureIconBase + 'identity/10223-icon-service-Groups.svg',
+  'Copilot': azureIconBase + 'web/03335-icon-service-Power-Platform.svg',
+  'MSSQL': azureIconBase + 'databases/10132-icon-service-SQL-Server.svg',
+  'SSMS': azureIconBase + 'databases/10132-icon-service-SQL-Server.svg',
+  'Linked Server': azureIconBase + 'databases/10130-icon-service-SQL-Database.svg',
+  'Hub & Spoke': azureIconBase + 'networking/10061-icon-service-Virtual-Networks.svg',
+  'VPN Gateway': azureIconBase + 'networking/10063-icon-service-Virtual-Network-Gateways.svg',
+  'Microsoft Sentinel': azureIconBase + 'security/10248-icon-service-Azure-Sentinel.svg',
+  'Sentinel': azureIconBase + 'security/10248-icon-service-Azure-Sentinel.svg',
+  'KQL': azureIconBase + 'general/10825-icon-service-Powershell.svg',
+  'Defender': azureIconBase + 'security/10241-icon-service-Microsoft-Defender-for-Cloud.svg',
+  'Data Catalog': azureIconBase + 'integration/10216-icon-service-Azure-Data-Catalog.svg',
+  'Azure SQL': azureIconBase + 'databases/02390-icon-service-Azure-SQL.svg'
+};
+
+const domainAccent = {
+  Architecture: '#8b5cf6',
+  Automation: '#f59e0b',
+  AI: '#10b981',
+  Identity: '#3b82f6',
+  Security: '#ef4444',
+  Infrastructure: '#8b5cf6',
+  Workplace: '#06b6d4',
+  Data: '#6366f1'
+};
+
+const projectDiagramModels = {
+  1: { title: 'Enterprise Azure Landing Zone', stages: [
+    ['Tenant Strategy', 'Mgmt groups + subscriptions'],
+    ['Hub Network', 'Firewall + shared routing'],
+    ['Governance', 'Policy, RBAC, compliance'],
+    ['IaC Delivery', 'Terraform baseline']
+  ], chips: ['Management Groups', 'Hub-Spoke', 'Policy-as-Code'] },
+  2: { title: 'Internal AI Work Platform', stages: [
+    ['Knowledge Sources', 'Docs and business data'],
+    ['AI Search', 'Index + retrieval'],
+    ['Azure OpenAI', 'Grounded answer generation'],
+    ['Copilot UI', 'Department workflows']
+  ], chips: ['RAG', 'Permission Scoped', 'Grounded Answers'] },
+  3: { title: 'Asset Process Automation', stages: [
+    ['Forms Intake', 'Request and return forms'],
+    ['Approval Flow', 'Routing + notifications'],
+    ['PAD Task', 'Desktop automation'],
+    ['Asset Ledger', 'Updated inventory state']
+  ], chips: ['Approvals', 'Notifications', 'Audit Trail'] },
+  4: { title: 'Hybrid Identity Transition', stages: [
+    ['On-prem AD', 'Existing directory'],
+    ['Entra Connect', 'Identity synchronization'],
+    ['Access Policy', 'Conditional controls'],
+    ['SSO Apps', 'Unified sign-in']
+  ], chips: ['Password Hash Sync', 'SSO', 'Zero Trust'] },
+  5: { title: 'Purview DLP Policy Standard', stages: [
+    ['Data Labels', 'Sensitivity taxonomy'],
+    ['Purview Policy', 'Classification rules'],
+    ['DLP Controls', 'Share and download guard'],
+    ['Compliance View', 'Risk tracking']
+  ], chips: ['Sensitivity Labels', 'DLP', 'Compliance'] },
+  6: { title: 'Hybrid Infrastructure Operation', stages: [
+    ['On-prem Servers', 'Existing workloads'],
+    ['Azure Arc', 'Unified control plane'],
+    ['Backup / ASR', 'Recovery objectives'],
+    ['Bastion Ops', 'Secure operations']
+  ], chips: ['Azure Arc', 'Backup', 'DR Readiness'] },
+  7: { title: 'Zero Trust Network Architecture', stages: [
+    ['Identity Signal', 'User and device context'],
+    ['Segmentation', 'Firewall + NSG policy'],
+    ['Private Endpoint', 'No public exposure'],
+    ['Enforcement', 'Layered access control']
+  ], chips: ['Least Privilege', 'Private Link', 'Micro Segments'] },
+  8: { title: 'PAD Print Setting Automation', stages: [
+    ['Trigger Queue', 'Scheduled run'],
+    ['PAD Runner', 'Unattended desktop flow'],
+    ['Print Settings', 'Standard driver config'],
+    ['Monitoring', 'Retry and alert']
+  ], chips: ['Unattended RPA', 'Retry Logic', 'Standard Build'] },
+  9: { title: 'Firewall Policy Management', stages: [
+    ['Policy Inventory', 'Rule purpose catalog'],
+    ['NAC Signal', 'Device trust check'],
+    ['Firewall Rules', 'Least privilege cleanup'],
+    ['Change Flow', 'Approval and history']
+  ], chips: ['Palo Alto', 'NAC', 'Change Control'] },
+  10: { title: 'Copilot Studio Chatbot', stages: [
+    ['Teams User', 'Employee questions'],
+    ['Copilot Studio', 'Conversation orchestration'],
+    ['Power Automate', 'Business action flow'],
+    ['Knowledge Base', 'SharePoint answers']
+  ], chips: ['Chatbot', 'M365', 'Power Platform'] },
+  11: { title: 'AD Account Governance', stages: [
+    ['Request Intake', 'Create/change/disable'],
+    ['RBAC Model', 'Role based access'],
+    ['GPO Baseline', 'Security configuration'],
+    ['Access Review', 'Periodic cleanup']
+  ], chips: ['RBAC', 'GPO', 'Lifecycle'] },
+  12: { title: 'MSSQL Performance and Security', stages: [
+    ['SQL Workload', 'Queries and linked servers'],
+    ['Tuning', 'Indexes + execution plans'],
+    ['Access Cleanup', 'Least privilege accounts'],
+    ['Maintenance', 'Backup and scheduled jobs']
+  ], chips: ['SQL Server', 'Performance', 'Security'] },
+  13: { title: 'M365 Copilot Adoption', stages: [
+    ['Readiness Audit', 'Data and sharing cleanup'],
+    ['Training Paths', 'Role based enablement'],
+    ['Use Cases', 'Meetings, drafts, search'],
+    ['Metrics', 'Adoption and value tracking']
+  ], chips: ['Readiness', 'Training', 'Adoption'] },
+  14: { title: 'Azure Hub-Spoke Network', stages: [
+    ['On-prem VPN', 'Hybrid connectivity'],
+    ['Hub VNet', 'Shared network services'],
+    ['Spoke VNets', 'Workload separation'],
+    ['Security Route', 'Firewall and NSG policy']
+  ], chips: ['VPN Gateway', 'VNet Peering', 'Central Security'] },
+  15: { title: 'Forms Based Process Automation', stages: [
+    ['Forms Request', 'Standardized intake'],
+    ['Power Automate', 'Approval and alerts'],
+    ['SharePoint List', 'System of record'],
+    ['Dashboard', 'Progress visibility']
+  ], chips: ['Forms', 'Approvals', 'SharePoint'] },
+  16: { title: 'Security Monitoring Environment', stages: [
+    ['Log Sources', 'Entra, Defender, Firewall'],
+    ['Sentinel', 'Central detection plane'],
+    ['KQL Analytics', 'Rules and hunting queries'],
+    ['Playbook', 'Response automation']
+  ], chips: ['Sentinel', 'KQL', 'SOC Workflow'] },
+  17: { title: 'SharePoint Intranet', stages: [
+    ['Departments', 'Information owners'],
+    ['SharePoint Hub', 'Navigation and IA'],
+    ['Teams Workspace', 'Collaboration entry'],
+    ['Search', 'Metadata and discovery']
+  ], chips: ['Intranet', 'Teams', 'Information Architecture'] },
+  18: { title: 'Data Governance Framework', stages: [
+    ['Data Sources', 'Azure SQL and files'],
+    ['Purview Catalog', 'Asset discovery'],
+    ['Classification', 'Sensitivity rules'],
+    ['Stewardship', 'Owner and lineage tracking']
+  ], chips: ['Catalog', 'Lineage', 'Data Owners'] }
+};
+
+function escapeSvg(value) {
+  return String(value).replace(/[&<>"']/g, ch => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;'
+  }[ch]));
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, ch => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[ch]));
+}
+
+function stackIconFor(name) {
+  return stackIcons[name] || stackIcons[String(name).replace(/^Microsoft\s+/, '')] || null;
+}
+
+function stackInitial(name) {
+  return (String(name).trim()[0] || '?').toUpperCase();
+}
+
+function buildProjectDiagram(project) {
+  const detail = getProjectDetail(project);
+  const model = projectDiagramModels[project.id] || {
+    title: project.title,
+    stages: (detail.techStack || project.tags || []).slice(0, 4).map(t => [t.name || t, project.domain]),
+    chips: detail.keywords || project.tags || []
+  };
+  const accent = domainAccent[project.domain] || '#3b82f6';
+  const stages = model.stages.slice(0, 4);
+  const stageX = [36, 204, 372, 540];
+  const stageMarkup = stages.map((stage, i) => {
+    const x = stageX[i];
+    const number = String(i + 1).padStart(2, '0');
+    return `
+      <g>
+        <rect x="${x}" y="132" width="132" height="132" rx="14" fill="#ffffff" stroke="#dbe4f0"/>
+        <rect x="${x}" y="132" width="132" height="5" rx="2.5" fill="${accent}"/>
+        <circle cx="${x + 24}" cy="160" r="13" fill="${accent}" opacity=".14"/>
+        <text x="${x + 24}" y="164" text-anchor="middle" font-size="10" font-weight="800" fill="${accent}">${number}</text>
+        <text x="${x + 66}" y="192" text-anchor="middle" font-size="13" font-weight="800" fill="#0f172a">${escapeSvg(stage[0])}</text>
+        <text x="${x + 66}" y="214" text-anchor="middle" font-size="10.5" fill="#64748b">${escapeSvg(stage[1])}</text>
+        <path d="M${x + 44} 236h44" stroke="${accent}" stroke-width="2" stroke-linecap="round" opacity=".45"/>
+      </g>`;
+  }).join('');
+  const arrows = stages.slice(0, -1).map((_, i) => {
+    const x1 = stageX[i] + 142;
+    const x2 = stageX[i + 1] - 12;
+    return `<path d="M${x1} 198H${x2}" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>`;
+  }).join('');
+  const chips = (model.chips || []).slice(0, 3).map((chip, i) => {
+    const x = 82 + i * 186;
+    return `
+      <g>
+        <rect x="${x}" y="322" width="156" height="30" rx="15" fill="${accent}" opacity=".1"/>
+        <text x="${x + 78}" y="342" text-anchor="middle" font-size="11" font-weight="700" fill="${accent}">${escapeSvg(chip)}</text>
+      </g>`;
+  }).join('');
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 708 430" role="img" aria-label="${escapeSvg(model.title)} architecture diagram">
+    <defs>
+      <marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0l8 4-8 4z" fill="#94a3b8"/>
+      </marker>
+      <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+        <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#0f172a" flood-opacity=".08"/>
+      </filter>
+    </defs>
+    <rect width="708" height="430" fill="#f8fafc"/>
+    <rect x="20" y="20" width="668" height="390" rx="22" fill="#ffffff" stroke="#e2e8f0" filter="url(#shadow)"/>
+    <text x="42" y="58" font-size="20" font-weight="850" fill="#0f172a">${escapeSvg(model.title)}</text>
+    <text x="42" y="82" font-size="12" font-weight="650" fill="${accent}">${escapeSvg(project.domain)} · ${escapeSvg(project.status)}</text>
+    <text x="666" y="58" text-anchor="end" font-size="11" font-weight="700" fill="#94a3b8">PROJECT ${String(project.id).padStart(2, '0')}</text>
+    ${arrows}
+    ${stageMarkup}
+    <text x="42" y="302" font-size="11" font-weight="800" fill="#64748b" letter-spacing=".08em">DESIGN FOCUS</text>
+    ${chips}
+  </svg>`;
+}
+
+function projectDiagramSrc(project) {
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(buildProjectDiagram(project))}`;
+}
+
 /* ══ State ══ */
 let currentStatus = 'all';
 let currentDomain = 'all';
@@ -1402,11 +1665,12 @@ function renderProjectModal(p) {
   const imgEl = document.getElementById('pmDiagramImg');
   const placeholderEl = document.getElementById('pmDiagramPlaceholder');
   const diagramSection = document.getElementById('pmDiagramSection');
-  if (d && d.diagram) {
+  const diagramSrc = (d && d.diagram) ? d.diagram : projectDiagramSrc(p);
+  if (diagramSrc) {
     diagramSection.style.display = '';
     imgEl.style.display = '';
     placeholderEl.style.display = 'none';
-    imgEl.src = d.diagram;
+    imgEl.src = diagramSrc;
   } else if (d) {
     diagramSection.style.display = '';
     imgEl.style.display = 'none';
@@ -1415,15 +1679,21 @@ function renderProjectModal(p) {
     diagramSection.style.display = 'none';
   }
 
-  // Tech stack (icon files not ready yet — showing initial letter as placeholder)
+  // Tech stack
   const stackSection = document.getElementById('pmStackSection');
   if (d && d.techStack && d.techStack.length) {
     stackSection.style.display = '';
-    document.getElementById('pmStackGrid').innerHTML = d.techStack.map(t => `
-      <div class="pm-stack-item">
-        <div class="pm-stack-icon">${t.name.charAt(0)}</div>
-        <span>${t.name}</span>
-      </div>`).join('');
+    document.getElementById('pmStackGrid').innerHTML = d.techStack.map(t => {
+      const iconSrc = t.icon || stackIconFor(t.name);
+      const icon = iconSrc
+        ? `<img src="${iconSrc}" alt="" loading="lazy" onerror="this.parentElement.textContent='${escapeHtml(stackInitial(t.name))}';">`
+        : escapeHtml(stackInitial(t.name));
+      return `
+        <div class="pm-stack-item">
+          <div class="pm-stack-icon" title="${escapeHtml(t.name)}">${icon}</div>
+          <span>${escapeHtml(t.name)}</span>
+        </div>`;
+    }).join('');
   } else {
     stackSection.style.display = 'none';
   }
