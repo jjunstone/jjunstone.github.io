@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Architecture Library - Enterprise Platform Engineer</title>
+  <title>Architecture Library — Junseok Lee</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
   <style>
     :root {
-      --topbar-h: 52px;
+      --topbar-h: 92px;
       /* Light mode */
       --bg-light: #f8fafc;
       --bg-panel-light: #ffffff;
@@ -28,25 +28,28 @@
       /* Common */
       --accent: #3b82f6;
       --accent-light: #eff6ff;
-      
-      /* Specific to this page */
-      --accent2: #06b6d4;
-      --good: #10b981;
-      --shadow: 0 24px 60px rgba(0, 0, 0, .45);
-      --radius: 22px;
+      --gold: #d4af6a;
       
       /* Default to dark */
       --bg: var(--bg-dark);
-      --bg2: #1e293b;
+      --bg2: var(--bg-panel-dark);
+      --bg-panel: var(--bg-panel-dark);
+      --border: var(--border-dark);
       --text: var(--text-dark-mode);
       --muted: var(--text-muted-dark);
+      --text-muted: var(--text-muted-dark);
+      --text-light: var(--text-light-dark);
     }
 
     html.light-mode {
       --bg: var(--bg-light);
-      --bg2: #f1f5f9;
+      --bg2: var(--bg-panel-light);
+      --bg-panel: var(--bg-panel-light);
+      --border: var(--border-light);
       --text: var(--text-light-mode);
       --muted: var(--text-muted-light);
+      --text-muted: var(--text-muted-light);
+      --text-light: var(--text-light-muted);
     }
 
     * {
@@ -62,55 +65,7 @@
     body {
       font-family: "Pretendard", "Segoe UI", system-ui, sans-serif;
       color: var(--text);
-      background: radial-gradient(ellipse at 18% 18%, rgba(79, 179, 255, .16) 0%, transparent 40%),
-                  radial-gradient(ellipse at 82% 14%, rgba(124, 219, 255, .12) 0%, transparent 35%),
-                  radial-gradient(ellipse at 72% 88%, rgba(94, 234, 212, .09) 0%, transparent 38%),
-                  linear-gradient(170deg, #070f1e 0%, #050d1a 55%, #060e1d 100%);
-    }
-
-    .orb {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(50px);
-      opacity: .18;
-      pointer-events: none;
-      animation: drift 14s ease-in-out infinite;
-      z-index: -1;
-    }
-
-    .orb-a {
-      width: 300px;
-      height: 300px;
-      left: -60px;
-      top: 0;
-      background: #2a9fff;
-    }
-
-    .orb-b {
-      width: 240px;
-      height: 240px;
-      right: 8%;
-      top: 8%;
-      background: #6fe0ff;
-      animation-delay: -5s;
-    }
-
-    .orb-c {
-      width: 340px;
-      height: 340px;
-      right: 2%;
-      bottom: -80px;
-      background: #1dcfb3;
-      animation-delay: -9s;
-    }
-
-    @keyframes drift {
-      0%, 100% {
-        transform: translateY(0) translateX(0) scale(1);
-      }
-      50% {
-        transform: translateY(-22px) translateX(12px) scale(1.04);
-      }
+      background: var(--bg);
     }
 
     /* ── Header ── */
@@ -137,23 +92,24 @@
     .brand-name { font-size: 15px; font-weight: 700; color: var(--text); transition: color .3s; }
     .brand-role { font-size: 11px; color: var(--text-light); transition: color .3s; }
 
-    .topbar-nav { display: flex; align-items: center; gap: 2px; flex: 1; }
+    .topbar-nav { display: flex; align-items: center; gap: 10px; flex: 1; }
 
     .tnav {
-      padding: 6px 16px; border-radius: 6px; font-size: 14px; font-weight: 500;
-      color: var(--text-light); cursor: pointer; transition: .15s;
-      text-decoration: none; border: none; background: transparent; font-family: inherit;
-      position: relative;
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 16px; border-radius: 10px; min-width: 180px;
+      color: var(--text-light); cursor: pointer; transition: .15s ease;
+      text-decoration: none; border: 1px solid var(--border); background: transparent;
+      font-family: inherit;
     }
 
-    .tnav:hover { color: var(--text); }
+    .tnav:hover { border-color: var(--text-light); background: var(--bg); }
 
-    .tnav.active { color: var(--accent); font-weight: 600; }
+    .tnav.active { border-color: var(--accent); background: var(--accent-light); }
 
-    .tnav.active::after {
-      content: ''; position: absolute; bottom: -17px; left: 16px; right: 16px;
-      height: 2px; background: var(--accent); border-radius: 1px;
-    }
+    .tnav-icon { font-size: 20px; line-height: 1; flex-shrink: 0; width: 22px; text-align: center; }
+    .tnav-body { display: flex; flex-direction: column; gap: 2px; line-height: 1.3; min-width: 0; }
+    .tnav-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .tnav-desc { font-size: 11.5px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     
     .topbar-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
     
@@ -193,9 +149,19 @@
     }
 
     .page-header h1 {
-      font-size: 28px;
-      font-weight: 800;
-      margin-bottom: 8px;
+      font-family: 'Kalam', cursive;
+      font-size: 30px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 6px;
+    }
+
+    .page-header h1::after {
+      content: '';
+      position: absolute; left: 0; right: 0; bottom: 0; height: 3px;
+      background: var(--gold); border-radius: 1px;
     }
 
     .page-header p {
@@ -414,7 +380,7 @@
     }
 
     .arch-card:hover {
-      border-color: rgba(79, 179, 255, .3);
+      border-color: rgba(59,130,246,.3);
       background: rgba(8, 15, 27, .65);
       transform: translateY(-4px);
       box-shadow: 0 8px 24px rgba(0, 0, 0, .3);
@@ -423,7 +389,7 @@
     .arch-card-image {
       width: 100%;
       height: 160px;
-      background: linear-gradient(135deg, rgba(79, 179, 255, .1), rgba(94, 234, 212, .1));
+      background: linear-gradient(135deg, rgba(59,130,246,.1), rgba(59,130,246,.05));
       display: flex;
       align-items: center;
       justify-content: center;
@@ -468,11 +434,11 @@
 
     .service-badge {
       font-size: 10px;
-      background: rgba(79, 179, 255, .1);
-      border: 1px solid rgba(79, 179, 255, .2);
+      background: rgba(59,130,246,.1);
+      border: 1px solid rgba(59,130,246,.2);
       border-radius: 4px;
       padding: 4px 8px;
-      color: #4fb3ff;
+      color: var(--accent);
     }
 
     .arch-card-meta {
@@ -559,8 +525,24 @@
       color: rgba(59,130,246,.2);
     }
 
+    .modal-header {
+      margin-bottom: 28px;
+    }
+
+    .modal-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 20px;
+      background: rgba(212,175,106,.12);
+      border: 1px solid rgba(212,175,106,.35);
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
     .modal-title {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 700;
       margin-bottom: 12px;
       color: var(--text);
@@ -576,27 +558,41 @@
     }
 
     .modal-section {
-      margin-bottom: 28px;
-      padding-bottom: 0;
-      border-bottom: none;
+      margin-bottom: 18px;
+      padding: 18px 20px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      border-radius: 10px;
     }
 
     .modal-content {
-      font-size: 13px;
-      color: var(--text-light);
+      font-size: 14.5px;
+      color: var(--text);
       line-height: 1.9;
       margin: 0;
       white-space: pre-wrap;
       word-break: break-word;
     }
 
+    .modal-section-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .modal-section-icon {
+      font-size: 18px;
+      line-height: 1;
+    }
+
     .modal-section-title {
-      font-size: 12px;
-      color: var(--accent);
+      font-size: 13px;
+      color: var(--gold);
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: .08em;
-      margin-bottom: 14px;
       transition: color .3s;
     }
 
@@ -674,9 +670,6 @@
   </style>
 </head>
 <body>
-  <div class="orb orb-a"></div>
-  <div class="orb orb-b"></div>
-  <div class="orb orb-c"></div>
 
   <!-- Header -->
   <header class="topbar">
@@ -689,10 +682,18 @@
     </a>
     
     <nav class="topbar-nav">
-      <a href="index.html" class="tnav" id="nav-home">Home</a>
-      <a href="projects.html" class="tnav" id="nav-projects">Projects</a>
-      <a href="technology-map.html" class="tnav" id="nav-techmap">Technology Map</a>
-      <a href="architecture-library.html" class="tnav" id="nav-arch">Architecture Library</a>
+      <a href="projects.html" class="tnav" id="nav-projects">
+        <span class="tnav-icon">📁</span>
+        <span class="tnav-body"><span class="tnav-title">Projects</span><span class="tnav-desc">운영 실무를 통해 수행한 프로젝트들</span></span>
+      </a>
+      <a href="technology-map.html" class="tnav" id="nav-techmap">
+        <span class="tnav-icon">🔧</span>
+        <span class="tnav-body"><span class="tnav-title">Technology Map</span><span class="tnav-desc">Azure 기술 스택과 실무 활용</span></span>
+      </a>
+      <a href="architecture-library.html" class="tnav" id="nav-arch">
+        <span class="tnav-icon">📐</span>
+        <span class="tnav-body"><span class="tnav-title">Architecture Library</span><span class="tnav-desc">구상해본 설계 스터디 (컨셉)</span></span>
+      </a>
     </nav>
     
     <div class="topbar-right">
@@ -711,8 +712,8 @@
   <!-- Main Content -->
   <div class="container">
     <div class="page-header">
-      <h1>Architecture Portfolio</h1>
-      <p>Law Firm AI Platform Design (30 Projects)</p>
+      <h1>Architecture Library</h1>
+      <p>실무 밖에서 구상한 설계 스터디 (컨셉) — Law Firm AI Platform</p>
     </div>
 
     <!-- 필터 & 검색 -->
@@ -733,56 +734,12 @@
     <div class="category-section" data-category="governance">
       <h2 class="category-header">Trust & Governance Platform</h2>
       <div class="project-grid">
-        <div class="project-card" data-category="governance" data-search="Agent 365 권한 격리" data-problem="에이전트가 변호사의 권한을 남용하여 접근 권한이 없는 다른 사건의 기밀 문서에 접근할 위험" data-solution="■ 사건별 에이전트 ID 자동 생성&#10;  새 사건 → 전용 ID 자동 생성 (Agent-2024-001)&#10;&#10;■ Entra ID 신원 등록&#10;  에이전트 ID를 회사 신원 시스템에 직원처럼 등록&#10;&#10;■ ABAC 정책 자동 할당&#10;  각 에이전트: &quot;이 사건의 문서만 접근 가능&quot; 규칙 자동 설정&#10;&#10;■ 접근 요청 실시간 검증&#10;  에이전트가 문서 접근 요청 → 정책 엔진이 0.1초 안에 승인/거부&#10;&#10;■ 변조 불가능한 감사 로그&#10;  모든 접근 시도 (성공/실패) → 지울 수 없는 기록으로 저장&#10;&#10;■ 이상 행동 패턴 탐지&#10;  비정상 접근 (과도한 요청, 야간 접근) 자동 감지 및 경고&#10;&#10;■ 정기적 감사 보고서&#10;  매주/매월 &quot;누가 뭘 언제 접근했는가&quot; 자동 리포트 생성" data-architecture="■ Identity Layer (신원 관리)&#10;  사건별 에이전트 ID 생성 → Entra ID 등록&#10;&#10;■ Policy Engine (정책 결정)&#10;  접근 요청 검증 → ABAC 규칙 적용 → 0.1초 승인/거부&#10;&#10;■ Audit Logger (감사 기록)&#10;  모든 행동 기록 → 변조 불가능하게 저장&#10;&#10;■ Anomaly Detector (이상 탐지)&#10;  비정상 패턴 감지 → 자동 경고&#10;&#10;🔑 핵심 기술 과제:&#10;  • 정책 엔진 실시간 성능 (수천 건/초 처리)&#10;  • 감사 로그 무결성 (지우기 불가능)&#10;  • ABAC 정책 유연성 (새 규칙 쉽게 추가)"><div class="project-badge">🟢 Production</div><h3>Agent 365 권한 격리 및 감시</h3><p class="problem">에이전트의 권한 남용으로 기밀 문서 접근 위험</p><div class="tech-stack"><span>Agent 365</span><span>Entra Agent ID</span><span>ABAC</span><span>Azure Monitor</span></div></div>
-        <div class="project-card" data-category="governance" data-search="MXC 격리 샌드박스" data-problem="의뢰인이 제출한 파일 내에 악성코드나 매크로가 포함되어 에이전트의 실행 환경이 오염될 가능성" data-solution="■ 외부 파일 자동 감지&#10;  의뢰인 업로드 → &quot;검증 안 된 외부 파일&quot; 표시&#10;&#10;■ 격리 환경 자동 생성&#10;  위험한 파일 → MXC OS 격리 환경에서만 실행&#10;&#10;■ 안전한 분석 수행&#10;  격리실 내에서: 텍스트 추출, 메타데이터 확인, 매크로 검사&#10;&#10;■ 분석 결과만 추출&#10;  원본 파일 버림 → 분석된 데이터(텍스트, 이미지) 추출&#10;&#10;■ 격리 환경 완전 폐기&#10;  분석 완료 → 격리실 즉시 삭제 (아무 흔적 남지 않음)&#10;&#10;■ 안전 확인 후 시스템 반영&#10;  분석 결과 검증 → 안전 확인 후 실제 시스템에 저장" data-architecture="■ File Intake Monitor (파일 감시)&#10;  외부 파일 입수 감지 → 격리 환경 생성 지시&#10;&#10;■ Sandboxed Runtime (격리 실행 환경)&#10;  MXC OS 기반: 악성코드도 격리실 안에서만 작동&#10;&#10;■ Analysis Engine (분석기)&#10;  격리 환경에서 문서 분석 (텍스트/이미지/메타데이터)&#10;&#10;■ Result Extractor (결과 추출)&#10;  분석 결과만 격리실 밖으로 → 원본 파일 버림&#10;&#10;■ Environment Cleanup (환경 정리)&#10;  사용 후 격리실 완전 삭제&#10;&#10;🔑 핵심 기술 과제:&#10;  • 격리 완전성 (악성코드 탈출 방지)&#10;  • 성능 최적화 (빠른 생성/삭제)&#10;  • 분석 정확성 (격리 환경에서도 정확한 결과)"><div class="project-badge">🔵 Designed</div><h3>MXC OS 격리 샌드박스</h3><p class="problem">외부 파일의 악성코드로 인한 인프라 오염 위험</p><div class="tech-stack"><span>MXC OS Isolation</span><span>Azure Container Instances</span><span>Windows 365</span><span>Confidential Computing</span></div></div>
-        <div class="project-card" data-category="governance" data-search="AI Gateway FinOps 토큰" data-problem="수천 명의 변호사가 사용하는 AI 비용을 사건(Case)별로 정산하여 의뢰인에게 청구해야 하는 복잡성" data-solution="■ 사건 태그 강제&#10;  변호사 질문 → &quot;사건 2024-001&quot; 태그 반드시 입력&#10;&#10;■ 모든 요청 중앙 관리&#10;  AI 호출 → API Gateway 중앙 통제 허브 거침&#10;&#10;■ 토큰 실시간 카운트&#10;  각 요청마다 사용 토큰 기록 (예: 500 토큰 = $2.50)&#10;&#10;■ 사건별 비용 자동 집계&#10;  매일 밤 &quot;사건 2024-001은 오늘 $50 사용&quot; 자동 계산&#10;&#10;■ 의뢰인별 청구서 자동 생성&#10;  여러 사건 비용 합산 → &quot;의뢰인 ABC: 총 $500&quot;&#10;&#10;■ 파트너 변호사 자동 보고&#10;  매주 &quot;당신의 AI 비용 리포트&quot; 이메일 자동 발송&#10;&#10;■ 이상 거래 감지&#10;  평소 10배 이상 사용 → 자동 경고" data-architecture="■ API Gateway (중앙 통제)&#10;  모든 AI 요청 수집 → 토큰 카운트 → 정책 적용&#10;&#10;■ Token Counter (토큰 계산)&#10;  각 요청 사용량 실시간 계산&#10;&#10;■ Billing Router (청구 분류)&#10;  토큰 비용 → 사건/의뢰인별 배분&#10;&#10;■ Analytics Dashboard (비용 대시보드)&#10;  사건별/의뢰인별 비용 실시간 보기&#10;&#10;■ Anomaly Detector (이상 감지)&#10;  과도한 사용 → 자동 경고&#10;&#10;■ Report Generator (보고서 생성)&#10;  청구서 및 사용 리포트 자동 작성&#10;&#10;🔑 핵심 기술 과제:&#10;  • 실시간 정확한 토큰 카운트&#10;  • 다중 의뢰인 격리 (청구 혼선 방지)&#10;  • 100% 자동화된 청구"><div class="project-badge">🔵 Designed</div><h3>AI Gateway 기반 FinOps</h3><p class="problem">AI 비용을 사건별로 정산하고 의뢰인에게 청구</p><div class="tech-stack"><span>AI Gateway</span><span>Semantic Caching</span><span>Azure API Management</span><span>Cosmos DB</span></div></div>
-        <div class="project-card" data-category="governance" data-search="MCP 레거시 통합" data-problem="사내 기존 법무 시스템(문서 관리, 일정 관리 등)과 에이전트 사이에 단절된 데이터 흐름" data-solution="■ 레거시 API 분석&#10;  문서 관리, 일정 관리 등 기존 API 문서 수집&#10;&#10;■ MCP 스키마 정의&#10;  각 API를 표준 MCP 형식으로 변환 규칙 정의&#10;&#10;■ MCP Server 구축&#10;  각 레거시 시스템 앞에 &quot;번역기&quot; 역할하는 MCP 서버 설치&#10;&#10;■ 에이전트 연결&#10;  에이전트: &quot;MCP로 문서 검색&quot; → MCP 서버가 처리&#10;&#10;■ 데이터 형식 호환&#10;  레거시 XML → 현대식 JSON 자동 변환&#10;&#10;■ 오류 처리 및 재시도&#10;  레거시 느림/오류 → 자동 재시도 또는 명확한 메시지 전달&#10;&#10;■ 모니터링 및 로깅&#10;  모든 통신 기록 → 문제 추적 가능" data-architecture="■ Legacy System Adapter (번역기)&#10;  레거시 API → MCP 표준으로 변환&#10;&#10;■ MCP Protocol Handler (프로토콜 처리)&#10;  에이전트 MCP 요청 수신 → 올바른 어댑터로 라우팅&#10;&#10;■ Data Mapper (데이터 변환)&#10;  XML → JSON, 날짜 형식, 문자 인코딩 자동 변환&#10;&#10;■ Error Handler (오류 처리)&#10;  재시도, 타임아웃 처리, 명확한 오류 메시지&#10;&#10;■ Communication Logger (통신 기록)&#10;  모든 대화 기록 → 나중에 문제 추적 가능&#10;&#10;■ Protocol Router (라우터)&#10;  요청 타입별로 올바른 레거시 시스템으로 배분&#10;&#10;🔑 핵심 기술 과제:&#10;  • MCP 표준화 (모든 API 일관되게 변환)&#10;  • 호환성 유지 (레거시 변경 시에도 에이전트는 영향 X)&#10;  • 성능 (번역 지연시간 최소화)"><div class="project-badge">🟡 Concept</div><h3>MCP 기반 레거시 시스템 통합</h3><p class="problem">사내 기존 법무 시스템과의 단절된 데이터 흐름</p><div class="tech-stack"><span>Model Context Protocol</span><span>API Management</span><span>Event Grid</span></div></div>
-        <div class="project-card" data-category="governance" data-search="Agent 365 감시" data-problem="에이전트 동작의 완벽한 감시 및 컴플라이언스 증거가 필요하나 기술적 구현이 복잡함" data-solution="■ 감시 기능 활성화&#10;  Agent 365 기본 로깅 및 모니터링 기능 모두 켜기&#10;&#10;■ 모든 단계 기록&#10;  프롬프트 → 추론 과정 → API 호출 → 최종 답변 까지 기록&#10;&#10;■ Azure Monitor 통합&#10;  Agent 365 로그 → Azure Monitor 실시간 전송&#10;&#10;■ 컴플라이언스 자동 검증&#10;  기록된 활동 → 변호사 윤리 규칙 자동 비교&#10;&#10;■ 이상 행동 탐지&#10;  비정상 접근 (과도한 문서 접근, 야간 활동) 자동 감지&#10;&#10;■ 감사 증거 자동 생성&#10;  정기적으로 &quot;컴플라이언스 확인됨&quot; 리포트 자동 생성&#10;&#10;■ 위반 시 즉시 조치&#10;  컴플라이언스 위반 감지 → 에이전트 접근 차단 + 운영팀 경고" data-architecture="■ Agent Activity Logger (활동 기록)&#10;  에이전트 모든 행동 자동 기록 (입력 → 추론 → 출력)&#10;&#10;■ Azure Monitor Aggregator (데이터 수집)&#10;  모든 로그를 중앙에 모으기 → 실시간 감시&#10;&#10;■ Compliance Validator (규칙 검증)&#10;  활동을 변호사 윤리 규칙과 자동 비교&#10;&#10;■ Anomaly Detector (이상 탐지)&#10;  비정상 행동 자동 감지 + 플래그&#10;&#10;■ Audit Report Generator (보고서 생성)&#10;  정기적 컴플라이언스 증명 리포트 자동 작성&#10;&#10;■ Access Control & Alert (제한 및 경고)&#10;  위반 시 접근 차단 + 경고 발송&#10;&#10;🔑 핵심 기술 과제:&#10;  • 로그 성능 (모두 기록해도 처리 속도 유지)&#10;  • 실시간 감사 (수천 건 활동 실시간 검증)&#10;  • 위증 방지 (한번 기록되면 절대 수정 불가)"><div class="project-badge">🟡 Concept</div><h3>Agent 365 기반 감시 추적</h3><p class="problem">에이전트 동작의 완벽한 감시 및 컴플라이언스 증명</p><div class="tech-stack"><span>Agent 365</span><span>Audit Logs</span><span>Compliance</span></div></div>
-        <div class="project-card" data-category="governance" data-search="폐쇄망 Stack Edge" data-problem="폐쇄망 로펌을 위한 로컬 AI 런타임 필요 (인터넷 미연결 환경에서 AI 사용 불가)" data-solution="1. 사건 생성 시마다 에이전트 ID 자동 생성
-각 새로운 사건이 생기면 시스템이 자동으로 그 사건 전용 에이전트 ID를 만듭니다. 예를 들어 &quot;사건 번호 2024-001&quot;이 생기면 &quot;Agent-2024-001&quot;이 자동 생성되어, 이 사건의 에이전트는 이 ID만 사용합니다.
-
-2. Entra Agent ID로 에이전트를 Microsoft 신원 시스템에 등록
-생성된 에이전트 ID를 Microsoft의 Entra ID(엔터프라이즈 신원 관리 시스템)에 &quot;사람&quot;처럼 등록합니다. 마치 직원을 회사 시스템에 등록하는 것처럼요.
-
-3. ABAC(속성 기반 접근 제어) 정책 자동 할당
-각 에이전트에게 &quot;너는 이 사건의 기밀문서만 볼 수 있고, 다른 사건은 절대 못 본다&quot;는 규칙을 자동으로 설정합니다. 이 규칙은 에이전트 ID + 사건 + 문서 타입 조합으로 매우 세밀하게 설정됩니다.
-
-4. 문서 접근 요청 시마다 정책 엔진이 실시간 검사
-에이전트가 문서에 접근하려면 정책 엔진에 &quot;이거 접근 가능한가요?&quot;라고 물어봅니다. 엔진은 0.1초 안에 승인 또는 거부를 결정합니다.
-
-5. 모든 접근 시도를 변조 불가능한 감사 로그에 기록
-성공하든 실패하든 모든 접근 시도가 기록됩니다. 한번 기록되면 지우거나 수정할 수 없는 형태로 저장되어 나중에 &quot;누가 뭘 했는가&quot;를 증명할 수 있습니다.
-
-6. Azure Monitor에서 이상 행동 패턴 감지
-정상 행동과 다른 패턴(예: 평소보다 훨씬 많은 접근 시도, 업무 시간 외 접근)을 자동으로 감지하고 경고합니다.
-
-7. 정기적 감사 보고서 자동 생성
-매주/매월 &quot;누가 뭘 언제 접근했고 거부된 건 뭔가&quot;를 정리한 보고서를 자동으로 만들어서 규제 대응에 사용합니다." data-architecture="🏗️ 아키텍처 구성 (초보자 설명):
-
-■ Identity Layer (신원 관리 계층)
-= 에이전트 ID 생성 및 등록 담당 부서
-역할: 각 사건마다 에이전트를 만들고 Microsoft Entra ID에 등록하기
-초보자 설명: &quot;회사에 새 직원이 들어오면 직원증을 발급하는 것처럼, 각 에이전트에게 고유의 신원(ID)을 부여하는 부서&quot;
-
-■ Policy Engine (정책 결정 부서)
-= 접근 요청이 들어올 때마다 &quot;허용되나 안 되나&quot; 결정하는 부서
-역할: ABAC 정책을 적용하여 실시간 접근 제어
-초보자 설명: &quot;은행의 보안 요원처럼, 접근 요청이 오면 '당신은 이걸 볼 권리가 있나?'를 규칙(ABAC)으로 판단하는 부서&quot;
-
-■ Audit Logger (감사 기록 부서)
-= 모든 접근 시도(성공/실패)를 변조 불가능하게 기록
-역할: 이력서처럼 모든 행동을 기록하되, 한번 기록되면 절대 수정 불가
-초보자 설명: &quot;법원의 기록 담당처럼, 모든 일을 기록장에 써놓고 절대 고치지 않는 부서&quot;
-
-■ Anomaly Detector (이상 탐지 부서)
-= 평상시 패턴과 다른 행동을 감지
-역할: Azure Monitor로 비정상 접근 패턴 자동 감지 및 경고
-초보자 설명: &quot;경보실처럼, '어? 요새 평소와 다르게 뭔가 이상한데?' 하는 상황을 자동으로 감지해서 알려주는 부서&quot;
-
-🔑 핵심 기술 과제:
-- 정책 엔진의 실시간 성능: 수천 건 요청/초를 처리하면서도 밀리초 단위 응답
-- 감사 로그의 무결성: 한번 기록되면 절대 지우거나 수정 불가능하게 설계
-- ABAC 정책의 유연성: 새로운 요구사항 나올 때마다 정책을 쉽게 추가/수정할 수 있도록"><div class="project-badge">🟡 Concept</div><h3>Azure Stack Edge 폐쇄망 AI</h3><p class="problem">폐쇄망 로펌을 위한 로컬 AI 런타임 필요</p><div class="tech-stack"><span>Azure Stack Edge</span><span>Local AI Runtime</span><span>Sovereign Controls</span></div></div>
+        <div class="project-card" data-category="governance" data-search="Agent 365 권한 격리" data-problem="에이전트가 변호사의 권한을 남용하여 접근 권한이 없는 다른 사건의 기밀 문서에 접근할 위험" data-solution="■ 사건별 에이전트 ID 자동 생성&#10;  새 사건 → 전용 ID 자동 생성 (Agent-2024-001)&#10;&#10;■ Entra ID 신원 등록&#10;  에이전트 ID를 회사 신원 시스템에 직원처럼 등록&#10;&#10;■ ABAC 정책 자동 할당&#10;  각 에이전트: &quot;이 사건의 문서만 접근 가능&quot; 규칙 자동 설정&#10;&#10;■ 접근 요청 실시간 검증&#10;  에이전트가 문서 접근 요청 → 정책 엔진이 0.1초 안에 승인/거부&#10;&#10;■ 변조 불가능한 감사 로그&#10;  모든 접근 시도 (성공/실패) → 지울 수 없는 기록으로 저장&#10;&#10;■ 이상 행동 패턴 탐지&#10;  비정상 접근 (과도한 요청, 야간 접근) 자동 감지 및 경고&#10;&#10;■ 정기적 감사 보고서&#10;  매주/매월 &quot;누가 뭘 언제 접근했는가&quot; 자동 리포트 생성" data-architecture="■ Identity Layer (신원 관리)&#10;  사건별 에이전트 ID 생성 → Entra ID 등록&#10;&#10;■ Policy Engine (정책 결정)&#10;  접근 요청 검증 → ABAC 규칙 적용 → 0.1초 승인/거부&#10;&#10;■ Audit Logger (감사 기록)&#10;  모든 행동 기록 → 변조 불가능하게 저장&#10;&#10;■ Anomaly Detector (이상 탐지)&#10;  비정상 패턴 감지 → 자동 경고&#10;&#10;🔑 핵심 기술 과제:&#10;  • 정책 엔진 실시간 성능 (수천 건/초 처리)&#10;  • 감사 로그 무결성 (지우기 불가능)&#10;  • ABAC 정책 유연성 (새 규칙 쉽게 추가)"><div class="project-badge">🔵 설계 완료</div><h3>Agent 365 권한 격리 및 감시</h3><p class="problem">에이전트의 권한 남용으로 기밀 문서 접근 위험</p><div class="tech-stack"><span>Agent 365</span><span>Entra Agent ID</span><span>ABAC</span><span>Azure Monitor</span></div></div>
+        <div class="project-card" data-category="governance" data-search="MXC 격리 샌드박스" data-problem="의뢰인이 제출한 파일 내에 악성코드나 매크로가 포함되어 에이전트의 실행 환경이 오염될 가능성" data-solution="■ 외부 파일 자동 감지&#10;  의뢰인 업로드 → &quot;검증 안 된 외부 파일&quot; 표시&#10;&#10;■ 격리 환경 자동 생성&#10;  위험한 파일 → MXC OS 격리 환경에서만 실행&#10;&#10;■ 안전한 분석 수행&#10;  격리실 내에서: 텍스트 추출, 메타데이터 확인, 매크로 검사&#10;&#10;■ 분석 결과만 추출&#10;  원본 파일 버림 → 분석된 데이터(텍스트, 이미지) 추출&#10;&#10;■ 격리 환경 완전 폐기&#10;  분석 완료 → 격리실 즉시 삭제 (아무 흔적 남지 않음)&#10;&#10;■ 안전 확인 후 시스템 반영&#10;  분석 결과 검증 → 안전 확인 후 실제 시스템에 저장" data-architecture="■ File Intake Monitor (파일 감시)&#10;  외부 파일 입수 감지 → 격리 환경 생성 지시&#10;&#10;■ Sandboxed Runtime (격리 실행 환경)&#10;  MXC OS 기반: 악성코드도 격리실 안에서만 작동&#10;&#10;■ Analysis Engine (분석기)&#10;  격리 환경에서 문서 분석 (텍스트/이미지/메타데이터)&#10;&#10;■ Result Extractor (결과 추출)&#10;  분석 결과만 격리실 밖으로 → 원본 파일 버림&#10;&#10;■ Environment Cleanup (환경 정리)&#10;  사용 후 격리실 완전 삭제&#10;&#10;🔑 핵심 기술 과제:&#10;  • 격리 완전성 (악성코드 탈출 방지)&#10;  • 성능 최적화 (빠른 생성/삭제)&#10;  • 분석 정확성 (격리 환경에서도 정확한 결과)"><div class="project-badge">🔵 설계 완료</div><h3>MXC OS 격리 샌드박스</h3><p class="problem">외부 파일의 악성코드로 인한 인프라 오염 위험</p><div class="tech-stack"><span>MXC OS Isolation</span><span>Azure Container Instances</span><span>Windows 365</span><span>Confidential Computing</span></div></div>
+        <div class="project-card" data-category="governance" data-search="AI Gateway FinOps 토큰" data-problem="수천 명의 변호사가 사용하는 AI 비용을 사건(Case)별로 정산하여 의뢰인에게 청구해야 하는 복잡성" data-solution="■ 사건 태그 강제&#10;  변호사 질문 → &quot;사건 2024-001&quot; 태그 반드시 입력&#10;&#10;■ 모든 요청 중앙 관리&#10;  AI 호출 → API Gateway 중앙 통제 허브 거침&#10;&#10;■ 토큰 실시간 카운트&#10;  각 요청마다 사용 토큰 기록 (예: 500 토큰 = $2.50)&#10;&#10;■ 사건별 비용 자동 집계&#10;  매일 밤 &quot;사건 2024-001은 오늘 $50 사용&quot; 자동 계산&#10;&#10;■ 의뢰인별 청구서 자동 생성&#10;  여러 사건 비용 합산 → &quot;의뢰인 ABC: 총 $500&quot;&#10;&#10;■ 파트너 변호사 자동 보고&#10;  매주 &quot;당신의 AI 비용 리포트&quot; 이메일 자동 발송&#10;&#10;■ 이상 거래 감지&#10;  평소 10배 이상 사용 → 자동 경고" data-architecture="■ API Gateway (중앙 통제)&#10;  모든 AI 요청 수집 → 토큰 카운트 → 정책 적용&#10;&#10;■ Token Counter (토큰 계산)&#10;  각 요청 사용량 실시간 계산&#10;&#10;■ Billing Router (청구 분류)&#10;  토큰 비용 → 사건/의뢰인별 배분&#10;&#10;■ Analytics Dashboard (비용 대시보드)&#10;  사건별/의뢰인별 비용 실시간 보기&#10;&#10;■ Anomaly Detector (이상 감지)&#10;  과도한 사용 → 자동 경고&#10;&#10;■ Report Generator (보고서 생성)&#10;  청구서 및 사용 리포트 자동 작성&#10;&#10;🔑 핵심 기술 과제:&#10;  • 실시간 정확한 토큰 카운트&#10;  • 다중 의뢰인 격리 (청구 혼선 방지)&#10;  • 100% 자동화된 청구"><div class="project-badge">🔵 설계 완료</div><h3>AI Gateway 기반 FinOps</h3><p class="problem">AI 비용을 사건별로 정산하고 의뢰인에게 청구</p><div class="tech-stack"><span>AI Gateway</span><span>Semantic Caching</span><span>Azure API Management</span><span>Cosmos DB</span></div></div>
+        <div class="project-card" data-category="governance" data-search="MCP 레거시 통합" data-problem="사내 기존 법무 시스템(문서 관리, 일정 관리 등)과 에이전트 사이에 단절된 데이터 흐름" data-solution="■ 레거시 API 분석&#10;  문서 관리, 일정 관리 등 기존 API 문서 수집&#10;&#10;■ MCP 스키마 정의&#10;  각 API를 표준 MCP 형식으로 변환 규칙 정의&#10;&#10;■ MCP Server 구축&#10;  각 레거시 시스템 앞에 &quot;번역기&quot; 역할하는 MCP 서버 설치&#10;&#10;■ 에이전트 연결&#10;  에이전트: &quot;MCP로 문서 검색&quot; → MCP 서버가 처리&#10;&#10;■ 데이터 형식 호환&#10;  레거시 XML → 현대식 JSON 자동 변환&#10;&#10;■ 오류 처리 및 재시도&#10;  레거시 느림/오류 → 자동 재시도 또는 명확한 메시지 전달&#10;&#10;■ 모니터링 및 로깅&#10;  모든 통신 기록 → 문제 추적 가능" data-architecture="■ Legacy System Adapter (번역기)&#10;  레거시 API → MCP 표준으로 변환&#10;&#10;■ MCP Protocol Handler (프로토콜 처리)&#10;  에이전트 MCP 요청 수신 → 올바른 어댑터로 라우팅&#10;&#10;■ Data Mapper (데이터 변환)&#10;  XML → JSON, 날짜 형식, 문자 인코딩 자동 변환&#10;&#10;■ Error Handler (오류 처리)&#10;  재시도, 타임아웃 처리, 명확한 오류 메시지&#10;&#10;■ Communication Logger (통신 기록)&#10;  모든 대화 기록 → 나중에 문제 추적 가능&#10;&#10;■ Protocol Router (라우터)&#10;  요청 타입별로 올바른 레거시 시스템으로 배분&#10;&#10;🔑 핵심 기술 과제:&#10;  • MCP 표준화 (모든 API 일관되게 변환)&#10;  • 호환성 유지 (레거시 변경 시에도 에이전트는 영향 X)&#10;  • 성능 (번역 지연시간 최소화)"><div class="project-badge">🟡 아이디어</div><h3>MCP 기반 레거시 시스템 통합</h3><p class="problem">사내 기존 법무 시스템과의 단절된 데이터 흐름</p><div class="tech-stack"><span>Model Context Protocol</span><span>API Management</span><span>Event Grid</span></div></div>
+        <div class="project-card" data-category="governance" data-search="Agent 365 감시" data-problem="에이전트 동작의 완벽한 감시 및 컴플라이언스 증거가 필요하나 기술적 구현이 복잡함" data-solution="■ 감시 기능 활성화&#10;  Agent 365 기본 로깅 및 모니터링 기능 모두 켜기&#10;&#10;■ 모든 단계 기록&#10;  프롬프트 → 추론 과정 → API 호출 → 최종 답변 까지 기록&#10;&#10;■ Azure Monitor 통합&#10;  Agent 365 로그 → Azure Monitor 실시간 전송&#10;&#10;■ 컴플라이언스 자동 검증&#10;  기록된 활동 → 변호사 윤리 규칙 자동 비교&#10;&#10;■ 이상 행동 탐지&#10;  비정상 접근 (과도한 문서 접근, 야간 활동) 자동 감지&#10;&#10;■ 감사 증거 자동 생성&#10;  정기적으로 &quot;컴플라이언스 확인됨&quot; 리포트 자동 생성&#10;&#10;■ 위반 시 즉시 조치&#10;  컴플라이언스 위반 감지 → 에이전트 접근 차단 + 운영팀 경고" data-architecture="■ Agent Activity Logger (활동 기록)&#10;  에이전트 모든 행동 자동 기록 (입력 → 추론 → 출력)&#10;&#10;■ Azure Monitor Aggregator (데이터 수집)&#10;  모든 로그를 중앙에 모으기 → 실시간 감시&#10;&#10;■ Compliance Validator (규칙 검증)&#10;  활동을 변호사 윤리 규칙과 자동 비교&#10;&#10;■ Anomaly Detector (이상 탐지)&#10;  비정상 행동 자동 감지 + 플래그&#10;&#10;■ Audit Report Generator (보고서 생성)&#10;  정기적 컴플라이언스 증명 리포트 자동 작성&#10;&#10;■ Access Control & Alert (제한 및 경고)&#10;  위반 시 접근 차단 + 경고 발송&#10;&#10;🔑 핵심 기술 과제:&#10;  • 로그 성능 (모두 기록해도 처리 속도 유지)&#10;  • 실시간 감사 (수천 건 활동 실시간 검증)&#10;  • 위증 방지 (한번 기록되면 절대 수정 불가)"><div class="project-badge">🟡 아이디어</div><h3>Agent 365 기반 감시 추적</h3><p class="problem">에이전트 동작의 완벽한 감시 및 컴플라이언스 증명</p><div class="tech-stack"><span>Agent 365</span><span>Audit Logs</span><span>Compliance</span></div></div>
+        <div class="project-card" data-category="governance" data-search="폐쇄망 Stack Edge" data-problem="폐쇄망 로펌을 위한 로컬 AI 런타임 필요 (인터넷 미연결 환경에서 AI 사용 불가)" data-solution="■ Stack Edge 하드웨어 반입&#10;  폐쇄망(인터넷 미연결) 로펌 사무실에 Azure Stack Edge 어플라이언스를 물리적으로 설치&#10;&#10;■ 로컬 모델 사전 탑재&#10;  경량 언어모델(SLM)과 검색 인덱스를 사전에 다운로드하여 디바이스에 로드&#10;&#10;■ 사내망 전용 API 노출&#10;  변호사 PC에서는 사내망 안에서만 접근 가능한 REST 엔드포인트로 AI 기능 제공&#10;&#10;■ 정기 오프라인 업데이트&#10;  허용된 저장매체를 통해 주기적으로 모델·인덱스만 업데이트, 데이터는 반출 금지&#10;&#10;■ 로컬 로깅 및 감사&#10;  모든 요청/응답을 디바이스 내부에만 기록하여 외부 유출 없이 감사 가능" data-architecture="■ Edge Compute Node&#10;  Stack Edge 하드웨어 위에서 추론 실행, 외부 네트워크 연결 차단&#10;&#10;■ Local Model Store&#10;  경량화된 SLM과 임베딩 인덱스를 디바이스 내부 스토리지에 보관&#10;&#10;■ Internal API Gateway&#10;  사내망 전용 엔드포인트로 변호사 클라이언트 앱과 연결&#10;&#10;■ Offline Update Channel&#10;  물리 매체 기반 모델/인덱스 갱신 프로세스&#10;&#10;🔑 핵심 기술 과제:&#10;  • 제한된 하드웨어 자원에서의 추론 성능 확보&#10;  • 모델 최신성 유지(오프라인 업데이트 주기)&#10;  • 물리 반입 매체를 통한 유출 방지 통제"><div class="project-badge">🟡 아이디어</div><h3>Azure Stack Edge 폐쇄망 AI</h3><p class="problem">폐쇄망 로펌을 위한 로컬 AI 런타임 필요</p><div class="tech-stack"><span>Azure Stack Edge</span><span>Local AI Runtime</span><span>Sovereign Controls</span></div></div>
       </div>
     </div>
 
@@ -790,276 +747,12 @@
     <div class="category-section" data-category="intelligence">
       <h2 class="category-header">Legal Document Intelligence</h2>
       <div class="project-grid">
-        <div class="project-card" data-category="intelligence" data-search="e-Discovery 자율 에이전트" data-problem="소송 전 수십만 건의 이메일과 문서에서 핵심 증거를 찾는 데 소요되는 막대한 시간과 비용" data-solution="1. 사건 생성 시마다 에이전트 ID 자동 생성
-각 새로운 사건이 생기면 시스템이 자동으로 그 사건 전용 에이전트 ID를 만듭니다. 예를 들어 &quot;사건 번호 2024-001&quot;이 생기면 &quot;Agent-2024-001&quot;이 자동 생성되어, 이 사건의 에이전트는 이 ID만 사용합니다.
-
-2. Entra Agent ID로 에이전트를 Microsoft 신원 시스템에 등록
-생성된 에이전트 ID를 Microsoft의 Entra ID(엔터프라이즈 신원 관리 시스템)에 &quot;사람&quot;처럼 등록합니다. 마치 직원을 회사 시스템에 등록하는 것처럼요.
-
-3. ABAC(속성 기반 접근 제어) 정책 자동 할당
-각 에이전트에게 &quot;너는 이 사건의 기밀문서만 볼 수 있고, 다른 사건은 절대 못 본다&quot;는 규칙을 자동으로 설정합니다. 이 규칙은 에이전트 ID + 사건 + 문서 타입 조합으로 매우 세밀하게 설정됩니다.
-
-4. 문서 접근 요청 시마다 정책 엔진이 실시간 검사
-에이전트가 문서에 접근하려면 정책 엔진에 &quot;이거 접근 가능한가요?&quot;라고 물어봅니다. 엔진은 0.1초 안에 승인 또는 거부를 결정합니다.
-
-5. 모든 접근 시도를 변조 불가능한 감사 로그에 기록
-성공하든 실패하든 모든 접근 시도가 기록됩니다. 한번 기록되면 지우거나 수정할 수 없는 형태로 저장되어 나중에 &quot;누가 뭘 했는가&quot;를 증명할 수 있습니다.
-
-6. Azure Monitor에서 이상 행동 패턴 감지
-정상 행동과 다른 패턴(예: 평소보다 훨씬 많은 접근 시도, 업무 시간 외 접근)을 자동으로 감지하고 경고합니다.
-
-7. 정기적 감사 보고서 자동 생성
-매주/매월 &quot;누가 뭘 언제 접근했고 거부된 건 뭔가&quot;를 정리한 보고서를 자동으로 만들어서 규제 대응에 사용합니다." data-architecture="🏗️ 아키텍처 구성 (초보자 설명):
-
-■ Identity Layer (신원 관리 계층)
-= 에이전트 ID 생성 및 등록 담당 부서
-역할: 각 사건마다 에이전트를 만들고 Microsoft Entra ID에 등록하기
-초보자 설명: &quot;회사에 새 직원이 들어오면 직원증을 발급하는 것처럼, 각 에이전트에게 고유의 신원(ID)을 부여하는 부서&quot;
-
-■ Policy Engine (정책 결정 부서)
-= 접근 요청이 들어올 때마다 &quot;허용되나 안 되나&quot; 결정하는 부서
-역할: ABAC 정책을 적용하여 실시간 접근 제어
-초보자 설명: &quot;은행의 보안 요원처럼, 접근 요청이 오면 '당신은 이걸 볼 권리가 있나?'를 규칙(ABAC)으로 판단하는 부서&quot;
-
-■ Audit Logger (감사 기록 부서)
-= 모든 접근 시도(성공/실패)를 변조 불가능하게 기록
-역할: 이력서처럼 모든 행동을 기록하되, 한번 기록되면 절대 수정 불가
-초보자 설명: &quot;법원의 기록 담당처럼, 모든 일을 기록장에 써놓고 절대 고치지 않는 부서&quot;
-
-■ Anomaly Detector (이상 탐지 부서)
-= 평상시 패턴과 다른 행동을 감지
-역할: Azure Monitor로 비정상 접근 패턴 자동 감지 및 경고
-초보자 설명: &quot;경보실처럼, '어? 요새 평소와 다르게 뭔가 이상한데?' 하는 상황을 자동으로 감지해서 알려주는 부서&quot;
-
-🔑 핵심 기술 과제:
-- 정책 엔진의 실시간 성능: 수천 건 요청/초를 처리하면서도 밀리초 단위 응답
-- 감사 로그의 무결성: 한번 기록되면 절대 지우거나 수정 불가능하게 설계
-- ABAC 정책의 유연성: 새로운 요구사항 나올 때마다 정책을 쉽게 추가/수정할 수 있도록"><div class="project-badge">🔵 Designed</div><h3>e-Discovery 자율 에이전트 팀</h3><p class="problem">수십만 건의 이메일에서 핵심 증거 발굴의 시간/비용</p><div class="tech-stack"><span>Microsoft Discovery</span><span>Multi-agent Orchestration</span><span>Azure AI Search</span><span>Reasoning Loop</span></div></div>
-        <div class="project-card" data-category="intelligence" data-search="Teacher-Student 모델 디스틸레이션" data-problem="일반 모델은 특정 국가/지역의 복잡한 판례 법리를 무시하고 일반적인 답변을 하는 환각 문제 발생" data-solution="1. 사건 생성 시마다 에이전트 ID 자동 생성
-각 새로운 사건이 생기면 시스템이 자동으로 그 사건 전용 에이전트 ID를 만듭니다. 예를 들어 &quot;사건 번호 2024-001&quot;이 생기면 &quot;Agent-2024-001&quot;이 자동 생성되어, 이 사건의 에이전트는 이 ID만 사용합니다.
-
-2. Entra Agent ID로 에이전트를 Microsoft 신원 시스템에 등록
-생성된 에이전트 ID를 Microsoft의 Entra ID(엔터프라이즈 신원 관리 시스템)에 &quot;사람&quot;처럼 등록합니다. 마치 직원을 회사 시스템에 등록하는 것처럼요.
-
-3. ABAC(속성 기반 접근 제어) 정책 자동 할당
-각 에이전트에게 &quot;너는 이 사건의 기밀문서만 볼 수 있고, 다른 사건은 절대 못 본다&quot;는 규칙을 자동으로 설정합니다. 이 규칙은 에이전트 ID + 사건 + 문서 타입 조합으로 매우 세밀하게 설정됩니다.
-
-4. 문서 접근 요청 시마다 정책 엔진이 실시간 검사
-에이전트가 문서에 접근하려면 정책 엔진에 &quot;이거 접근 가능한가요?&quot;라고 물어봅니다. 엔진은 0.1초 안에 승인 또는 거부를 결정합니다.
-
-5. 모든 접근 시도를 변조 불가능한 감사 로그에 기록
-성공하든 실패하든 모든 접근 시도가 기록됩니다. 한번 기록되면 지우거나 수정할 수 없는 형태로 저장되어 나중에 &quot;누가 뭘 했는가&quot;를 증명할 수 있습니다.
-
-6. Azure Monitor에서 이상 행동 패턴 감지
-정상 행동과 다른 패턴(예: 평소보다 훨씬 많은 접근 시도, 업무 시간 외 접근)을 자동으로 감지하고 경고합니다.
-
-7. 정기적 감사 보고서 자동 생성
-매주/매월 &quot;누가 뭘 언제 접근했고 거부된 건 뭔가&quot;를 정리한 보고서를 자동으로 만들어서 규제 대응에 사용합니다." data-architecture="🏗️ 아키텍처 구성 (초보자 설명):
-
-■ Identity Layer (신원 관리 계층)
-= 에이전트 ID 생성 및 등록 담당 부서
-역할: 각 사건마다 에이전트를 만들고 Microsoft Entra ID에 등록하기
-초보자 설명: &quot;회사에 새 직원이 들어오면 직원증을 발급하는 것처럼, 각 에이전트에게 고유의 신원(ID)을 부여하는 부서&quot;
-
-■ Policy Engine (정책 결정 부서)
-= 접근 요청이 들어올 때마다 &quot;허용되나 안 되나&quot; 결정하는 부서
-역할: ABAC 정책을 적용하여 실시간 접근 제어
-초보자 설명: &quot;은행의 보안 요원처럼, 접근 요청이 오면 '당신은 이걸 볼 권리가 있나?'를 규칙(ABAC)으로 판단하는 부서&quot;
-
-■ Audit Logger (감사 기록 부서)
-= 모든 접근 시도(성공/실패)를 변조 불가능하게 기록
-역할: 이력서처럼 모든 행동을 기록하되, 한번 기록되면 절대 수정 불가
-초보자 설명: &quot;법원의 기록 담당처럼, 모든 일을 기록장에 써놓고 절대 고치지 않는 부서&quot;
-
-■ Anomaly Detector (이상 탐지 부서)
-= 평상시 패턴과 다른 행동을 감지
-역할: Azure Monitor로 비정상 접근 패턴 자동 감지 및 경고
-초보자 설명: &quot;경보실처럼, '어? 요새 평소와 다르게 뭔가 이상한데?' 하는 상황을 자동으로 감지해서 알려주는 부서&quot;
-
-🔑 핵심 기술 과제:
-- 정책 엔진의 실시간 성능: 수천 건 요청/초를 처리하면서도 밀리초 단위 응답
-- 감사 로그의 무결성: 한번 기록되면 절대 지우거나 수정 불가능하게 설계
-- ABAC 정책의 유연성: 새로운 요구사항 나올 때마다 정책을 쉽게 추가/수정할 수 있도록"><div class="project-badge">🔵 Designed</div><h3>법률 모델 디스틸레이션</h3><p class="problem">일반 모델의 판례 오류(환각) 문제</p><div class="tech-stack"><span>Model Distillation</span><span>Supervised Fine-tuning</span><span>Azure AI Foundry</span></div></div>
-        <div class="project-card" data-category="intelligence" data-search="Fabric IQ 컨텍스트 레이어" data-problem="로펌 내 수십 년간 쌓인 수억 건의 서면과 의견서가 사일로화되어 에이전트가 활용하지 못함" data-solution="1. 사건 생성 시마다 에이전트 ID 자동 생성
-각 새로운 사건이 생기면 시스템이 자동으로 그 사건 전용 에이전트 ID를 만듭니다. 예를 들어 &quot;사건 번호 2024-001&quot;이 생기면 &quot;Agent-2024-001&quot;이 자동 생성되어, 이 사건의 에이전트는 이 ID만 사용합니다.
-
-2. Entra Agent ID로 에이전트를 Microsoft 신원 시스템에 등록
-생성된 에이전트 ID를 Microsoft의 Entra ID(엔터프라이즈 신원 관리 시스템)에 &quot;사람&quot;처럼 등록합니다. 마치 직원을 회사 시스템에 등록하는 것처럼요.
-
-3. ABAC(속성 기반 접근 제어) 정책 자동 할당
-각 에이전트에게 &quot;너는 이 사건의 기밀문서만 볼 수 있고, 다른 사건은 절대 못 본다&quot;는 규칙을 자동으로 설정합니다. 이 규칙은 에이전트 ID + 사건 + 문서 타입 조합으로 매우 세밀하게 설정됩니다.
-
-4. 문서 접근 요청 시마다 정책 엔진이 실시간 검사
-에이전트가 문서에 접근하려면 정책 엔진에 &quot;이거 접근 가능한가요?&quot;라고 물어봅니다. 엔진은 0.1초 안에 승인 또는 거부를 결정합니다.
-
-5. 모든 접근 시도를 변조 불가능한 감사 로그에 기록
-성공하든 실패하든 모든 접근 시도가 기록됩니다. 한번 기록되면 지우거나 수정할 수 없는 형태로 저장되어 나중에 &quot;누가 뭘 했는가&quot;를 증명할 수 있습니다.
-
-6. Azure Monitor에서 이상 행동 패턴 감지
-정상 행동과 다른 패턴(예: 평소보다 훨씬 많은 접근 시도, 업무 시간 외 접근)을 자동으로 감지하고 경고합니다.
-
-7. 정기적 감사 보고서 자동 생성
-매주/매월 &quot;누가 뭘 언제 접근했고 거부된 건 뭔가&quot;를 정리한 보고서를 자동으로 만들어서 규제 대응에 사용합니다." data-architecture="🏗️ 아키텍처 구성 (초보자 설명):
-
-■ Identity Layer (신원 관리 계층)
-= 에이전트 ID 생성 및 등록 담당 부서
-역할: 각 사건마다 에이전트를 만들고 Microsoft Entra ID에 등록하기
-초보자 설명: &quot;회사에 새 직원이 들어오면 직원증을 발급하는 것처럼, 각 에이전트에게 고유의 신원(ID)을 부여하는 부서&quot;
-
-■ Policy Engine (정책 결정 부서)
-= 접근 요청이 들어올 때마다 &quot;허용되나 안 되나&quot; 결정하는 부서
-역할: ABAC 정책을 적용하여 실시간 접근 제어
-초보자 설명: &quot;은행의 보안 요원처럼, 접근 요청이 오면 '당신은 이걸 볼 권리가 있나?'를 규칙(ABAC)으로 판단하는 부서&quot;
-
-■ Audit Logger (감사 기록 부서)
-= 모든 접근 시도(성공/실패)를 변조 불가능하게 기록
-역할: 이력서처럼 모든 행동을 기록하되, 한번 기록되면 절대 수정 불가
-초보자 설명: &quot;법원의 기록 담당처럼, 모든 일을 기록장에 써놓고 절대 고치지 않는 부서&quot;
-
-■ Anomaly Detector (이상 탐지 부서)
-= 평상시 패턴과 다른 행동을 감지
-역할: Azure Monitor로 비정상 접근 패턴 자동 감지 및 경고
-초보자 설명: &quot;경보실처럼, '어? 요새 평소와 다르게 뭔가 이상한데?' 하는 상황을 자동으로 감지해서 알려주는 부서&quot;
-
-🔑 핵심 기술 과제:
-- 정책 엔진의 실시간 성능: 수천 건 요청/초를 처리하면서도 밀리초 단위 응답
-- 감사 로그의 무결성: 한번 기록되면 절대 지우거나 수정 불가능하게 설계
-- ABAC 정책의 유연성: 새로운 요구사항 나올 때마다 정책을 쉽게 추가/수정할 수 있도록"><div class="project-badge">🔵 Designed</div><h3>Fabric IQ 전사 판례 컨텍스트</h3><p class="problem">수십 년의 서면과 의견서가 사일로화되어 활용 불가</p><div class="tech-stack"><span>Microsoft Fabric</span><span>OneLake</span><span>Semantic Link</span><span>Azure AI Search</span></div></div>
-        <div class="project-card" data-category="intelligence" data-search="다국어 실시간 번역" data-problem="국제 소송에서 여러 언어의 법률 문서를 실시간으로 번역하고 로컬라이징 필요" data-solution="1. 사건 생성 시마다 에이전트 ID 자동 생성
-각 새로운 사건이 생기면 시스템이 자동으로 그 사건 전용 에이전트 ID를 만듭니다. 예를 들어 &quot;사건 번호 2024-001&quot;이 생기면 &quot;Agent-2024-001&quot;이 자동 생성되어, 이 사건의 에이전트는 이 ID만 사용합니다.
-
-2. Entra Agent ID로 에이전트를 Microsoft 신원 시스템에 등록
-생성된 에이전트 ID를 Microsoft의 Entra ID(엔터프라이즈 신원 관리 시스템)에 &quot;사람&quot;처럼 등록합니다. 마치 직원을 회사 시스템에 등록하는 것처럼요.
-
-3. ABAC(속성 기반 접근 제어) 정책 자동 할당
-각 에이전트에게 &quot;너는 이 사건의 기밀문서만 볼 수 있고, 다른 사건은 절대 못 본다&quot;는 규칙을 자동으로 설정합니다. 이 규칙은 에이전트 ID + 사건 + 문서 타입 조합으로 매우 세밀하게 설정됩니다.
-
-4. 문서 접근 요청 시마다 정책 엔진이 실시간 검사
-에이전트가 문서에 접근하려면 정책 엔진에 &quot;이거 접근 가능한가요?&quot;라고 물어봅니다. 엔진은 0.1초 안에 승인 또는 거부를 결정합니다.
-
-5. 모든 접근 시도를 변조 불가능한 감사 로그에 기록
-성공하든 실패하든 모든 접근 시도가 기록됩니다. 한번 기록되면 지우거나 수정할 수 없는 형태로 저장되어 나중에 &quot;누가 뭘 했는가&quot;를 증명할 수 있습니다.
-
-6. Azure Monitor에서 이상 행동 패턴 감지
-정상 행동과 다른 패턴(예: 평소보다 훨씬 많은 접근 시도, 업무 시간 외 접근)을 자동으로 감지하고 경고합니다.
-
-7. 정기적 감사 보고서 자동 생성
-매주/매월 &quot;누가 뭘 언제 접근했고 거부된 건 뭔가&quot;를 정리한 보고서를 자동으로 만들어서 규제 대응에 사용합니다." data-architecture="🏗️ 아키텍처 구성 (초보자 설명):
-
-■ Identity Layer (신원 관리 계층)
-= 에이전트 ID 생성 및 등록 담당 부서
-역할: 각 사건마다 에이전트를 만들고 Microsoft Entra ID에 등록하기
-초보자 설명: &quot;회사에 새 직원이 들어오면 직원증을 발급하는 것처럼, 각 에이전트에게 고유의 신원(ID)을 부여하는 부서&quot;
-
-■ Policy Engine (정책 결정 부서)
-= 접근 요청이 들어올 때마다 &quot;허용되나 안 되나&quot; 결정하는 부서
-역할: ABAC 정책을 적용하여 실시간 접근 제어
-초보자 설명: &quot;은행의 보안 요원처럼, 접근 요청이 오면 '당신은 이걸 볼 권리가 있나?'를 규칙(ABAC)으로 판단하는 부서&quot;
-
-■ Audit Logger (감사 기록 부서)
-= 모든 접근 시도(성공/실패)를 변조 불가능하게 기록
-역할: 이력서처럼 모든 행동을 기록하되, 한번 기록되면 절대 수정 불가
-초보자 설명: &quot;법원의 기록 담당처럼, 모든 일을 기록장에 써놓고 절대 고치지 않는 부서&quot;
-
-■ Anomaly Detector (이상 탐지 부서)
-= 평상시 패턴과 다른 행동을 감지
-역할: Azure Monitor로 비정상 접근 패턴 자동 감지 및 경고
-초보자 설명: &quot;경보실처럼, '어? 요새 평소와 다르게 뭔가 이상한데?' 하는 상황을 자동으로 감지해서 알려주는 부서&quot;
-
-🔑 핵심 기술 과제:
-- 정책 엔진의 실시간 성능: 수천 건 요청/초를 처리하면서도 밀리초 단위 응답
-- 감사 로그의 무결성: 한번 기록되면 절대 지우거나 수정 불가능하게 설계
-- ABAC 정책의 유연성: 새로운 요구사항 나올 때마다 정책을 쉽게 추가/수정할 수 있도록"><div class="project-badge">🟡 Concept</div><h3>다국어 실시간 법률 번역</h3><p class="problem">국제 소송에서의 다국어 대응</p><div class="tech-stack"><span>MAI-2-5B Tuning</span><span>Real-time Translation</span><span>Localization</span></div></div>
-        <div class="project-card" data-category="intelligence" data-search="법률 서식 Structured Outputs" data-problem="반복적인 서식 작성은 시간이 많이 걸리고 실수가 발생하기 쉬움" data-solution="1. 사건 생성 시마다 에이전트 ID 자동 생성
-각 새로운 사건이 생기면 시스템이 자동으로 그 사건 전용 에이전트 ID를 만듭니다. 예를 들어 &quot;사건 번호 2024-001&quot;이 생기면 &quot;Agent-2024-001&quot;이 자동 생성되어, 이 사건의 에이전트는 이 ID만 사용합니다.
-
-2. Entra Agent ID로 에이전트를 Microsoft 신원 시스템에 등록
-생성된 에이전트 ID를 Microsoft의 Entra ID(엔터프라이즈 신원 관리 시스템)에 &quot;사람&quot;처럼 등록합니다. 마치 직원을 회사 시스템에 등록하는 것처럼요.
-
-3. ABAC(속성 기반 접근 제어) 정책 자동 할당
-각 에이전트에게 &quot;너는 이 사건의 기밀문서만 볼 수 있고, 다른 사건은 절대 못 본다&quot;는 규칙을 자동으로 설정합니다. 이 규칙은 에이전트 ID + 사건 + 문서 타입 조합으로 매우 세밀하게 설정됩니다.
-
-4. 문서 접근 요청 시마다 정책 엔진이 실시간 검사
-에이전트가 문서에 접근하려면 정책 엔진에 &quot;이거 접근 가능한가요?&quot;라고 물어봅니다. 엔진은 0.1초 안에 승인 또는 거부를 결정합니다.
-
-5. 모든 접근 시도를 변조 불가능한 감사 로그에 기록
-성공하든 실패하든 모든 접근 시도가 기록됩니다. 한번 기록되면 지우거나 수정할 수 없는 형태로 저장되어 나중에 &quot;누가 뭘 했는가&quot;를 증명할 수 있습니다.
-
-6. Azure Monitor에서 이상 행동 패턴 감지
-정상 행동과 다른 패턴(예: 평소보다 훨씬 많은 접근 시도, 업무 시간 외 접근)을 자동으로 감지하고 경고합니다.
-
-7. 정기적 감사 보고서 자동 생성
-매주/매월 &quot;누가 뭘 언제 접근했고 거부된 건 뭔가&quot;를 정리한 보고서를 자동으로 만들어서 규제 대응에 사용합니다." data-architecture="🏗️ 아키텍처 구성 (초보자 설명):
-
-■ Identity Layer (신원 관리 계층)
-= 에이전트 ID 생성 및 등록 담당 부서
-역할: 각 사건마다 에이전트를 만들고 Microsoft Entra ID에 등록하기
-초보자 설명: &quot;회사에 새 직원이 들어오면 직원증을 발급하는 것처럼, 각 에이전트에게 고유의 신원(ID)을 부여하는 부서&quot;
-
-■ Policy Engine (정책 결정 부서)
-= 접근 요청이 들어올 때마다 &quot;허용되나 안 되나&quot; 결정하는 부서
-역할: ABAC 정책을 적용하여 실시간 접근 제어
-초보자 설명: &quot;은행의 보안 요원처럼, 접근 요청이 오면 '당신은 이걸 볼 권리가 있나?'를 규칙(ABAC)으로 판단하는 부서&quot;
-
-■ Audit Logger (감사 기록 부서)
-= 모든 접근 시도(성공/실패)를 변조 불가능하게 기록
-역할: 이력서처럼 모든 행동을 기록하되, 한번 기록되면 절대 수정 불가
-초보자 설명: &quot;법원의 기록 담당처럼, 모든 일을 기록장에 써놓고 절대 고치지 않는 부서&quot;
-
-■ Anomaly Detector (이상 탐지 부서)
-= 평상시 패턴과 다른 행동을 감지
-역할: Azure Monitor로 비정상 접근 패턴 자동 감지 및 경고
-초보자 설명: &quot;경보실처럼, '어? 요새 평소와 다르게 뭔가 이상한데?' 하는 상황을 자동으로 감지해서 알려주는 부서&quot;
-
-🔑 핵심 기술 과제:
-- 정책 엔진의 실시간 성능: 수천 건 요청/초를 처리하면서도 밀리초 단위 응답
-- 감사 로그의 무결성: 한번 기록되면 절대 지우거나 수정 불가능하게 설계
-- ABAC 정책의 유연성: 새로운 요구사항 나올 때마다 정책을 쉽게 추가/수정할 수 있도록"><div class="project-badge">🟡 Concept</div><h3>법률 서식 자동 생성</h3><p class="problem">반복적인 서식 작성의 자동화</p><div class="tech-stack"><span>Structured Outputs API</span><span>Schema Generation</span></div></div>
-        <div class="project-card" data-category="intelligence" data-search="로컬 SLM 배포" data-problem="인터넷 미연결 환경(에어갭)에서는 클라우드 API를 사용할 수 없어 AI 활용 불가" data-solution="1. 사건 생성 시마다 에이전트 ID 자동 생성
-각 새로운 사건이 생기면 시스템이 자동으로 그 사건 전용 에이전트 ID를 만듭니다. 예를 들어 &quot;사건 번호 2024-001&quot;이 생기면 &quot;Agent-2024-001&quot;이 자동 생성되어, 이 사건의 에이전트는 이 ID만 사용합니다.
-
-2. Entra Agent ID로 에이전트를 Microsoft 신원 시스템에 등록
-생성된 에이전트 ID를 Microsoft의 Entra ID(엔터프라이즈 신원 관리 시스템)에 &quot;사람&quot;처럼 등록합니다. 마치 직원을 회사 시스템에 등록하는 것처럼요.
-
-3. ABAC(속성 기반 접근 제어) 정책 자동 할당
-각 에이전트에게 &quot;너는 이 사건의 기밀문서만 볼 수 있고, 다른 사건은 절대 못 본다&quot;는 규칙을 자동으로 설정합니다. 이 규칙은 에이전트 ID + 사건 + 문서 타입 조합으로 매우 세밀하게 설정됩니다.
-
-4. 문서 접근 요청 시마다 정책 엔진이 실시간 검사
-에이전트가 문서에 접근하려면 정책 엔진에 &quot;이거 접근 가능한가요?&quot;라고 물어봅니다. 엔진은 0.1초 안에 승인 또는 거부를 결정합니다.
-
-5. 모든 접근 시도를 변조 불가능한 감사 로그에 기록
-성공하든 실패하든 모든 접근 시도가 기록됩니다. 한번 기록되면 지우거나 수정할 수 없는 형태로 저장되어 나중에 &quot;누가 뭘 했는가&quot;를 증명할 수 있습니다.
-
-6. Azure Monitor에서 이상 행동 패턴 감지
-정상 행동과 다른 패턴(예: 평소보다 훨씬 많은 접근 시도, 업무 시간 외 접근)을 자동으로 감지하고 경고합니다.
-
-7. 정기적 감사 보고서 자동 생성
-매주/매월 &quot;누가 뭘 언제 접근했고 거부된 건 뭔가&quot;를 정리한 보고서를 자동으로 만들어서 규제 대응에 사용합니다." data-architecture="🏗️ 아키텍처 구성 (초보자 설명):
-
-■ Identity Layer (신원 관리 계층)
-= 에이전트 ID 생성 및 등록 담당 부서
-역할: 각 사건마다 에이전트를 만들고 Microsoft Entra ID에 등록하기
-초보자 설명: &quot;회사에 새 직원이 들어오면 직원증을 발급하는 것처럼, 각 에이전트에게 고유의 신원(ID)을 부여하는 부서&quot;
-
-■ Policy Engine (정책 결정 부서)
-= 접근 요청이 들어올 때마다 &quot;허용되나 안 되나&quot; 결정하는 부서
-역할: ABAC 정책을 적용하여 실시간 접근 제어
-초보자 설명: &quot;은행의 보안 요원처럼, 접근 요청이 오면 '당신은 이걸 볼 권리가 있나?'를 규칙(ABAC)으로 판단하는 부서&quot;
-
-■ Audit Logger (감사 기록 부서)
-= 모든 접근 시도(성공/실패)를 변조 불가능하게 기록
-역할: 이력서처럼 모든 행동을 기록하되, 한번 기록되면 절대 수정 불가
-초보자 설명: &quot;법원의 기록 담당처럼, 모든 일을 기록장에 써놓고 절대 고치지 않는 부서&quot;
-
-■ Anomaly Detector (이상 탐지 부서)
-= 평상시 패턴과 다른 행동을 감지
-역할: Azure Monitor로 비정상 접근 패턴 자동 감지 및 경고
-초보자 설명: &quot;경보실처럼, '어? 요새 평소와 다르게 뭔가 이상한데?' 하는 상황을 자동으로 감지해서 알려주는 부서&quot;
-
-🔑 핵심 기술 과제:
-- 정책 엔진의 실시간 성능: 수천 건 요청/초를 처리하면서도 밀리초 단위 응답
-- 감사 로그의 무결성: 한번 기록되면 절대 지우거나 수정 불가능하게 설계
-- ABAC 정책의 유연성: 새로운 요구사항 나올 때마다 정책을 쉽게 추가/수정할 수 있도록"><div class="project-badge">🟡 Concept</div><h3>에어갭 환경 SLM 배포</h3><p class="problem">인터넷 미연결 환경에서의 AI 활용</p><div class="tech-stack"><span>Small Language Models</span><span>Local Deployment</span><span>Offline</span></div></div>
+        <div class="project-card" data-category="intelligence" data-search="e-Discovery 자율 에이전트" data-problem="소송 전 수십만 건의 이메일과 문서에서 핵심 증거를 찾는 데 소요되는 막대한 시간과 비용" data-solution="■ 문서군 자동 분류&#10;  수십만 건의 이메일·문서를 사건 쟁점별로 1차 자동 분류&#10;&#10;■ 멀티 에이전트 역할 분담&#10;  수집 에이전트·관련성 판단 에이전트·특권정보(privilege) 검토 에이전트로 팀 구성&#10;&#10;■ 추론 루프 기반 재검토&#10;  1차 판단에 낮은 확신도가 나온 문서는 다른 에이전트가 교차 재검토&#10;&#10;■ 증거 후보 리스트 생성&#10;  관련성 높은 문서만 인간 검토자에게 랭킹과 함께 전달&#10;&#10;■ 검토 근거 명시&#10;  왜 관련/비관련으로 판단했는지 근거 문장을 함께 제시하여 변호사 검증 지원" data-architecture="■ Ingestion Agent&#10;  이메일·문서 대량 수집 및 전처리&#10;&#10;■ Relevance Agent&#10;  쟁점 키워드/컨텍스트 기반 관련성 스코어링&#10;&#10;■ Privilege Review Agent&#10;  변호사-의뢰인 특권정보 여부 판별&#10;&#10;■ Orchestrator&#10;  에이전트 간 작업 분배 및 결과 취합(Reasoning Loop)&#10;&#10;■ Search Layer&#10;  Azure AI Search 기반 대규모 문서 인덱싱&#10;&#10;🔑 핵심 기술 과제:&#10;  • 대량 문서에 대한 처리 비용/속도 균형&#10;  • 특권정보 오탐지로 인한 법적 리스크 최소화&#10;  • 에이전트 간 판단 불일치 조정 로직"><div class="project-badge">🔵 설계 완료</div><h3>e-Discovery 자율 에이전트 팀</h3><p class="problem">수십만 건의 이메일에서 핵심 증거 발굴의 시간/비용</p><div class="tech-stack"><span>Microsoft Discovery</span><span>Multi-agent Orchestration</span><span>Azure AI Search</span><span>Reasoning Loop</span></div></div>
+        <div class="project-card" data-category="intelligence" data-search="Teacher-Student 모델 디스틸레이션" data-problem="일반 모델은 특정 국가/지역의 복잡한 판례 법리를 무시하고 일반적인 답변을 하는 환각 문제 발생" data-solution="■ Teacher 모델 활용&#10;  대형 모델(Teacher)이 특정 국가/지역 판례 법리에 대한 고품질 답변 생성&#10;&#10;■ Student 모델 학습 데이터 구축&#10;  Teacher의 답변과 실제 판례 근거를 짝지어 파인튜닝 데이터셋 구성&#10;&#10;■ 지도학습 파인튜닝&#10;  경량 Student 모델을 해당 지역 법리 특화 데이터로 SFT&#10;&#10;■ 환각 검증 루프&#10;  Student 응답을 원 판례와 대조하여 근거 없는 응답 필터링&#10;&#10;■ 지역별 모델 분리 배포&#10;  국가/지역별로 특화된 Student 모델을 별도 엔드포인트로 운영" data-architecture="■ Teacher Inference Layer&#10;  대형 모델 기반 고품질 판례 답변 생성&#10;&#10;■ Distillation Pipeline&#10;  Teacher 출력을 정제하여 학습 데이터셋으로 변환&#10;&#10;■ Fine-tuning Job (Azure AI Foundry)&#10;  지역별 Student 모델 SFT 실행&#10;&#10;■ Grounding Verifier&#10;  생성된 답변과 원 판례 소스 대조 검증&#10;&#10;🔑 핵심 기술 과제:&#10;  • 지역별 법리 데이터 확보 및 정제&#10;  • Student 모델 성능과 비용의 균형&#10;  • 환각 억제와 응답 다양성 사이 트레이드오프"><div class="project-badge">🔵 설계 완료</div><h3>법률 모델 디스틸레이션</h3><p class="problem">일반 모델의 판례 오류(환각) 문제</p><div class="tech-stack"><span>Model Distillation</span><span>Supervised Fine-tuning</span><span>Azure AI Foundry</span></div></div>
+        <div class="project-card" data-category="intelligence" data-search="Fabric IQ 컨텍스트 레이어" data-problem="로펌 내 수십 년간 쌓인 수억 건의 서면과 의견서가 사일로화되어 에이전트가 활용하지 못함" data-solution="■ 전사 데이터 레이크 통합&#10;  수십 년간 쌓인 서면·의견서를 OneLake 단일 레이크로 통합&#10;&#10;■ 시맨틱 레이어 구축&#10;  Semantic Link로 사건/당사자/쟁점 간 관계를 의미 단위로 연결&#10;&#10;■ 에이전트 조회 인터페이스&#10;  에이전트가 자연어로 과거 유사 사건을 검색·인용할 수 있도록 인덱싱&#10;&#10;■ 접근 권한 상속&#10;  사건별 접근 권한을 Fabric IQ 레이어에서도 동일하게 유지&#10;&#10;■ 사일로 해소 후 지속 동기화&#10;  신규 서면 작성 시 자동으로 레이크에 반영되도록 파이프라인 구성" data-architecture="■ Microsoft Fabric / OneLake&#10;  전사 문서 데이터를 단일 레이크에 통합 저장&#10;&#10;■ Semantic Link Layer&#10;  문서 간 관계와 컨텍스트를 의미 단위로 매핑&#10;&#10;■ Azure AI Search Index&#10;  빠른 검색을 위한 벡터+키워드 하이브리드 인덱스&#10;&#10;■ Access-aware Query Layer&#10;  사건별 접근 권한을 준수하는 검색 결과 필터링&#10;&#10;🔑 핵심 기술 과제:&#10;  • 대규모 레거시 문서의 품질/정합성 정제&#10;  • 권한 상속 정확성 보장&#10;  • 실시간 동기화 파이프라인 안정성"><div class="project-badge">🔵 설계 완료</div><h3>Fabric IQ 전사 판례 컨텍스트</h3><p class="problem">수십 년의 서면과 의견서가 사일로화되어 활용 불가</p><div class="tech-stack"><span>Microsoft Fabric</span><span>OneLake</span><span>Semantic Link</span><span>Azure AI Search</span></div></div>
+        <div class="project-card" data-category="intelligence" data-search="다국어 실시간 번역" data-problem="국제 소송에서 여러 언어의 법률 문서를 실시간으로 번역하고 로컬라이징 필요" data-solution="■ 법률 도메인 특화 튜닝&#10;  MAI-2-5B를 법률 전문용어·문체에 맞게 파인튜닝&#10;&#10;■ 실시간 번역 파이프라인&#10;  국제 소송 문서 업로드 시 즉시 번역 초안 생성&#10;&#10;■ 로컬라이징 규칙 적용&#10;  국가별 법률 용어·표기 관행에 맞춰 후처리&#10;&#10;■ 전문 검수 워크플로우&#10;  번역 초안을 현지 변호사가 검수하는 human-in-the-loop 구조&#10;&#10;■ 용어집 관리&#10;  사건별/고객별 용어집을 유지해 번역 일관성 확보" data-architecture="■ Domain-tuned Translation Model&#10;  법률 문서 특화 번역 추론&#10;&#10;■ Localization Rule Engine&#10;  국가별 표기·용어 규칙 적용&#10;&#10;■ Terminology Store&#10;  사건/고객별 용어집 관리&#10;&#10;■ Review Workflow&#10;  현지 변호사 검수 및 승인 프로세스&#10;&#10;🔑 핵심 기술 과제:&#10;  • 법률 전문용어의 미묘한 뉘앙스 보존&#10;  • 국가별 규제 표현 차이 반영&#10;  • 실시간 처리와 번역 품질의 균형"><div class="project-badge">🟡 아이디어</div><h3>다국어 실시간 법률 번역</h3><p class="problem">국제 소송에서의 다국어 대응</p><div class="tech-stack"><span>MAI-2-5B Tuning</span><span>Real-time Translation</span><span>Localization</span></div></div>
+        <div class="project-card" data-category="intelligence" data-search="법률 서식 Structured Outputs" data-problem="반복적인 서식 작성은 시간이 많이 걸리고 실수가 발생하기 쉬움" data-solution="■ 서식 스키마 정의&#10;  표준 서식(준비서면, 계약서 등)의 필수 항목을 구조화된 스키마로 정의&#10;&#10;■ Structured Outputs 적용&#10;  모델이 자유 텍스트 대신 스키마에 맞는 JSON 형태로 서식 항목 생성&#10;&#10;■ 검증 규칙 자동 적용&#10;  필수 항목 누락·형식 오류를 생성 즉시 자동 검증&#10;&#10;■ 템플릿 매핑&#10;  검증된 데이터를 회사 표준 서식 템플릿에 자동 삽입&#10;&#10;■ 변호사 최종 검토&#10;  자동 생성된 서식을 변호사가 최종 확인 후 발행" data-architecture="■ Schema Definition Layer&#10;  서식별 필수 항목 및 형식 정의&#10;&#10;■ Structured Outputs API&#10;  스키마 기반 구조화 데이터 생성&#10;&#10;■ Validation Engine&#10;  생성 데이터의 완결성/형식 검증&#10;&#10;■ Template Renderer&#10;  검증된 데이터를 최종 문서 양식에 삽입&#10;&#10;🔑 핵심 기술 과제:&#10;  • 다양한 서식 유형에 대한 스키마 확장성&#10;  • 법률 요건 변경 시 스키마 유지보수&#10;  • 생성 데이터의 법적 정확성 보장"><div class="project-badge">🟡 아이디어</div><h3>법률 서식 자동 생성</h3><p class="problem">반복적인 서식 작성의 자동화</p><div class="tech-stack"><span>Structured Outputs API</span><span>Schema Generation</span></div></div>
+        <div class="project-card" data-category="intelligence" data-search="로컬 SLM 배포" data-problem="인터넷 미연결 환경(에어갭)에서는 클라우드 API를 사용할 수 없어 AI 활용 불가" data-solution="■ 경량 모델 선정&#10;  에어갭 환경 하드웨어 사양에 맞는 소형 언어모델(SLM) 선정&#10;&#10;■ 로컬 패키징&#10;  모델·인덱스·런타임을 오프라인 설치 패키지로 구성&#10;&#10;■ 현장 설치 및 검증&#10;  인터넷 연결 없이 로컬 환경에 설치 후 동작 검증&#10;&#10;■ 주기적 오프라인 갱신&#10;  보안 승인된 매체로만 모델 업데이트 반입&#10;&#10;■ 로컬 전용 로깅&#10;  모든 사용 기록을 외부 전송 없이 로컬에만 보관" data-architecture="■ Small Language Model Runtime&#10;  경량화된 모델의 로컬 추론 실행&#10;&#10;■ Offline Package Manager&#10;  모델/인덱스/의존성 오프라인 배포 관리&#10;&#10;■ Local Vector Store&#10;  로컬 문서 임베딩 저장 및 검색&#10;&#10;■ Air-gap Update Process&#10;  물리 매체 기반 안전한 업데이트 절차&#10;&#10;🔑 핵심 기술 과제:&#10;  • 제한된 자원에서 모델 성능 확보&#10;  • 오프라인 환경에서의 최신성 유지&#10;  • 설치 매체를 통한 보안 통제"><div class="project-badge">🟡 아이디어</div><h3>에어갭 환경 SLM 배포</h3><p class="problem">인터넷 미연결 환경에서의 AI 활용</p><div class="tech-stack"><span>Small Language Models</span><span>Local Deployment</span><span>Offline</span></div></div>
       </div>
     </div>
 
@@ -1067,411 +760,15 @@
     <div class="category-section" data-category="automation">
       <h2 class="category-header">Workflow Automation</h2>
       <div class="project-grid">
-        <div class="project-card" data-category="automation" data-search="GitHub Copilot 서면 작성" data-problem="초년생 변호사들이 반복적으로 수행하는 표준 서면(준비서면 등) 작성의 비효율" data-solution="1. 사건 생성 시마다 에이전트 ID 자동 생성
-각 새로운 사건이 생기면 시스템이 자동으로 그 사건 전용 에이전트 ID를 만듭니다. 예를 들어 &quot;사건 번호 2024-001&quot;이 생기면 &quot;Agent-2024-001&quot;이 자동 생성되어, 이 사건의 에이전트는 이 ID만 사용합니다.
-
-2. Entra Agent ID로 에이전트를 Microsoft 신원 시스템에 등록
-생성된 에이전트 ID를 Microsoft의 Entra ID(엔터프라이즈 신원 관리 시스템)에 &quot;사람&quot;처럼 등록합니다. 마치 직원을 회사 시스템에 등록하는 것처럼요.
-
-3. ABAC(속성 기반 접근 제어) 정책 자동 할당
-각 에이전트에게 &quot;너는 이 사건의 기밀문서만 볼 수 있고, 다른 사건은 절대 못 본다&quot;는 규칙을 자동으로 설정합니다. 이 규칙은 에이전트 ID + 사건 + 문서 타입 조합으로 매우 세밀하게 설정됩니다.
-
-4. 문서 접근 요청 시마다 정책 엔진이 실시간 검사
-에이전트가 문서에 접근하려면 정책 엔진에 &quot;이거 접근 가능한가요?&quot;라고 물어봅니다. 엔진은 0.1초 안에 승인 또는 거부를 결정합니다.
-
-5. 모든 접근 시도를 변조 불가능한 감사 로그에 기록
-성공하든 실패하든 모든 접근 시도가 기록됩니다. 한번 기록되면 지우거나 수정할 수 없는 형태로 저장되어 나중에 &quot;누가 뭘 했는가&quot;를 증명할 수 있습니다.
-
-6. Azure Monitor에서 이상 행동 패턴 감지
-정상 행동과 다른 패턴(예: 평소보다 훨씬 많은 접근 시도, 업무 시간 외 접근)을 자동으로 감지하고 경고합니다.
-
-7. 정기적 감사 보고서 자동 생성
-매주/매월 &quot;누가 뭘 언제 접근했고 거부된 건 뭔가&quot;를 정리한 보고서를 자동으로 만들어서 규제 대응에 사용합니다." data-architecture="🏗️ 아키텍처 구성 (초보자 설명):
-
-■ Identity Layer (신원 관리 계층)
-= 에이전트 ID 생성 및 등록 담당 부서
-역할: 각 사건마다 에이전트를 만들고 Microsoft Entra ID에 등록하기
-초보자 설명: &quot;회사에 새 직원이 들어오면 직원증을 발급하는 것처럼, 각 에이전트에게 고유의 신원(ID)을 부여하는 부서&quot;
-
-■ Policy Engine (정책 결정 부서)
-= 접근 요청이 들어올 때마다 &quot;허용되나 안 되나&quot; 결정하는 부서
-역할: ABAC 정책을 적용하여 실시간 접근 제어
-초보자 설명: &quot;은행의 보안 요원처럼, 접근 요청이 오면 '당신은 이걸 볼 권리가 있나?'를 규칙(ABAC)으로 판단하는 부서&quot;
-
-■ Audit Logger (감사 기록 부서)
-= 모든 접근 시도(성공/실패)를 변조 불가능하게 기록
-역할: 이력서처럼 모든 행동을 기록하되, 한번 기록되면 절대 수정 불가
-초보자 설명: &quot;법원의 기록 담당처럼, 모든 일을 기록장에 써놓고 절대 고치지 않는 부서&quot;
-
-■ Anomaly Detector (이상 탐지 부서)
-= 평상시 패턴과 다른 행동을 감지
-역할: Azure Monitor로 비정상 접근 패턴 자동 감지 및 경고
-초보자 설명: &quot;경보실처럼, '어? 요새 평소와 다르게 뭔가 이상한데?' 하는 상황을 자동으로 감지해서 알려주는 부서&quot;
-
-🔑 핵심 기술 과제:
-- 정책 엔진의 실시간 성능: 수천 건 요청/초를 처리하면서도 밀리초 단위 응답
-- 감사 로그의 무결성: 한번 기록되면 절대 지우거나 수정 불가능하게 설계
-- ABAC 정책의 유연성: 새로운 요구사항 나올 때마다 정책을 쉽게 추가/수정할 수 있도록"><div class="project-badge">🔵 Designed</div><h3>Copilot × Issues 서면 파이프라인</h3><p class="problem">초년생 변호사의 반복적 서면 작성</p><div class="tech-stack"><span>GitHub Copilot</span><span>Issues</span><span>Sequential Workflow</span></div></div>
-        <div class="project-card" data-category="automation" data-search="동적 모델 라우팅 챗봇" data-problem="모든 간단한 질문(상담 예약 등)에 비싼 추론 모델을 사용하여 발생하는 자원 낭비 및 높은 운영 비용" data-solution="1. 사건 생성 시마다 에이전트 ID 자동 생성
-각 새로운 사건이 생기면 시스템이 자동으로 그 사건 전용 에이전트 ID를 만듭니다. 예를 들어 &quot;사건 번호 2024-001&quot;이 생기면 &quot;Agent-2024-001&quot;이 자동 생성되어, 이 사건의 에이전트는 이 ID만 사용합니다.
-
-2. Entra Agent ID로 에이전트를 Microsoft 신원 시스템에 등록
-생성된 에이전트 ID를 Microsoft의 Entra ID(엔터프라이즈 신원 관리 시스템)에 &quot;사람&quot;처럼 등록합니다. 마치 직원을 회사 시스템에 등록하는 것처럼요.
-
-3. ABAC(속성 기반 접근 제어) 정책 자동 할당
-각 에이전트에게 &quot;너는 이 사건의 기밀문서만 볼 수 있고, 다른 사건은 절대 못 본다&quot;는 규칙을 자동으로 설정합니다. 이 규칙은 에이전트 ID + 사건 + 문서 타입 조합으로 매우 세밀하게 설정됩니다.
-
-4. 문서 접근 요청 시마다 정책 엔진이 실시간 검사
-에이전트가 문서에 접근하려면 정책 엔진에 &quot;이거 접근 가능한가요?&quot;라고 물어봅니다. 엔진은 0.1초 안에 승인 또는 거부를 결정합니다.
-
-5. 모든 접근 시도를 변조 불가능한 감사 로그에 기록
-성공하든 실패하든 모든 접근 시도가 기록됩니다. 한번 기록되면 지우거나 수정할 수 없는 형태로 저장되어 나중에 &quot;누가 뭘 했는가&quot;를 증명할 수 있습니다.
-
-6. Azure Monitor에서 이상 행동 패턴 감지
-정상 행동과 다른 패턴(예: 평소보다 훨씬 많은 접근 시도, 업무 시간 외 접근)을 자동으로 감지하고 경고합니다.
-
-7. 정기적 감사 보고서 자동 생성
-매주/매월 &quot;누가 뭘 언제 접근했고 거부된 건 뭔가&quot;를 정리한 보고서를 자동으로 만들어서 규제 대응에 사용합니다." data-architecture="🏗️ 아키텍처 구성 (초보자 설명):
-
-■ Identity Layer (신원 관리 계층)
-= 에이전트 ID 생성 및 등록 담당 부서
-역할: 각 사건마다 에이전트를 만들고 Microsoft Entra ID에 등록하기
-초보자 설명: &quot;회사에 새 직원이 들어오면 직원증을 발급하는 것처럼, 각 에이전트에게 고유의 신원(ID)을 부여하는 부서&quot;
-
-■ Policy Engine (정책 결정 부서)
-= 접근 요청이 들어올 때마다 &quot;허용되나 안 되나&quot; 결정하는 부서
-역할: ABAC 정책을 적용하여 실시간 접근 제어
-초보자 설명: &quot;은행의 보안 요원처럼, 접근 요청이 오면 '당신은 이걸 볼 권리가 있나?'를 규칙(ABAC)으로 판단하는 부서&quot;
-
-■ Audit Logger (감사 기록 부서)
-= 모든 접근 시도(성공/실패)를 변조 불가능하게 기록
-역할: 이력서처럼 모든 행동을 기록하되, 한번 기록되면 절대 수정 불가
-초보자 설명: &quot;법원의 기록 담당처럼, 모든 일을 기록장에 써놓고 절대 고치지 않는 부서&quot;
-
-■ Anomaly Detector (이상 탐지 부서)
-= 평상시 패턴과 다른 행동을 감지
-역할: Azure Monitor로 비정상 접근 패턴 자동 감지 및 경고
-초보자 설명: &quot;경보실처럼, '어? 요새 평소와 다르게 뭔가 이상한데?' 하는 상황을 자동으로 감지해서 알려주는 부서&quot;
-
-🔑 핵심 기술 과제:
-- 정책 엔진의 실시간 성능: 수천 건 요청/초를 처리하면서도 밀리초 단위 응답
-- 감사 로그의 무결성: 한번 기록되면 절대 지우거나 수정 불가능하게 설계
-- ABAC 정책의 유연성: 새로운 요구사항 나올 때마다 정책을 쉽게 추가/수정할 수 있도록"><div class="project-badge">🔵 Designed</div><h3>동적 라우팅 법률 챗봇</h3><p class="problem">모든 질문에 고성능 모델 사용으로 비용 낭비</p><div class="tech-stack"><span>Dynamic Model Routing</span><span>Intent Classification</span><span>Semantic Kernel</span></div></div>
-        <div class="project-card" data-category="automation" data-search="RL 강화학습 판결 예측" data-problem="과거 판결 결과와 에이전트의 예측 간의 차이를 좁히기 위한 지속적인 모델 개선 필요" data-solution="1. 사건 생성 시마다 에이전트 ID 자동 생성
-각 새로운 사건이 생기면 시스템이 자동으로 그 사건 전용 에이전트 ID를 만듭니다. 예를 들어 &quot;사건 번호 2024-001&quot;이 생기면 &quot;Agent-2024-001&quot;이 자동 생성되어, 이 사건의 에이전트는 이 ID만 사용합니다.
-
-2. Entra Agent ID로 에이전트를 Microsoft 신원 시스템에 등록
-생성된 에이전트 ID를 Microsoft의 Entra ID(엔터프라이즈 신원 관리 시스템)에 &quot;사람&quot;처럼 등록합니다. 마치 직원을 회사 시스템에 등록하는 것처럼요.
-
-3. ABAC(속성 기반 접근 제어) 정책 자동 할당
-각 에이전트에게 &quot;너는 이 사건의 기밀문서만 볼 수 있고, 다른 사건은 절대 못 본다&quot;는 규칙을 자동으로 설정합니다. 이 규칙은 에이전트 ID + 사건 + 문서 타입 조합으로 매우 세밀하게 설정됩니다.
-
-4. 문서 접근 요청 시마다 정책 엔진이 실시간 검사
-에이전트가 문서에 접근하려면 정책 엔진에 &quot;이거 접근 가능한가요?&quot;라고 물어봅니다. 엔진은 0.1초 안에 승인 또는 거부를 결정합니다.
-
-5. 모든 접근 시도를 변조 불가능한 감사 로그에 기록
-성공하든 실패하든 모든 접근 시도가 기록됩니다. 한번 기록되면 지우거나 수정할 수 없는 형태로 저장되어 나중에 &quot;누가 뭘 했는가&quot;를 증명할 수 있습니다.
-
-6. Azure Monitor에서 이상 행동 패턴 감지
-정상 행동과 다른 패턴(예: 평소보다 훨씬 많은 접근 시도, 업무 시간 외 접근)을 자동으로 감지하고 경고합니다.
-
-7. 정기적 감사 보고서 자동 생성
-매주/매월 &quot;누가 뭘 언제 접근했고 거부된 건 뭔가&quot;를 정리한 보고서를 자동으로 만들어서 규제 대응에 사용합니다." data-architecture="🏗️ 아키텍처 구성 (초보자 설명):
-
-■ Identity Layer (신원 관리 계층)
-= 에이전트 ID 생성 및 등록 담당 부서
-역할: 각 사건마다 에이전트를 만들고 Microsoft Entra ID에 등록하기
-초보자 설명: &quot;회사에 새 직원이 들어오면 직원증을 발급하는 것처럼, 각 에이전트에게 고유의 신원(ID)을 부여하는 부서&quot;
-
-■ Policy Engine (정책 결정 부서)
-= 접근 요청이 들어올 때마다 &quot;허용되나 안 되나&quot; 결정하는 부서
-역할: ABAC 정책을 적용하여 실시간 접근 제어
-초보자 설명: &quot;은행의 보안 요원처럼, 접근 요청이 오면 '당신은 이걸 볼 권리가 있나?'를 규칙(ABAC)으로 판단하는 부서&quot;
-
-■ Audit Logger (감사 기록 부서)
-= 모든 접근 시도(성공/실패)를 변조 불가능하게 기록
-역할: 이력서처럼 모든 행동을 기록하되, 한번 기록되면 절대 수정 불가
-초보자 설명: &quot;법원의 기록 담당처럼, 모든 일을 기록장에 써놓고 절대 고치지 않는 부서&quot;
-
-■ Anomaly Detector (이상 탐지 부서)
-= 평상시 패턴과 다른 행동을 감지
-역할: Azure Monitor로 비정상 접근 패턴 자동 감지 및 경고
-초보자 설명: &quot;경보실처럼, '어? 요새 평소와 다르게 뭔가 이상한데?' 하는 상황을 자동으로 감지해서 알려주는 부서&quot;
-
-🔑 핵심 기술 과제:
-- 정책 엔진의 실시간 성능: 수천 건 요청/초를 처리하면서도 밀리초 단위 응답
-- 감사 로그의 무결성: 한번 기록되면 절대 지우거나 수정 불가능하게 설계
-- ABAC 정책의 유연성: 새로운 요구사항 나올 때마다 정책을 쉽게 추가/수정할 수 있도록"><div class="project-badge">🔵 Designed</div><h3>RL 피드백 루프 에이전트</h3><p class="problem">과거 판결과 예측의 차이를 좁히기</p><div class="tech-stack"><span>Reinforcement Learning</span><span>Reward Modeling</span><span>Human-in-the-loop</span></div></div>
-        <div class="project-card" data-category="automation" data-search="세션 메모리 Persistent" data-problem="변호사별 대화 이력과 선호도가 유지되지 않아 매번 동일한 정보 반복 입력 필요" data-solution="1. 사건 생성 시마다 에이전트 ID 자동 생성
-각 새로운 사건이 생기면 시스템이 자동으로 그 사건 전용 에이전트 ID를 만듭니다. 예를 들어 &quot;사건 번호 2024-001&quot;이 생기면 &quot;Agent-2024-001&quot;이 자동 생성되어, 이 사건의 에이전트는 이 ID만 사용합니다.
-
-2. Entra Agent ID로 에이전트를 Microsoft 신원 시스템에 등록
-생성된 에이전트 ID를 Microsoft의 Entra ID(엔터프라이즈 신원 관리 시스템)에 &quot;사람&quot;처럼 등록합니다. 마치 직원을 회사 시스템에 등록하는 것처럼요.
-
-3. ABAC(속성 기반 접근 제어) 정책 자동 할당
-각 에이전트에게 &quot;너는 이 사건의 기밀문서만 볼 수 있고, 다른 사건은 절대 못 본다&quot;는 규칙을 자동으로 설정합니다. 이 규칙은 에이전트 ID + 사건 + 문서 타입 조합으로 매우 세밀하게 설정됩니다.
-
-4. 문서 접근 요청 시마다 정책 엔진이 실시간 검사
-에이전트가 문서에 접근하려면 정책 엔진에 &quot;이거 접근 가능한가요?&quot;라고 물어봅니다. 엔진은 0.1초 안에 승인 또는 거부를 결정합니다.
-
-5. 모든 접근 시도를 변조 불가능한 감사 로그에 기록
-성공하든 실패하든 모든 접근 시도가 기록됩니다. 한번 기록되면 지우거나 수정할 수 없는 형태로 저장되어 나중에 &quot;누가 뭘 했는가&quot;를 증명할 수 있습니다.
-
-6. Azure Monitor에서 이상 행동 패턴 감지
-정상 행동과 다른 패턴(예: 평소보다 훨씬 많은 접근 시도, 업무 시간 외 접근)을 자동으로 감지하고 경고합니다.
-
-7. 정기적 감사 보고서 자동 생성
-매주/매월 &quot;누가 뭘 언제 접근했고 거부된 건 뭔가&quot;를 정리한 보고서를 자동으로 만들어서 규제 대응에 사용합니다." data-architecture="🏗️ 아키텍처 구성 (초보자 설명):
-
-■ Identity Layer (신원 관리 계층)
-= 에이전트 ID 생성 및 등록 담당 부서
-역할: 각 사건마다 에이전트를 만들고 Microsoft Entra ID에 등록하기
-초보자 설명: &quot;회사에 새 직원이 들어오면 직원증을 발급하는 것처럼, 각 에이전트에게 고유의 신원(ID)을 부여하는 부서&quot;
-
-■ Policy Engine (정책 결정 부서)
-= 접근 요청이 들어올 때마다 &quot;허용되나 안 되나&quot; 결정하는 부서
-역할: ABAC 정책을 적용하여 실시간 접근 제어
-초보자 설명: &quot;은행의 보안 요원처럼, 접근 요청이 오면 '당신은 이걸 볼 권리가 있나?'를 규칙(ABAC)으로 판단하는 부서&quot;
-
-■ Audit Logger (감사 기록 부서)
-= 모든 접근 시도(성공/실패)를 변조 불가능하게 기록
-역할: 이력서처럼 모든 행동을 기록하되, 한번 기록되면 절대 수정 불가
-초보자 설명: &quot;법원의 기록 담당처럼, 모든 일을 기록장에 써놓고 절대 고치지 않는 부서&quot;
-
-■ Anomaly Detector (이상 탐지 부서)
-= 평상시 패턴과 다른 행동을 감지
-역할: Azure Monitor로 비정상 접근 패턴 자동 감지 및 경고
-초보자 설명: &quot;경보실처럼, '어? 요새 평소와 다르게 뭔가 이상한데?' 하는 상황을 자동으로 감지해서 알려주는 부서&quot;
-
-🔑 핵심 기술 과제:
-- 정책 엔진의 실시간 성능: 수천 건 요청/초를 처리하면서도 밀리초 단위 응답
-- 감사 로그의 무결성: 한번 기록되면 절대 지우거나 수정 불가능하게 설계
-- ABAC 정책의 유연성: 새로운 요구사항 나올 때마다 정책을 쉽게 추가/수정할 수 있도록"><div class="project-badge">🟡 Concept</div><h3>변호사 맞춤형 세션 메모리</h3><p class="problem">변호사별 대화 이력과 선호도 유지</p><div class="tech-stack"><span>Cosmos DB</span><span>Session Persistence</span></div></div>
-        <div class="project-card" data-category="automation" data-search="Author-Critic 계약서" data-problem="계약서의 독소조항을 단일 에이전트만으로 검토하면 놓칠 위험이 높음" data-solution="1. 사건 생성 시마다 에이전트 ID 자동 생성
-각 새로운 사건이 생기면 시스템이 자동으로 그 사건 전용 에이전트 ID를 만듭니다. 예를 들어 &quot;사건 번호 2024-001&quot;이 생기면 &quot;Agent-2024-001&quot;이 자동 생성되어, 이 사건의 에이전트는 이 ID만 사용합니다.
-
-2. Entra Agent ID로 에이전트를 Microsoft 신원 시스템에 등록
-생성된 에이전트 ID를 Microsoft의 Entra ID(엔터프라이즈 신원 관리 시스템)에 &quot;사람&quot;처럼 등록합니다. 마치 직원을 회사 시스템에 등록하는 것처럼요.
-
-3. ABAC(속성 기반 접근 제어) 정책 자동 할당
-각 에이전트에게 &quot;너는 이 사건의 기밀문서만 볼 수 있고, 다른 사건은 절대 못 본다&quot;는 규칙을 자동으로 설정합니다. 이 규칙은 에이전트 ID + 사건 + 문서 타입 조합으로 매우 세밀하게 설정됩니다.
-
-4. 문서 접근 요청 시마다 정책 엔진이 실시간 검사
-에이전트가 문서에 접근하려면 정책 엔진에 &quot;이거 접근 가능한가요?&quot;라고 물어봅니다. 엔진은 0.1초 안에 승인 또는 거부를 결정합니다.
-
-5. 모든 접근 시도를 변조 불가능한 감사 로그에 기록
-성공하든 실패하든 모든 접근 시도가 기록됩니다. 한번 기록되면 지우거나 수정할 수 없는 형태로 저장되어 나중에 &quot;누가 뭘 했는가&quot;를 증명할 수 있습니다.
-
-6. Azure Monitor에서 이상 행동 패턴 감지
-정상 행동과 다른 패턴(예: 평소보다 훨씬 많은 접근 시도, 업무 시간 외 접근)을 자동으로 감지하고 경고합니다.
-
-7. 정기적 감사 보고서 자동 생성
-매주/매월 &quot;누가 뭘 언제 접근했고 거부된 건 뭔가&quot;를 정리한 보고서를 자동으로 만들어서 규제 대응에 사용합니다." data-architecture="🏗️ 아키텍처 구성 (초보자 설명):
-
-■ Identity Layer (신원 관리 계층)
-= 에이전트 ID 생성 및 등록 담당 부서
-역할: 각 사건마다 에이전트를 만들고 Microsoft Entra ID에 등록하기
-초보자 설명: &quot;회사에 새 직원이 들어오면 직원증을 발급하는 것처럼, 각 에이전트에게 고유의 신원(ID)을 부여하는 부서&quot;
-
-■ Policy Engine (정책 결정 부서)
-= 접근 요청이 들어올 때마다 &quot;허용되나 안 되나&quot; 결정하는 부서
-역할: ABAC 정책을 적용하여 실시간 접근 제어
-초보자 설명: &quot;은행의 보안 요원처럼, 접근 요청이 오면 '당신은 이걸 볼 권리가 있나?'를 규칙(ABAC)으로 판단하는 부서&quot;
-
-■ Audit Logger (감사 기록 부서)
-= 모든 접근 시도(성공/실패)를 변조 불가능하게 기록
-역할: 이력서처럼 모든 행동을 기록하되, 한번 기록되면 절대 수정 불가
-초보자 설명: &quot;법원의 기록 담당처럼, 모든 일을 기록장에 써놓고 절대 고치지 않는 부서&quot;
-
-■ Anomaly Detector (이상 탐지 부서)
-= 평상시 패턴과 다른 행동을 감지
-역할: Azure Monitor로 비정상 접근 패턴 자동 감지 및 경고
-초보자 설명: &quot;경보실처럼, '어? 요새 평소와 다르게 뭔가 이상한데?' 하는 상황을 자동으로 감지해서 알려주는 부서&quot;
-
-🔑 핵심 기술 과제:
-- 정책 엔진의 실시간 성능: 수천 건 요청/초를 처리하면서도 밀리초 단위 응답
-- 감사 로그의 무결성: 한번 기록되면 절대 지우거나 수정 불가능하게 설계
-- ABAC 정책의 유연성: 새로운 요구사항 나올 때마다 정책을 쉽게 추가/수정할 수 있도록"><div class="project-badge">🟡 Concept</div><h3>Author-Critic 계약서 검증</h3><p class="problem">계약서 독소조항의 교차 검증</p><div class="tech-stack"><span>Agent Team</span><span>Contract Analysis</span></div></div>
-        <div class="project-card" data-category="automation" data-search="음성 변론 요약" data-problem="법정 변론의 내용이 기록되지 않아 이후 분석과 참고가 어려움" data-solution="1. 사건 생성 시마다 에이전트 ID 자동 생성
-각 새로운 사건이 생기면 시스템이 자동으로 그 사건 전용 에이전트 ID를 만듭니다. 예를 들어 &quot;사건 번호 2024-001&quot;이 생기면 &quot;Agent-2024-001&quot;이 자동 생성되어, 이 사건의 에이전트는 이 ID만 사용합니다.
-
-2. Entra Agent ID로 에이전트를 Microsoft 신원 시스템에 등록
-생성된 에이전트 ID를 Microsoft의 Entra ID(엔터프라이즈 신원 관리 시스템)에 &quot;사람&quot;처럼 등록합니다. 마치 직원을 회사 시스템에 등록하는 것처럼요.
-
-3. ABAC(속성 기반 접근 제어) 정책 자동 할당
-각 에이전트에게 &quot;너는 이 사건의 기밀문서만 볼 수 있고, 다른 사건은 절대 못 본다&quot;는 규칙을 자동으로 설정합니다. 이 규칙은 에이전트 ID + 사건 + 문서 타입 조합으로 매우 세밀하게 설정됩니다.
-
-4. 문서 접근 요청 시마다 정책 엔진이 실시간 검사
-에이전트가 문서에 접근하려면 정책 엔진에 &quot;이거 접근 가능한가요?&quot;라고 물어봅니다. 엔진은 0.1초 안에 승인 또는 거부를 결정합니다.
-
-5. 모든 접근 시도를 변조 불가능한 감사 로그에 기록
-성공하든 실패하든 모든 접근 시도가 기록됩니다. 한번 기록되면 지우거나 수정할 수 없는 형태로 저장되어 나중에 &quot;누가 뭘 했는가&quot;를 증명할 수 있습니다.
-
-6. Azure Monitor에서 이상 행동 패턴 감지
-정상 행동과 다른 패턴(예: 평소보다 훨씬 많은 접근 시도, 업무 시간 외 접근)을 자동으로 감지하고 경고합니다.
-
-7. 정기적 감사 보고서 자동 생성
-매주/매월 &quot;누가 뭘 언제 접근했고 거부된 건 뭔가&quot;를 정리한 보고서를 자동으로 만들어서 규제 대응에 사용합니다." data-architecture="🏗️ 아키텍처 구성 (초보자 설명):
-
-■ Identity Layer (신원 관리 계층)
-= 에이전트 ID 생성 및 등록 담당 부서
-역할: 각 사건마다 에이전트를 만들고 Microsoft Entra ID에 등록하기
-초보자 설명: &quot;회사에 새 직원이 들어오면 직원증을 발급하는 것처럼, 각 에이전트에게 고유의 신원(ID)을 부여하는 부서&quot;
-
-■ Policy Engine (정책 결정 부서)
-= 접근 요청이 들어올 때마다 &quot;허용되나 안 되나&quot; 결정하는 부서
-역할: ABAC 정책을 적용하여 실시간 접근 제어
-초보자 설명: &quot;은행의 보안 요원처럼, 접근 요청이 오면 '당신은 이걸 볼 권리가 있나?'를 규칙(ABAC)으로 판단하는 부서&quot;
-
-■ Audit Logger (감사 기록 부서)
-= 모든 접근 시도(성공/실패)를 변조 불가능하게 기록
-역할: 이력서처럼 모든 행동을 기록하되, 한번 기록되면 절대 수정 불가
-초보자 설명: &quot;법원의 기록 담당처럼, 모든 일을 기록장에 써놓고 절대 고치지 않는 부서&quot;
-
-■ Anomaly Detector (이상 탐지 부서)
-= 평상시 패턴과 다른 행동을 감지
-역할: Azure Monitor로 비정상 접근 패턴 자동 감지 및 경고
-초보자 설명: &quot;경보실처럼, '어? 요새 평소와 다르게 뭔가 이상한데?' 하는 상황을 자동으로 감지해서 알려주는 부서&quot;
-
-🔑 핵심 기술 과제:
-- 정책 엔진의 실시간 성능: 수천 건 요청/초를 처리하면서도 밀리초 단위 응답
-- 감사 로그의 무결성: 한번 기록되면 절대 지우거나 수정 불가능하게 설계
-- ABAC 정책의 유연성: 새로운 요구사항 나올 때마다 정책을 쉽게 추가/수정할 수 있도록"><div class="project-badge">🟡 Concept</div><h3>음성 변론 요약 및 쟁점 추출</h3><p class="problem">법정 변론의 실시간 기록 및 분석</p><div class="tech-stack"><span>MAI Transcribe-1.5</span><span>Teams Integration</span></div></div>
-        <div class="project-card" data-category="automation" data-search="Spark 마이크로 앱" data-problem="로펌 내 행정 부서가 간단한 앱(예: 비용 계산기, 일정 공유)을 필요하나 개발 비용이 높음" data-solution="1. 사건 생성 시마다 에이전트 ID 자동 생성
-각 새로운 사건이 생기면 시스템이 자동으로 그 사건 전용 에이전트 ID를 만듭니다. 예를 들어 &quot;사건 번호 2024-001&quot;이 생기면 &quot;Agent-2024-001&quot;이 자동 생성되어, 이 사건의 에이전트는 이 ID만 사용합니다.
-
-2. Entra Agent ID로 에이전트를 Microsoft 신원 시스템에 등록
-생성된 에이전트 ID를 Microsoft의 Entra ID(엔터프라이즈 신원 관리 시스템)에 &quot;사람&quot;처럼 등록합니다. 마치 직원을 회사 시스템에 등록하는 것처럼요.
-
-3. ABAC(속성 기반 접근 제어) 정책 자동 할당
-각 에이전트에게 &quot;너는 이 사건의 기밀문서만 볼 수 있고, 다른 사건은 절대 못 본다&quot;는 규칙을 자동으로 설정합니다. 이 규칙은 에이전트 ID + 사건 + 문서 타입 조합으로 매우 세밀하게 설정됩니다.
-
-4. 문서 접근 요청 시마다 정책 엔진이 실시간 검사
-에이전트가 문서에 접근하려면 정책 엔진에 &quot;이거 접근 가능한가요?&quot;라고 물어봅니다. 엔진은 0.1초 안에 승인 또는 거부를 결정합니다.
-
-5. 모든 접근 시도를 변조 불가능한 감사 로그에 기록
-성공하든 실패하든 모든 접근 시도가 기록됩니다. 한번 기록되면 지우거나 수정할 수 없는 형태로 저장되어 나중에 &quot;누가 뭘 했는가&quot;를 증명할 수 있습니다.
-
-6. Azure Monitor에서 이상 행동 패턴 감지
-정상 행동과 다른 패턴(예: 평소보다 훨씬 많은 접근 시도, 업무 시간 외 접근)을 자동으로 감지하고 경고합니다.
-
-7. 정기적 감사 보고서 자동 생성
-매주/매월 &quot;누가 뭘 언제 접근했고 거부된 건 뭔가&quot;를 정리한 보고서를 자동으로 만들어서 규제 대응에 사용합니다." data-architecture="🏗️ 아키텍처 구성 (초보자 설명):
-
-■ Identity Layer (신원 관리 계층)
-= 에이전트 ID 생성 및 등록 담당 부서
-역할: 각 사건마다 에이전트를 만들고 Microsoft Entra ID에 등록하기
-초보자 설명: &quot;회사에 새 직원이 들어오면 직원증을 발급하는 것처럼, 각 에이전트에게 고유의 신원(ID)을 부여하는 부서&quot;
-
-■ Policy Engine (정책 결정 부서)
-= 접근 요청이 들어올 때마다 &quot;허용되나 안 되나&quot; 결정하는 부서
-역할: ABAC 정책을 적용하여 실시간 접근 제어
-초보자 설명: &quot;은행의 보안 요원처럼, 접근 요청이 오면 '당신은 이걸 볼 권리가 있나?'를 규칙(ABAC)으로 판단하는 부서&quot;
-
-■ Audit Logger (감사 기록 부서)
-= 모든 접근 시도(성공/실패)를 변조 불가능하게 기록
-역할: 이력서처럼 모든 행동을 기록하되, 한번 기록되면 절대 수정 불가
-초보자 설명: &quot;법원의 기록 담당처럼, 모든 일을 기록장에 써놓고 절대 고치지 않는 부서&quot;
-
-■ Anomaly Detector (이상 탐지 부서)
-= 평상시 패턴과 다른 행동을 감지
-역할: Azure Monitor로 비정상 접근 패턴 자동 감지 및 경고
-초보자 설명: &quot;경보실처럼, '어? 요새 평소와 다르게 뭔가 이상한데?' 하는 상황을 자동으로 감지해서 알려주는 부서&quot;
-
-🔑 핵심 기술 과제:
-- 정책 엔진의 실시간 성능: 수천 건 요청/초를 처리하면서도 밀리초 단위 응답
-- 감사 로그의 무결성: 한번 기록되면 절대 지우거나 수정 불가능하게 설계
-- ABAC 정책의 유연성: 새로운 요구사항 나올 때마다 정책을 쉽게 추가/수정할 수 있도록"><div class="project-badge">🟡 Concept</div><h3>GitHub Spark 마이크로 앱</h3><p class="problem">로펌 행정용 간단한 앱 개발 자동화</p><div class="tech-stack"><span>GitHub Spark</span><span>Prompt-to-App</span></div></div>
-        <div class="project-card" data-category="automation" data-search="Teams 에이전트 핸드오프" data-problem="변호사 간 에이전트 작업 인수인계 시 컨텍스트 손실이 발생함" data-solution="1. 사건 생성 시마다 에이전트 ID 자동 생성
-각 새로운 사건이 생기면 시스템이 자동으로 그 사건 전용 에이전트 ID를 만듭니다. 예를 들어 &quot;사건 번호 2024-001&quot;이 생기면 &quot;Agent-2024-001&quot;이 자동 생성되어, 이 사건의 에이전트는 이 ID만 사용합니다.
-
-2. Entra Agent ID로 에이전트를 Microsoft 신원 시스템에 등록
-생성된 에이전트 ID를 Microsoft의 Entra ID(엔터프라이즈 신원 관리 시스템)에 &quot;사람&quot;처럼 등록합니다. 마치 직원을 회사 시스템에 등록하는 것처럼요.
-
-3. ABAC(속성 기반 접근 제어) 정책 자동 할당
-각 에이전트에게 &quot;너는 이 사건의 기밀문서만 볼 수 있고, 다른 사건은 절대 못 본다&quot;는 규칙을 자동으로 설정합니다. 이 규칙은 에이전트 ID + 사건 + 문서 타입 조합으로 매우 세밀하게 설정됩니다.
-
-4. 문서 접근 요청 시마다 정책 엔진이 실시간 검사
-에이전트가 문서에 접근하려면 정책 엔진에 &quot;이거 접근 가능한가요?&quot;라고 물어봅니다. 엔진은 0.1초 안에 승인 또는 거부를 결정합니다.
-
-5. 모든 접근 시도를 변조 불가능한 감사 로그에 기록
-성공하든 실패하든 모든 접근 시도가 기록됩니다. 한번 기록되면 지우거나 수정할 수 없는 형태로 저장되어 나중에 &quot;누가 뭘 했는가&quot;를 증명할 수 있습니다.
-
-6. Azure Monitor에서 이상 행동 패턴 감지
-정상 행동과 다른 패턴(예: 평소보다 훨씬 많은 접근 시도, 업무 시간 외 접근)을 자동으로 감지하고 경고합니다.
-
-7. 정기적 감사 보고서 자동 생성
-매주/매월 &quot;누가 뭘 언제 접근했고 거부된 건 뭔가&quot;를 정리한 보고서를 자동으로 만들어서 규제 대응에 사용합니다." data-architecture="🏗️ 아키텍처 구성 (초보자 설명):
-
-■ Identity Layer (신원 관리 계층)
-= 에이전트 ID 생성 및 등록 담당 부서
-역할: 각 사건마다 에이전트를 만들고 Microsoft Entra ID에 등록하기
-초보자 설명: &quot;회사에 새 직원이 들어오면 직원증을 발급하는 것처럼, 각 에이전트에게 고유의 신원(ID)을 부여하는 부서&quot;
-
-■ Policy Engine (정책 결정 부서)
-= 접근 요청이 들어올 때마다 &quot;허용되나 안 되나&quot; 결정하는 부서
-역할: ABAC 정책을 적용하여 실시간 접근 제어
-초보자 설명: &quot;은행의 보안 요원처럼, 접근 요청이 오면 '당신은 이걸 볼 권리가 있나?'를 규칙(ABAC)으로 판단하는 부서&quot;
-
-■ Audit Logger (감사 기록 부서)
-= 모든 접근 시도(성공/실패)를 변조 불가능하게 기록
-역할: 이력서처럼 모든 행동을 기록하되, 한번 기록되면 절대 수정 불가
-초보자 설명: &quot;법원의 기록 담당처럼, 모든 일을 기록장에 써놓고 절대 고치지 않는 부서&quot;
-
-■ Anomaly Detector (이상 탐지 부서)
-= 평상시 패턴과 다른 행동을 감지
-역할: Azure Monitor로 비정상 접근 패턴 자동 감지 및 경고
-초보자 설명: &quot;경보실처럼, '어? 요새 평소와 다르게 뭔가 이상한데?' 하는 상황을 자동으로 감지해서 알려주는 부서&quot;
-
-🔑 핵심 기술 과제:
-- 정책 엔진의 실시간 성능: 수천 건 요청/초를 처리하면서도 밀리초 단위 응답
-- 감사 로그의 무결성: 한번 기록되면 절대 지우거나 수정 불가능하게 설계
-- ABAC 정책의 유연성: 새로운 요구사항 나올 때마다 정책을 쉽게 추가/수정할 수 있도록"><div class="project-badge">🟡 Concept</div><h3>Teams 에이전트 협업 핸드오프</h3><p class="problem">변호사 간 에이전트 작업 인수인계</p><div class="tech-stack"><span>Teams Integration</span><span>Handoff Architecture</span></div></div>
-        <div class="project-card" data-category="automation" data-search="자율 일상 업무 비서" data-problem="변호사가 일정, 메일, 청구 등 여러 도구를 개별 확인해야 하는 비효율" data-solution="1. 사건 생성 시마다 에이전트 ID 자동 생성
-각 새로운 사건이 생기면 시스템이 자동으로 그 사건 전용 에이전트 ID를 만듭니다. 예를 들어 &quot;사건 번호 2024-001&quot;이 생기면 &quot;Agent-2024-001&quot;이 자동 생성되어, 이 사건의 에이전트는 이 ID만 사용합니다.
-
-2. Entra Agent ID로 에이전트를 Microsoft 신원 시스템에 등록
-생성된 에이전트 ID를 Microsoft의 Entra ID(엔터프라이즈 신원 관리 시스템)에 &quot;사람&quot;처럼 등록합니다. 마치 직원을 회사 시스템에 등록하는 것처럼요.
-
-3. ABAC(속성 기반 접근 제어) 정책 자동 할당
-각 에이전트에게 &quot;너는 이 사건의 기밀문서만 볼 수 있고, 다른 사건은 절대 못 본다&quot;는 규칙을 자동으로 설정합니다. 이 규칙은 에이전트 ID + 사건 + 문서 타입 조합으로 매우 세밀하게 설정됩니다.
-
-4. 문서 접근 요청 시마다 정책 엔진이 실시간 검사
-에이전트가 문서에 접근하려면 정책 엔진에 &quot;이거 접근 가능한가요?&quot;라고 물어봅니다. 엔진은 0.1초 안에 승인 또는 거부를 결정합니다.
-
-5. 모든 접근 시도를 변조 불가능한 감사 로그에 기록
-성공하든 실패하든 모든 접근 시도가 기록됩니다. 한번 기록되면 지우거나 수정할 수 없는 형태로 저장되어 나중에 &quot;누가 뭘 했는가&quot;를 증명할 수 있습니다.
-
-6. Azure Monitor에서 이상 행동 패턴 감지
-정상 행동과 다른 패턴(예: 평소보다 훨씬 많은 접근 시도, 업무 시간 외 접근)을 자동으로 감지하고 경고합니다.
-
-7. 정기적 감사 보고서 자동 생성
-매주/매월 &quot;누가 뭘 언제 접근했고 거부된 건 뭔가&quot;를 정리한 보고서를 자동으로 만들어서 규제 대응에 사용합니다." data-architecture="🏗️ 아키텍처 구성 (초보자 설명):
-
-■ Identity Layer (신원 관리 계층)
-= 에이전트 ID 생성 및 등록 담당 부서
-역할: 각 사건마다 에이전트를 만들고 Microsoft Entra ID에 등록하기
-초보자 설명: &quot;회사에 새 직원이 들어오면 직원증을 발급하는 것처럼, 각 에이전트에게 고유의 신원(ID)을 부여하는 부서&quot;
-
-■ Policy Engine (정책 결정 부서)
-= 접근 요청이 들어올 때마다 &quot;허용되나 안 되나&quot; 결정하는 부서
-역할: ABAC 정책을 적용하여 실시간 접근 제어
-초보자 설명: &quot;은행의 보안 요원처럼, 접근 요청이 오면 '당신은 이걸 볼 권리가 있나?'를 규칙(ABAC)으로 판단하는 부서&quot;
-
-■ Audit Logger (감사 기록 부서)
-= 모든 접근 시도(성공/실패)를 변조 불가능하게 기록
-역할: 이력서처럼 모든 행동을 기록하되, 한번 기록되면 절대 수정 불가
-초보자 설명: &quot;법원의 기록 담당처럼, 모든 일을 기록장에 써놓고 절대 고치지 않는 부서&quot;
-
-■ Anomaly Detector (이상 탐지 부서)
-= 평상시 패턴과 다른 행동을 감지
-역할: Azure Monitor로 비정상 접근 패턴 자동 감지 및 경고
-초보자 설명: &quot;경보실처럼, '어? 요새 평소와 다르게 뭔가 이상한데?' 하는 상황을 자동으로 감지해서 알려주는 부서&quot;
-
-🔑 핵심 기술 과제:
-- 정책 엔진의 실시간 성능: 수천 건 요청/초를 처리하면서도 밀리초 단위 응답
-- 감사 로그의 무결성: 한번 기록되면 절대 지우거나 수정 불가능하게 설계
-- ABAC 정책의 유연성: 새로운 요구사항 나올 때마다 정책을 쉽게 추가/수정할 수 있도록"><div class="project-badge">🟡 Concept</div><h3>자율 일상 업무 비서</h3><p class="problem">일정, 메일, 청구 관리의 자동화</p><div class="tech-stack"><span>Copilot App</span><span>Calendar/Mail Integration</span></div></div>
+        <div class="project-card" data-category="automation" data-search="GitHub Copilot 서면 작성" data-problem="초년생 변호사들이 반복적으로 수행하는 표준 서면(준비서면 등) 작성의 비효율" data-solution="■ 작업 티켓화&#10;  표준 서면 작성 요청을 GitHub Issues로 티켓화&#10;&#10;■ Copilot 초안 생성&#10;  Issue에 요구사항 입력 시 Copilot이 서면 초안을 자동 생성&#10;&#10;■ 순차 워크플로우 구성&#10;  초안→검토→수정→승인 단계를 Issue 상태(Label)로 관리&#10;&#10;■ 초년생 변호사 검토 지점 지정&#10;  각 단계마다 담당 변호사가 코멘트로 피드백&#10;&#10;■ 완료본 자동 아카이빙&#10;  승인된 서면을 사건 폴더에 자동 저장" data-architecture="■ Issue Tracker&#10;  서면 작성 요청 및 진행 상태 관리&#10;&#10;■ GitHub Copilot Agent&#10;  요구사항 기반 서면 초안 생성&#10;&#10;■ Sequential Workflow Engine&#10;  초안-검토-승인 단계 자동 전이&#10;&#10;■ Archive Connector&#10;  완료 문서를 사건 관리 시스템에 저장&#10;&#10;🔑 핵심 기술 과제:&#10;  • 반복 서면의 품질 일관성 확보&#10;  • 검토 단계 병목 최소화&#10;  • 버전 관리와 최종본 추적"><div class="project-badge">🔵 설계 완료</div><h3>Copilot × Issues 서면 파이프라인</h3><p class="problem">초년생 변호사의 반복적 서면 작성</p><div class="tech-stack"><span>GitHub Copilot</span><span>Issues</span><span>Sequential Workflow</span></div></div>
+        <div class="project-card" data-category="automation" data-search="동적 모델 라우팅 챗봇" data-problem="모든 간단한 질문(상담 예약 등)에 비싼 추론 모델을 사용하여 발생하는 자원 낭비 및 높은 운영 비용" data-solution="■ 질의 의도 분류&#10;  들어온 질문을 상담 예약, 간단 질의, 복잡 법률 자문 등으로 분류&#10;&#10;■ 경량 모델 우선 처리&#10;  단순 질문은 저비용 경량 모델로 즉시 응답&#10;&#10;■ 고비용 모델 선택적 사용&#10;  복잡한 법률 추론이 필요한 경우만 고성능 모델로 라우팅&#10;&#10;■ Semantic Kernel 오케스트레이션&#10;  의도별로 적절한 스킬/모델을 자동 조합&#10;&#10;■ 응답 품질 모니터링&#10;  라우팅 정확도를 지속 측정해 분류 규칙 개선" data-architecture="■ Intent Classifier&#10;  질의 유형 자동 분류&#10;&#10;■ Model Router&#10;  분류 결과 기반 적정 모델로 요청 전달&#10;&#10;■ Semantic Kernel Orchestrator&#10;  스킬·모델 조합 및 실행 관리&#10;&#10;■ Cost Monitor&#10;  모델별 비용/사용량 추적&#10;&#10;🔑 핵심 기술 과제:&#10;  • 분류 정확도와 오라우팅 리스크&#10;  • 비용 절감과 응답 품질의 균형&#10;  • 신규 의도 유형에 대한 확장성"><div class="project-badge">🔵 설계 완료</div><h3>동적 라우팅 법률 챗봇</h3><p class="problem">모든 질문에 고성능 모델 사용으로 비용 낭비</p><div class="tech-stack"><span>Dynamic Model Routing</span><span>Intent Classification</span><span>Semantic Kernel</span></div></div>
+        <div class="project-card" data-category="automation" data-search="RL 강화학습 판결 예측" data-problem="과거 판결 결과와 에이전트의 예측 간의 차이를 좁히기 위한 지속적인 모델 개선 필요" data-solution="■ 판결 예측 기록&#10;  에이전트의 사건 예측 결과를 지속적으로 기록&#10;&#10;■ 실제 판결 결과 대조&#10;  실제 판결이 나오면 예측과의 차이를 자동 계산&#10;&#10;■ 보상 모델 설계&#10;  예측 정확도에 기반한 보상 신호(Reward Model) 정의&#10;&#10;■ 주기적 강화학습&#10;  축적된 보상 데이터로 정책을 주기적으로 업데이트&#10;&#10;■ 휴먼 인 더 루프 검증&#10;  중요 사건은 변호사가 보상 라벨링에 참여" data-architecture="■ Prediction Logger&#10;  에이전트 예측 결과 기록&#10;&#10;■ Outcome Matcher&#10;  실제 판결과 예측 비교&#10;&#10;■ Reward Model&#10;  정확도 기반 보상 신호 산출&#10;&#10;■ RL Training Loop&#10;  정책 업데이트를 위한 강화학습 파이프라인&#10;&#10;🔑 핵심 기술 과제:&#10;  • 판결 결과 반영까지의 긴 피드백 지연&#10;  • 보상 설계의 공정성/편향 방지&#10;  • 지속 학습으로 인한 모델 안정성 리스크"><div class="project-badge">🔵 설계 완료</div><h3>RL 피드백 루프 에이전트</h3><p class="problem">과거 판결과 예측의 차이를 좁히기</p><div class="tech-stack"><span>Reinforcement Learning</span><span>Reward Modeling</span><span>Human-in-the-loop</span></div></div>
+        <div class="project-card" data-category="automation" data-search="세션 메모리 Persistent" data-problem="변호사별 대화 이력과 선호도가 유지되지 않아 매번 동일한 정보 반복 입력 필요" data-solution="■ 세션 이력 저장&#10;  변호사별 대화 이력을 Cosmos DB에 영속적으로 저장&#10;&#10;■ 선호도 프로파일링&#10;  자주 쓰는 표현/포맷/스타일을 프로필로 학습&#10;&#10;■ 컨텍스트 자동 로드&#10;  새 세션 시작 시 이전 컨텍스트와 선호도를 자동 불러오기&#10;&#10;■ 사건별 격리 저장&#10;  세션 메모리를 사건 단위로 분리해 정보 혼선 방지&#10;&#10;■ 보관 기간 정책 적용&#10;  사건 종료 후 메모리 보관/파기 정책 자동 적용" data-architecture="■ Session Store (Cosmos DB)&#10;  변호사·사건별 대화 이력 저장&#10;&#10;■ Preference Profiler&#10;  반복 패턴 기반 선호도 학습&#10;&#10;■ Context Loader&#10;  세션 시작 시 관련 이력 자동 주입&#10;&#10;■ Retention Policy Engine&#10;  보관 기간 및 파기 규칙 관리&#10;&#10;🔑 핵심 기술 과제:&#10;  • 개인정보/기밀정보 보관 범위 설정&#10;  • 사건 간 정보 격리 보장&#10;  • 장기 저장 데이터의 검색 성능"><div class="project-badge">🟡 아이디어</div><h3>변호사 맞춤형 세션 메모리</h3><p class="problem">변호사별 대화 이력과 선호도 유지</p><div class="tech-stack"><span>Cosmos DB</span><span>Session Persistence</span></div></div>
+        <div class="project-card" data-category="automation" data-search="Author-Critic 계약서" data-problem="계약서의 독소조항을 단일 에이전트만으로 검토하면 놓칠 위험이 높음" data-solution="■ Author 에이전트 초안 검토&#10;  계약서를 1차로 분석해 조항별 위험도 평가&#10;&#10;■ Critic 에이전트 교차 검증&#10;  독립된 에이전트가 Author의 판단을 재검토하며 누락 조항 탐지&#10;&#10;■ 독소조항 체크리스트 대조&#10;  표준 위험 조항 라이브러리와 자동 대조&#10;&#10;■ 불일치 시 재검토 루프&#10;  Author-Critic 판단이 다르면 근거를 비교해 재평가&#10;&#10;■ 최종 리스크 리포트 생성&#10;  합의된 위험 조항과 근거를 변호사에게 요약 제공" data-architecture="■ Author Agent&#10;  계약서 조항별 1차 위험 분석&#10;&#10;■ Critic Agent&#10;  Author 결과 교차 검증 및 누락 탐지&#10;&#10;■ Risk Clause Library&#10;  표준 독소조항 패턴 데이터베이스&#10;&#10;■ Consensus Resolver&#10;  두 에이전트 판단 불일치 조정&#10;&#10;🔑 핵심 기술 과제:&#10;  • 에이전트 간 판단 불일치의 효율적 조정&#10;  • 다양한 계약 유형에 대한 위험 라이브러리 확장&#10;  • 오탐/누락 최소화"><div class="project-badge">🟡 아이디어</div><h3>Author-Critic 계약서 검증</h3><p class="problem">계약서 독소조항의 교차 검증</p><div class="tech-stack"><span>Agent Team</span><span>Contract Analysis</span></div></div>
+        <div class="project-card" data-category="automation" data-search="음성 변론 요약" data-problem="법정 변론의 내용이 기록되지 않아 이후 분석과 참고가 어려움" data-solution="■ 실시간 음성 전사&#10;  MAI Transcribe-1.5로 법정 변론을 실시간 텍스트화&#10;&#10;■ 화자 분리&#10;  변호사·판사·증인 발언을 화자별로 구분&#10;&#10;■ 쟁점 자동 추출&#10;  전사본에서 핵심 쟁점과 발언을 요약&#10;&#10;■ Teams 연동 기록&#10;  회의/변론 기록을 Teams 캘린더·문서와 연결&#10;&#10;■ 검색 가능한 아카이브 구축&#10;  추후 사건 참고를 위한 전사본 검색 인덱스 생성" data-architecture="■ Speech-to-Text Engine (MAI Transcribe)&#10;  실시간 음성 전사&#10;&#10;■ Speaker Diarization&#10;  화자별 발언 분리&#10;&#10;■ Issue Extraction Model&#10;  쟁점/핵심 발언 요약&#10;&#10;■ Teams Integration Layer&#10;  회의 기록과 사건 문서 연결&#10;&#10;🔑 핵심 기술 과제:&#10;  • 법정 특유의 전문용어 인식 정확도&#10;  • 다자 발언 환경에서의 화자 분리 정확도&#10;  • 민감 정보 보관 및 접근 통제"><div class="project-badge">🟡 아이디어</div><h3>음성 변론 요약 및 쟁점 추출</h3><p class="problem">법정 변론의 실시간 기록 및 분석</p><div class="tech-stack"><span>MAI Transcribe-1.5</span><span>Teams Integration</span></div></div>
+        <div class="project-card" data-category="automation" data-search="Spark 마이크로 앱" data-problem="로펌 내 행정 부서가 간단한 앱(예: 비용 계산기, 일정 공유)을 필요하나 개발 비용이 높음" data-solution="■ 요구사항 자연어 입력&#10;  행정 부서가 필요한 앱을 자연어로 설명&#10;&#10;■ Spark 프롬프트투앱 생성&#10;  설명만으로 동작하는 마이크로 앱 자동 생성&#10;&#10;■ 내부 승인 절차&#10;  생성된 앱을 IT팀이 보안·품질 검토 후 배포 승인&#10;&#10;■ 사내 배포&#10;  승인된 앱을 사내 포털에 등록해 누구나 사용 가능하도록 공개&#10;&#10;■ 사용 현황 모니터링&#10;  앱 사용량과 오류를 모니터링해 개선" data-architecture="■ GitHub Spark&#10;  프롬프트 기반 마이크로 앱 생성 엔진&#10;&#10;■ Internal Review Gate&#10;  보안/품질 검토 프로세스&#10;&#10;■ Internal App Portal&#10;  승인된 앱 배포 및 접근 관리&#10;&#10;■ Usage Monitor&#10;  앱 사용 현황 추적&#10;&#10;🔑 핵심 기술 과제:&#10;  • 비개발자가 만든 앱의 보안 검증&#10;  • 저비용 개발과 품질 기준의 균형&#10;  • 다수 마이크로 앱의 유지보수 관리"><div class="project-badge">🟡 아이디어</div><h3>GitHub Spark 마이크로 앱</h3><p class="problem">로펌 행정용 간단한 앱 개발 자동화</p><div class="tech-stack"><span>GitHub Spark</span><span>Prompt-to-App</span></div></div>
+        <div class="project-card" data-category="automation" data-search="Teams 에이전트 핸드오프" data-problem="변호사 간 에이전트 작업 인수인계 시 컨텍스트 손실이 발생함" data-solution="■ 컨텍스트 패키징&#10;  작업 중이던 에이전트 세션의 맥락(문서, 대화, 진행상태)을 패키지화&#10;&#10;■ 핸드오프 트리거&#10;  변호사가 Teams에서 다른 변호사에게 인수인계 요청&#10;&#10;■ 컨텍스트 자동 이전&#10;  받는 변호사의 에이전트 세션에 기존 맥락을 자동 로드&#10;&#10;■ 인수인계 요약 제공&#10;  무엇이 진행 중이었는지 요약을 함께 전달&#10;&#10;■ 이력 추적&#10;  핸드오프 이력을 감사 로그로 기록" data-architecture="■ Context Packager&#10;  세션 상태를 이전 가능한 형태로 직렬화&#10;&#10;■ Handoff Broker&#10;  Teams 내 인수인계 요청 처리&#10;&#10;■ Context Loader&#10;  수신자 세션에 맥락 자동 주입&#10;&#10;■ Handoff Audit Log&#10;  인수인계 이력 기록&#10;&#10;🔑 핵심 기술 과제:&#10;  • 세션 맥락의 정확한 직렬화/복원&#10;  • 다른 변호사 간 권한 경계 유지&#10;  • 핸드오프 누락 방지"><div class="project-badge">🟡 아이디어</div><h3>Teams 에이전트 협업 핸드오프</h3><p class="problem">변호사 간 에이전트 작업 인수인계</p><div class="tech-stack"><span>Teams Integration</span><span>Handoff Architecture</span></div></div>
+        <div class="project-card" data-category="automation" data-search="자율 일상 업무 비서" data-problem="변호사가 일정, 메일, 청구 등 여러 도구를 개별 확인해야 하는 비효율" data-solution="■ 도구 통합 연결&#10;  일정·메일·청구 시스템을 Copilot App에 연동&#10;&#10;■ 일일 브리핑 생성&#10;  매일 아침 일정·미결 메일·청구 현황을 요약해 전달&#10;&#10;■ 우선순위 자동 정렬&#10;  긴급도·마감일 기준으로 할 일 우선순위 제시&#10;&#10;■ 반복 작업 자동화&#10;  정기 보고서, 일정 조율 등 반복 업무 자동 처리&#10;&#10;■ 승인 필요 작업만 확인 요청&#10;  중요한 결정만 변호사에게 확인받고 나머지는 자동 처리" data-architecture="■ Copilot App Core&#10;  여러 업무 도구를 통합하는 에이전트 허브&#10;&#10;■ Calendar/Mail Connector&#10;  일정·메일 시스템 연동&#10;&#10;■ Priority Engine&#10;  긴급도 기반 작업 정렬&#10;&#10;■ Automation Rules&#10;  반복 업무 자동 처리 규칙&#10;&#10;🔑 핵심 기술 과제:&#10;  • 여러 시스템 간 연동 안정성&#10;  • 자동화 범위와 변호사 통제권의 균형&#10;  • 민감 업무 정보에 대한 접근 통제"><div class="project-badge">🟡 아이디어</div><h3>자율 일상 업무 비서</h3><p class="problem">일정, 메일, 청구 관리의 자동화</p><div class="tech-stack"><span>Copilot App</span><span>Calendar/Mail Integration</span></div></div>
       </div>
     </div>
 
@@ -1479,321 +776,13 @@
     <div class="category-section" data-category="aiops">
       <h2 class="category-header">AIOps & Observability</h2>
       <div class="project-grid">
-        <div class="project-card" data-category="aiops" data-search="에이전트 추론 트레이싱 루브릭" data-problem="에이전트가 왜 그런 법적 결론을 내렸는지 과정을 알 수 없어 발생하는 블랙박스 문제" data-solution="1. 사건 생성 시마다 에이전트 ID 자동 생성
-각 새로운 사건이 생기면 시스템이 자동으로 그 사건 전용 에이전트 ID를 만듭니다. 예를 들어 &quot;사건 번호 2024-001&quot;이 생기면 &quot;Agent-2024-001&quot;이 자동 생성되어, 이 사건의 에이전트는 이 ID만 사용합니다.
-
-2. Entra Agent ID로 에이전트를 Microsoft 신원 시스템에 등록
-생성된 에이전트 ID를 Microsoft의 Entra ID(엔터프라이즈 신원 관리 시스템)에 &quot;사람&quot;처럼 등록합니다. 마치 직원을 회사 시스템에 등록하는 것처럼요.
-
-3. ABAC(속성 기반 접근 제어) 정책 자동 할당
-각 에이전트에게 &quot;너는 이 사건의 기밀문서만 볼 수 있고, 다른 사건은 절대 못 본다&quot;는 규칙을 자동으로 설정합니다. 이 규칙은 에이전트 ID + 사건 + 문서 타입 조합으로 매우 세밀하게 설정됩니다.
-
-4. 문서 접근 요청 시마다 정책 엔진이 실시간 검사
-에이전트가 문서에 접근하려면 정책 엔진에 &quot;이거 접근 가능한가요?&quot;라고 물어봅니다. 엔진은 0.1초 안에 승인 또는 거부를 결정합니다.
-
-5. 모든 접근 시도를 변조 불가능한 감사 로그에 기록
-성공하든 실패하든 모든 접근 시도가 기록됩니다. 한번 기록되면 지우거나 수정할 수 없는 형태로 저장되어 나중에 &quot;누가 뭘 했는가&quot;를 증명할 수 있습니다.
-
-6. Azure Monitor에서 이상 행동 패턴 감지
-정상 행동과 다른 패턴(예: 평소보다 훨씬 많은 접근 시도, 업무 시간 외 접근)을 자동으로 감지하고 경고합니다.
-
-7. 정기적 감사 보고서 자동 생성
-매주/매월 &quot;누가 뭘 언제 접근했고 거부된 건 뭔가&quot;를 정리한 보고서를 자동으로 만들어서 규제 대응에 사용합니다." data-architecture="🏗️ 아키텍처 구성 (초보자 설명):
-
-■ Identity Layer (신원 관리 계층)
-= 에이전트 ID 생성 및 등록 담당 부서
-역할: 각 사건마다 에이전트를 만들고 Microsoft Entra ID에 등록하기
-초보자 설명: &quot;회사에 새 직원이 들어오면 직원증을 발급하는 것처럼, 각 에이전트에게 고유의 신원(ID)을 부여하는 부서&quot;
-
-■ Policy Engine (정책 결정 부서)
-= 접근 요청이 들어올 때마다 &quot;허용되나 안 되나&quot; 결정하는 부서
-역할: ABAC 정책을 적용하여 실시간 접근 제어
-초보자 설명: &quot;은행의 보안 요원처럼, 접근 요청이 오면 '당신은 이걸 볼 권리가 있나?'를 규칙(ABAC)으로 판단하는 부서&quot;
-
-■ Audit Logger (감사 기록 부서)
-= 모든 접근 시도(성공/실패)를 변조 불가능하게 기록
-역할: 이력서처럼 모든 행동을 기록하되, 한번 기록되면 절대 수정 불가
-초보자 설명: &quot;법원의 기록 담당처럼, 모든 일을 기록장에 써놓고 절대 고치지 않는 부서&quot;
-
-■ Anomaly Detector (이상 탐지 부서)
-= 평상시 패턴과 다른 행동을 감지
-역할: Azure Monitor로 비정상 접근 패턴 자동 감지 및 경고
-초보자 설명: &quot;경보실처럼, '어? 요새 평소와 다르게 뭔가 이상한데?' 하는 상황을 자동으로 감지해서 알려주는 부서&quot;
-
-🔑 핵심 기술 과제:
-- 정책 엔진의 실시간 성능: 수천 건 요청/초를 처리하면서도 밀리초 단위 응답
-- 감사 로그의 무결성: 한번 기록되면 절대 지우거나 수정 불가능하게 설계
-- ABAC 정책의 유연성: 새로운 요구사항 나올 때마다 정책을 쉽게 추가/수정할 수 있도록"><div class="project-badge">🟢 Production</div><h3>에이전트 추론 트레이싱 및 평가</h3><p class="problem">에이전트의 법적 결론 과정이 블랙박스</p><div class="tech-stack"><span>OpenTelemetry</span><span>Rubric Evaluators</span><span>Application Insights</span><span>Azure Managed Grafana</span></div></div>
-        <div class="project-card" data-category="aiops" data-search="법률 윤리 Red-teaming" data-problem="에이전트의 비윤리적 행동(뇌물 제시, 거짓 증거 제안 등)을 사전에 탐지하지 못함" data-solution="1. 사건 생성 시마다 에이전트 ID 자동 생성
-각 새로운 사건이 생기면 시스템이 자동으로 그 사건 전용 에이전트 ID를 만듭니다. 예를 들어 &quot;사건 번호 2024-001&quot;이 생기면 &quot;Agent-2024-001&quot;이 자동 생성되어, 이 사건의 에이전트는 이 ID만 사용합니다.
-
-2. Entra Agent ID로 에이전트를 Microsoft 신원 시스템에 등록
-생성된 에이전트 ID를 Microsoft의 Entra ID(엔터프라이즈 신원 관리 시스템)에 &quot;사람&quot;처럼 등록합니다. 마치 직원을 회사 시스템에 등록하는 것처럼요.
-
-3. ABAC(속성 기반 접근 제어) 정책 자동 할당
-각 에이전트에게 &quot;너는 이 사건의 기밀문서만 볼 수 있고, 다른 사건은 절대 못 본다&quot;는 규칙을 자동으로 설정합니다. 이 규칙은 에이전트 ID + 사건 + 문서 타입 조합으로 매우 세밀하게 설정됩니다.
-
-4. 문서 접근 요청 시마다 정책 엔진이 실시간 검사
-에이전트가 문서에 접근하려면 정책 엔진에 &quot;이거 접근 가능한가요?&quot;라고 물어봅니다. 엔진은 0.1초 안에 승인 또는 거부를 결정합니다.
-
-5. 모든 접근 시도를 변조 불가능한 감사 로그에 기록
-성공하든 실패하든 모든 접근 시도가 기록됩니다. 한번 기록되면 지우거나 수정할 수 없는 형태로 저장되어 나중에 &quot;누가 뭘 했는가&quot;를 증명할 수 있습니다.
-
-6. Azure Monitor에서 이상 행동 패턴 감지
-정상 행동과 다른 패턴(예: 평소보다 훨씬 많은 접근 시도, 업무 시간 외 접근)을 자동으로 감지하고 경고합니다.
-
-7. 정기적 감사 보고서 자동 생성
-매주/매월 &quot;누가 뭘 언제 접근했고 거부된 건 뭔가&quot;를 정리한 보고서를 자동으로 만들어서 규제 대응에 사용합니다." data-architecture="🏗️ 아키텍처 구성 (초보자 설명):
-
-■ Identity Layer (신원 관리 계층)
-= 에이전트 ID 생성 및 등록 담당 부서
-역할: 각 사건마다 에이전트를 만들고 Microsoft Entra ID에 등록하기
-초보자 설명: &quot;회사에 새 직원이 들어오면 직원증을 발급하는 것처럼, 각 에이전트에게 고유의 신원(ID)을 부여하는 부서&quot;
-
-■ Policy Engine (정책 결정 부서)
-= 접근 요청이 들어올 때마다 &quot;허용되나 안 되나&quot; 결정하는 부서
-역할: ABAC 정책을 적용하여 실시간 접근 제어
-초보자 설명: &quot;은행의 보안 요원처럼, 접근 요청이 오면 '당신은 이걸 볼 권리가 있나?'를 규칙(ABAC)으로 판단하는 부서&quot;
-
-■ Audit Logger (감사 기록 부서)
-= 모든 접근 시도(성공/실패)를 변조 불가능하게 기록
-역할: 이력서처럼 모든 행동을 기록하되, 한번 기록되면 절대 수정 불가
-초보자 설명: &quot;법원의 기록 담당처럼, 모든 일을 기록장에 써놓고 절대 고치지 않는 부서&quot;
-
-■ Anomaly Detector (이상 탐지 부서)
-= 평상시 패턴과 다른 행동을 감지
-역할: Azure Monitor로 비정상 접근 패턴 자동 감지 및 경고
-초보자 설명: &quot;경보실처럼, '어? 요새 평소와 다르게 뭔가 이상한데?' 하는 상황을 자동으로 감지해서 알려주는 부서&quot;
-
-🔑 핵심 기술 과제:
-- 정책 엔진의 실시간 성능: 수천 건 요청/초를 처리하면서도 밀리초 단위 응답
-- 감사 로그의 무결성: 한번 기록되면 절대 지우거나 수정 불가능하게 설계
-- ABAC 정책의 유연성: 새로운 요구사항 나올 때마다 정책을 쉽게 추가/수정할 수 있도록"><div class="project-badge">🟡 Concept</div><h3>법률 윤리 위반 탐지</h3><p class="problem">에이전트의 비윤리적 행동 사전 탐지</p><div class="tech-stack"><span>PyRIT</span><span>Content Safety</span><span>Red-teaming</span></div></div>
-        <div class="project-card" data-category="aiops" data-search="배치 추론 대규모 증거" data-problem="수십만 건의 문서를 실시간 처리할 수 없으며 배치 처리 필요" data-solution="1. 사건 생성 시마다 에이전트 ID 자동 생성
-각 새로운 사건이 생기면 시스템이 자동으로 그 사건 전용 에이전트 ID를 만듭니다. 예를 들어 &quot;사건 번호 2024-001&quot;이 생기면 &quot;Agent-2024-001&quot;이 자동 생성되어, 이 사건의 에이전트는 이 ID만 사용합니다.
-
-2. Entra Agent ID로 에이전트를 Microsoft 신원 시스템에 등록
-생성된 에이전트 ID를 Microsoft의 Entra ID(엔터프라이즈 신원 관리 시스템)에 &quot;사람&quot;처럼 등록합니다. 마치 직원을 회사 시스템에 등록하는 것처럼요.
-
-3. ABAC(속성 기반 접근 제어) 정책 자동 할당
-각 에이전트에게 &quot;너는 이 사건의 기밀문서만 볼 수 있고, 다른 사건은 절대 못 본다&quot;는 규칙을 자동으로 설정합니다. 이 규칙은 에이전트 ID + 사건 + 문서 타입 조합으로 매우 세밀하게 설정됩니다.
-
-4. 문서 접근 요청 시마다 정책 엔진이 실시간 검사
-에이전트가 문서에 접근하려면 정책 엔진에 &quot;이거 접근 가능한가요?&quot;라고 물어봅니다. 엔진은 0.1초 안에 승인 또는 거부를 결정합니다.
-
-5. 모든 접근 시도를 변조 불가능한 감사 로그에 기록
-성공하든 실패하든 모든 접근 시도가 기록됩니다. 한번 기록되면 지우거나 수정할 수 없는 형태로 저장되어 나중에 &quot;누가 뭘 했는가&quot;를 증명할 수 있습니다.
-
-6. Azure Monitor에서 이상 행동 패턴 감지
-정상 행동과 다른 패턴(예: 평소보다 훨씬 많은 접근 시도, 업무 시간 외 접근)을 자동으로 감지하고 경고합니다.
-
-7. 정기적 감사 보고서 자동 생성
-매주/매월 &quot;누가 뭘 언제 접근했고 거부된 건 뭔가&quot;를 정리한 보고서를 자동으로 만들어서 규제 대응에 사용합니다." data-architecture="🏗️ 아키텍처 구성 (초보자 설명):
-
-■ Identity Layer (신원 관리 계층)
-= 에이전트 ID 생성 및 등록 담당 부서
-역할: 각 사건마다 에이전트를 만들고 Microsoft Entra ID에 등록하기
-초보자 설명: &quot;회사에 새 직원이 들어오면 직원증을 발급하는 것처럼, 각 에이전트에게 고유의 신원(ID)을 부여하는 부서&quot;
-
-■ Policy Engine (정책 결정 부서)
-= 접근 요청이 들어올 때마다 &quot;허용되나 안 되나&quot; 결정하는 부서
-역할: ABAC 정책을 적용하여 실시간 접근 제어
-초보자 설명: &quot;은행의 보안 요원처럼, 접근 요청이 오면 '당신은 이걸 볼 권리가 있나?'를 규칙(ABAC)으로 판단하는 부서&quot;
-
-■ Audit Logger (감사 기록 부서)
-= 모든 접근 시도(성공/실패)를 변조 불가능하게 기록
-역할: 이력서처럼 모든 행동을 기록하되, 한번 기록되면 절대 수정 불가
-초보자 설명: &quot;법원의 기록 담당처럼, 모든 일을 기록장에 써놓고 절대 고치지 않는 부서&quot;
-
-■ Anomaly Detector (이상 탐지 부서)
-= 평상시 패턴과 다른 행동을 감지
-역할: Azure Monitor로 비정상 접근 패턴 자동 감지 및 경고
-초보자 설명: &quot;경보실처럼, '어? 요새 평소와 다르게 뭔가 이상한데?' 하는 상황을 자동으로 감지해서 알려주는 부서&quot;
-
-🔑 핵심 기술 과제:
-- 정책 엔진의 실시간 성능: 수천 건 요청/초를 처리하면서도 밀리초 단위 응답
-- 감사 로그의 무결성: 한번 기록되면 절대 지우거나 수정 불가능하게 설계
-- ABAC 정책의 유연성: 새로운 요구사항 나올 때마다 정책을 쉽게 추가/수정할 수 있도록"><div class="project-badge">🟡 Concept</div><h3>배치 추론 대규모 증거 처리</h3><p class="problem">수십만 건의 문서를 비동기로 처리</p><div class="tech-stack"><span>Foundry Batch Inference</span><span>Async Processing</span></div></div>
-        <div class="project-card" data-category="aiops" data-search="시맨틱 캐싱 Latency" data-problem="반복되는 법률 질의(예: 같은 판례에 대한 여러 질문)가 매번 새로 처리되어 지연시간 증가" data-solution="1. 사건 생성 시마다 에이전트 ID 자동 생성
-각 새로운 사건이 생기면 시스템이 자동으로 그 사건 전용 에이전트 ID를 만듭니다. 예를 들어 &quot;사건 번호 2024-001&quot;이 생기면 &quot;Agent-2024-001&quot;이 자동 생성되어, 이 사건의 에이전트는 이 ID만 사용합니다.
-
-2. Entra Agent ID로 에이전트를 Microsoft 신원 시스템에 등록
-생성된 에이전트 ID를 Microsoft의 Entra ID(엔터프라이즈 신원 관리 시스템)에 &quot;사람&quot;처럼 등록합니다. 마치 직원을 회사 시스템에 등록하는 것처럼요.
-
-3. ABAC(속성 기반 접근 제어) 정책 자동 할당
-각 에이전트에게 &quot;너는 이 사건의 기밀문서만 볼 수 있고, 다른 사건은 절대 못 본다&quot;는 규칙을 자동으로 설정합니다. 이 규칙은 에이전트 ID + 사건 + 문서 타입 조합으로 매우 세밀하게 설정됩니다.
-
-4. 문서 접근 요청 시마다 정책 엔진이 실시간 검사
-에이전트가 문서에 접근하려면 정책 엔진에 &quot;이거 접근 가능한가요?&quot;라고 물어봅니다. 엔진은 0.1초 안에 승인 또는 거부를 결정합니다.
-
-5. 모든 접근 시도를 변조 불가능한 감사 로그에 기록
-성공하든 실패하든 모든 접근 시도가 기록됩니다. 한번 기록되면 지우거나 수정할 수 없는 형태로 저장되어 나중에 &quot;누가 뭘 했는가&quot;를 증명할 수 있습니다.
-
-6. Azure Monitor에서 이상 행동 패턴 감지
-정상 행동과 다른 패턴(예: 평소보다 훨씬 많은 접근 시도, 업무 시간 외 접근)을 자동으로 감지하고 경고합니다.
-
-7. 정기적 감사 보고서 자동 생성
-매주/매월 &quot;누가 뭘 언제 접근했고 거부된 건 뭔가&quot;를 정리한 보고서를 자동으로 만들어서 규제 대응에 사용합니다." data-architecture="🏗️ 아키텍처 구성 (초보자 설명):
-
-■ Identity Layer (신원 관리 계층)
-= 에이전트 ID 생성 및 등록 담당 부서
-역할: 각 사건마다 에이전트를 만들고 Microsoft Entra ID에 등록하기
-초보자 설명: &quot;회사에 새 직원이 들어오면 직원증을 발급하는 것처럼, 각 에이전트에게 고유의 신원(ID)을 부여하는 부서&quot;
-
-■ Policy Engine (정책 결정 부서)
-= 접근 요청이 들어올 때마다 &quot;허용되나 안 되나&quot; 결정하는 부서
-역할: ABAC 정책을 적용하여 실시간 접근 제어
-초보자 설명: &quot;은행의 보안 요원처럼, 접근 요청이 오면 '당신은 이걸 볼 권리가 있나?'를 규칙(ABAC)으로 판단하는 부서&quot;
-
-■ Audit Logger (감사 기록 부서)
-= 모든 접근 시도(성공/실패)를 변조 불가능하게 기록
-역할: 이력서처럼 모든 행동을 기록하되, 한번 기록되면 절대 수정 불가
-초보자 설명: &quot;법원의 기록 담당처럼, 모든 일을 기록장에 써놓고 절대 고치지 않는 부서&quot;
-
-■ Anomaly Detector (이상 탐지 부서)
-= 평상시 패턴과 다른 행동을 감지
-역할: Azure Monitor로 비정상 접근 패턴 자동 감지 및 경고
-초보자 설명: &quot;경보실처럼, '어? 요새 평소와 다르게 뭔가 이상한데?' 하는 상황을 자동으로 감지해서 알려주는 부서&quot;
-
-🔑 핵심 기술 과제:
-- 정책 엔진의 실시간 성능: 수천 건 요청/초를 처리하면서도 밀리초 단위 응답
-- 감사 로그의 무결성: 한번 기록되면 절대 지우거나 수정 불가능하게 설계
-- ABAC 정책의 유연성: 새로운 요구사항 나올 때마다 정책을 쉽게 추가/수정할 수 있도록"><div class="project-badge">🟡 Concept</div><h3>시맨틱 캐싱 반복 질의 최적화</h3><p class="problem">반복되는 법률 질의의 지연 시간</p><div class="tech-stack"><span>Semantic Caching</span><span>AI Gateway</span><span>Latency Optimization</span></div></div>
-        <div class="project-card" data-category="aiops" data-search="멀티테넌트 AI 플랫폼" data-problem="부서별로 격리된 AI 서비스를 제공해야 하나 단일 인프라로는 보안 보장 불가" data-solution="1. 사건 생성 시마다 에이전트 ID 자동 생성
-각 새로운 사건이 생기면 시스템이 자동으로 그 사건 전용 에이전트 ID를 만듭니다. 예를 들어 &quot;사건 번호 2024-001&quot;이 생기면 &quot;Agent-2024-001&quot;이 자동 생성되어, 이 사건의 에이전트는 이 ID만 사용합니다.
-
-2. Entra Agent ID로 에이전트를 Microsoft 신원 시스템에 등록
-생성된 에이전트 ID를 Microsoft의 Entra ID(엔터프라이즈 신원 관리 시스템)에 &quot;사람&quot;처럼 등록합니다. 마치 직원을 회사 시스템에 등록하는 것처럼요.
-
-3. ABAC(속성 기반 접근 제어) 정책 자동 할당
-각 에이전트에게 &quot;너는 이 사건의 기밀문서만 볼 수 있고, 다른 사건은 절대 못 본다&quot;는 규칙을 자동으로 설정합니다. 이 규칙은 에이전트 ID + 사건 + 문서 타입 조합으로 매우 세밀하게 설정됩니다.
-
-4. 문서 접근 요청 시마다 정책 엔진이 실시간 검사
-에이전트가 문서에 접근하려면 정책 엔진에 &quot;이거 접근 가능한가요?&quot;라고 물어봅니다. 엔진은 0.1초 안에 승인 또는 거부를 결정합니다.
-
-5. 모든 접근 시도를 변조 불가능한 감사 로그에 기록
-성공하든 실패하든 모든 접근 시도가 기록됩니다. 한번 기록되면 지우거나 수정할 수 없는 형태로 저장되어 나중에 &quot;누가 뭘 했는가&quot;를 증명할 수 있습니다.
-
-6. Azure Monitor에서 이상 행동 패턴 감지
-정상 행동과 다른 패턴(예: 평소보다 훨씬 많은 접근 시도, 업무 시간 외 접근)을 자동으로 감지하고 경고합니다.
-
-7. 정기적 감사 보고서 자동 생성
-매주/매월 &quot;누가 뭘 언제 접근했고 거부된 건 뭔가&quot;를 정리한 보고서를 자동으로 만들어서 규제 대응에 사용합니다." data-architecture="🏗️ 아키텍처 구성 (초보자 설명):
-
-■ Identity Layer (신원 관리 계층)
-= 에이전트 ID 생성 및 등록 담당 부서
-역할: 각 사건마다 에이전트를 만들고 Microsoft Entra ID에 등록하기
-초보자 설명: &quot;회사에 새 직원이 들어오면 직원증을 발급하는 것처럼, 각 에이전트에게 고유의 신원(ID)을 부여하는 부서&quot;
-
-■ Policy Engine (정책 결정 부서)
-= 접근 요청이 들어올 때마다 &quot;허용되나 안 되나&quot; 결정하는 부서
-역할: ABAC 정책을 적용하여 실시간 접근 제어
-초보자 설명: &quot;은행의 보안 요원처럼, 접근 요청이 오면 '당신은 이걸 볼 권리가 있나?'를 규칙(ABAC)으로 판단하는 부서&quot;
-
-■ Audit Logger (감사 기록 부서)
-= 모든 접근 시도(성공/실패)를 변조 불가능하게 기록
-역할: 이력서처럼 모든 행동을 기록하되, 한번 기록되면 절대 수정 불가
-초보자 설명: &quot;법원의 기록 담당처럼, 모든 일을 기록장에 써놓고 절대 고치지 않는 부서&quot;
-
-■ Anomaly Detector (이상 탐지 부서)
-= 평상시 패턴과 다른 행동을 감지
-역할: Azure Monitor로 비정상 접근 패턴 자동 감지 및 경고
-초보자 설명: &quot;경보실처럼, '어? 요새 평소와 다르게 뭔가 이상한데?' 하는 상황을 자동으로 감지해서 알려주는 부서&quot;
-
-🔑 핵심 기술 과제:
-- 정책 엔진의 실시간 성능: 수천 건 요청/초를 처리하면서도 밀리초 단위 응답
-- 감사 로그의 무결성: 한번 기록되면 절대 지우거나 수정 불가능하게 설계
-- ABAC 정책의 유연성: 새로운 요구사항 나올 때마다 정책을 쉽게 추가/수정할 수 있도록"><div class="project-badge">🟡 Concept</div><h3>멀티테넌트 AI 서비스 플랫폼</h3><p class="problem">부서별 격리된 AI 서비스 제공</p><div class="tech-stack"><span>Private Link</span><span>VNet Inference</span><span>Multi-tenant</span></div></div>
-        <div class="project-card" data-category="aiops" data-search="루브릭 자동화 평가" data-problem="에이전트 성능을 정량화할 일관된 기준이 없어 평가가 주관적" data-solution="1. 사건 생성 시마다 에이전트 ID 자동 생성
-각 새로운 사건이 생기면 시스템이 자동으로 그 사건 전용 에이전트 ID를 만듭니다. 예를 들어 &quot;사건 번호 2024-001&quot;이 생기면 &quot;Agent-2024-001&quot;이 자동 생성되어, 이 사건의 에이전트는 이 ID만 사용합니다.
-
-2. Entra Agent ID로 에이전트를 Microsoft 신원 시스템에 등록
-생성된 에이전트 ID를 Microsoft의 Entra ID(엔터프라이즈 신원 관리 시스템)에 &quot;사람&quot;처럼 등록합니다. 마치 직원을 회사 시스템에 등록하는 것처럼요.
-
-3. ABAC(속성 기반 접근 제어) 정책 자동 할당
-각 에이전트에게 &quot;너는 이 사건의 기밀문서만 볼 수 있고, 다른 사건은 절대 못 본다&quot;는 규칙을 자동으로 설정합니다. 이 규칙은 에이전트 ID + 사건 + 문서 타입 조합으로 매우 세밀하게 설정됩니다.
-
-4. 문서 접근 요청 시마다 정책 엔진이 실시간 검사
-에이전트가 문서에 접근하려면 정책 엔진에 &quot;이거 접근 가능한가요?&quot;라고 물어봅니다. 엔진은 0.1초 안에 승인 또는 거부를 결정합니다.
-
-5. 모든 접근 시도를 변조 불가능한 감사 로그에 기록
-성공하든 실패하든 모든 접근 시도가 기록됩니다. 한번 기록되면 지우거나 수정할 수 없는 형태로 저장되어 나중에 &quot;누가 뭘 했는가&quot;를 증명할 수 있습니다.
-
-6. Azure Monitor에서 이상 행동 패턴 감지
-정상 행동과 다른 패턴(예: 평소보다 훨씬 많은 접근 시도, 업무 시간 외 접근)을 자동으로 감지하고 경고합니다.
-
-7. 정기적 감사 보고서 자동 생성
-매주/매월 &quot;누가 뭘 언제 접근했고 거부된 건 뭔가&quot;를 정리한 보고서를 자동으로 만들어서 규제 대응에 사용합니다." data-architecture="🏗️ 아키텍처 구성 (초보자 설명):
-
-■ Identity Layer (신원 관리 계층)
-= 에이전트 ID 생성 및 등록 담당 부서
-역할: 각 사건마다 에이전트를 만들고 Microsoft Entra ID에 등록하기
-초보자 설명: &quot;회사에 새 직원이 들어오면 직원증을 발급하는 것처럼, 각 에이전트에게 고유의 신원(ID)을 부여하는 부서&quot;
-
-■ Policy Engine (정책 결정 부서)
-= 접근 요청이 들어올 때마다 &quot;허용되나 안 되나&quot; 결정하는 부서
-역할: ABAC 정책을 적용하여 실시간 접근 제어
-초보자 설명: &quot;은행의 보안 요원처럼, 접근 요청이 오면 '당신은 이걸 볼 권리가 있나?'를 규칙(ABAC)으로 판단하는 부서&quot;
-
-■ Audit Logger (감사 기록 부서)
-= 모든 접근 시도(성공/실패)를 변조 불가능하게 기록
-역할: 이력서처럼 모든 행동을 기록하되, 한번 기록되면 절대 수정 불가
-초보자 설명: &quot;법원의 기록 담당처럼, 모든 일을 기록장에 써놓고 절대 고치지 않는 부서&quot;
-
-■ Anomaly Detector (이상 탐지 부서)
-= 평상시 패턴과 다른 행동을 감지
-역할: Azure Monitor로 비정상 접근 패턴 자동 감지 및 경고
-초보자 설명: &quot;경보실처럼, '어? 요새 평소와 다르게 뭔가 이상한데?' 하는 상황을 자동으로 감지해서 알려주는 부서&quot;
-
-🔑 핵심 기술 과제:
-- 정책 엔진의 실시간 성능: 수천 건 요청/초를 처리하면서도 밀리초 단위 응답
-- 감사 로그의 무결성: 한번 기록되면 절대 지우거나 수정 불가능하게 설계
-- ABAC 정책의 유연성: 새로운 요구사항 나올 때마다 정책을 쉽게 추가/수정할 수 있도록"><div class="project-badge">🟡 Concept</div><h3>법률 전문 루브릭 자동화</h3><p class="problem">에이전트 성능 측정의 표준화</p><div class="tech-stack"><span>Custom Evaluators</span><span>Legal Rubrics</span></div></div>
-        <div class="project-card" data-category="aiops" data-search="Foundry 벤치마크 모델 비교" data-problem="여러 LLM(OpenAI, Meta, Mistral 등) 중 법률 작업에 가장 적합한 모델을 찾기 어려움" data-solution="1. 사건 생성 시마다 에이전트 ID 자동 생성
-각 새로운 사건이 생기면 시스템이 자동으로 그 사건 전용 에이전트 ID를 만듭니다. 예를 들어 &quot;사건 번호 2024-001&quot;이 생기면 &quot;Agent-2024-001&quot;이 자동 생성되어, 이 사건의 에이전트는 이 ID만 사용합니다.
-
-2. Entra Agent ID로 에이전트를 Microsoft 신원 시스템에 등록
-생성된 에이전트 ID를 Microsoft의 Entra ID(엔터프라이즈 신원 관리 시스템)에 &quot;사람&quot;처럼 등록합니다. 마치 직원을 회사 시스템에 등록하는 것처럼요.
-
-3. ABAC(속성 기반 접근 제어) 정책 자동 할당
-각 에이전트에게 &quot;너는 이 사건의 기밀문서만 볼 수 있고, 다른 사건은 절대 못 본다&quot;는 규칙을 자동으로 설정합니다. 이 규칙은 에이전트 ID + 사건 + 문서 타입 조합으로 매우 세밀하게 설정됩니다.
-
-4. 문서 접근 요청 시마다 정책 엔진이 실시간 검사
-에이전트가 문서에 접근하려면 정책 엔진에 &quot;이거 접근 가능한가요?&quot;라고 물어봅니다. 엔진은 0.1초 안에 승인 또는 거부를 결정합니다.
-
-5. 모든 접근 시도를 변조 불가능한 감사 로그에 기록
-성공하든 실패하든 모든 접근 시도가 기록됩니다. 한번 기록되면 지우거나 수정할 수 없는 형태로 저장되어 나중에 &quot;누가 뭘 했는가&quot;를 증명할 수 있습니다.
-
-6. Azure Monitor에서 이상 행동 패턴 감지
-정상 행동과 다른 패턴(예: 평소보다 훨씬 많은 접근 시도, 업무 시간 외 접근)을 자동으로 감지하고 경고합니다.
-
-7. 정기적 감사 보고서 자동 생성
-매주/매월 &quot;누가 뭘 언제 접근했고 거부된 건 뭔가&quot;를 정리한 보고서를 자동으로 만들어서 규제 대응에 사용합니다." data-architecture="🏗️ 아키텍처 구성 (초보자 설명):
-
-■ Identity Layer (신원 관리 계층)
-= 에이전트 ID 생성 및 등록 담당 부서
-역할: 각 사건마다 에이전트를 만들고 Microsoft Entra ID에 등록하기
-초보자 설명: &quot;회사에 새 직원이 들어오면 직원증을 발급하는 것처럼, 각 에이전트에게 고유의 신원(ID)을 부여하는 부서&quot;
-
-■ Policy Engine (정책 결정 부서)
-= 접근 요청이 들어올 때마다 &quot;허용되나 안 되나&quot; 결정하는 부서
-역할: ABAC 정책을 적용하여 실시간 접근 제어
-초보자 설명: &quot;은행의 보안 요원처럼, 접근 요청이 오면 '당신은 이걸 볼 권리가 있나?'를 규칙(ABAC)으로 판단하는 부서&quot;
-
-■ Audit Logger (감사 기록 부서)
-= 모든 접근 시도(성공/실패)를 변조 불가능하게 기록
-역할: 이력서처럼 모든 행동을 기록하되, 한번 기록되면 절대 수정 불가
-초보자 설명: &quot;법원의 기록 담당처럼, 모든 일을 기록장에 써놓고 절대 고치지 않는 부서&quot;
-
-■ Anomaly Detector (이상 탐지 부서)
-= 평상시 패턴과 다른 행동을 감지
-역할: Azure Monitor로 비정상 접근 패턴 자동 감지 및 경고
-초보자 설명: &quot;경보실처럼, '어? 요새 평소와 다르게 뭔가 이상한데?' 하는 상황을 자동으로 감지해서 알려주는 부서&quot;
-
-🔑 핵심 기술 과제:
-- 정책 엔진의 실시간 성능: 수천 건 요청/초를 처리하면서도 밀리초 단위 응답
-- 감사 로그의 무결성: 한번 기록되면 절대 지우거나 수정 불가능하게 설계
-- ABAC 정책의 유연성: 새로운 요구사항 나올 때마다 정책을 쉽게 추가/수정할 수 있도록"><div class="project-badge">🟡 Concept</div><h3>Foundry 모델 성능 벤치마크</h3><p class="problem">여러 LLM 간 성능 비교</p><div class="tech-stack"><span>Foundry</span><span>Model Catalog</span><span>Benchmarking</span></div></div>
+        <div class="project-card" data-category="aiops" data-search="에이전트 추론 트레이싱 루브릭" data-problem="에이전트가 왜 그런 법적 결론을 내렸는지 과정을 알 수 없어 발생하는 블랙박스 문제" data-solution="■ 추론 과정 트레이싱&#10;  OpenTelemetry로 에이전트의 입력-추론-출력 전 과정을 기록&#10;&#10;■ 루브릭 기반 자동 평가&#10;  법률 답변 품질을 평가 기준(Rubric)에 따라 자동 채점&#10;&#10;■ 실시간 모니터링 연동&#10;  Application Insights로 성능·오류를 실시간 관찰&#10;&#10;■ 대시보드 시각화&#10;  Azure Managed Grafana로 추론 품질 추이를 시각화&#10;&#10;■ 이상 추론 알림&#10;  평가 점수가 기준 이하로 떨어지면 자동 경고" data-architecture="■ Tracing Layer (OpenTelemetry)&#10;  에이전트 추론 전 과정 계측&#10;&#10;■ Rubric Evaluator&#10;  정의된 기준에 따른 답변 자동 채점&#10;&#10;■ Application Insights&#10;  실시간 성능/오류 모니터링&#10;&#10;■ Grafana Dashboard&#10;  품질 추이 시각화&#10;&#10;🔑 핵심 기술 과제:&#10;  • 법률 답변 품질의 정량적 평가 기준 설계&#10;  • 대량 트레이싱 데이터 처리 비용&#10;  • 블랙박스 추론의 설명 가능성 확보"><div class="project-badge">🔵 설계 완료</div><h3>에이전트 추론 트레이싱 및 평가</h3><p class="problem">에이전트의 법적 결론 과정이 블랙박스</p><div class="tech-stack"><span>OpenTelemetry</span><span>Rubric Evaluators</span><span>Application Insights</span><span>Azure Managed Grafana</span></div></div>
+        <div class="project-card" data-category="aiops" data-search="법률 윤리 Red-teaming" data-problem="에이전트의 비윤리적 행동(뇌물 제시, 거짓 증거 제안 등)을 사전에 탐지하지 못함" data-solution="■ 레드티밍 시나리오 구축&#10;  PyRIT으로 비윤리적 행동을 유도하는 테스트 시나리오 설계&#10;&#10;■ 콘텐츠 안전 필터 적용&#10;  Content Safety로 위험 응답을 사전 차단&#10;&#10;■ 실시간 모니터링&#10;  실제 운영 중에도 윤리 위반 패턴을 지속 탐지&#10;&#10;■ 위반 시 즉시 차단&#10;  탐지 즉시 해당 요청/응답을 차단하고 기록&#10;&#10;■ 정기 레드팀 테스트&#10;  주기적으로 새로운 공격 시나리오로 재검증" data-architecture="■ Red-teaming Framework (PyRIT)&#10;  비윤리적 행동 유도 테스트 자동화&#10;&#10;■ Content Safety Filter&#10;  위험 콘텐츠 사전 차단&#10;&#10;■ Runtime Ethics Monitor&#10;  실시간 윤리 위반 탐지&#10;&#10;■ Incident Logger&#10;  위반 사례 기록 및 리포팅&#10;&#10;🔑 핵심 기술 과제:&#10;  • 법조 윤리 규정의 정량적 규칙화&#10;  • 새로운 유형의 위반 패턴 탐지&#10;  • 오탐으로 인한 정상 업무 방해 최소화"><div class="project-badge">🟡 아이디어</div><h3>법률 윤리 위반 탐지</h3><p class="problem">에이전트의 비윤리적 행동 사전 탐지</p><div class="tech-stack"><span>PyRIT</span><span>Content Safety</span><span>Red-teaming</span></div></div>
+        <div class="project-card" data-category="aiops" data-search="배치 추론 대규모 증거" data-problem="수십만 건의 문서를 실시간 처리할 수 없으며 배치 처리 필요" data-solution="■ 문서 배치 그룹핑&#10;  수십만 건의 증거 문서를 처리 단위로 그룹화&#10;&#10;■ 비동기 배치 추론 실행&#10;  Foundry Batch Inference로 야간/저비용 시간대에 일괄 처리&#10;&#10;■ 진행 상태 추적&#10;  배치 작업 진행률과 실패 건을 모니터링&#10;&#10;■ 실패 건 재처리&#10;  오류 발생 문서만 자동으로 재시도&#10;&#10;■ 결과 통합 리포트&#10;  처리 완료 후 요약 리포트를 변호사에게 제공" data-architecture="■ Batch Grouping Layer&#10;  문서를 처리 단위로 분할&#10;&#10;■ Foundry Batch Inference&#10;  비동기 대량 추론 실행&#10;&#10;■ Job Tracker&#10;  배치 진행 상태 및 오류 관리&#10;&#10;■ Result Aggregator&#10;  처리 결과 통합 및 리포트 생성&#10;&#10;🔑 핵심 기술 과제:&#10;  • 대량 배치 처리의 비용 최적화&#10;  • 실패 건에 대한 안정적 재처리&#10;  • 처리 완료 시점의 예측 가능성"><div class="project-badge">🟡 아이디어</div><h3>배치 추론 대규모 증거 처리</h3><p class="problem">수십만 건의 문서를 비동기로 처리</p><div class="tech-stack"><span>Foundry Batch Inference</span><span>Async Processing</span></div></div>
+        <div class="project-card" data-category="aiops" data-search="시맨틱 캐싱 Latency" data-problem="반복되는 법률 질의(예: 같은 판례에 대한 여러 질문)가 매번 새로 처리되어 지연시간 증가" data-solution="■ 질의 임베딩 비교&#10;  새 질문이 과거 질문과 의미적으로 유사한지 임베딩으로 비교&#10;&#10;■ 캐시 히트 시 즉시 응답&#10;  유사 질의로 판단되면 저장된 답변을 즉시 재사용&#10;&#10;■ AI Gateway 연동&#10;  캐싱 로직을 AI Gateway 레벨에서 중앙 처리&#10;&#10;■ 캐시 신선도 관리&#10;  판례 변경 등으로 오래된 캐시는 주기적으로 무효화&#10;&#10;■ 지연시간 모니터링&#10;  캐시 적중률과 응답 지연시간을 지속 추적" data-architecture="■ Semantic Cache Layer&#10;  질의 임베딩 기반 유사도 캐시&#10;&#10;■ AI Gateway&#10;  캐시 조회/저장을 중앙에서 처리&#10;&#10;■ Cache Invalidation Policy&#10;  캐시 신선도 유지 규칙&#10;&#10;■ Latency Monitor&#10;  캐시 효과 및 응답 속도 추적&#10;&#10;🔑 핵심 기술 과제:&#10;  • 의미적 유사도 판단의 정확도&#10;  • 법률 정보 최신성과 캐시 신선도의 균형&#10;  • 캐시 저장 비용과 히트율의 최적화"><div class="project-badge">🟡 아이디어</div><h3>시맨틱 캐싱 반복 질의 최적화</h3><p class="problem">반복되는 법률 질의의 지연 시간</p><div class="tech-stack"><span>Semantic Caching</span><span>AI Gateway</span><span>Latency Optimization</span></div></div>
+        <div class="project-card" data-category="aiops" data-search="멀티테넌트 AI 플랫폼" data-problem="부서별로 격리된 AI 서비스를 제공해야 하나 단일 인프라로는 보안 보장 불가" data-solution="■ 부서별 논리적 격리&#10;  부서(테넌트)별로 데이터와 모델 접근을 논리적으로 분리&#10;&#10;■ Private Link 연결&#10;  각 부서 트래픽을 VNet 내부에서만 흐르도록 구성&#10;&#10;■ VNet 기반 추론 격리&#10;  모델 추론 자체도 부서별 격리된 네트워크 경로로 실행&#10;&#10;■ 공통 인프라 위 개별 정책 적용&#10;  단일 인프라를 공유하되 부서별 보안 정책을 별도 적용&#10;&#10;■ 테넌트별 사용량 과금&#10;  부서별 리소스 사용량을 추적해 내부 비용 배분" data-architecture="■ Multi-tenant Control Plane&#10;  부서별 정책/권한 중앙 관리&#10;&#10;■ Private Link&#10;  부서별 폐쇄망 연결&#10;&#10;■ VNet Inference Layer&#10;  격리된 네트워크 내 모델 추론 실행&#10;&#10;■ Usage Metering&#10;  테넌트별 사용량 측정 및 과금&#10;&#10;🔑 핵심 기술 과제:&#10;  • 단일 인프라에서의 테넌트 간 완전한 격리 보장&#10;  • 부서별 정책 관리의 복잡도&#10;  • 격리로 인한 리소스 효율성 저하 최소화"><div class="project-badge">🟡 아이디어</div><h3>멀티테넌트 AI 서비스 플랫폼</h3><p class="problem">부서별 격리된 AI 서비스 제공</p><div class="tech-stack"><span>Private Link</span><span>VNet Inference</span><span>Multi-tenant</span></div></div>
+        <div class="project-card" data-category="aiops" data-search="루브릭 자동화 평가" data-problem="에이전트 성능을 정량화할 일관된 기준이 없어 평가가 주관적" data-solution="■ 평가 기준 표준화&#10;  법률 답변 품질을 판단할 루브릭(정확성, 근거 인용, 논리성 등) 정의&#10;&#10;■ Custom Evaluator 구현&#10;  정의된 루브릭을 자동 채점 로직으로 구현&#10;&#10;■ 샘플 기반 검증&#10;  실제 변호사 평가와 자동 평가 결과를 대조해 루브릭 보정&#10;&#10;■ 지속적 루브릭 개선&#10;  새로운 오류 유형 발견 시 루브릭 항목 추가&#10;&#10;■ 평가 결과 대시보드화&#10;  에이전트별/시기별 품질 추이를 시각화" data-architecture="■ Rubric Definition Layer&#10;  법률 평가 기준 정의&#10;&#10;■ Custom Evaluator&#10;  루브릭 기반 자동 채점 엔진&#10;&#10;■ Human Calibration Loop&#10;  변호사 평가와의 대조 검증&#10;&#10;■ Quality Dashboard&#10;  평가 결과 시각화&#10;&#10;🔑 핵심 기술 과제:&#10;  • 주관적인 법률 품질을 정량 기준으로 변환&#10;  • 루브릭의 지속적 유지보수&#10;  • 평가 자동화와 실제 변호사 판단 간 신뢰도 격차"><div class="project-badge">🟡 아이디어</div><h3>법률 전문 루브릭 자동화</h3><p class="problem">에이전트 성능 측정의 표준화</p><div class="tech-stack"><span>Custom Evaluators</span><span>Legal Rubrics</span></div></div>
+        <div class="project-card" data-category="aiops" data-search="Foundry 벤치마크 모델 비교" data-problem="여러 LLM(OpenAI, Meta, Mistral 등) 중 법률 작업에 가장 적합한 모델을 찾기 어려움" data-solution="■ 법률 태스크 벤치마크셋 구성&#10;  실제 법률 업무 유형별 평가 데이터셋 구축&#10;&#10;■ 다중 모델 병렬 테스트&#10;  OpenAI, Meta, Mistral 등 후보 모델을 Foundry Model Catalog에서 동일 조건으로 테스트&#10;&#10;■ 정량 지표 비교&#10;  정확도, 응답속도, 비용을 기준으로 모델별 점수화&#10;&#10;■ 업무별 최적 모델 매핑&#10;  태스크 유형에 따라 다른 모델을 선택하도록 라우팅 규칙 수립&#10;&#10;■ 주기적 재벤치마크&#10;  신규 모델 출시 시 재평가하여 최신 상태 유지" data-architecture="■ Benchmark Dataset&#10;  법률 업무 유형별 평가 데이터&#10;&#10;■ Foundry Model Catalog&#10;  다중 모델 후보군 관리&#10;&#10;■ Evaluation Runner&#10;  동일 조건 병렬 테스트 실행&#10;&#10;■ Model Selection Router&#10;  업무별 최적 모델 매핑&#10;&#10;🔑 핵심 기술 과제:&#10;  • 대표성 있는 법률 벤치마크 데이터셋 구축&#10;  • 모델 간 공정한 비교 조건 설계&#10;  • 빠르게 변화하는 모델 생태계 대응"><div class="project-badge">🟡 아이디어</div><h3>Foundry 모델 성능 벤치마크</h3><p class="problem">여러 LLM 간 성능 비교</p><div class="tech-stack"><span>Foundry</span><span>Model Catalog</span><span>Benchmarking</span></div></div>
       </div>
     </div>
 
@@ -1801,96 +790,8 @@
     <div class="category-section" data-category="all">
       <h2 class="category-header">Cross-domain Projects</h2>
       <div class="project-grid">
-        <div class="project-card" data-category="governance" data-search="법무 특화 SDK" data-problem="각 부서가 개별적으로 에이전트를 구축하면서 중복 코드와 표준 부재로 인한 비효율" data-solution="1. 사건 생성 시마다 에이전트 ID 자동 생성
-각 새로운 사건이 생기면 시스템이 자동으로 그 사건 전용 에이전트 ID를 만듭니다. 예를 들어 &quot;사건 번호 2024-001&quot;이 생기면 &quot;Agent-2024-001&quot;이 자동 생성되어, 이 사건의 에이전트는 이 ID만 사용합니다.
-
-2. Entra Agent ID로 에이전트를 Microsoft 신원 시스템에 등록
-생성된 에이전트 ID를 Microsoft의 Entra ID(엔터프라이즈 신원 관리 시스템)에 &quot;사람&quot;처럼 등록합니다. 마치 직원을 회사 시스템에 등록하는 것처럼요.
-
-3. ABAC(속성 기반 접근 제어) 정책 자동 할당
-각 에이전트에게 &quot;너는 이 사건의 기밀문서만 볼 수 있고, 다른 사건은 절대 못 본다&quot;는 규칙을 자동으로 설정합니다. 이 규칙은 에이전트 ID + 사건 + 문서 타입 조합으로 매우 세밀하게 설정됩니다.
-
-4. 문서 접근 요청 시마다 정책 엔진이 실시간 검사
-에이전트가 문서에 접근하려면 정책 엔진에 &quot;이거 접근 가능한가요?&quot;라고 물어봅니다. 엔진은 0.1초 안에 승인 또는 거부를 결정합니다.
-
-5. 모든 접근 시도를 변조 불가능한 감사 로그에 기록
-성공하든 실패하든 모든 접근 시도가 기록됩니다. 한번 기록되면 지우거나 수정할 수 없는 형태로 저장되어 나중에 &quot;누가 뭘 했는가&quot;를 증명할 수 있습니다.
-
-6. Azure Monitor에서 이상 행동 패턴 감지
-정상 행동과 다른 패턴(예: 평소보다 훨씬 많은 접근 시도, 업무 시간 외 접근)을 자동으로 감지하고 경고합니다.
-
-7. 정기적 감사 보고서 자동 생성
-매주/매월 &quot;누가 뭘 언제 접근했고 거부된 건 뭔가&quot;를 정리한 보고서를 자동으로 만들어서 규제 대응에 사용합니다." data-architecture="🏗️ 아키텍처 구성 (초보자 설명):
-
-■ Identity Layer (신원 관리 계층)
-= 에이전트 ID 생성 및 등록 담당 부서
-역할: 각 사건마다 에이전트를 만들고 Microsoft Entra ID에 등록하기
-초보자 설명: &quot;회사에 새 직원이 들어오면 직원증을 발급하는 것처럼, 각 에이전트에게 고유의 신원(ID)을 부여하는 부서&quot;
-
-■ Policy Engine (정책 결정 부서)
-= 접근 요청이 들어올 때마다 &quot;허용되나 안 되나&quot; 결정하는 부서
-역할: ABAC 정책을 적용하여 실시간 접근 제어
-초보자 설명: &quot;은행의 보안 요원처럼, 접근 요청이 오면 '당신은 이걸 볼 권리가 있나?'를 규칙(ABAC)으로 판단하는 부서&quot;
-
-■ Audit Logger (감사 기록 부서)
-= 모든 접근 시도(성공/실패)를 변조 불가능하게 기록
-역할: 이력서처럼 모든 행동을 기록하되, 한번 기록되면 절대 수정 불가
-초보자 설명: &quot;법원의 기록 담당처럼, 모든 일을 기록장에 써놓고 절대 고치지 않는 부서&quot;
-
-■ Anomaly Detector (이상 탐지 부서)
-= 평상시 패턴과 다른 행동을 감지
-역할: Azure Monitor로 비정상 접근 패턴 자동 감지 및 경고
-초보자 설명: &quot;경보실처럼, '어? 요새 평소와 다르게 뭔가 이상한데?' 하는 상황을 자동으로 감지해서 알려주는 부서&quot;
-
-🔑 핵심 기술 과제:
-- 정책 엔진의 실시간 성능: 수천 건 요청/초를 처리하면서도 밀리초 단위 응답
-- 감사 로그의 무결성: 한번 기록되면 절대 지우거나 수정 불가능하게 설계
-- ABAC 정책의 유연성: 새로운 요구사항 나올 때마다 정책을 쉽게 추가/수정할 수 있도록"><div class="project-badge">🟡 Concept</div><h3>법무 특화 SDK 개발</h3><p class="problem">전사 에이전트 생태계 확장</p><div class="tech-stack"><span>Copilot SDK</span><span>Custom API</span></div></div>
-        <div class="project-card" data-category="intelligence" data-search="지식 갱신 자동화" data-problem="새로운 판례나 법령이 나와도 수동으로 아이디어를 업데이트해야 하는 운영 부담" data-solution="1. 사건 생성 시마다 에이전트 ID 자동 생성
-각 새로운 사건이 생기면 시스템이 자동으로 그 사건 전용 에이전트 ID를 만듭니다. 예를 들어 &quot;사건 번호 2024-001&quot;이 생기면 &quot;Agent-2024-001&quot;이 자동 생성되어, 이 사건의 에이전트는 이 ID만 사용합니다.
-
-2. Entra Agent ID로 에이전트를 Microsoft 신원 시스템에 등록
-생성된 에이전트 ID를 Microsoft의 Entra ID(엔터프라이즈 신원 관리 시스템)에 &quot;사람&quot;처럼 등록합니다. 마치 직원을 회사 시스템에 등록하는 것처럼요.
-
-3. ABAC(속성 기반 접근 제어) 정책 자동 할당
-각 에이전트에게 &quot;너는 이 사건의 기밀문서만 볼 수 있고, 다른 사건은 절대 못 본다&quot;는 규칙을 자동으로 설정합니다. 이 규칙은 에이전트 ID + 사건 + 문서 타입 조합으로 매우 세밀하게 설정됩니다.
-
-4. 문서 접근 요청 시마다 정책 엔진이 실시간 검사
-에이전트가 문서에 접근하려면 정책 엔진에 &quot;이거 접근 가능한가요?&quot;라고 물어봅니다. 엔진은 0.1초 안에 승인 또는 거부를 결정합니다.
-
-5. 모든 접근 시도를 변조 불가능한 감사 로그에 기록
-성공하든 실패하든 모든 접근 시도가 기록됩니다. 한번 기록되면 지우거나 수정할 수 없는 형태로 저장되어 나중에 &quot;누가 뭘 했는가&quot;를 증명할 수 있습니다.
-
-6. Azure Monitor에서 이상 행동 패턴 감지
-정상 행동과 다른 패턴(예: 평소보다 훨씬 많은 접근 시도, 업무 시간 외 접근)을 자동으로 감지하고 경고합니다.
-
-7. 정기적 감사 보고서 자동 생성
-매주/매월 &quot;누가 뭘 언제 접근했고 거부된 건 뭔가&quot;를 정리한 보고서를 자동으로 만들어서 규제 대응에 사용합니다." data-architecture="🏗️ 아키텍처 구성 (초보자 설명):
-
-■ Identity Layer (신원 관리 계층)
-= 에이전트 ID 생성 및 등록 담당 부서
-역할: 각 사건마다 에이전트를 만들고 Microsoft Entra ID에 등록하기
-초보자 설명: &quot;회사에 새 직원이 들어오면 직원증을 발급하는 것처럼, 각 에이전트에게 고유의 신원(ID)을 부여하는 부서&quot;
-
-■ Policy Engine (정책 결정 부서)
-= 접근 요청이 들어올 때마다 &quot;허용되나 안 되나&quot; 결정하는 부서
-역할: ABAC 정책을 적용하여 실시간 접근 제어
-초보자 설명: &quot;은행의 보안 요원처럼, 접근 요청이 오면 '당신은 이걸 볼 권리가 있나?'를 규칙(ABAC)으로 판단하는 부서&quot;
-
-■ Audit Logger (감사 기록 부서)
-= 모든 접근 시도(성공/실패)를 변조 불가능하게 기록
-역할: 이력서처럼 모든 행동을 기록하되, 한번 기록되면 절대 수정 불가
-초보자 설명: &quot;법원의 기록 담당처럼, 모든 일을 기록장에 써놓고 절대 고치지 않는 부서&quot;
-
-■ Anomaly Detector (이상 탐지 부서)
-= 평상시 패턴과 다른 행동을 감지
-역할: Azure Monitor로 비정상 접근 패턴 자동 감지 및 경고
-초보자 설명: &quot;경보실처럼, '어? 요새 평소와 다르게 뭔가 이상한데?' 하는 상황을 자동으로 감지해서 알려주는 부서&quot;
-
-🔑 핵심 기술 과제:
-- 정책 엔진의 실시간 성능: 수천 건 요청/초를 처리하면서도 밀리초 단위 응답
-- 감사 로그의 무결성: 한번 기록되면 절대 지우거나 수정 불가능하게 설계
-- ABAC 정책의 유연성: 새로운 요구사항 나올 때마다 정책을 쉽게 추가/수정할 수 있도록"><div class="project-badge">🟡 Concept</div><h3>판례/법령 자동 갱신 파이프라인</h3><p class="problem">사내 지식의 지속적 최신화</p><div class="tech-stack"><span>Context Refine Loop</span><span>Automated Updates</span></div></div>
+        <div class="project-card" data-category="governance" data-search="법무 특화 SDK" data-problem="각 부서가 개별적으로 에이전트를 구축하면서 중복 코드와 표준 부재로 인한 비효율" data-solution="■ 공통 기능 모듈화&#10;  여러 부서가 반복 구현하던 인증·로깅·문서접근 기능을 SDK로 표준화&#10;&#10;■ Copilot SDK 확장&#10;  법무 도메인 전용 API(사건 조회, 문서 검색 등)를 SDK에 포함&#10;&#10;■ 사내 배포 및 문서화&#10;  SDK를 내부 패키지 레지스트리에 배포하고 사용 가이드 제공&#10;&#10;■ 버전 관리 체계 수립&#10;  SDK 변경 시 하위 호환성을 유지하는 버전 정책 적용&#10;&#10;■ 도입 부서 지원&#10;  SDK 도입 부서에 온보딩 지원 및 예제 코드 제공" data-architecture="■ Core SDK Package&#10;  인증·로깅 등 공통 기능 모듈&#10;&#10;■ Legal Domain API Layer&#10;  사건/문서 조회 등 법무 특화 API&#10;&#10;■ Internal Package Registry&#10;  SDK 배포 및 버전 관리&#10;&#10;■ Documentation & Samples&#10;  도입 지원 문서 및 예제&#10;&#10;🔑 핵심 기술 과제:&#10;  • 다양한 부서 요구사항의 공통분모 도출&#10;  • 하위 호환성을 유지한 지속적 업데이트&#10;  • SDK 도입에 대한 부서별 저항 관리"><div class="project-badge">🟡 아이디어</div><h3>법무 특화 SDK 개발</h3><p class="problem">전사 에이전트 생태계 확장</p><div class="tech-stack"><span>Copilot SDK</span><span>Custom API</span></div></div>
+        <div class="project-card" data-category="intelligence" data-search="지식 갱신 자동화" data-problem="새로운 판례나 법령이 나와도 수동으로 아이디어를 업데이트해야 하는 운영 부담" data-solution="■ 신규 판례/법령 모니터링&#10;  공개 법령 데이터베이스를 주기적으로 크롤링하여 변경 감지&#10;&#10;■ 변경 사항 자동 요약&#10;  새 판례가 기존 법리에 미치는 영향을 자동 요약&#10;&#10;■ 컨텍스트 자동 갱신&#10;  Context Refine Loop로 에이전트가 참조하는 지식베이스를 자동 업데이트&#10;&#10;■ 변경 이력 추적&#10;  무엇이 언제 왜 갱신되었는지 이력을 기록&#10;&#10;■ 변호사 검수 후 반영&#10;  중요 변경 사항은 변호사 확인 후 최종 반영" data-architecture="■ Legal Source Monitor&#10;  판례/법령 공개 소스 변경 감지&#10;&#10;■ Context Refine Loop&#10;  지식베이스 자동 갱신 파이프라인&#10;&#10;■ Change Tracker&#10;  갱신 이력 기록&#10;&#10;■ Review Gate&#10;  중요 변경에 대한 변호사 검수&#10;&#10;🔑 핵심 기술 과제:&#10;  • 공개 법령 소스의 신뢰성 검증&#10;  • 잦은 갱신으로 인한 지식베이스 일관성 관리&#10;  • 갱신 지연과 최신성 요구 간 균형"><div class="project-badge">🟡 아이디어</div><h3>판례/법령 자동 갱신 파이프라인</h3><p class="problem">사내 지식의 지속적 최신화</p><div class="tech-stack"><span>Context Refine Loop</span><span>Automated Updates</span></div></div>
       </div>
     </div>
 
@@ -1907,26 +808,22 @@
       </div>
 
       <div class="modal-section">
-        <div class="modal-section-icon">⚠️</div>
-        <div class="modal-section-title">문제</div>
+        <div class="modal-section-head"><span class="modal-section-icon">⚠️</span><span class="modal-section-title">문제</span></div>
         <p class="modal-content" id="modalProblem">문제 설명</p>
       </div>
 
       <div class="modal-section">
-        <div class="modal-section-icon">💡</div>
-        <div class="modal-section-title">해결책</div>
+        <div class="modal-section-head"><span class="modal-section-icon">💡</span><span class="modal-section-title">해결책</span></div>
         <p class="modal-content" id="modalSolution">해결책 설명</p>
       </div>
 
       <div class="modal-section">
-        <div class="modal-section-icon">🛠️</div>
-        <div class="modal-section-title">기술</div>
+        <div class="modal-section-head"><span class="modal-section-icon">🛠️</span><span class="modal-section-title">기술</span></div>
         <div class="modal-services" id="modalServices"></div>
       </div>
 
       <div class="modal-section">
-        <div class="modal-section-icon">🏗️</div>
-        <div class="modal-section-title">아키텍처 & 기술 과제</div>
+        <div class="modal-section-head"><span class="modal-section-icon">🏗️</span><span class="modal-section-title">아키텍처 & 기술 과제</span></div>
         <p class="modal-content" id="modalArchitecture">아키텍처 설명</p>
       </div>
 
@@ -2118,9 +1015,16 @@
         modal.classList.remove('show');
       }
     });
-  </script>
-
-    })();
+    // 현재 페이지 네비게이션 활성화
+    const path = window.location.pathname.split('/').pop() || 'index.html';
+    document.querySelectorAll('.topbar-nav .tnav').forEach(link => {
+      const href = link.getAttribute('href');
+      if (href === path) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
   </script>
 </body>
 </html>

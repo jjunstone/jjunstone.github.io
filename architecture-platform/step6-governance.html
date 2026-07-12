@@ -70,11 +70,6 @@
     .main-title{font-size:2.8rem;line-height:.95;margin:0;transform:rotate(-1deg);color:var(--ink);}
     .subtitle-text{font-size:1rem;line-height:1.6;margin:16px 0 0;color:var(--ink-soft);max-width:640px;}
 
-    .nav-dots{display:flex;gap:12px;margin-bottom:48px;flex-wrap:wrap;}
-    .nav-dot{width:32px;height:32px;border-radius:50%;background:rgba(23,60,120,.1);border:2px solid rgba(23,60,120,.3);cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--navy);font-weight:600;}
-    .nav-dot:hover{background:rgba(23,60,120,.2);transform:scale(1.1);}
-    .nav-dot.active{background:var(--navy);color:white;border-color:var(--navy);box-shadow:0 4px 12px rgba(23,60,120,.3);}
-
     section{margin-bottom:56px;}
     .section-label{font-weight:700;font-size:1.2rem;margin:0 0 24px;color:var(--navy);position:relative;display:inline-block;}
     .section-label::after{content:"";position:absolute;left:-8px;right:-12px;bottom:-8px;height:6px;
@@ -230,6 +225,27 @@
     .main-title-ln2::after{content:'';display:block;height:4px;width:64%;background:linear-gradient(90deg,var(--gold),transparent);border-radius:2px;margin-top:6px;}
     @media(max-width:680px){.side-nav{display:none;}.main-title{font-size:2.6rem!important;}}
 
+  
+    /* ─── QUALITY DETAIL PANEL ─── */
+    .q-detail-panel{margin-top:12px;padding:12px 16px;background:rgba(255,255,255,.82);border-radius:8px;border-left:3px solid var(--navy);font-size:.84rem;color:var(--ink-soft);display:none;animation:fadeIn .25s ease;}
+    .q-detail-panel.visible{display:block;}
+    .q-dp-row{display:flex;gap:8px;margin-bottom:6px;align-items:baseline;}
+    .q-dp-row:last-child{margin-bottom:0;}
+    .q-dp-label{font-size:.7rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.04em;flex-shrink:0;width:56px;}
+    .q-dp-text{line-height:1.6;}
+    .q-dp-fail{color:var(--maroon);}
+    /* ─── QUALITY BAR CLICKABLE ─── */
+    .q-bar-row{cursor:pointer;border-radius:4px;padding:2px 0;transition:background .15s;}
+    .q-bar-row:hover{background:rgba(255,255,255,.4);}
+    .q-bar-row.q-selected .q-bar-label{color:var(--navy)!important;font-weight:700;}
+    /* ─── JOURNEY SKIP FIELD ─── */
+    .jd-skip{margin-top:10px;padding:8px 12px;background:rgba(124,38,31,.07);border-left:3px solid var(--maroon);border-radius:4px;font-size:.82rem;color:var(--maroon);line-height:1.6;}
+    .jd-skip b{font-weight:700;}
+    /* ─── SUMMARY GRID CLICKABLE ─── */
+    .jsg-item{cursor:pointer;transition:transform .2s,box-shadow .2s;}
+    .jsg-item:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.08);}
+    /* ─── REGULATION BADGE ─── */
+    .own-regulation{font-size:.74rem;color:var(--olive);font-style:italic;}
   </style>
 </head>
 <body>
@@ -257,7 +273,8 @@
     <!-- TITLE -->
     <div class="title-block">
       <p class="eyebrow">Step 6 / 6</p>
-      <h1 class="main-title">데이터<br>거버넌스</h1>
+        <span class="title-wm">06</span>
+      <h1 class="main-title">데이터<br><span class="main-title-ln2">거버넌스</span></h1>
       <p class="subtitle-text">1~5단계를 통해 구축된 데이터 구조가 시간이 흐름에 따라 파편화되거나 오염되지 않도록, 전사적인 차원의 지속 가능한 관리 체계를 수립한다. 아키텍처를 단순한 설계도로 남겨두지 않고 기업의 지식 자산으로 승화시키는 최종 단계다.</p>
     </div>
 
@@ -344,6 +361,7 @@
         <svg viewBox="0 0 320 270" style="width:100%;max-width:340px;height:auto;" id="radar-svg"></svg>
       </div>
       <div class="quality-bars" id="quality-bars"></div>
+      <div class="q-detail-panel" id="q-detail-panel"></div>
     </section>
 
     <!-- SEC 4: OWNERSHIP TABLE -->
@@ -380,6 +398,7 @@
           <div><p class="jd-field-label">핵심 질문</p><p class="jd-field-text" id="jd-q"></p></div>
           <div><p class="jd-field-label">주요 산출물</p><p class="jd-field-text" id="jd-out"></p></div>
         </div>
+        <div class="jd-skip" id="jd-skip" style="display:none;"></div>
       </div>
     </section>
 
@@ -411,6 +430,38 @@
 </div>
 
 <script>
+
+// ── QUALITY DIMENSION DETAIL ──────────────────────────────────────────
+const QUALITY_DETAIL = {
+  '정확성':  {measure:'시장 데이터와 원장 데이터의 일치율 측정', fail:'잘못된 데이터로 잘못된 투자 결정 → 직접적 금전 손실 및 고객 신뢰 붕괴'},
+  '완전성':  {measure:'필수 속성의 NULL 비율 모니터링', fail:'NULL이 많으면 집계·계산 불가 → 업무 중단 및 규제 보고 실패'},
+  '준수성':  {measure:'표준 도메인·명명 규칙 적용 비율', fail:'시스템 간 데이터 매핑 오류 → 연계 실패 및 통합 불가'},
+  '최신성':  {measure:'T+0 목표 대비 실제 데이터 반영 지연 시간', fail:'오래된 데이터로 리스크 계산 → 한도 초과 미탐지 → 규제 위반'},
+  '일관성':  {measure:'동일 데이터가 여러 시스템에서 같은 값을 가지는 비율', fail:'시스템 A와 B의 잔고 불일치 → 규제 보고 실패 및 내부 감사 지적'},
+  '활용성':  {measure:'권한 있는 사용자의 데이터 접근 성공률', fail:'필요할 때 데이터에 접근 불가 → 의사결정 지연 및 업무 효율 저하'},
+};
+let activeQuality = null;
+
+// ── QUALITY BAR CLICK ─────────────────────────────────────────────────
+function clickQualityBar(name, color) {
+  const panel = document.getElementById('q-detail-panel');
+  const d = QUALITY_DETAIL[name];
+  if (!d) return;
+  document.querySelectorAll('.q-bar-row').forEach(r => r.classList.remove('q-selected'));
+  if (activeQuality === name) {
+    panel.classList.remove('visible');
+    activeQuality = null;
+    return;
+  }
+  const row = document.getElementById('qrow-' + name);
+  if (row) row.classList.add('q-selected');
+  panel.style.borderLeftColor = color;
+  panel.innerHTML =
+    `<div class="q-dp-row"><span class="q-dp-label">측정</span><span class="q-dp-text">${d.measure}</span></div>` +
+    `<div class="q-dp-row"><span class="q-dp-label">실패 시</span><span class="q-dp-text q-dp-fail">${d.fail}</span></div>`;
+  panel.classList.add('visible');
+  activeQuality = name;
+}
 // ── STD CARDS ─────────────────────────────────────────────────────────
 function toggleStd(idx, card) {
   const was = card.classList.contains('sc-active');
@@ -420,10 +471,10 @@ function toggleStd(idx, card) {
 
 // ── METADATA CYCLE ────────────────────────────────────────────────────
 const CYCLE_NODES = [
-  { label:'메타 정보\n수집',     angle: -90, color:var_navy,   desc:'DB 오브젝트의 정의·용도·관계를 중앙 저장소에 등록한다. ERD, CRUD 매트릭스, 비즈니스 규칙, 제약 조건이 모두 메타데이터의 일부다.' },
-  { label:'추적 가능성\n확보',   angle:   0, color:var_maroon, desc:'업무 규칙이 변경될 때 영향을 받는 데이터와 프로세스를 즉시 파악한다. 비즈니스 목표 → 기능 → DB 칼럼까지 전 방향 추적이 가능해야 한다.' },
-  { label:'영향도\n분석',        angle:  90, color:var_olive,  desc:'신규 상품(신종 파생상품) 추가나 규제 변경 시 기존 엔터티와의 관계를 사전에 분석한다. 변경 영향도 분석 시간 90% 단축 효과.' },
-  { label:'지속적\n업데이트',    angle: 180, color:var_gold,   desc:'비즈니스 변화에 따라 메타데이터도 동시에 갱신하여 현행화를 유지한다. 메타데이터가 현실을 반영하지 못하면 거버넌스 전체가 무너진다.' },
+  { label:'메타 정보\n수집',     angle: -90, color:var_navy,   desc:'DB 오브젝트의 정의·용도·관계를 중앙 저장소에 등록한다. ERD, CRUD 매트릭스, 비즈니스 규칙, 제약 조건이 모두 메타데이터의 일부다. ⛔ 이 단계를 생략하면 이후 영향도 분석과 추적이 불가능해지며, 변경 시 어디에 파급이 미치는지 알 수 없게 된다.' },
+  { label:'추적 가능성\n확보',   angle:   0, color:var_maroon, desc:'업무 규칙이 변경될 때 영향을 받는 데이터와 프로세스를 즉시 파악한다. 비즈니스 목표 → 기능 → DB 칼럼까지 전 방향 추적이 가능해야 한다. ⛔ 이 단계가 없으면 하나의 규칙 변경이 얼마나 많은 시스템에 파급되는지 모른 채 "깜짝 장애"가 발생한다.' },
+  { label:'영향도\n분석',        angle:  90, color:var_olive,  desc:'신규 상품(신종 파생상품) 추가나 규제 변경 시 기존 엔터티와의 관계를 사전에 분석한다. 변경 영향도 분석 시간 90% 단축 효과. ⛔ 이 단계를 건너뛰면 신규 상품 출시 시 기존 ERD·CRUD와의 충돌을 운영 환경에서 처음 발견하게 된다.' },
+  { label:'지속적\n업데이트',    angle: 180, color:var_gold,   desc:'비즈니스 변화에 따라 메타데이터도 동시에 갱신하여 현행화를 유지한다. 메타데이터가 현실을 반영하지 못하면 거버넌스 전체가 무너진다. ⛔ 업데이트가 멈추면 메타데이터와 현실이 괴리되어 거버넌스가 형식적인 문서로 전락하고 아무도 신뢰하지 않게 된다.' },
 ];
 const var_navy='#173c78', var_maroon='#7c261f', var_olive='#4e5533', var_gold='#9a7729';
 
@@ -558,7 +609,7 @@ function buildRadarSVG() {
   const bars = document.getElementById('quality-bars');
   const cls = ['q-acc','q-com','q-con','q-tim','q-con2','q-acc2'];
   bars.innerHTML = QUALITY.map((q,i) => `
-    <div class="q-bar-row">
+    <div class="q-bar-row" id="qrow-${q.name}" onclick="clickQualityBar('${q.name}','${q.color}')">
       <span class="q-bar-label" style="color:${q.color}">${q.name}</span>
       <div class="q-bar-track"><div class="q-bar-fill ${cls[i]}" id="qb-${i}"></div></div>
       <span class="q-bar-val">${Math.round(q.val*100)}%</span>
@@ -594,13 +645,13 @@ function setupRadarObserver() {
 // ── OWNERSHIP TABLE ───────────────────────────────────────────────────
 const OWN_DATA = [
   { entity:'고객 기본정보', dept:'영업 추진부', badge:'ob-create', rights:'생성, 수정, 폐기',
-    standard:'정확성 99.9%', frequency:'실시간 갱신', rule:'고객 삭제 시 계좌 CASCADE', audit:'연간 1회 감사' },
+    standard:'정확성 99.9%', frequency:'실시간 갱신', rule:'고객 삭제 시 계좌 CASCADE', audit:'연간 1회 감사', regulation:'자본시장법 §45 — 고객 정보 관리 의무' },
   { entity:'투자 자산',     dept:'상품 개발팀', badge:'ob-create', rights:'생성, 변경',
-    standard:'시장 데이터 실시간 동기', frequency:'시장 시세 연동', rule:'상장폐지 상품 신규 거래 RESTRICT', audit:'분기별 검토' },
+    standard:'시장 데이터 실시간 동기', frequency:'시장 시세 연동', rule:'상장폐지 상품 신규 거래 RESTRICT', audit:'분기별 검토', regulation:'금융투자업 규정 §4-20 — 투자 자산 정보 공시 의무' },
   { entity:'거래 원장',     dept:'업무 지원부', badge:'ob-readonly', rights:'생성, 조회만(수정불가)',
-    standard:'거래 이력 100% 추적', frequency:'배치 마감 시 생성', rule:'원장은 append-only, DELETE 불가', audit:'매일 자동 정합성 검증' },
+    standard:'거래 이력 100% 추적', frequency:'배치 마감 시 생성', rule:'원장은 append-only, DELETE 불가', audit:'매일 자동 정합성 검증', regulation:'전자금융감독규정 §34 — 거래 기록 5년 보존 의무' },
   { entity:'계좌 잔액',     dept:'리스크 관리팀', badge:'ob-read', rights:'조회, 한도 통제',
-    standard:'T+0 실시간 정확성', frequency:'체결 즉시 갱신', rule:'한도 초과 시 자동 알림·차단', audit:'분기별 포지션 검증' },
+    standard:'T+0 실시간 정확성', frequency:'체결 즉시 갱신', rule:'한도 초과 시 자동 알림·차단', audit:'분기별 포지션 검증', regulation:'자본시장법 §166 — 리스크 관리 기준 마련 의무' },
 ];
 
 function buildOwnershipTable() {
@@ -642,12 +693,12 @@ function toggleOwnRow(i) {
 
 // ── JOURNEY TIMELINE ──────────────────────────────────────────────────
 const JOURNEY_STEPS = [
-  { label:'전략\n메타모델', q:'왜 이 데이터가\n존재해야 하는가?', out:'ISP 통합 메타모델\n전략의 사슬', color:var_navy },
-  { label:'주제 영역\n분할',    q:'어떻게 나눌 것인가?',           out:'4개 SA 정의\nLow Coupling 설계', color:var_maroon },
-  { label:'CRUD\n매트릭스',  q:'누가 데이터를\n소유하는가?',       out:'12/12 소유권 검증\n기능-데이터 정합성', color:var_olive },
-  { label:'논리 모델 &\n정규화',  q:'얼마나 정확하게\n구조화할 것인가?', out:'ERD 설계\n3NF 정규화', color:var_navy },
-  { label:'물리 설계',       q:'어떻게 빠르고\n안정적으로 구현?',  out:'인덱스·파티셔닝\nDDL·무결성 제약', color:var_gold },
-  { label:'거버넌스',        q:'어떻게 지속 가능하게\n관리할 것인가?', out:'표준화 체계\n메타데이터 관리', color:var_gold },
+  { label:'전략\n메타모델', q:'왜 이 데이터가\n존재해야 하는가?', out:'ISP 통합 메타모델\n전략의 사슬', color:var_navy , skip:"WHY 없이 설계하면 이후 요구사항 변화 시 근거 없이 구조가 흔들린다. 엔터티가 '왜 존재하는가'를 설명할 수 없으면 거버넌스가 불가능하다."},
+  { label:'주제 영역\n분할',    q:'어떻게 나눌 것인가?',           out:'4개 SA 정의\nLow Coupling 설계', color:var_maroon , skip:"SA 분할 없이 전체를 하나로 설계하면 결합도가 폭발하고 팀 간 책임 소재가 불명확해진다."},
+  { label:'CRUD\n매트릭스',  q:'누가 데이터를\n소유하는가?',       out:'12/12 소유권 검증\n기능-데이터 정합성', color:var_olive , skip:"소유권 검증 없이 다음 단계로 가면 고아 엔터티가 운영 환경에서 처음 발견된다. 설계 단계에서 찾는 버그가 운영 장애가 된다."},
+  { label:'논리 모델 &\n정규화',  q:'얼마나 정확하게\n구조화할 것인가?', out:'ERD 설계\n3NF 정규화', color:var_navy , skip:"ERD·정규화 없이 물리 설계로 가면 중복·이상 현상이 누적되어 시스템이 커질수록 복구 비용이 기하급수적으로 증가한다."},
+  { label:'물리 설계',       q:'어떻게 빠르고\n안정적으로 구현?',  out:'인덱스·파티셔닝\nDDL·무결성 제약', color:var_gold , skip:"물리 설계 없이 운영하면 초당 수백 건 트랜잭션에서 성능 병목이 발생하고 장애 대응이 수동·임시방편이 된다."},
+  { label:'거버넌스',        q:'어떻게 지속 가능하게\n관리할 것인가?', out:'표준화 체계\n메타데이터 관리', color:var_gold , skip:"거버넌스 없이 운영하면 1~5단계에서 쌓은 아키텍처가 시간이 지나면서 파편화되어 결국 재설계 비용이 발생한다."},
 ];
 
 function buildJourneySVG() {
@@ -686,6 +737,8 @@ function clickJourneyNode(i) {
   document.getElementById('jd-title').textContent = s.label.replace('\n', ' ');
   document.getElementById('jd-q').textContent = s.q.replace('\n',' ');
   document.getElementById('jd-out').textContent = s.out.replace('\n',' · ');
+  const skipEl = document.getElementById('jd-skip');
+  if (skipEl) { skipEl.innerHTML = '<b>⛔ 건너뛰면:</b> ' + (s.skip||''); skipEl.style.display = s.skip ? 'block' : 'none'; }
   document.getElementById('journey-detail').style.borderLeftColor = s.color;
   detail.classList.add('visible');
   activeJourneyNode = i;
@@ -719,10 +772,10 @@ const SUMMARY = [
 ];
 function buildSummaryGrid() {
   document.getElementById('summary-grid').innerHTML = SUMMARY.map((s,i) => `
-    <div class="jsg-item" style="border-left-color:${SUMMARY_COLORS[i]};${i===5?'background:rgba(255,255,255,.88);':''}">
+    <div class="jsg-item" style="border-left-color:${SUMMARY_COLORS[i]};${i===5?'background:rgba(255,255,255,.88);':''}" onclick="navigateToStep(${i+1})" title="Step ${i+1}로 이동 →">
       <p class="jsg-step" style="color:${SUMMARY_COLORS[i]}">${s.step}</p>
       <p class="jsg-q">${s.q}</p>
-      <p class="jsg-out">${s.out}</p>
+      <p class="jsg-out">${s.out} <span style="font-size:.7rem;color:rgba(0,0,0,.3);">↗</span></p>
     </div>`).join('');
 }
 

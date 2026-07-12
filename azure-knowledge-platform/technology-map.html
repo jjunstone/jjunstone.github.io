@@ -6,12 +6,12 @@
   <title>Technology Map — Junseok Lee</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
   <style>
     :root {
       --sidebar-w: 280px;
-      --topbar-h: 52px;
+      --topbar-h: 92px;
       
       /* Light mode */
       --bg-light: #f8fafc;
@@ -33,6 +33,7 @@
       --accent: #3b82f6;
       --accent-light: #eff6ff;
       --accent-dark: #1d4ed8;
+      --gold: #d4af6a;
 
       /* 8-category accent colors */
       --c-identity:   #3b82f6;
@@ -88,19 +89,21 @@
     .brand-name { font-size: 15px; font-weight: 700; color: var(--text); transition: color .3s; }
     .brand-role { font-size: 11px; color: var(--text-light); transition: color .3s; }
 
-    .topbar-nav { display: flex; align-items: center; gap: 2px; flex: 1; }
+    .topbar-nav { display: flex; align-items: center; gap: 10px; flex: 1; }
     .tnav {
-      padding: 6px 16px; border-radius: 6px; font-size: 14px; font-weight: 500;
-      color: var(--text-light); cursor: pointer; transition: .15s;
-      text-decoration: none; border: none; background: transparent; font-family: inherit;
-      position: relative;
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 16px; border-radius: 10px; min-width: 180px;
+      color: var(--text-light); cursor: pointer; transition: .15s ease;
+      text-decoration: none; border: 1px solid var(--border); background: transparent;
+      font-family: inherit;
     }
-    .tnav:hover { color: var(--text); }
-    .tnav.active { color: var(--accent); font-weight: 600; }
-    .tnav.active::after {
-      content: ''; position: absolute; bottom: -17px; left: 16px; right: 16px;
-      height: 2px; background: var(--accent); border-radius: 1px;
-    }
+    .tnav:hover { border-color: var(--text-light); background: var(--bg); }
+    .tnav.active { border-color: var(--accent); background: rgba(59,130,246,.14); }
+    .tnav.active .tnav-title { color: var(--accent); }
+    .tnav-icon { font-size: 20px; line-height: 1; flex-shrink: 0; width: 22px; text-align: center; }
+    .tnav-body { display: flex; flex-direction: column; gap: 2px; line-height: 1.3; min-width: 0; }
+    .tnav-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .tnav-desc { font-size: 11.5px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
     .topbar-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
     .theme-toggle {
@@ -120,19 +123,6 @@
       border-right: 1px solid var(--border); overflow-y: auto;
       display: flex; flex-direction: column; z-index: 50;
     }
-    .sidebar-nav { padding: 12px 10px; flex-shrink: 0; }
-    .snav-item {
-      display: flex; align-items: center; gap: 9px; padding: 8px 12px;
-      border-radius: 7px; font-size: 13px; font-weight: 500; color: var(--text-muted);
-      cursor: pointer; transition: .15s ease; margin-bottom: 2px;
-      text-decoration: none;
-    }
-    .snav-item:hover { color: var(--text); background: var(--bg); }
-    .snav-item.active { color: var(--accent); background: var(--accent-light); font-weight: 600; }
-    .snav-item svg { width: 15px; height: 15px; flex-shrink: 0; opacity: .7; }
-    .snav-item.active svg { opacity: 1; }
-
-    .sidebar-divider { height: 1px; background: var(--border); margin: 6px 16px; }
 
     /* Sidebar detail panel (fully dynamic) */
     .sidebar-detail { flex: 1; padding: 14px 16px 20px; overflow-y: auto; min-height: 0; }
@@ -176,32 +166,6 @@
     }
     .sd-chip-arch { background: #f0fdf4; color: #16a34a; border-color: #dcfce7; }
 
-    .sd-arch-btn {
-      display: inline-flex; align-items: center; gap: 5px; width: 100%; justify-content: center;
-      padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border);
-      background: var(--bg-panel); color: var(--text-muted); font-size: 12px; font-weight: 600;
-      cursor: pointer; transition: .15s; font-family: inherit; margin-bottom: 14px;
-    }
-    .sd-arch-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
-
-    /* ── Sidebar Portfolio Overview ── */
-    .sidebar-overview {
-      margin: 0 14px 16px; flex-shrink: 0;
-      background: linear-gradient(135deg, #1e3a5f, #1a4080);
-      border-radius: 10px; padding: 14px; color: white;
-    }
-    .sov-text { font-size: 11.5px; line-height: 1.5; opacity: .9; margin-bottom: 10px; }
-    .sov-stats { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
-    .sov-stat { display: flex; justify-content: space-between; font-size: 10.5px; opacity: .8; }
-    .sov-stat-val { font-weight: 600; opacity: 1; }
-    .sov-btn {
-      width: 100%; padding: 7px; border-radius: 7px; border: 1px solid rgba(255,255,255,.3);
-      background: rgba(255,255,255,.12); color: white; font-size: 11.5px; font-weight: 600;
-      cursor: pointer; transition: .15s ease; font-family: inherit;
-      display: flex; align-items: center; justify-content: center; gap: 5px; text-decoration: none;
-    }
-    .sov-btn:hover { background: rgba(255,255,255,.2); }
-
     /* ── Main content ── */
     .main {
       position: fixed; top: var(--topbar-h); left: var(--sidebar-w); right: 0; bottom: 0;
@@ -215,30 +179,49 @@
     }
     .page-header-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
     .page-title-block { display: flex; align-items: baseline; gap: 12px; }
-    .page-title { font-size: 20px; font-weight: 700; color: var(--text); }
+    .page-title {
+      font-family: 'Kalam', cursive; font-size: 24px; font-weight: 700; color: var(--text);
+      position: relative; display: inline-block; padding-bottom: 4px;
+    }
+    .page-title::after {
+      content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+      background: var(--gold); border-radius: 1px;
+    }
     .page-sub { font-size: 12px; color: var(--text-muted); }
 
     .header-actions { display: flex; align-items: center; gap: 8px; }
-    .view-toggle-btn {
-      display: flex; align-items: center; gap: 6px;
-      padding: 7px 14px; border-radius: 8px; border: 1px solid var(--border);
-      background: var(--bg-panel); color: var(--text); font-size: 12.5px; font-weight: 600;
-      cursor: pointer; transition: .15s; font-family: inherit;
+
+    .svc-search-wrap { position: relative; }
+    .svc-search {
+      width: 220px; padding: 8px 12px; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--bg-panel);
+      color: var(--text); font-size: 12.5px; font-family: inherit; outline: none;
+      transition: border-color .15s ease, width .15s ease;
     }
-    .view-toggle-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+    .svc-search:focus { border-color: var(--accent); width: 260px; }
+    .svc-search::placeholder { color: var(--text-light); }
+    .svc-search-results {
+      position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+      background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25); max-height: 320px; overflow-y: auto;
+      display: none; z-index: 200;
+    }
+    .svc-search-results.show { display: block; }
+    .svc-result-item {
+      padding: 9px 12px; cursor: pointer; border-bottom: 1px solid var(--border);
+      transition: background .12s ease;
+    }
+    .svc-result-item:last-child { border-bottom: none; }
+    .svc-result-item:hover { background: var(--bg); }
+    .svc-result-title { font-size: 12.5px; font-weight: 700; color: var(--text); }
+    .svc-result-cat { font-size: 10.5px; color: var(--text-muted); margin-top: 2px; }
+    .svc-result-empty { padding: 14px 12px; font-size: 12px; color: var(--text-muted); text-align: center; }
     .overview-btn {
       padding: 7px 14px; border-radius: 8px; border: 1px solid var(--border);
       background: var(--bg-panel); color: var(--text-muted); font-size: 12.5px; font-weight: 600;
       cursor: pointer; transition: .15s; font-family: inherit;
     }
     .overview-btn:hover { border-color: var(--accent); color: var(--accent); }
-    .live-pill {
-      display: flex; align-items: center; gap: 6px;
-      padding: 7px 12px; border-radius: 999px; border: 1px solid #bbf7d0;
-      background: #f0fdf4; color: #16a34a; font-size: 11.5px; font-weight: 600;
-    }
-    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
 
     /* Tabs row */
     .view-tabs {
@@ -246,14 +229,6 @@
       padding: 8px 28px; background: var(--bg-panel);
       border-bottom: 1px solid var(--border); flex-shrink: 0;
     }
-    .vtabs { display: flex; gap: 2px; }
-    .vtab {
-      padding: 6px 16px; border-radius: 6px; font-size: 13px; font-weight: 500;
-      color: var(--text-muted); cursor: pointer; border: none; background: transparent;
-      font-family: inherit; transition: .15s ease;
-    }
-    .vtab:hover { color: var(--text); background: var(--bg); }
-    .vtab.active { background: var(--accent); color: white; font-weight: 600; }
 
     .cat-quick-nav { display: flex; gap: 4px; flex-wrap: wrap; }
     .qn-btn {
@@ -287,7 +262,6 @@
     }
     .mm-center-icon { font-size: 26px; margin-bottom: 6px; }
     .mm-center-title { font-size: 16px; font-weight: 700; color: white; line-height: 1.15; }
-    .mm-center-sub { font-size: 10px; color: rgba(255,255,255,.75); margin-top: 5px; line-height: 1.4; }
 
     .hub-ring {
       position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
@@ -317,7 +291,6 @@
     .mm-node-foot { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
     .mm-node-tags { display: flex; flex-wrap: wrap; gap: 4px; }
     .mm-node-tag { font-size: 9px; padding: 2px 7px; border-radius: 999px; background: var(--bg); border: 1px solid var(--border); color: var(--text-muted); }
-    .mm-node-count { font-size: 9.5px; color: var(--text-light); white-space: nowrap; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; padding: 2px 7px; }
 
     .mm-node[data-key="identity"]  { --n-color: var(--c-identity); }
     .mm-node[data-key="network"]   { --n-color: var(--c-network); }
@@ -327,7 +300,6 @@
     .mm-node[data-key="data"]      { --n-color: var(--c-data); }
     .mm-node[data-key="ops"]       { --n-color: var(--c-ops); }
     .mm-node[data-key="workplace"] { --n-color: var(--c-workplace); }
-    .mm-node.proj-node { --n-color: #2563eb; }
 
     /* ── Subgraph strip ── */
     .subgraph-strip {
@@ -350,6 +322,7 @@
       position: absolute; padding: 10px 13px; border-radius: 11px; z-index: 3;
       background: var(--bg-panel); border: 1.5px solid var(--border);
       box-shadow: 0 2px 10px rgba(0,0,0,.05); cursor: pointer;
+      box-sizing: border-box;
       transition: transform .15s ease, border-color .15s ease;
     }
     .mn:hover { transform: translateY(-2px); border-color: #93c5fd; }
@@ -386,45 +359,6 @@
     }
     .zoom-reset:hover { background: var(--bg); color: var(--text); }
 
-    /* ══ Cases tab content ══ */
-    .cases-wrap { flex: 1; overflow-y: auto; padding: 20px 28px; min-height: 0; }
-    .cases-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; max-width: 1180px; margin: 0 auto; }
-    .case-card {
-      background: var(--bg-panel); border: 1px solid var(--border); border-radius: 14px;
-      padding: 18px 20px; cursor: pointer; transition: .18s ease;
-    }
-    .case-card:hover { border-color: #c7d7f0; box-shadow: 0 6px 20px rgba(0,0,0,.07); }
-    .case-card.open { border-color: var(--accent); box-shadow: 0 6px 20px rgba(59,130,246,.1); }
-    .case-card-head { display: flex; align-items: flex-start; gap: 12px; }
-    .case-num { font-size: 12px; font-weight: 700; color: var(--text-light); font-variant-numeric: tabular-nums; margin-top: 1px; }
-    .case-status { font-size: 10.5px; padding: 2px 9px; border-radius: 999px; font-weight: 700; flex-shrink: 0; white-space: nowrap; }
-    .case-status.done { background: #f0fdf4; color: #16a34a; }
-    .case-status.plan { background: #f5f3ff; color: #7c3aed; }
-    .case-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
-    .case-sub { font-size: 11.5px; color: var(--text-muted); line-height: 1.5; }
-    .case-body { display: none; margin-top: 16px; }
-    .case-card.open .case-body { display: block; }
-    .case-section-label { font-size: 10px; text-transform: uppercase; letter-spacing: .09em; color: var(--text-light); font-weight: 700; margin: 14px 0 7px; }
-    .case-section-label:first-child { margin-top: 0; }
-    .case-problem-box { padding: 10px 14px; background: #fef2f2; border-radius: 9px; border: 1px solid #fecaca; }
-    .case-problem-box li { font-size: 11.5px; color: #991b1b; line-height: 1.7; padding-left: 12px; position: relative; }
-    .case-problem-box li::before { content: '·'; position: absolute; left: 0; }
-    .case-flow { display: flex; flex-direction: column; }
-    .flow-step { display: flex; align-items: flex-start; gap: 9px; font-size: 11.5px; color: var(--text); padding: 4px 0; line-height: 1.5; }
-    .flow-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 5px; }
-    .flow-line { width: 1.5px; height: 14px; background: #bfdbfe; margin-left: 3px; flex-shrink: 0; display: block; }
-    .case-chips { display: flex; flex-wrap: wrap; gap: 5px; }
-    .case-chip { font-size: 10.5px; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--border); background: var(--bg); color: var(--text-muted); }
-    .case-outcome li { font-size: 11.5px; color: #16a34a; line-height: 1.7; padding-left: 12px; position: relative; font-weight: 500; }
-    .case-outcome li::before { content: '✓'; position: absolute; left: 0; font-size: 9px; top: 3px; }
-    .case-arch-btn {
-      display: inline-flex; align-items: center; gap: 5px; margin-top: 14px;
-      padding: 7px 14px; border-radius: 8px; border: 1px solid var(--border);
-      background: var(--bg); color: var(--text-muted); font-size: 11.5px; font-weight: 600;
-      cursor: pointer; transition: .15s; font-family: inherit;
-    }
-    .case-arch-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
-
     /* ══ Modals ══ */
     .modal-overlay {
       display: none; position: fixed; inset: 0; z-index: 200;
@@ -437,7 +371,6 @@
       background: var(--bg-panel); border-radius: 18px; box-shadow: 0 24px 60px rgba(0,0,0,.25);
       padding: 32px 34px 28px;
     }
-    .modal-panel.wide { width: min(880px, 100%); }
     .modal-close {
       position: absolute; top: 18px; right: 18px; width: 30px; height: 30px; border-radius: 50%;
       border: 1px solid var(--border); background: var(--bg); color: var(--text-muted);
@@ -457,20 +390,6 @@
     .ov-rmitem { background: var(--bg); border: 1px solid var(--border); border-radius: 11px; padding: 11px 10px; font-size: 11.5px; color: var(--text); line-height: 1.55; }
     .ov-q { display: block; font-size: 9.5px; color: var(--accent); letter-spacing: .08em; margin-bottom: 5px; font-weight: 700; }
     .ov-quote { font-size: 12.5px; color: var(--text-muted); line-height: 1.8; font-style: italic; border-top: 1px solid var(--border); padding-top: 18px; text-align: center; }
-
-    .arch-modal-sub { font-size: 12.5px; color: var(--text-muted); margin: 4px 0 18px; line-height: 1.65; }
-    .arch-modal-hint { font-size: 10.5px; color: var(--text-light); margin-top: 16px; text-align: center; letter-spacing: .04em; }
-    .arch-placeholder {
-      display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 180px;
-      border: 1.5px dashed var(--border); border-radius: 12px; background: var(--bg); gap: 10px; padding: 24px;
-    }
-    .arch-placeholder .ap-icon { font-size: 36px; opacity: .3; }
-    .arch-placeholder .ap-title { font-size: 13px; font-weight: 600; color: var(--text-muted); }
-    .arch-placeholder .ap-sub { font-size: 10.5px; color: var(--text-light); text-align: center; line-height: 1.6; max-width: 360px; }
-
-    @media (max-width: 900px) {
-      .cases-grid { grid-template-columns: 1fr; }
-    }
   </style>
 </head>
 <body>
@@ -486,10 +405,18 @@
   </a>
   
   <nav class="topbar-nav">
-    <a class="tnav" href="index.html" id="nav-home">Home</a>
-    <a class="tnav" href="projects.html" id="nav-projects">Projects</a>
-    <a class="tnav" href="technology-map.html" id="nav-techmap">Technology Map</a>
-    <a class="tnav" href="architecture-library.html" id="nav-arch">Architecture Library</a>
+    <a class="tnav" href="projects.html" id="nav-projects">
+      <span class="tnav-icon">📁</span>
+      <span class="tnav-body"><span class="tnav-title">Projects</span><span class="tnav-desc">운영 실무를 통해 수행한 프로젝트들</span></span>
+    </a>
+    <a class="tnav" href="technology-map.html" id="nav-techmap">
+      <span class="tnav-icon">🔧</span>
+      <span class="tnav-body"><span class="tnav-title">Technology Map</span><span class="tnav-desc">Azure 기술 스택과 실무 활용</span></span>
+    </a>
+    <a class="tnav" href="architecture-library.html" id="nav-arch">
+      <span class="tnav-icon">📐</span>
+      <span class="tnav-body"><span class="tnav-title">Architecture Library</span><span class="tnav-desc">구상해본 설계 스터디 (컨셉)</span></span>
+    </a>
   </nav>
   
   <div class="topbar-right">
@@ -507,46 +434,9 @@
 
 <!-- ── Sidebar ── -->
 <aside class="sidebar">
-  <nav class="sidebar-nav">
-    <a class="snav-item" href="index.html">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-      Home
-    </a>
-    <a class="snav-item" href="projects.html">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-      Projects
-    </a>
-    <a class="snav-item active" href="#">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
-      Technology Map
-    </a>
-    <a class="snav-item" href="architecture-library.html">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg>
-      Architecture Library
-    </a>
-    <a class="snav-item" href="about.html">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-      About
-    </a>
-  </nav>
-
-  <div class="sidebar-divider"></div>
-
   <!-- Dynamic detail panel -->
   <div class="sidebar-detail" id="sidebarDetail">
     <!-- Populated by JS -->
-  </div>
-
-  <!-- Portfolio Overview Card -->
-  <div class="sidebar-overview">
-    <div class="sov-text">운영 경험을 기반으로<br/>Azure Enterprise Platform을<br/>설계합니다.</div>
-    <div class="sov-stats">
-      <div class="sov-stat"><span>총 프로젝트</span><span class="sov-stat-val">18</span></div>
-      <div class="sov-stat"><span>완료</span><span class="sov-stat-val">7</span></div>
-      <div class="sov-stat"><span>진행 중</span><span class="sov-stat-val">6</span></div>
-      <div class="sov-stat"><span>컨셉 / 설계</span><span class="sov-stat-val">5</span></div>
-    </div>
-    <a class="sov-btn" href="projects.html">View Projects →</a>
   </div>
 </aside>
 
@@ -557,23 +447,20 @@
     <div class="page-header-row">
       <div class="page-title-block">
         <div class="page-title">Technology Map</div>
-        <div class="page-sub">실무 경험에서 출발한 하이브리드 인프라 · 보안 · 자동화 설계 지도</div>
+        <div class="page-sub">다뤄본 Azure 기술 스택 — 8개 카테고리</div>
       </div>
       <div class="header-actions">
+        <div class="svc-search-wrap">
+          <input type="text" class="svc-search" id="svcSearch" placeholder="서비스 검색 (예: Key Vault)" autocomplete="off">
+          <div class="svc-search-results" id="svcSearchResults"></div>
+        </div>
         <button class="overview-btn" onclick="toggleOverview(true)">Overview</button>
-        <button class="view-toggle-btn" id="viewToggleBtn" onclick="toggleMainView()">
-          <span id="viewToggleIcon">📊</span> <span id="viewToggleLabel">8 Categories</span>
-        </button>
       </div>
     </div>
   </div>
 
   <!-- View tabs -->
   <div class="view-tabs">
-    <div class="vtabs">
-      <button class="vtab active" id="tabServices" onclick="switchMainTab('services')">서비스 맵</button>
-      <button class="vtab" id="tabCases" onclick="switchMainTab('cases')">아키텍처 사례 6</button>
-    </div>
     <div class="cat-quick-nav" id="catQuickNav"></div>
   </div>
 
@@ -616,11 +503,6 @@
       </div>
     </div>
   </div>
-
-  <!-- ══ Cases tab content ══ -->
-  <div class="cases-wrap" id="casesTabContent" style="display:none;">
-    <div class="cases-grid" id="casesGrid"></div>
-  </div>
 </main>
 
 <!-- ══ Overview Modal ══ -->
@@ -655,17 +537,6 @@
   </div>
 </div>
 
-<!-- ══ Architecture Diagram Modal ══ -->
-<div class="modal-overlay" id="archOverlay" onclick="if(event.target===this) closeArchModal()">
-  <div class="modal-panel wide">
-    <button class="modal-close" onclick="closeArchModal()">✕</button>
-    <div class="modal-eyebrow" id="archEyebrow">Architecture Diagram</div>
-    <h2 id="archTitle" style="font-size:17px;margin-bottom:4px;"></h2>
-    <p class="arch-modal-sub" id="archSub"></p>
-    <div id="archDiagram"></div>
-    <p class="arch-modal-hint" id="archHint">실제 구현 기반 아키텍처 흐름도 · 서비스 연결 구조 참고용</p>
-  </div>
-</div>
 
 <script>
 /* ════════════════════════════════════════════════════════
@@ -685,7 +556,7 @@ const graph = {
       '계정 생명주기(입사·이동·퇴사) 자동화로 누락과 지연 제거',
       'Hybrid Sync(Entra Connect) 구조 설계 및 동기화 범위 정의'
     ],
-    keyServices:['Entra ID','RBAC','PIM','Conditional Access'],
+    keyServices:['Entra ID','RBAC','PIM','Conditional Access','Entra Connect'],
     archFocus:['Identity Governance Platform','Zero Trust Architecture','Hybrid Identity Integration'],
     children:{
       entra:{
@@ -723,6 +594,15 @@ const graph = {
         design:['Named Location으로 허용 IP 대역·국가 구분','Report-only 모드로 정책 영향도 사전 검증 후 적용','디바이스 규정 준수(Intune Compliance) 조건 연계','사용자 그룹별 정책 세분화 — 일괄 적용 지양'],
         related:['Entra ID','MFA','Defender for Cloud Apps','Intune'],
         archFit:['Zero Trust Access Model','Secure Remote Work Architecture']
+      },
+      entraconnect:{
+        title:'Entra Connect (Hybrid Identity)',
+        desc:'온프레미스 AD와 Entra ID를 동기화하여 하나의 신원 체계로 통합하는 하이브리드 Identity 연결 고리',
+        role:['온프레미스 Active Directory 계정을 Entra ID로 동기화','하이브리드 환경에서 단일 신원으로 온프레미스·클라우드 리소스 접근 통합'],
+        when:['온프레미스 AD가 남아있는 환경에서 클라우드 전환을 시작할 때','SSO를 온프레미스 앱까지 확장해야 할 때','계정 통합 마이그레이션(Hybrid Identity 전환) 설계 시'],
+        design:['동기화 범위(OU/그룹) 명확히 정의 — 불필요 계정 동기화 방지','Password Hash Sync vs Pass-through Authentication 방식 선택','동기화 지연·충돌 모니터링 체계 구축','동기화 서버 이중화로 단일 장애점 제거'],
+        related:['Entra ID','RBAC','Conditional Access'],
+        archFit:['Hybrid Identity Integration','Zero Trust Architecture']
       }
     }
   },
@@ -738,7 +618,7 @@ const graph = {
       'DNS 설계 — 퍼블릭/프라이빗 네임 해석 분리 필수',
       'NSG와 Azure Firewall의 역할 명확히 분리 (분산 제어 vs 중앙 제어)'
     ],
-    keyServices:['VNet','VPN Gateway','Azure Firewall','Application Gateway','Private Link'],
+    keyServices:['VNet','VPN Gateway','Azure Firewall','Application Gateway','Private Link','ExpressRoute'],
     archFocus:['Hybrid Secure Network','Landing Zone Connectivity','Secure Application Delivery'],
     children:{
       vnet:{
@@ -785,6 +665,15 @@ const graph = {
         design:['Private DNS Zone 구성 필수 — DNS 해석이 프라이빗 IP로 향해야 함','서비스마다 별도 Private Endpoint 생성 (서비스 = 1개의 PE)','Private Endpoint 전용 서브넷 분리 권장','기존 Service Endpoint와 병행 시 충돌 여부 사전 확인'],
         related:['VNet','Private DNS Zone','Key Vault','Azure Storage','Azure SQL'],
         archFit:['Zero Trust Network Access','Secure PaaS Connectivity']
+      },
+      expressroute:{
+        title:'ExpressRoute',
+        desc:'온프레미스와 Azure를 사설 회선으로 직접 연결하는 전용 하이브리드 연결 서비스',
+        role:['인터넷을 거치지 않는 전용선으로 온프레미스-Azure 간 안정적 대역폭 확보','VPN 대비 낮은 지연시간과 높은 보안성으로 대규모 하이브리드 워크로드 지원'],
+        when:['대용량 데이터 전송이 지속적으로 필요한 하이브리드 환경 구축 시','VPN의 대역폭·지연시간 한계로 전용 연결이 필요할 때','금융/법률 등 규제 준수를 위해 인터넷 경유를 피해야 할 때'],
+        design:['ExpressRoute Gateway SKU를 트래픽 규모에 맞게 선정','이중화 회선(Primary/Secondary)으로 고가용성 확보','VPN Gateway를 백업 경로로 함께 구성','ExpressRoute Circuit 대역폭 모니터링 및 확장 계획 수립'],
+        related:['VNet','VPN Gateway','Azure Firewall','Private Link'],
+        archFit:['Hybrid Secure Network','Landing Zone Connectivity']
       }
     }
   },
@@ -800,7 +689,7 @@ const graph = {
       'Defender for Cloud 권고사항을 정기 검토해 보안 기준선(Baseline) 유지',
       'Azure Policy로 리소스가 보안 기준을 벗어나지 못하도록 선제 강제'
     ],
-    keyServices:['Microsoft Sentinel','Defender for Cloud','Key Vault','Microsoft Purview','Azure Policy'],
+    keyServices:['Microsoft Sentinel','Defender for Cloud','Key Vault','Microsoft Purview','Azure Policy','Defender for Cloud Apps'],
     archFocus:['Security Operations Center (SOC)','Cloud Security Architecture','Compliance Automation'],
     children:{
       sentinel:{
@@ -847,6 +736,15 @@ const graph = {
         design:['Deny 적용 전 Audit으로 기존 비준수 현황 파악 후 단계적 적용','Management Group 레벨에서 적용해 하위 구독 전체 커버','Exclusion(예외)을 최소화하고 기록 의무화','DeployIfNotExists로 진단 설정 등 필수 리소스 자동 배포'],
         related:['Defender for Cloud','Management Group','Purview','Compliance Manager'],
         archFit:['Governance Automation','Landing Zone Policy']
+      },
+      defenderapps:{
+        title:'Defender for Cloud Apps',
+        desc:'조직에서 사용 중인 SaaS 앱을 가시화하고 비정상 사용을 탐지하는 CASB(클라우드 접근 보안 브로커)',
+        role:['섀도우 IT(비인가 SaaS 사용) 현황을 자동으로 발견하고 위험도 평가','비정상 파일 다운로드·대량 공유 등 이상 행위를 실시간 탐지 및 차단'],
+        when:['직원들이 승인 없이 외부 SaaS를 쓰는 섀도우 IT를 파악해야 할 때','Conditional Access와 연동해 세션 단위로 앱 사용을 제어할 때','민감 데이터의 외부 공유·다운로드를 통제해야 할 때'],
+        design:['Conditional Access App Control로 세션 실시간 제어 연동','이상 행위 탐지 정책(대량 다운로드·비정상 위치 접속) 커스터마이징','승인 SaaS 카탈로그 관리로 섀도우 IT 가시성 확보','Purview DLP 정책과 연계해 민감 데이터 유출 차단'],
+        related:['Conditional Access','Entra ID','Microsoft Purview','Intune'],
+        archFit:['Zero Trust Access Model','SaaS Security Posture']
       }
     }
   },
@@ -862,7 +760,7 @@ const graph = {
       '기존 운영 절차와의 충돌 최소화 — 점진적 이전 전략 수립',
       'Azure Bastion으로 공개 IP 없이 VM 원격 접근 보안 확보'
     ],
-    keyServices:['Virtual Machine','Azure Arc','Azure Backup','Storage Account'],
+    keyServices:['Virtual Machine','Azure Arc','Azure Backup','Storage Account','Site Recovery'],
     archFocus:['Hybrid Cloud Platform','Business Continuity Architecture','Infrastructure Modernization'],
     children:{
       vm:{
@@ -900,6 +798,15 @@ const graph = {
         design:['Lifecycle Policy로 Hot→Cool→Archive 자동 계층 전환 설정','Private Endpoint로 인터넷 노출 없이 VNet 내부에서만 접근','SAS 토큰 최소 권한·만료 시간 설정 의무화','Immutable Storage로 규정 준수 목적 데이터 변경 방지'],
         related:['Private Link','Azure Backup','Data Factory','AI Search'],
         archFit:['Object Storage Layer','RAG Source Repository']
+      },
+      siterecovery:{
+        title:'Azure Site Recovery',
+        desc:'온프레미스·VM 워크로드를 다른 리전으로 복제해 장애 시 신속히 전환하는 재해복구(DR) 서비스',
+        role:['VM·서버를 지속 복제하여 주 사이트 장애 시 보조 리전에서 즉시 기동','RPO/RTO 목표에 맞춘 복구 계획을 사전에 테스트하고 검증'],
+        when:['서비스 중요도에 따라 백업과 별개로 재해복구 체계가 필요할 때','장애 조치(Failover) 절차를 정기적으로 리허설해야 할 때','규정상 재해복구 계획(BCP)을 문서화·증빙해야 할 때'],
+        design:['RPO/RTO 목표를 서비스 중요도별로 계층화해 복제 정책 차등 적용','정기 DR 드릴(Failover Test)로 실제 복구 가능 여부 검증','네트워크·IP 매핑을 보조 리전에도 동일하게 사전 구성','복제 대역폭·비용을 고려한 복제 주기 설정'],
+        related:['Virtual Machine','Azure Backup','VNet','Storage Account'],
+        archFit:['Business Continuity Architecture','Disaster Recovery Design']
       }
     }
   },
@@ -915,7 +822,7 @@ const graph = {
       'Branch 전략(Git Flow vs Trunk-based) 팀 규모에 맞게 선택',
       '배포 실패 시 자동 롤백 조건과 알림 흐름 사전 정의'
     ],
-    keyServices:['GitHub Actions','Azure DevOps','Terraform / Bicep','Container Registry'],
+    keyServices:['GitHub Actions','Azure DevOps','Terraform / Bicep','Container Registry','Landing Zone'],
     archFocus:['CI/CD Automation Platform','Infrastructure as Code','DevSecOps Foundation'],
     children:{
       actions:{
@@ -953,6 +860,15 @@ const graph = {
         design:['Managed Identity로 ACR Pull — 서비스 계정 자격증명 제거','Geo-replication으로 다지역 이미지 배포 속도 개선','ACR Tasks로 베이스 이미지 업데이트 시 자동 재빌드','Defender for Containers와 연동해 이미지 취약점 스캔'],
         related:['GitHub Actions','AKS','Container Apps','Defender for Containers'],
         archFit:['Container CI/CD Pipeline','Image Management Platform']
+      },
+      landingzone:{
+        title:'Landing Zone',
+        desc:'거버넌스·보안·네트워크가 사전 구성된 표준화된 클라우드 환경 — 신규 워크로드가 안전하게 착륙하는 기반',
+        role:['구독·관리 그룹·정책·네트워크를 표준화된 구조로 사전 설계','신규 프로젝트/팀이 거버넌스 걱정 없이 빠르게 워크로드를 배포할 수 있는 기반 제공'],
+        when:['조직 전체 Azure 환경을 처음부터 체계적으로 설계할 때','여러 팀·프로젝트가 일관된 보안·비용 정책 위에서 운영되어야 할 때','기존 환경의 거버넌스 부재로 인한 혼란을 정리해야 할 때'],
+        design:['관리 그룹 계층 설계 — 조직 구조와 정책 상속 범위 일치','Azure Policy로 필수 태그·리전·SKU 강제','Hub-Spoke 네트워크와 연동한 구독 분리 전략','IaC(Terraform/Bicep)로 Landing Zone 자체를 코드로 관리'],
+        related:['Azure Policy','RBAC','VNet','Terraform / Bicep'],
+        archFit:['Landing Zone Governance','Enterprise-scale Architecture']
       }
     }
   },
@@ -1101,7 +1017,7 @@ const graph = {
       'Exchange 메일 보안 — DMARC·DKIM·SPF 설정과 Defender 연동',
       'SharePoint 정보 아키텍처 — 사이트·라이브러리·권한 구조 표준화'
     ],
-    keyServices:['M365 Admin Center','Exchange Online','SharePoint Online','Microsoft Teams','Copilot for M365'],
+    keyServices:['M365 Admin Center','Exchange Online','SharePoint Online','Microsoft Teams','Copilot for M365','Intune'],
     archFocus:['Modern Workplace Platform','Secure Collaboration','AI-Powered Productivity'],
     children:{
       m365admin:{
@@ -1148,364 +1064,28 @@ const graph = {
         design:['도입 전 선행 조건 — Purview 데이터 분류, 과도 공유 파일 정리 필수','DLP 정책으로 Copilot이 처리할 수 없는 민감 데이터 범위 명확히 정의','정보 배리어(Information Barrier)로 민감 부서 간 데이터 격리','Copilot Dashboard(Viva Insights)로 도입 효과 정량 측정'],
         related:['Microsoft Purview','SharePoint','Teams','Entra ID','Copilot Studio'],
         archFit:['AI-Powered Workplace','Enterprise Copilot Governance']
+      },
+      intune:{
+        title:'Microsoft Intune',
+        desc:'조직 소유·개인 디바이스를 등록하고 규정 준수 상태를 관리하는 통합 엔드포인트 관리(UEM) 서비스',
+        role:['디바이스 등록·구성·규정 준수 정책을 중앙에서 관리','Conditional Access와 연동해 규정 준수 디바이스만 리소스 접근 허용'],
+        when:['재택/원격 근무 환경에서 디바이스 보안을 표준화해야 할 때','BYOD 환경에서 회사 데이터와 개인 데이터를 분리해야 할 때','Zero Trust 접근 모델에서 디바이스 신뢰도를 조건으로 추가할 때'],
+        design:['규정 준수 정책(암호화·OS 버전·백신)을 디바이스 유형별로 세분화','App Protection Policy로 비관리 디바이스에서도 데이터 유출 방지','Autopilot으로 신규 디바이스 자동 프로비저닝 구성','Conditional Access와 연동해 비규정 준수 디바이스 접근 차단'],
+        related:['Conditional Access','Entra ID','Defender for Cloud Apps'],
+        archFit:['Zero Trust Access Model','Secure Remote Work Architecture']
       }
     }
   },
-
-  // ==================== 12 PROJECT SECTIONS ====================
-  summary:{
-    title:'Executive Summary',
-    intro:'기업의 클라우드 전환 목표, 현 상태와 목표 상태, 기대 효과를 한눈에 파악하는 전략 요약',
-    layer:'Strategy',nodeDesc:'비즈니스 목표와 전환 전략',
-    tags:['Vision','Roadmap'],
-    design:[
-      '조직 구성: 2,000명 사용자·서울 본사·4개 지역사무실·500+ 외부협력사',
-      '현재 상태: 온프레미스 AD·M365 혼용·수동운영·거버넌스 부재',
-      '목표: Entra ID 기반 Zero Trust·Hub-Spoke·자동화·AI 플랫폼',
-      '기대효과: 확장성·보안·운영효율 동시 확보·IT비용 30% 절감'
-    ],
-    keyServices:['Azure Landing Zone','Entra ID','Zero Trust','Cloud Platform'],
-    archFocus:['Enterprise Transformation','Digital Modernization','Cloud-Native Operations'],
-    children:{}
-  },
-
-  assessment:{
-    title:'Enterprise Assessment (As-Is)',
-    intro:'현재 온프레미스 환경을 체계적으로 분석하여 문제점, 기술 채무, 확장성 한계를 파악',
-    layer:'Discovery',nodeDesc:'현 상태 분석·As-Is 평가',
-    tags:['Analysis','Assessment'],
-    design:[
-      '인프라 현황: AD·M365·SQL Server·File Server·NAC·MDM 분석',
-      '운영 이슈: 수동 프로비저닝·권한관리복잡·보안감시부재·VPN병목·비용추적불가',
-      '보안 요구: 기밀문서·eDiscovery·DLP·법무정보보호·감시법 준수',
-      '비즈니스 기회: 신규지점확장·원격근무·비용최적화·자동화·AI도입'
-    ],
-    keyServices:['Infrastructure Assessment','Security Audit','Workload Analysis','Dependency Mapping'],
-    archFocus:['Current State Analysis','Pain Point Identification','Readiness Assessment'],
-    children:{}
-  },
-
-  requirement:{
-    title:'Business Requirements',
-    intro:'assessment 결과를 기반으로 비즈니스 요구사항을 5가지 축으로 정의',
-    layer:'Planning',nodeDesc:'문제점 도출·요구사항 정의',
-    tags:['Requirements','Planning'],
-    design:[
-      '가용성: 99.95% 가용·RTO <4시간·RPO <1시간·Multi-region failover',
-      '보안: Zero Trust·민감문서자동분류·로그중앙화·위협탐지 <5분',
-      '확장성: 신규지점 <1주일·사용자온보딩 <24시간·자동화',
-      '규정준수: 개인정보보호법·eDiscovery·감시법·법무정보보호',
-      '비용: IT비용 30% 절감·RI+Savings 추가 20%·부서별할당·자동최적화'
-    ],
-    keyServices:['Availability & DR','Security & Compliance','Scalability','Cost Optimization','Automation'],
-    archFocus:['Business Case','ROI Analysis','Transformation Goals'],
-    children:{}
-  },
-
-  adr:{
-    title:'Architecture Decisions (ADR)',
-    intro:'15-20개의 핵심 설계 의사결정을 기록하여 기술적 근거와 영향도를 명시',
-    layer:'Architecture',nodeDesc:'ADR·설계 의사결정 기록',
-    tags:['ADR','Design','Decision'],
-    design:[
-      'Hub-Spoke vs Flat: 보안·거버넌스·확장성 위해 Hub-Spoke 채택',
-      'Firewall vs NVA: 관리형·자동패치·NGFW 기능·운영용이로 Firewall 선택',
-      'VPN vs ExpressRoute: 초기 VPN·안정화 후 ER 단계적 도입',
-      'Sync vs Federated: Entra Connect 동기화로 Hybrid 유지·클라우드 중심화'
-    ],
-    keyServices:['ADR Registry','Architecture Review','Decision Tracking','Alternative Analysis'],
-    archFocus:['Technical Governance','Architecture Decisions','Traceability'],
-    children:{}
-  },
-
-  landing:{
-    title:'Landing Zone Design',
-    intro:'Microsoft Cloud Adoption Framework 기반 Azure 기초 플랫폼 설계',
-    layer:'Foundation',nodeDesc:'Azure 기초 플랫폼·Landing Zone 구축',
-    tags:['Platform','LZ','Governance'],
-    design:[
-      'Management Group: Root·Platform·Landing Zones·Decommissioned 4단계 계층',
-      'Subscription: 플랫폼(공유)·업무별(독립)·정책상속으로 표준화 강제',
-      'Naming & Tagging: 일관된 명명·소유자·환경·비용센터·앱이름 태그',
-      'Shared Services: Hub VNet·방화벽·DNS·Log Analytics·Key Vault·Recovery Vault'
-    ],
-    keyServices:['Management Group','Subscription','Azure Policy','Naming Strategy','RBAC Framework'],
-    archFocus:['Platform Foundation','Enterprise Scale','Multi-Subscription Governance'],
-    children:{}
-  },
-
-  'id-sec':{
-    title:'Identity & Security Architecture',
-    intro:'Zero Trust 모델 기반 클라우드 ID 관리와 데이터 보호 설계',
-    layer:'Security',nodeDesc:'Zero Trust·Entra ID·DLP 보안아키텍처',
-    tags:['Identity','Security','ZeroTrust'],
-    design:[
-      'Migration Path: AD → Hybrid Sync → Entra ID 중심 → Passwordless 진화',
-      'Zero Trust: 모든 접근 검증(ID+Device+App+Network+Data)',
-      'Entra ID: SSO·MFA의무·조건부접근·PIM·Identity Governance·Passwordless',
-      'DLP & Purview: 민감도레이블자동분류·DLP정책·데이터거버넌스·규정준수'
-    ],
-    keyServices:['Entra ID','Conditional Access','PIM','MFA','Azure Key Vault','Microsoft Purview','Defender'],
-    archFocus:['Zero Trust Architecture','Identity Governance','Data Protection','Compliance'],
-    children:{}
-  },
-
-  'net-arch':{
-    title:'Network Architecture',
-    intro:'온프레미스와 클라우드를 안전하게 연결하는 하이브리드 네트워크 설계',
-    layer:'Connectivity',nodeDesc:'Hub-Spoke·하이브리드·트래픽흐름 설계',
-    tags:['Network','Connectivity','Hybrid'],
-    design:[
-      '구조: Hub(방화벽·DNS·Log Analytics)·Spoke(워크로드)·Private Endpoint·ExpressRoute',
-      '연결: VPN Gateway(초기)→ExpressRoute(안정화)·온프레미스 ↔ Spoke',
-      '트래픽흐름: Spoke→Hub방화벽(East-West)·Hub→Internet(Egress중앙화)',
-      'DNS: 퍼블릭/프라이빗분리·Private Resolver·조건부포워딩'
-    ],
-    keyServices:['VNet','VPN Gateway','ExpressRoute','Azure Firewall','Private Link','Network Watcher'],
-    archFocus:['Hybrid Network','Secure Connectivity','Traffic Management'],
-    children:{}
-  },
-
-  migration:{
-    title:'Migration Strategy',
-    intro:'6R Framework 기반 워크로드별 마이그레이션 방식 정의',
-    layer:'Execution',nodeDesc:'워크로드분류·6R·단계별계획',
-    tags:['Migration','Workload','6R'],
-    design:[
-      '6R: Rehost(Lift-Shift)·Replatform(조정)·Refactor(재작성)·Repurchase·Retire',
-      'Workload분류: FileServer(Lift-Shift)·SQL(Replatform)·LegacyApp(Hybrid)·WebApp(Refactor)',
-      '단계: Phase1평가·Phase2파일럿·Phase3확대·Phase4온프레미스폐기',
-      '위험관리: 다운타임최소화·데이터동기화·롤백계획·사용자교육'
-    ],
-    keyServices:['Azure Migrate','Database Migration Service','Data Box','Site Recovery','Application Insights'],
-    archFocus:['Migration Planning','Workload Assessment','Change Management'],
-    children:{}
-  },
-
-  governance:{
-    title:'Governance & Cost Optimization',
-    intro:'정책·비용·리소스를 체계적으로 통제하는 거버넌스 프레임워크',
-    layer:'Operations',nodeDesc:'정책·비용통제·최적화 체계',
-    tags:['Governance','Cost','Policy'],
-    design:[
-      'Policy Framework: 리소스기준강제·Audit→Deny단계적적용·비준수현황파악',
-      'Cost Control: 예산설정·알람·Reserved Instance·Savings Plan·Advisor권고',
-      'Tagging: Owner·Environment·CostCenter·Application·SpotId 표준화',
-      '기대절감: 온프레미스폐기(월5K)·RI(월2K)·자동최적화(월1K)=월8K절감'
-    ],
-    keyServices:['Azure Policy','Cost Management','Advisor','Resource Tags','Budget Alerts','Governance'],
-    archFocus:['Cost Optimization','Policy Enforcement','Financial Governance'],
-    children:{}
-  },
-
-  automation:{
-    title:'Automation & Infrastructure as Code',
-    intro:'Terraform·Bicep·PowerShell로 배포·운영을 자동화하여 오류 제거',
-    layer:'Engineering',nodeDesc:'IaC·자동배포·운영자동화',
-    tags:['IaC','Automation','DevOps'],
-    design:[
-      'IaC전략: Terraform(Hub-Spoke)·Bicep(모듈)·PowerShell(운영)·GitHub Actions(CI/CD)',
-      '배포파이프라인: Push→PR검토→Plan검증→승인→Apply→Log Analytics기록',
-      '운영자동화: 사용자프로비저닝·정책적용·알람응답(Logic Apps)·보고서생성(Power BI)',
-      '이점: 배포시간2시간→10분·오류율95%감소·감시추적100%자동화'
-    ],
-    keyServices:['Terraform','Bicep','PowerShell','GitHub','GitHub Actions','Automation Account','Logic Apps'],
-    archFocus:['Infrastructure as Code','CI/CD Pipeline','Operational Automation'],
-    children:{}
-  },
-
-  'ai-platform':{
-    title:'AI Platform Strategy',
-    intro:'Azure OpenAI·AI Search·Copilot Studio로 구축하는 지능형 플랫폼',
-    layer:'Innovation',nodeDesc:'RAG·Copilot·지능형지원시스템',
-    tags:['AI','Copilot','RAG','Innovation'],
-    design:[
-      'Use Case: 지능형지원팀(질문→AI→자동응답)·문서검색(RAG)·규정준수보조·리스크평가',
-      'Architecture: User→Copilot Studio→Azure OpenAI→Azure AI Search→Knowledge Base',
-      'Core: OpenAI(GPT-4선택·프라이빗)·AI Search(벡터검색)·Copilot Studio(노코드)·Power Automate(워크플로우)',
-      '운영효과: FAQ자동화(50%절감)·문서검색(5분→30초)·법무팀생산성(20%향상)·근무시간전환'
-    ],
-    keyServices:['Azure OpenAI','Azure AI Search','Copilot Studio','Power Automate','Vector Search','RAG Pipeline'],
-    archFocus:['AI-Powered Automation','Knowledge Management','Intelligent Support'],
-    children:{}
-  },
-
-  operations:{
-    title:'Operations Model & Continuous Improvement',
-    intro:'클라우드 플랫폼을 일관되게 운영하고 지속적으로 개선하는 모델',
-    layer:'Sustainment',nodeDesc:'모니터링·사건관리·지속개선',
-    tags:['Operations','Monitoring','SRE'],
-    design:[
-      '모니터링스택: Azure Monitor·Log Analytics·Sentinel·Application Insights 통합',
-      'Alert & Incident: KQL기반조건·Sentinel자동생성·Logic Apps자동대응·온콜로테이션',
-      '지속개선: 월간성능리뷰·Advisor권고추적·비용최적화분석·Secure Score점검',
-      'Lessons: 클라우드는기술아닌운영모델·거버넌스는처음부터·AI는업무혁신도구·보안은설계시점부터'
-    ],
-    keyServices:['Azure Monitor','Log Analytics','Sentinel','Application Insights','Workbooks','Dashboards'],
-    archFocus:['Operational Excellence','Incident Management','Continuous Improvement'],
-    children:{}
-  }
-};
-
-const cases = [
-  {
-    id:'aip', num:'01', status:'완료', statusCls:'st-done',
-    title:'M365 문서보안 및 AI 정책 운영',
-    sub:'Microsoft Purview · AIP 레이블 · DLP · Copilot 정책',
-    problem:['AIP 레이블 미적용 — 민감 문서 무제한 유통','민감정보 패턴 탐지·차단 체계 없음','Copilot 도입 시 데이터 입력 범위 정책 미수립'],
-    flow:['4개 사부별 AIP 레이블 정책 설계','레이블별 자동 암호화 + 접근제한 구현','DLP 규칙 민감정보 탐지·차단','Copilot 데이터 입력 범위 및 권한 점검 프로세스','정책 위반·예외 승인 프로세스 표준화'],
-    stack:['Microsoft Purview','AIP 레이블','DLP 정책','Exchange Online','SharePoint','Copilot 정책'],
-    outcome:['AIP 자동 적용률 92% 달성','정책 예외 처리 시간 40% 단축','데이터 유출 위험 사건 0건','위반 건수 월 30% 감소']
-  },
-  {
-    id:'hybrid_id', num:'02', status:'완료', statusCls:'st-done',
-    title:'하이브리드 ID 및 Conditional Access 운영',
-    sub:'AD ↔ Entra ID 동기화 · RBAC · CA · PowerShell 자동화',
-    problem:['온프레미스 AD + Entra ID 이원 관리 → 계정 오류 발생','수동 계정 생명주기 관리 월 8시간 소요','비인가 접근·위험 로그인 차단 정책 미비'],
-    flow:['AD ↔ Entra ID 동기화 구조 설계·운영','온보딩 → 배치 변경 → 퇴사 계정 자동화','RBAC + 메일 그룹 + 라이선스 자동 할당','Conditional Access (위험 로그인·미승인 디바이스 차단)','PowerShell 반복 업무 자동화 (월 20회+)'],
-    stack:['Active Directory','Microsoft Entra ID','Conditional Access','Power Automate','PowerShell','M365 Admin Center'],
-    outcome:['계정 변경 오류율 0%','월 수작업 8시간 → 1시간 (87.5%↓)','위험 로그인·비인가 접근 자동 차단 체계 구축']
-  },
-  {
-    id:'ad_auto', num:'03', status:'완료', statusCls:'st-done',
-    title:'AD 정보 변경 요청 자동화 시스템',
-    sub:'Teams Adaptive Card · Power Automate Approval · PAD 서버 실행',
-    problem:['이메일 기반 AD 변경 요청 → 누락·지연 빈발','승인 이력 없어 감사 대응 불가','처리자 PC 상태에 따라 실행 불안정'],
-    flow:['Teams Adaptive Card 대화형 신청 양식','필수 정보 자동 검증 (누락 방지)','Power Automate Approval 직속 상사/IT 승인 라우팅','SharePoint List 전체 요청·승인·처리 이력 저장','PAD + PowerShell 서버 기반 무인 자동 처리'],
-    stack:['Teams Adaptive Card','Power Automate Cloud Flow','Power Automate Approval','SharePoint List','PAD (Unattended)','PowerShell'],
-    outcome:['신청 정보 누락율 0%','월 40+ 건 완전 자동화 처리','100% 감사 추적 가능한 로그 구축']
-  },
-  {
-    id:'onboarding', num:'04', status:'완료', statusCls:'st-done',
-    title:'인사 온보딩 자동화 시스템',
-    sub:'AI Builder OCR · Power Automate · Entra ID 프로비저닝',
-    problem:['입사자 정보 수기 입력 2시간 소요 + 오류 빈발','이메일·PDF 비정형 데이터 수동 처리','계정 생성·라이선스 할당 수동 처리'],
-    flow:['Outlook 메일 수신 트리거','AI Builder OCR로 비정형 데이터 자동 추출','사원명·부서·직급·입사일 JSON 정규화','SharePoint List 구조화 저장','Entra ID 계정 생성 + M365 라이선스 할당 + 환영 메일 발송'],
-    stack:['Outlook Trigger','AI Builder (OCR·자동 추출)','Power Automate','SharePoint List','JSON 파싱','Entra ID','Teams 알림'],
-    outcome:['데이터 입력 정확도 99.2%','처리 시간 2시간 → 15분 (87.5%↓)','수작업 오류 98% 감소']
-  },
-  {
-    id:'platform', num:'05', status:'완료', statusCls:'st-done',
-    title:'IT 운영 프로세스 표준화 플랫폼',
-    sub:'전사 IT 업무 통합 · 24/7 무인 자동화 · Power BI 모니터링',
-    problem:['파편화된 IT 요청 채널 → 누락·처리 지연','개인 PC 기반 자동화 → 안정성 저하','운영 현황 가시성 없음'],
-    flow:['Teams Adaptive Card 규격화된 신청 양식','Power Automate 승인 워크플로우 중앙화','Windows Server + PAD Unattended 24/7 무인 실행','SharePoint 모든 요청·처리 영구 저장','Power BI 실시간 현황 시각화 + 예외 알림'],
-    stack:['Teams','Power Automate Cloud/Desktop','SharePoint','Windows Server','PAD Unattended','PowerShell','Power BI'],
-    outcome:['수작업 80% 감소','장애 대응 시간 30% 단축','완전한 감사 추적 운영 기록 구축']
-  },
-  {
-    id:'collab', num:'06', status:'설계', statusCls:'st-plan',
-    title:'Secure Client Collaboration Architecture',
-    sub:'Entra B2B · CA + MFA · AIP 레이블 · DLP · Defender · Sentinel',
-    problem:[
-      '의뢰인 기밀 문서를 이메일 첨부로 발송 — 암호화 없음, 수신자 통제 불가',
-      '외부 포털 없이 SharePoint 링크 공유 → MFA 미적용 상태로 접근 허용',
-      '문서 다운로드·프린트 후 통제 불가, 접근 이력 및 감사 로그 부재'
-    ],
-    flow:[
-      'Entra B2B 게스트 계정으로 의뢰인 외부 ID 안전하게 프로비저닝',
-      'Conditional Access — 위치·디바이스·MFA 3중 조건 동시 적용',
-      'SharePoint 전용 문서 사이트 — 계약별 독립 공간 분리',
-      'AIP 민감도 레이블 자동 적용 — 열람 전 암호화 보장',
-      'DLP 정책 — 다운로드·프린트·외부 전달 전면 차단',
-      'Defender for Cloud Apps — 세션 제어 및 비정상 접근 실시간 탐지',
-      'Microsoft Sentinel — 전체 감사 로그 수집 및 Playbook 자동 대응'
-    ],
-    stack:['Microsoft Entra B2B','SharePoint External Sharing','Conditional Access','AIP / Information Protection','DLP 정책','Defender for Cloud Apps','Microsoft Sentinel'],
-    outcome:[
-      '외부 공유 문서 전수 암호화 — 레이블 미적용 문서 0건',
-      '비인가 다운로드·프린트 차단 100%',
-      '의뢰인 MFA 인증률 100% — 비관리 디바이스 접근 차단',
-      '접근 이력 완전 추적 가능 — 감사 대응 시간 70%↓'
-    ]
-  }
-];
-
-/* Architecture diagrams — image placeholders for cases 1-5, real SVG for case 6 (light theme) */
-const archDiagrams = {
-  aip: { title: 'M365 문서보안 아키텍처', sub: 'Microsoft Purview · AIP 레이블 · DLP 정책 · Compliance Manager', type: 'placeholder' },
-  hybrid_id: { title: '하이브리드 ID 아키텍처', sub: 'AD ↔ Entra ID 동기화 · Conditional Access · PowerShell 자동화', type: 'placeholder' },
-  ad_auto: { title: 'AD 자동화 시스템 아키텍처', sub: 'Teams Adaptive Card · Power Automate Approval · PAD Unattended', type: 'placeholder' },
-  onboarding: { title: '온보딩 자동화 아키텍처', sub: 'AI Builder OCR · Power Automate · Entra ID 프로비저닝', type: 'placeholder' },
-  platform: { title: 'IT 운영 플랫폼 아키텍처', sub: 'Power Automate · PAD Unattended · SharePoint · Power BI', type: 'placeholder' },
-  collab: {
-    title: 'Secure Client Collaboration Architecture',
-    sub: 'Entra B2B · Conditional Access + MFA · AIP 레이블 · DLP · Defender · Sentinel',
-    type: 'svg',
-    svg: `<svg viewBox="0 0 680 248" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;font-family:Pretendard,sans-serif;">
-<defs>
-  <marker id="a0" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0,0 7,2.5 0,5" fill="rgba(59,130,246,.7)"/></marker>
-  <marker id="a1" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0,0 7,2.5 0,5" fill="rgba(217,119,6,.7)"/></marker>
-  <marker id="a2" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0,0 7,2.5 0,5" fill="rgba(239,68,68,.7)"/></marker>
-  <marker id="a3" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0,0 7,2.5 0,5" fill="rgba(16,185,129,.7)"/></marker>
-</defs>
-<text x="10" y="13" fill="#94a3b8" font-size="9" letter-spacing=".1em" font-weight="600">① 접근 제어</text>
-<text x="305" y="88" fill="#94a3b8" font-size="9" letter-spacing=".1em" font-weight="600">② 문서 보호</text>
-<text x="10" y="185" fill="#94a3b8" font-size="9" letter-spacing=".1em" font-weight="600">③ 통합 모니터링</text>
-
-<rect x="10" y="18" width="118" height="54" rx="8" fill="#eff6ff" stroke="rgba(59,130,246,.4)" stroke-width="1.5"/>
-<text x="69" y="42" text-anchor="middle" fill="#1e3a8a" font-size="11" font-weight="600">외부 의뢰인</text>
-<text x="69" y="59" text-anchor="middle" fill="#64748b" font-size="9.5">Client Access</text>
-
-<line x1="130" y1="45" x2="150" y2="45" stroke="rgba(59,130,246,.6)" stroke-width="1.5" marker-end="url(#a0)"/>
-
-<rect x="152" y="18" width="148" height="54" rx="8" fill="#f5f3ff" stroke="rgba(168,85,247,.4)" stroke-width="1.5"/>
-<text x="226" y="42" text-anchor="middle" fill="#581c87" font-size="11" font-weight="600">Entra B2B 게스트</text>
-<text x="226" y="59" text-anchor="middle" fill="#64748b" font-size="9.5">외부 ID 프로비저닝</text>
-
-<line x1="302" y1="45" x2="322" y2="45" stroke="rgba(59,130,246,.6)" stroke-width="1.5" marker-end="url(#a0)"/>
-
-<rect x="324" y="18" width="168" height="54" rx="8" fill="#fef2f2" stroke="rgba(239,68,68,.4)" stroke-width="1.5"/>
-<text x="408" y="40" text-anchor="middle" fill="#991b1b" font-size="11" font-weight="600">Conditional Access</text>
-<text x="408" y="55" text-anchor="middle" fill="#991b1b" font-size="10.5" font-weight="600">+ MFA 강제</text>
-<text x="408" y="68" text-anchor="middle" fill="#64748b" font-size="9">위치 · 디바이스 · 위험도</text>
-
-<line x1="494" y1="45" x2="514" y2="45" stroke="rgba(59,130,246,.6)" stroke-width="1.5" marker-end="url(#a0)"/>
-
-<rect x="516" y="18" width="156" height="54" rx="8" fill="#f0fdf4" stroke="rgba(16,185,129,.4)" stroke-width="1.5"/>
-<text x="594" y="42" text-anchor="middle" fill="#065f46" font-size="11" font-weight="600">SharePoint 문서 사이트</text>
-<text x="594" y="59" text-anchor="middle" fill="#64748b" font-size="9.5">계약별 독립 공간</text>
-
-<line x1="594" y1="74" x2="594" y2="94" stroke="rgba(59,130,246,.35)" stroke-width="1.5"/>
-<line x1="420" y1="94" x2="594" y2="94" stroke="rgba(59,130,246,.3)" stroke-width="1"/>
-<line x1="420" y1="94" x2="420" y2="108" stroke="rgba(217,119,6,.6)" stroke-width="1.5" marker-end="url(#a1)"/>
-<line x1="594" y1="94" x2="594" y2="108" stroke="rgba(239,68,68,.6)" stroke-width="1.5" marker-end="url(#a2)"/>
-
-<rect x="305" y="110" width="215" height="54" rx="8" fill="#fffbeb" stroke="rgba(217,119,6,.4)" stroke-width="1.5"/>
-<text x="412" y="134" text-anchor="middle" fill="#92400e" font-size="11" font-weight="600">AIP 민감도 레이블</text>
-<text x="412" y="151" text-anchor="middle" fill="#64748b" font-size="9.5">자동 암호화 · 열람 전 보호</text>
-
-<rect x="528" y="110" width="144" height="54" rx="8" fill="#fef2f2" stroke="rgba(239,68,68,.4)" stroke-width="1.5"/>
-<text x="600" y="134" text-anchor="middle" fill="#991b1b" font-size="11" font-weight="600">DLP 정책</text>
-<text x="600" y="151" text-anchor="middle" fill="#64748b" font-size="9.5">다운로드·프린트 차단</text>
-
-<line x1="412" y1="166" x2="330" y2="194" stroke="rgba(59,130,246,.35)" stroke-width="1.5" marker-end="url(#a0)"/>
-<line x1="600" y1="166" x2="600" y2="194" stroke="rgba(59,130,246,.35)" stroke-width="1.5" marker-end="url(#a0)"/>
-
-<rect x="10" y="196" width="260" height="46" rx="8" fill="#f0fdf4" stroke="rgba(16,185,129,.4)" stroke-width="1.5"/>
-<text x="140" y="216" text-anchor="middle" fill="#065f46" font-size="11" font-weight="600">Defender for Cloud Apps</text>
-<text x="140" y="231" text-anchor="middle" fill="#64748b" font-size="9.5">세션 제어 · 비정상 접근 탐지</text>
-
-<line x1="272" y1="219" x2="292" y2="219" stroke="rgba(59,130,246,.6)" stroke-width="1.5" marker-end="url(#a0)"/>
-
-<rect x="294" y="196" width="378" height="46" rx="8" fill="#eff6ff" stroke="rgba(59,130,246,.4)" stroke-width="1.5"/>
-<text x="483" y="216" text-anchor="middle" fill="#1e3a8a" font-size="11" font-weight="600">Microsoft Sentinel</text>
-<text x="483" y="231" text-anchor="middle" fill="#64748b" font-size="9.5">감사 로그 수집 · KQL 탐지 · Playbook 자동 대응</text>
-</svg>`
-  }
 };
 
 /* ════════════════════════════════════════════════════════
    STATE & DOM REFS
 ════════════════════════════════════════════════════════ */
 const CAT_KEYS  = ['identity','network','security','hybrid','devops','data','ops','workplace'];
-const PROJ_KEYS = ['summary','assessment','requirement','adr','landing','id-sec','net-arch','migration','governance','automation','ai-platform','operations'];
 const CAT_LABELS = { identity:'Identity', network:'Network', security:'Security', hybrid:'Hybrid Infra', devops:'DevOps', data:'Data & AI', ops:'Operations', workplace:'Workplace' };
 
-let currentView   = 'categories'; // 'categories' | 'projects'
 let currentMain   = 'identity';
 let currentChild  = null;
-let currentTab    = 'services'; // 'services' | 'cases'
 
 const mindmap   = document.getElementById('mindmap');
 const mmSvg     = document.getElementById('mmSvg');
@@ -1513,14 +1093,13 @@ const sgCanvas  = document.getElementById('sgCanvas');
 const sgSvg     = document.getElementById('sgSvg');
 
 /* ════════════════════════════════════════════════════════
-   NODE RENDERING (8 categories or 12 project stages)
+   NODE RENDERING (8 categories)
 ════════════════════════════════════════════════════════ */
-function buildNodeHTML(key, isProject) {
+function buildNodeHTML(key) {
   const d = graph[key];
-  const cls = isProject ? 'mm-node proj-node' : 'mm-node';
-  const kicker = isProject ? d.layer : (CAT_LABELS[key] || d.title);
+  const kicker = CAT_LABELS[key] || d.title;
   return `
-    <article class="${cls}" data-key="${key}" id="node-${key}" onclick="setFocus('${key}')">
+    <article class="mm-node" data-key="${key}" id="node-${key}" onclick="setFocus('${key}')">
       <div class="mm-node-kicker"><span class="mm-node-dot"></span>${kicker}</div>
       <div class="mm-node-title">${d.title}</div>
       <div class="mm-node-desc">${d.nodeDesc}</div>
@@ -1533,17 +1112,15 @@ function buildNodeHTML(key, isProject) {
 function renderNodes() {
   // Remove old nodes
   mindmap.querySelectorAll('.mm-node').forEach(n => n.remove());
-  const keys = currentView === 'categories' ? CAT_KEYS : PROJ_KEYS;
-  const isProject = currentView === 'projects';
-  keys.forEach(k => {
-    mindmap.insertAdjacentHTML('beforeend', buildNodeHTML(k, isProject));
+  CAT_KEYS.forEach(k => {
+    mindmap.insertAdjacentHTML('beforeend', buildNodeHTML(k));
   });
   positionNodes();
   drawMainLines();
 }
 
 function positionNodes() {
-  const keys = currentView === 'categories' ? CAT_KEYS : PROJ_KEYS;
+  const keys = CAT_KEYS;
   const cx = 490, cy = 300;
   const r = keys.length > 8 ? 270 : 250;
   keys.forEach((key, i) => {
@@ -1559,7 +1136,7 @@ function positionNodes() {
 
 function drawMainLines() {
   mmSvg.innerHTML = `<defs><marker id="hubArrow" markerWidth="6" markerHeight="6" refX="5" refY="2.5" orient="auto"><polygon points="0,0 6,2.5 0,5" fill="rgba(59,130,246,.3)"/></marker></defs>`;
-  const keys = currentView === 'categories' ? CAT_KEYS : PROJ_KEYS;
+  const keys = CAT_KEYS;
   const cx = 490, cy = 300;
   const r = keys.length > 8 ? 270 : 250;
   keys.forEach((key, i) => {
@@ -1602,7 +1179,7 @@ function renderSubgraph(mainKey, selChild) {
 
   const root = document.createElement('div');
   root.className = 'mn mn-root';
-  root.style.cssText = `left:${RX}px;top:${RY}px;min-width:${RW}px;`;
+  root.style.cssText = `left:${RX}px;top:${RY}px;width:${RW}px;`;
   root.innerHTML = `<span class="mn-kicker">Category</span><div class="mn-title">${main.title}</div><span class="mn-sub">${children.length}개 서비스</span>`;
   sgCanvas.appendChild(root);
 
@@ -1610,7 +1187,7 @@ function renderSubgraph(mainKey, selChild) {
     const x = CX_START + i * (CW + GAP), y = CY;
     const node = document.createElement('div');
     node.className = 'mn' + (selChild === key ? ' mn-active' : '');
-    node.style.cssText = `left:${x}px;top:${y}px;min-width:${CW}px;`;
+    node.style.cssText = `left:${x}px;top:${y}px;width:${CW}px;`;
     const shortDesc = item.desc.length > 44 ? item.desc.slice(0,44) + '…' : item.desc;
     node.innerHTML = `<span class="mn-kicker">Service</span><div class="mn-title">${item.title}</div><span class="mn-sub">${shortDesc}</span>`;
     node.addEventListener('click', () => selectChild(mainKey, key));
@@ -1645,11 +1222,10 @@ function sdSection(num, title, items, type) {
 
 function renderSidebarMain(key) {
   const d = graph[key];
-  const isProject = PROJ_KEYS.includes(key);
-  const color = isProject ? '#2563eb' : getComputedStyle(document.documentElement).getPropertyValue('--c-' + key).trim() || '#3b82f6';
+  const color = getComputedStyle(document.documentElement).getPropertyValue('--c-' + key).trim() || '#3b82f6';
 
   let html = `
-    <div class="sd-eyebrow">${isProject ? 'Project Stage' : 'Selected Category'}</div>
+    <div class="sd-eyebrow">Selected Category</div>
     <div class="sd-badge" style="background:${color}18;color:${color}"><span class="sd-dot"></span>${d.layer}</div>
     <div class="sd-title">${d.title}</div>
     <div class="sd-desc">${d.intro}</div>
@@ -1666,7 +1242,6 @@ function renderSidebarChild(mainKey, childKey) {
     <div class="sd-eyebrow clickable" onclick="setFocus('${mainKey}')">← ${graph[mainKey].title}</div>
     <div class="sd-title">${c.title}</div>
     <div class="sd-desc">${c.desc}</div>
-    <button class="sd-arch-btn" onclick="showArchitecture('${mainKey}','${childKey}')">관련 사례 보기 →</button>
     ${sdSection('1','역할 (What)', c.role, 'list')}
     ${sdSection('2','사용 시나리오 (When)', c.when, 'list')}
     ${sdSection('3','설계 포인트 (Design)', c.design, 'list')}
@@ -1675,12 +1250,6 @@ function renderSidebarChild(mainKey, childKey) {
   `;
   document.getElementById('sidebarDetail').innerHTML = html;
 }
-
-function showArchitecture(mainKey, childKey) {
-  // Jump to cases tab as the closest equivalent "architecture view"
-  switchMainTab('cases');
-}
-window.showArchitecture = showArchitecture;
 
 /* ════════════════════════════════════════════════════════
    FOCUS / SELECTION
@@ -1708,9 +1277,8 @@ function selectChild(mainKey, childKey) {
    QUICK NAV (pills under tabs)
 ════════════════════════════════════════════════════════ */
 function renderQuickNav() {
-  const keys = currentView === 'categories' ? CAT_KEYS : PROJ_KEYS;
   const nav = document.getElementById('catQuickNav');
-  nav.innerHTML = keys.map(k => `<button class="qn-btn" id="qn-${k}" onclick="setFocus('${k}')">${graph[k].title}</button>`).join('');
+  nav.innerHTML = CAT_KEYS.map(k => `<button class="qn-btn" id="qn-${k}" onclick="setFocus('${k}')">${graph[k].title}</button>`).join('');
   updateQuickNav(currentMain);
 }
 function updateQuickNav(activeKey) {
@@ -1720,90 +1288,6 @@ function updateQuickNav(activeKey) {
 }
 
 /* ════════════════════════════════════════════════════════
-   VIEW TOGGLE (8 Categories ↔ 12 Projects)
-════════════════════════════════════════════════════════ */
-function toggleMainView() {
-  currentView = currentView === 'categories' ? 'projects' : 'categories';
-  const btn = document.getElementById('viewToggleLabel');
-  const icon = document.getElementById('viewToggleIcon');
-  const hub = document.getElementById('hubTitle');
-  if (currentView === 'categories') {
-    btn.textContent = '8 Categories';
-    icon.textContent = '📊';
-    hub.innerHTML = 'Azure Platform<br/>Architect';
-  } else {
-    btn.textContent = '12 Projects';
-    icon.textContent = '📋';
-    hub.innerHTML = 'Enterprise<br/>Transformation';
-  }
-  renderNodes();
-  renderQuickNav();
-  const firstKey = currentView === 'categories' ? 'identity' : 'summary';
-  setFocus(firstKey);
-}
-window.toggleMainView = toggleMainView;
-
-/* ════════════════════════════════════════════════════════
-   TAB SWITCHING (서비스 맵 / 아키텍처 사례)
-════════════════════════════════════════════════════════ */
-function switchMainTab(tab) {
-  currentTab = tab;
-  const isServices = tab === 'services';
-  document.getElementById('tabServices').classList.toggle('active', isServices);
-  document.getElementById('tabCases').classList.toggle('active', !isServices);
-  document.getElementById('servicesTabContent').style.display = isServices ? 'flex' : 'none';
-  document.getElementById('casesTabContent').style.display = isServices ? 'none' : 'block';
-  document.getElementById('catQuickNav').style.display = isServices ? 'flex' : 'none';
-  if (!isServices) renderCases();
-}
-window.switchMainTab = switchMainTab;
-
-/* ════════════════════════════════════════════════════════
-   ARCHITECTURE CASES
-════════════════════════════════════════════════════════ */
-function buildFlow(steps) {
-  return steps.map((s, i) => {
-    const dot = `<div class="flow-dot"></div>`;
-    const line = i < steps.length - 1 ? `<span class="flow-line"></span>` : '';
-    return `<div class="flow-step">${dot}<span>${s}</span></div>${line}`;
-  }).join('');
-}
-
-function renderCases() {
-  const grid = document.getElementById('casesGrid');
-  grid.innerHTML = cases.map(c => `
-    <div class="case-card" id="case-${c.id}" onclick="toggleCase('${c.id}')">
-      <div class="case-card-head">
-        <span class="case-num">${c.num}</span>
-        <div style="flex:1;">
-          <div class="case-title">${c.title}</div>
-          <div class="case-sub">${c.sub}</div>
-        </div>
-        <span class="case-status ${c.statusCls === 'st-done' ? 'done' : 'plan'}">${c.status}</span>
-      </div>
-      <div class="case-body">
-        <div class="case-section-label">Problem</div>
-        <ul class="case-problem-box">${c.problem.map(p => `<li>${p}</li>`).join('')}</ul>
-        <div class="case-section-label">Architecture Flow</div>
-        <div class="case-flow">${buildFlow(c.flow)}</div>
-        <div class="case-section-label">Stack</div>
-        <div class="case-chips">${c.stack.map(s => `<span class="case-chip">${s}</span>`).join('')}</div>
-        <div class="case-section-label">Outcome</div>
-        <ul class="case-outcome">${c.outcome.map(o => `<li>${o}</li>`).join('')}</ul>
-        <button class="case-arch-btn" onclick="event.stopPropagation();showArchDiagram('${c.id}')">구조도 보기 ›</button>
-      </div>
-    </div>`).join('');
-}
-
-function toggleCase(id) {
-  const card = document.getElementById('case-' + id);
-  const wasOpen = card.classList.contains('open');
-  document.querySelectorAll('.case-card.open').forEach(c => c.classList.remove('open'));
-  if (!wasOpen) card.classList.add('open');
-}
-window.toggleCase = toggleCase;
-
-/* ════════════════════════════════════════════════════════
    MODALS
 ════════════════════════════════════════════════════════ */
 function toggleOverview(show) {
@@ -1811,36 +1295,27 @@ function toggleOverview(show) {
 }
 window.toggleOverview = toggleOverview;
 
-function showArchDiagram(caseId) {
-  const d = archDiagrams[caseId];
-  if (!d) return;
-  document.getElementById('archTitle').textContent = d.title;
-  document.getElementById('archSub').textContent = d.sub;
-  const wrap = document.getElementById('archDiagram');
-  if (d.type === 'svg') {
-    wrap.innerHTML = d.svg;
-  } else {
-    wrap.innerHTML = `
-      <div class="arch-placeholder">
-        <div class="ap-icon">🗺️</div>
-        <div class="ap-title">아키텍처 구조도 준비 중</div>
-        <div class="ap-sub">상세 다이어그램은 별도 자료로 준비되어 있으며, 곧 이 영역에 추가될 예정입니다.</div>
-      </div>`;
-  }
-  document.getElementById('archOverlay').classList.add('show');
-}
-window.showArchDiagram = showArchDiagram;
-
-function closeArchModal() {
-  document.getElementById('archOverlay').classList.remove('show');
-}
-window.closeArchModal = closeArchModal;
-
 /* ════════════════════════════════════════════════════════
    ZOOM / PAN
 ════════════════════════════════════════════════════════ */
 let scale = 1, translateX = 0, translateY = 0;
+let baseScale = 1;
 let isPanning = false, startX = 0, startY = 0;
+
+function computeFitScale() {
+  const stage = document.querySelector('.canvas-stage');
+  if (!stage) return 1;
+  const rect = stage.getBoundingClientRect();
+  const s = Math.min(rect.width / 1020, rect.height / 640, 1.6);
+  return Math.max(0.7, s);
+}
+
+function fitToScreen() {
+  baseScale = computeFitScale();
+  scale = baseScale;
+  translateX = 0; translateY = 0;
+  updateTransform();
+}
 
 function updateTransform() {
   mindmap.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
@@ -1852,10 +1327,12 @@ function adjustZoom(delta) {
 }
 window.adjustZoom = adjustZoom;
 function resetZoom() {
-  scale = 1; translateX = 0; translateY = 0;
+  scale = baseScale; translateX = 0; translateY = 0;
   updateTransform();
 }
 window.resetZoom = resetZoom;
+
+window.addEventListener('resize', fitToScreen);
 
 const canvasInnerEl = document.getElementById('canvasInner');
 canvasInnerEl.addEventListener('mousedown', e => {
@@ -1879,32 +1356,75 @@ canvasInnerEl.addEventListener('wheel', e => {
 /* ════════════════════════════════════════════════════════
    INIT
 ════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════
+   SERVICE SEARCH
+════════════════════════════════════════════════════════ */
+function buildSearchIndex() {
+  const idx = [];
+  CAT_KEYS.forEach(catKey => {
+    const cat = graph[catKey];
+    Object.keys(cat.children).forEach(childKey => {
+      idx.push({ catKey, catTitle: cat.title, childKey, title: cat.children[childKey].title });
+    });
+  });
+  return idx;
+}
+const searchIndex = buildSearchIndex();
+
+const svcSearchInput = document.getElementById('svcSearch');
+const svcSearchResults = document.getElementById('svcSearchResults');
+
+function renderSearchResults(query) {
+  const q = query.trim().toLowerCase();
+  if (!q) { svcSearchResults.classList.remove('show'); svcSearchResults.innerHTML = ''; return; }
+  const matches = searchIndex.filter(item =>
+    item.title.toLowerCase().includes(q) || item.catTitle.toLowerCase().includes(q)
+  ).slice(0, 8);
+
+  if (matches.length === 0) {
+    svcSearchResults.innerHTML = `<div class="svc-result-empty">"${query}"에 대한 검색 결과가 없어요</div>`;
+  } else {
+    svcSearchResults.innerHTML = matches.map(m => `
+      <div class="svc-result-item" onclick="goToSearchResult('${m.catKey}','${m.childKey}')">
+        <div class="svc-result-title">${m.title}</div>
+        <div class="svc-result-cat">${m.catTitle}</div>
+      </div>`).join('');
+  }
+  svcSearchResults.classList.add('show');
+}
+
+function goToSearchResult(catKey, childKey) {
+  setFocus(catKey);
+  selectChild(catKey, childKey);
+  svcSearchInput.value = '';
+  svcSearchResults.classList.remove('show');
+  svcSearchInput.blur();
+}
+window.goToSearchResult = goToSearchResult;
+
+svcSearchInput.addEventListener('input', e => renderSearchResults(e.target.value));
+svcSearchInput.addEventListener('focus', e => { if (e.target.value.trim()) renderSearchResults(e.target.value); });
+document.addEventListener('click', e => {
+  if (!e.target.closest('.svc-search-wrap')) svcSearchResults.classList.remove('show');
+});
+
 renderNodes();
 renderQuickNav();
 
-/* Deep-link support: ?cat=security or ?cat=security&svc=sentinel, ?view=projects, ?tab=cases */
+/* Deep-link support: ?cat=security or ?cat=security&svc=sentinel */
 (function initFromQuery(){
   const params = new URLSearchParams(window.location.search);
-  const view = params.get('view');
-  const tab  = params.get('tab');
   const cat  = params.get('cat');
   const svc  = params.get('svc');
 
-  if (view === 'projects') {
-    toggleMainView();
-  }
-
-  if (tab === 'cases') {
-    switchMainTab('cases');
-  }
-
-  const validKeys = currentView === 'categories' ? CAT_KEYS : PROJ_KEYS;
-  const startKey = (cat && validKeys.includes(cat)) ? cat : (currentView === 'categories' ? 'identity' : 'summary');
+  const startKey = (cat && CAT_KEYS.includes(cat)) ? cat : 'identity';
   setFocus(startKey);
 
   if (svc && graph[startKey] && graph[startKey].children && graph[startKey].children[svc]) {
     selectChild(startKey, svc);
   }
+
+  fitToScreen();
 })();
 
 // 라이트/다크 모드 토글 로직

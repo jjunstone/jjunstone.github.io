@@ -297,101 +297,16 @@
       background: rgba(154, 58, 50, 0.08);
     }
 
-    /* 7단계 타임라인 */
-    .timeline-container {
-      margin: 32px 0;
-    }
-
-    /* 수평 타임라인 */
-    .timeline-wrapper {
-      margin: 32px 0;
-      overflow-x: auto;
-    }
-
-    .timeline-svg {
-      display: block;
-      width: 100%;
-      min-height: 280px;
-      background: transparent;
-    }
-
-    .stage-node {
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .stage-node:hover .stage-circle {
-      r: 26;
-    }
-
-    .stage-circle {
-      r: 24;
-      transition: r 0.2s;
-    }
-
-    .stage-circle.strategy-req {
-      fill: var(--navy);
-    }
-
-    .stage-circle.design {
-      fill: var(--olive);
-    }
-
-    .stage-circle.impl-ops {
-      fill: var(--maroon);
-    }
-
-    .stage-num {
-      font-size: 18px;
-      font-weight: bold;
-      fill: white;
-      text-anchor: middle;
-      dominant-baseline: middle;
-    }
-
-    .stage-label {
-      font-size: 12px;
-      font-weight: bold;
-      fill: var(--ink);
-      text-anchor: middle;
-    }
-
-    .stage-desc-text {
-      font-size: 10px;
-      fill: var(--ink-soft);
-      text-anchor: middle;
-    }
-
-    .group-label {
-      font-size: 11px;
-      font-weight: bold;
-      fill: var(--ink-soft);
-      text-anchor: middle;
-    }
-
-    .connector-line {
-      stroke: var(--line);
-      stroke-width: 2;
-      fill: none;
-      stroke-linecap: round;
-    }
-
-    .group-bg {
-      fill: none;
-      stroke: none;
-    }
-
-    .group-bg.strategy-req {
-      fill: rgba(23, 60, 120, 0.06);
-    }
-
-    .group-bg.design {
-      fill: rgba(78, 85, 51, 0.06);
-    }
-
-    .group-bg.impl-ops {
-      fill: rgba(124, 38, 31, 0.06);
-    }
+    /* ── 아키텍처 여정 (가로 아이콘 진행도) ─────────────────────────── */
+    .journey-flow { display:flex; gap:6px; align-items:center; justify-content:center; flex-wrap:nowrap; margin:18px 0; padding:10px 0; }
+    .journey-step { flex:0 0 110px; width:110px; height:110px; padding:0; background:rgba(255,255,255,.6); border:1.5px solid var(--navy); border-radius:50%; text-align:center; cursor:pointer; transition:all .2s; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .journey-step:hover { transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,.12); }
+    .journey-step.active { background:var(--navy); border-color:var(--navy); }
+    .journey-step.active .step-icon, .journey-step.active .step-num, .journey-step.active .step-title { color:white; }
+    .step-icon { font-size:1.5rem; margin-bottom:3px; }
+    .step-num { font-weight:700; font-size:.8rem; color:var(--navy); margin-bottom:1px; }
+    .step-title { font-size:.75rem; color:var(--ink-soft); line-height:1.2; font-weight:600; }
+    .flow-arrow { font-size:.95rem; color:var(--navy); opacity:.5; flex:0 0 14px; text-align:center; }
 
     /* ISP 메타 모델 체인 */
     .isp-chain {
@@ -557,22 +472,28 @@
       opacity: 0.8;
     }
 
-    /* ── 전략의 사슬 ─────────────────────────────── */
-    .strategy-chain-svg { display:block; width:100%; overflow:visible; }
-    .chain-node { cursor:pointer; }
-    .chain-node .chain-bg { transition: transform 0.22s; transform-box:fill-box; transform-origin:center; }
-    .chain-node:hover .chain-bg { transform: scale(1.13); }
-    .chain-node.chain-active .chain-bg { filter: brightness(1.22) drop-shadow(0 0 8px rgba(23,60,120,.45)); }
-    .chain-path { fill:none; stroke: rgba(23,60,120,.22); stroke-width:2; stroke-linecap:round; }
-    .chain-path-anim { stroke-dasharray:300; stroke-dashoffset:300; transition: stroke-dashoffset 0.7s ease forwards; }
-    .chain-path-anim.drawn { stroke-dashoffset:0; }
-    #chain-panel { display:none; margin-top:16px; padding:16px 20px; background:rgba(255,255,255,.6); border-radius:10px; border-left:4px solid var(--navy); }
+    /* ── 전략의 사슬 (수평 카드 플로우) ─────────────────────────────── */
+    .chain-flow-container { display:flex; gap:12px; align-items:center; justify-content:center; flex-wrap:nowrap; margin:24px 0; overflow-x:auto; }
+    .chain-card { flex:0 0 130px; padding:14px 12px; background:rgba(255,255,255,.62); border:2px solid var(--navy); border-radius:10px; text-align:center; cursor:pointer; transition:all .25s; box-shadow:0 2px 8px rgba(0,0,0,.08); }
+    .chain-card[data-chain="org"] { border-color:#173c78; background:rgba(23,60,120,.08); }
+    .chain-card[data-chain="goal"] { border-color:#4e5533; background:rgba(78,85,51,.08); }
+    .chain-card[data-chain="problem"] { border-color:#7c261f; background:rgba(124,38,31,.08); }
+    .chain-card[data-chain="csf"] { border-color:#9a7729; background:rgba(154,119,41,.08); }
+    .chain-card[data-chain="entity"] { border-color:#315b92; background:rgba(49,91,146,.08); }
+    .chain-card:hover { transform:translateY(-4px); box-shadow:0 6px 16px rgba(0,0,0,.15); border-width:2.5px; }
+    .chain-card.chain-active { box-shadow:0 0 0 2px var(--navy), 0 8px 20px rgba(23,60,120,.25); }
+    .card-icon { font-size:2rem; margin-bottom:8px; }
+    .card-title { font-weight:700; font-size:.95rem; color:var(--navy); margin-bottom:4px; }
+    .card-subtitle { font-size:.75rem; color:var(--gold); font-weight:600; margin-bottom:8px; }
+    .card-note { font-size:.8rem; color:var(--ink-soft); line-height:1.35; }
+    .chain-arrow { flex:0 0 20px; font-size:1.2rem; color:var(--navy); text-align:center; opacity:.6; }
+    #chain-panel { display:none; margin-top:20px; padding:18px 20px; background:rgba(255,255,255,.65); border-radius:10px; border-left:4px solid var(--navy); }
     #chain-panel.visible { display:block; animation: fadeSlideUp .25s ease; }
     @keyframes fadeSlideUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-    #chain-panel h3 { margin:0 0 4px; font-size:1rem; color:var(--navy); }
+    #chain-panel h3 { margin:0 0 6px; font-size:1.05rem; color:var(--navy); }
     #chain-panel .chain-panel-sub { margin:0 0 8px; font-size:.82rem; color:var(--gold); font-weight:bold; }
-    #chain-panel .chain-panel-body { margin:0 0 10px; font-size:.9rem; color:var(--ink-soft); line-height:1.5; }
-    #chain-panel .chain-panel-ex { background:rgba(23,60,120,.07); border-radius:6px; padding:8px 12px; font-size:.82rem; color:var(--ink-soft); white-space:pre-line; line-height:1.6; }
+    #chain-panel .chain-panel-body { margin:0 0 10px; font-size:.9rem; color:var(--ink-soft); line-height:1.6; }
+    #chain-panel .chain-panel-ex { background:rgba(23,60,120,.07); border-radius:6px; padding:10px 14px; font-size:.82rem; color:var(--ink-soft); white-space:pre-line; line-height:1.6; }
 
     /* ── 주제 영역 뷰 토글 ────────────────────────── */
     .view-toggle { display:flex; gap:8px; margin-bottom:14px; }
@@ -581,7 +502,7 @@
     .subject-areas.hidden { display:none !important; }
     #relmap-wrap { display:none; }
     #relmap-wrap.on { display:block; }
-    #relmap-svg { display:block; width:100%; max-width:540px; margin:0 auto; }
+    #relmap-svg { display:block; width:100%; max-width:100%; margin:0 auto; }
     .relmap-node { cursor:pointer; }
     .relmap-node .rl-bg { transition: filter .2s, transform .2s; transform-box:fill-box; transform-origin:center; }
     .relmap-node:hover .rl-bg { transform:scale(1.1); filter:brightness(1.18); }
@@ -674,7 +595,7 @@
         <div class="title-block">
           <div class="eyebrow">Architecture Thinking</div>
           <h1 class="main-title">Architecture Studies</h1>
-          <p class="subtitle">구조를 이해하고 설계 관점을 넓히기 위한 아키텍처 탐구</p>
+          <p class="subtitle">데이터 아키텍처 설계의 전체 과정을 Zachman Framework와 6단계 설계 여정으로 체계화합니다. 비즈니스 전략이 구체적인 데이터 구조와 거버넌스로 실현되는 과정을 탐구합니다.</p>
           <div class="badges">
             <span class="badge">Data Modeling</span>
             <span class="badge">ERD · Governance</span>
@@ -687,7 +608,7 @@
       <!-- Section 1: Zachman 매트릭스 -->
       <section>
         <h2 class="section-label">왜 이 구조인가 — 아키텍처의 뼈대</h2>
-        <p style="color: var(--ink-soft); font-size: 0.95rem; margin-top: -8px;">Zachman Framework — 관점(Who/What/How...)과 추상화 수준(Planner→User)으로 시스템을 분해하는 방법. 셀을 클릭하면 각 관점의 설계 산출물을 확인할 수 있습니다.</p>        <div class="zachman-container">
+        <p style="color: var(--ink-soft); font-size: 0.95rem; margin-top: -8px;"><strong>Zachman Framework</strong>는 6가지 관점(What/How/Where/Who/When/Why)과 6가지 추상화 수준(전략→실무)으로 엔터프라이즈 아키텍처를 체계화합니다. 각 셀은 특정 관점-수준 교점에서의 설계 산출물을 나타냅니다. <em style="color:var(--gold);">셀을 클릭하면 각 교점의 설계 내용을 확인할 수 있습니다.</em></p>        <div class="zachman-container">
           <div class="zachman-grid">
             <!-- 헤더 행 -->
             <div class="zachman-cell zachman-header">Perspective</div>
@@ -757,177 +678,115 @@
 
       <!-- Section 2: 7단계 타임라인 -->
       <section class="timeline-container">
-        <h2 class="section-label">어떻게 탐구하는가 — 7단계 설계 여정</h2>
-        <p style="color: var(--ink-soft); font-size: 0.95rem; margin-top: -8px;">전략 수립에서 거버넌스까지, 데이터 아키텍처가 구체화되는 7단계. 각 단계를 클릭하면 핵심 질문과 설계 목표를 확인할 수 있습니다.</p>        
-        <div class="timeline-wrapper">
-          <svg class="timeline-svg" viewBox="0 0 1400 280" xmlns="http://www.w3.org/2000/svg">
-            <!-- 그룹 배경 -->
-            <rect class="group-bg strategy-req" x="40" y="20" width="280" height="240" rx="8"/>
-            <rect class="group-bg design" x="340" y="20" width="420" height="240" rx="8"/>
-            <rect class="group-bg impl-ops" x="780" y="20" width="280" height="240" rx="8"/>
+        <h2 class="section-label">어떻게 탐구하는가 — 6단계 설계 여정</h2>
+        <p style="color: var(--ink-soft); font-size: 0.95rem; margin-top: -8px;">전략 수립에서 거버넌스까지, 데이터 아키텍처가 구체화되는 6단계. 각 단계를 클릭하면 핵심 질문과 설계 목표를 확인할 수 있습니다.</p>
 
-            <!-- 그룹 라벨 -->
-            <text class="group-label" x="180" y="50">전략 · 요건</text>
-            <text class="group-label" x="550" y="50">설계</text>
-            <text class="group-label" x="920" y="50">구현 · 운영</text>
+        <div class="journey-flow">
+          <div class="journey-step" data-stage="01">
+            <div class="step-icon">🎯</div>
+            <div class="step-num">01</div>
+            <div class="step-title">전략 메타모델</div>
+          </div>
+          <div class="flow-arrow">→</div>
 
-            <!-- 연결선 -->
-            <line class="connector-line" x1="105" y1="140" x2="165" y2="140"/>
-            <polygon points="175,140 165,135 168,140 165,145" fill="var(--line)"/>
-            
-            <line class="connector-line" x1="245" y1="140" x2="305" y2="140"/>
-            <polygon points="315,140 305,135 308,140 305,145" fill="var(--line)"/>
-            
-            <line class="connector-line" x1="385" y1="140" x2="445" y2="140"/>
-            <polygon points="455,140 445,135 448,140 445,145" fill="var(--line)"/>
-            
-            <line class="connector-line" x1="525" y1="140" x2="585" y2="140"/>
-            <polygon points="595,140 585,135 588,140 585,145" fill="var(--line)"/>
-            
-            <line class="connector-line" x1="665" y1="140" x2="725" y2="140"/>
-            <polygon points="735,140 725,135 728,140 725,145" fill="var(--line)"/>
-            
-            <line class="connector-line" x1="805" y1="140" x2="865" y2="140"/>
-            <polygon points="875,140 865,135 868,140 865,145" fill="var(--line)"/>
+          <div class="journey-step" data-stage="02">
+            <div class="step-icon">📐</div>
+            <div class="step-num">02</div>
+            <div class="step-title">주제 영역 분할</div>
+          </div>
+          <div class="flow-arrow">→</div>
 
-            <!-- Stage 01 -->
-            <g class="stage-node" data-stage="01">
-              <circle class="stage-circle strategy-req" cx="105" cy="140"/>
-              <text class="stage-num">01</text>
-              <text class="stage-label" x="105" y="180">ISP 메타</text>
-              <text class="stage-desc-text" x="105" y="200">전략 연결</text>
-            </g>
+          <div class="journey-step" data-stage="03">
+            <div class="step-icon">✅</div>
+            <div class="step-num">03</div>
+            <div class="step-title">CRUD 매트릭스</div>
+          </div>
+          <div class="flow-arrow">→</div>
 
-            <!-- Stage 02 -->
-            <g class="stage-node" data-stage="02">
-              <circle class="stage-circle strategy-req" cx="245" cy="140"/>
-              <text class="stage-num" x="245">02</text>
-              <text class="stage-label" x="245" y="180">데이터 요건</text>
-              <text class="stage-desc-text" x="245" y="200">언어 번역</text>
-            </g>
+          <div class="journey-step" data-stage="04">
+            <div class="step-icon">📊</div>
+            <div class="step-num">04</div>
+            <div class="step-title">논리 모델</div>
+          </div>
+          <div class="flow-arrow">→</div>
 
-            <!-- Stage 03 -->
-            <g class="stage-node" data-stage="03">
-              <circle class="stage-circle design" cx="385" cy="140"/>
-              <text class="stage-num" x="385">03</text>
-              <text class="stage-label" x="385" y="180">개념 모델</text>
-              <text class="stage-desc-text" x="385" y="200">구조화</text>
-            </g>
+          <div class="journey-step" data-stage="05">
+            <div class="step-icon">⚙️</div>
+            <div class="step-num">05</div>
+            <div class="step-title">물리 설계</div>
+          </div>
+          <div class="flow-arrow">→</div>
 
-            <!-- Stage 04 -->
-            <g class="stage-node" data-stage="04">
-              <circle class="stage-circle design" cx="525" cy="140"/>
-              <text class="stage-num" x="525">04</text>
-              <text class="stage-label" x="525" y="180">논리 모델</text>
-              <text class="stage-desc-text" x="525" y="200">정의</text>
-            </g>
-
-            <!-- Stage 05 -->
-            <g class="stage-node" data-stage="05">
-              <circle class="stage-circle design" cx="665" cy="140"/>
-              <text class="stage-num" x="665">05</text>
-              <text class="stage-label" x="665" y="180">물리 모델</text>
-              <text class="stage-desc-text" x="665" y="200">구현</text>
-            </g>
-
-            <!-- Stage 06 -->
-            <g class="stage-node" data-stage="06">
-              <circle class="stage-circle impl-ops" cx="805" cy="140"/>
-              <text class="stage-num" x="805">06</text>
-              <text class="stage-label" x="805" y="180">데이터 통합</text>
-              <text class="stage-desc-text" x="805" y="200">파이프라인</text>
-            </g>
-
-            <!-- Stage 07 -->
-            <g class="stage-node" data-stage="07">
-              <circle class="stage-circle impl-ops" cx="945" cy="140"/>
-              <text class="stage-num" x="945">07</text>
-              <text class="stage-label" x="945" y="180">거버넌스</text>
-              <text class="stage-desc-text" x="945" y="200">표준화</text>
-            </g>
-          </svg>
+          <div class="journey-step" data-stage="06">
+            <div class="step-icon">📋</div>
+            <div class="step-num">06</div>
+            <div class="step-title">거버넌스</div>
+          </div>
         </div>
 
-        <div id="stage-detail-panel" style="display:none; margin-top: 24px; padding: 16px; background: rgba(255,255,255,0.5); border-radius: 8px; border-left: 4px solid var(--navy);">
-          <h3 id="stage-detail-title" style="margin: 0 0 8px 0; font-size: 1.1rem;"></h3>
-          <p id="stage-detail-desc" style="margin: 0 0 12px 0; color: var(--ink-soft);"></p>
-          <p style="margin: 0; font-size: 0.9rem;"><strong>핵심 질문:</strong> <span id="stage-detail-question"></span></p>
+        <button type="button" class="nav-btn" id="journey-start" style="margin-top: 16px;">▶ 아키텍처 여정 시작</button>
+
+        <div id="stage-detail-panel" style="display:none; margin-top: 24px; padding: 18px 20px; background: rgba(255,255,255,0.6); border-radius: 8px; border-left: 4px solid var(--navy);">
+          <h3 id="stage-detail-title" style="margin: 0 0 8px 0; font-size: 1.15rem; color: var(--navy);"></h3>
+          <p id="stage-detail-desc" style="margin: 0 0 12px 0; color: var(--ink-soft); line-height: 1.6;"></p>
+          <p style="margin: 0; font-size: 0.92rem;"><strong>핵심 질문:</strong> <span id="stage-detail-question"></span></p>
         </div>
       </section>
 
       <!-- Section 3: 전략의 사슬 (Chain of Strategy) -->
       <section id="strategy-chain-section">
         <h2 class="section-label">전략과 데이터는 어떻게 연결되는가</h2>
-        <p style="color:var(--ink-soft);font-size:.95rem;margin-top:-8px;">조직의 목표 → 문제점 → 핵심 성공 요인 → 엔터티. 비즈니스 언어가 데이터 구조로 번역되는 과정을 추적합니다. 노드를 클릭하면 각 연결의 의미를 확인할 수 있습니다.</p>
-        <svg class="strategy-chain-svg" viewBox="0 0 1000 185" xmlns="http://www.w3.org/2000/svg" style="margin:20px 0">
+        <p style="color:var(--ink-soft);font-size:.95rem;margin-top:-8px;">비즈니스 전략은 데이터 구조로 변환됩니다. 조직의 목표에서 출발해 문제를 식별하고, 핵심 성공 요인을 거쳐 최종적으로 <strong>핵심 엔터티</strong>로 구체화되는 흐름입니다. <em style="color:var(--gold);">각 카드를 클릭하면 해당 단계의 의미와 실무적 함의를 확인할 수 있습니다.</em></p>
+        
+        <div class="chain-flow-container">
+          <!-- Card 1: Organization -->
+          <div class="chain-card" data-chain="org">
+            <div class="card-icon">🏢</div>
+            <div class="card-title">조직</div>
+            <div class="card-subtitle">Organization</div>
+            <div class="card-note">자산운용 본부, 리스크팀, IT 전략</div>
+          </div>
 
-          <!-- Animated connection paths -->
-          <path class="chain-path chain-path-anim" id="cp1" d="M116,88 L244,88"/>
-          <polygon id="cp1-arr" points="247,88 240,84 240,92" fill="rgba(23,60,120,.28)" style="opacity:0;transition:opacity .3s .9s"/>
-          <text x="180" y="79" text-anchor="middle" fill="var(--ink-soft)" font-size="8" opacity=".7" style="pointer-events:none">defines</text>
+          <div class="chain-arrow">→</div>
 
-          <path class="chain-path chain-path-anim" id="cp2" d="M316,88 L444,88" style="transition-delay:.25s"/>
-          <polygon id="cp2-arr" points="447,88 440,84 440,92" fill="rgba(23,60,120,.28)" style="opacity:0;transition:opacity .3s 1.15s"/>
-          <text x="380" y="79" text-anchor="middle" fill="var(--ink-soft)" font-size="8" opacity=".7" style="pointer-events:none">reveals</text>
+          <!-- Card 2: Goal -->
+          <div class="chain-card" data-chain="goal">
+            <div class="card-icon">🎯</div>
+            <div class="card-title">목표</div>
+            <div class="card-subtitle">Strategic Goal</div>
+            <div class="card-note">실시간 통합 평가, 수익률 최적화</div>
+          </div>
 
-          <path class="chain-path chain-path-anim" id="cp3" d="M516,88 L644,88" style="transition-delay:.5s"/>
-          <polygon id="cp3-arr" points="647,88 640,84 640,92" fill="rgba(23,60,120,.28)" style="opacity:0;transition:opacity .3s 1.4s"/>
-          <text x="580" y="79" text-anchor="middle" fill="var(--ink-soft)" font-size="8" opacity=".7" style="pointer-events:none">drives</text>
+          <div class="chain-arrow">→</div>
 
-          <path class="chain-path chain-path-anim" id="cp4" d="M716,88 L844,88" style="transition-delay:.75s"/>
-          <polygon id="cp4-arr" points="847,88 840,84 840,92" fill="rgba(23,60,120,.28)" style="opacity:0;transition:opacity .3s 1.65s"/>
-          <text x="780" y="79" text-anchor="middle" fill="var(--ink-soft)" font-size="8" opacity=".7" style="pointer-events:none">produces</text>
+          <!-- Card 3: Problem -->
+          <div class="chain-card" data-chain="problem">
+            <div class="card-icon">⚠️</div>
+            <div class="card-title">문제점</div>
+            <div class="card-subtitle">Core Problem</div>
+            <div class="card-note">데이터 사일로, 정합성 붕괴</div>
+          </div>
 
-          <!-- Node 1: 조직 (Organization) -->
-          <g class="chain-node" data-chain="org">
-            <circle class="chain-bg" cx="80" cy="88" r="36" fill="#173c78" opacity=".88"/>
-            <text x="80" y="82" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="11" font-weight="bold" style="pointer-events:none">조직</text>
-            <text x="80" y="96" text-anchor="middle" dominant-baseline="middle" fill="rgba(255,255,255,.75)" font-size="8.5" style="pointer-events:none">Organization</text>
-            <text x="80" y="136" text-anchor="middle" fill="var(--ink)" font-size="10.5" font-weight="bold" style="pointer-events:none">자산운용 본부</text>
-            <text x="80" y="152" text-anchor="middle" fill="var(--ink-soft)" font-size="9" style="pointer-events:none">리스크 관리팀</text>
-            <text x="80" y="167" text-anchor="middle" fill="var(--navy-soft)" font-size="8.5" opacity=".8" style="pointer-events:none">IT 전략 부서</text>
-          </g>
+          <div class="chain-arrow">→</div>
 
-          <!-- Node 2: 목표 (Goal) -->
-          <g class="chain-node" data-chain="goal">
-            <circle class="chain-bg" cx="280" cy="88" r="36" fill="#4e5533" opacity=".88"/>
-            <text x="280" y="82" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="11" font-weight="bold" style="pointer-events:none">목표</text>
-            <text x="280" y="96" text-anchor="middle" dominant-baseline="middle" fill="rgba(255,255,255,.75)" font-size="8.5" style="pointer-events:none">Strategic Goal</text>
-            <text x="280" y="136" text-anchor="middle" fill="var(--ink)" font-size="10.5" font-weight="bold" style="pointer-events:none">실시간 통합 평가</text>
-            <text x="280" y="152" text-anchor="middle" fill="var(--ink-soft)" font-size="9" style="pointer-events:none">수익률 최적화</text>
-            <text x="280" y="167" text-anchor="middle" fill="var(--navy-soft)" font-size="8.5" opacity=".8" style="pointer-events:none">한도 실시간 통제</text>
-          </g>
+          <!-- Card 4: CSF -->
+          <div class="chain-card" data-chain="csf">
+            <div class="card-icon">🔑</div>
+            <div class="card-title">핵심 성공 요인</div>
+            <div class="card-subtitle">Critical Success Factors</div>
+            <div class="card-note">표준화 체계, 이력 관리 모델</div>
+          </div>
 
-          <!-- Node 3: 문제점 (Problem) -->
-          <g class="chain-node" data-chain="problem">
-            <circle class="chain-bg" cx="480" cy="88" r="36" fill="#7c261f" opacity=".88"/>
-            <text x="480" y="82" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="11" font-weight="bold" style="pointer-events:none">문제점</text>
-            <text x="480" y="96" text-anchor="middle" dominant-baseline="middle" fill="rgba(255,255,255,.75)" font-size="8.5" style="pointer-events:none">Core Problem</text>
-            <text x="480" y="136" text-anchor="middle" fill="var(--ink)" font-size="10.5" font-weight="bold" style="pointer-events:none">데이터 사일로</text>
-            <text x="480" y="152" text-anchor="middle" fill="var(--ink-soft)" font-size="9" style="pointer-events:none">정합성 붕괴</text>
-            <text x="480" y="167" text-anchor="middle" fill="var(--navy-soft)" font-size="8.5" opacity=".8" style="pointer-events:none">의사결정 지연</text>
-          </g>
+          <div class="chain-arrow">→</div>
 
-          <!-- Node 4: CSF (Critical Success Factors) -->
-          <g class="chain-node" data-chain="csf">
-            <circle class="chain-bg" cx="680" cy="88" r="36" fill="#9a7729" opacity=".88"/>
-            <text x="680" y="80" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="10" font-weight="bold" style="pointer-events:none">핵심 성공</text>
-            <text x="680" y="94" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="10" font-weight="bold" style="pointer-events:none">요인 (CSF)</text>
-            <text x="680" y="136" text-anchor="middle" fill="var(--ink)" font-size="10.5" font-weight="bold" style="pointer-events:none">표준화 체계</text>
-            <text x="680" y="152" text-anchor="middle" fill="var(--ink-soft)" font-size="9" style="pointer-events:none">이력 관리 모델</text>
-            <text x="680" y="167" text-anchor="middle" fill="var(--navy-soft)" font-size="8.5" opacity=".8" style="pointer-events:none">메타데이터 정책</text>
-          </g>
-
-          <!-- Node 5: 핵심 엔터티 (Core Entity) -->
-          <g class="chain-node" data-chain="entity">
-            <circle class="chain-bg" cx="880" cy="88" r="36" fill="#315b92" opacity=".88"/>
-            <text x="880" y="80" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="10" font-weight="bold" style="pointer-events:none">핵심</text>
-            <text x="880" y="94" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="10" font-weight="bold" style="pointer-events:none">엔터티</text>
-            <text x="880" y="136" text-anchor="middle" fill="var(--ink)" font-size="10.5" font-weight="bold" style="pointer-events:none">ASSET · LEDGER</text>
-            <text x="880" y="152" text-anchor="middle" fill="var(--ink-soft)" font-size="9" style="pointer-events:none">POSITION · TRADE</text>
-            <text x="880" y="167" text-anchor="middle" fill="var(--navy-soft)" font-size="8.5" opacity=".8" style="pointer-events:none">INSTRUMENT</text>
-          </g>
-        </svg>
+          <!-- Card 5: Entity -->
+          <div class="chain-card" data-chain="entity">
+            <div class="card-icon">📊</div>
+            <div class="card-title">핵심 엔터티</div>
+            <div class="card-subtitle">Core Entity</div>
+            <div class="card-note">ASSET, LEDGER, POSITION, TRADE</div>
+          </div>
+        </div>
 
         <!-- 상세 패널 -->
         <div id="chain-panel">
@@ -941,11 +800,11 @@
       <!-- Section 4: 5대 주제 영역 -->
       <section>
         <h2 class="section-label">데이터는 어떻게 나뉘는가 — 주제 영역</h2>
-        <p style="color:var(--ink-soft);font-size:.95rem;margin-top:-8px;">연관된 엔터티를 하나의 영역으로 묶고, 영역 간 의존은 최소화한다. Low Coupling · High Cohesion — 클릭하면 영역 간 의존 관계를 확인할 수 있습니다.</p>
+        <p style="color:var(--ink-soft);font-size:.95rem;margin-top:-8px;"><strong>주제 영역(Subject Area)</strong>은 비즈니스 도메인의 핵심 개념을 그룹화한 것입니다. 설계 원칙 <strong>Low Coupling · High Cohesion</strong>을 적용하여 영역 간 의존성을 최소화하고 응집력을 극대화합니다. <em style="color:var(--gold);">관계 맵에서 노드를 클릭하거나 카드 보기로 전환해 각 영역의 역할과 관계를 파악할 수 있습니다.</em></p>
         <!-- 뷰 토글 -->
         <div class="view-toggle">
-          <button class="view-btn active" id="btn-card">카드 보기</button>
-          <button class="view-btn" id="btn-relmap">관계 맵 보기</button>
+          <button class="view-btn active" id="btn-relmap">관계 맵 보기</button>
+          <button class="view-btn" id="btn-card">카드 보기</button>
         </div>
 
         <!-- 카드 뷰 (기존) -->
@@ -1260,39 +1119,34 @@
 
   const stageData = {
     '01': {
-      title: 'ISP 메타 모델 수립',
-      desc: '전략과 데이터를 연결하는 방법론과 범위를 정의한다.',
-      question: '전략과 데이터를 어떻게 연결하는가?'
+      title: 'Step 1 · 전략 기반 메타 모델링',
+      desc: '조직의 목표와 문제점을 추적해 핵심 성공 요인(CSF)과 엔터티로 번역한다. 모든 데이터가 존재해야 하는 전략적 이유를 정의하는 단계.',
+      question: '왜 이 데이터가 존재해야 하는가?'
     },
     '02': {
-      title: '데이터 요건 분석',
-      desc: '비즈니스 언어를 데이터 요건과 규칙으로 번역한다.',
-      question: '비즈니스 언어를 어떻게 데이터로 번역하는가?'
+      title: 'Step 2 · 주제 영역 정의 및 분할',
+      desc: '핵심 엔터티를 4개의 논리적 주제 영역(SA)으로 나누어 Low Coupling · High Cohesion을 확보한다.',
+      question: '어떻게 나눌 것인가?'
     },
     '03': {
-      title: '개념 데이터 모델링',
-      desc: '핵심 엔터티와 관계를 비즈니스 관점에서 구조화한다.',
-      question: '핵심 개념을 어떻게 구조화하는가?'
+      title: 'Step 3 · CRUD 매트릭스',
+      desc: '12개 엔터티가 어떤 업무 기능에 의해 생성·조회·수정·삭제되는지 매핑하여 데이터 생성 소유권을 검증한다.',
+      question: '누가 데이터를 소유하는가?'
     },
     '04': {
-      title: '논리 데이터 모델링',
-      desc: '개념 모델을 속성, 키, 정규화 기준으로 정밀화한다.',
-      question: '개념을 어떻게 정밀하게 정의하는가?'
+      title: 'Step 4 · 논리 모델 & 정규화',
+      desc: '엔터티 간 관계를 정교한 ERD로 표현하고, 3NF까지 정규화하여 데이터 무결성의 수학적 기반을 확보한다.',
+      question: '얼마나 정확하게 구조화할 것인가?'
     },
     '05': {
-      title: '물리 데이터 모델링',
-      desc: '논리 설계를 DBMS에 구현 가능한 형태로 변환한다.',
-      question: '논리 설계를 어떻게 구현 가능하게 만드는가?'
+      title: 'Step 5 · 물리 설계 및 성능 전략',
+      desc: '인덱스·파티셔닝·전략적 반정규화로 논리 모델을 실제 운영 가능한 고성능 구조로 구현한다.',
+      question: '어떻게 빠르고 안정적으로 구현할 것인가?'
     },
     '06': {
-      title: '데이터 통합 아키텍처',
-      desc: '분산된 데이터를 표준화된 흐름으로 묶어낸다.',
-      question: '분산된 데이터를 어떻게 통합하는가?'
-    },
-    '07': {
-      title: '데이터 거버넌스 및 표준화',
-      desc: '아키텍처를 지속 가능한 운영 체계로 유지한다.',
-      question: '아키텍처를 어떻게 지속 가능하게 유지하는가?'
+      title: 'Step 6 · 데이터 거버넌스',
+      desc: '표준화 체계·메타데이터 관리·품질 검증으로 아키텍처를 지속 가능한 운영 체계로 유지한다.',
+      question: '어떻게 지속 가능하게 관리할 것인가?'
     }
   };
 
@@ -1364,26 +1218,6 @@
       }
       .subject-card.is-muted {
         opacity: .18;
-      }
-      .journey-controls {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        align-items: center;
-        margin: 14px 0 8px;
-      }
-      .journey-controls .nav-btn {
-        cursor: pointer;
-      }
-      .helper-pill {
-        display: inline-flex;
-        align-items: center;
-        padding: 6px 10px;
-        border-radius: 999px;
-        background: rgba(23,60,120,.08);
-        border: 1px solid rgba(23,60,120,.22);
-        color: var(--navy);
-        font-size: .88rem;
       }
       .floating-panel {
         position: fixed;
@@ -1557,59 +1391,56 @@
     });
   }
 
-  function ensureJourneyControls() {
-    const timelineSection = document.querySelector('.timeline-container');
-    const intro = timelineSection?.querySelector('p');
-    if (!timelineSection || !intro) return;
-
-    const controls = document.createElement('div');
-    controls.className = 'journey-controls';
-    controls.innerHTML = `
-      <button type="button" class="nav-btn" id="journey-start">▶ 아키텍처 여정 시작</button>
-      <button type="button" class="nav-btn" id="journey-reset" style="background: var(--olive);">다시 보기</button>
-      <span class="helper-pill">클릭하면 7단계가 순차적으로 활성화됩니다</span>
-    `;
-    intro.insertAdjacentElement('afterend', controls);
-  }
 
   function resetJourney() {
-    document.querySelectorAll('.stage-node').forEach(node => {
-      node.classList.remove('is-active', 'is-dim');
-      const circle = node.querySelector('.stage-circle');
-      const baseR = 24;
-      if (circle) circle.setAttribute('r', baseR);
+    document.querySelectorAll('.journey-step').forEach(step => {
+      step.classList.remove('active');
     });
-    document.querySelectorAll('.connector-line, .timeline-svg polygon').forEach(el => {
-      el.style.opacity = '1';
-    });
+    const panel = document.getElementById('stage-detail-panel');
+    if (panel) panel.style.display = 'none';
+  }
+
+  function showStageDetail(stageKey) {
+    const data = stageData[stageKey];
+    if (!data) return;
+    const panel = document.getElementById('stage-detail-panel');
+    const title = document.getElementById('stage-detail-title');
+    const desc = document.getElementById('stage-detail-desc');
+    const question = document.getElementById('stage-detail-question');
+    if (!panel || !title || !desc || !question) return;
+    panel.style.display = 'block';
+    title.textContent = data.title;
+    desc.textContent = data.desc;
+    question.textContent = data.question;
   }
 
   function playJourney() {
     resetJourney();
-    const nodes = [...document.querySelectorAll('.stage-node')];
-    const connectors = [...document.querySelectorAll('.connector-line')];
+    const steps = [...document.querySelectorAll('.journey-step')];
+    const panel = document.getElementById('stage-detail-panel');
+    if (panel) {
+      panel.style.display = 'block';
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
 
-    nodes.forEach((node, idx) => {
+    steps.forEach((step, idx) => {
       setTimeout(() => {
-        node.classList.add('is-active');
-        const circle = node.querySelector('.stage-circle');
-        if (circle) {
-          circle.setAttribute('r', 29);
-          setTimeout(() => circle.setAttribute('r', 24), 260);
-        }
+        step.classList.add('active');
+        showStageDetail(step.dataset.stage);
 
-        if (idx > 0 && connectors[idx - 1]) {
-          connectors[idx - 1].style.opacity = '0.9';
+        // Auto-reset after last stage completes
+        if (idx === steps.length - 1) {
+          setTimeout(() => {
+            resetJourney();
+          }, 3000);
         }
-      }, idx * 700);
+      }, idx * 900);
     });
   }
 
   function bindJourneyAnimator() {
     const startBtn = document.getElementById('journey-start');
-    const resetBtn = document.getElementById('journey-reset');
     if (startBtn) startBtn.addEventListener('click', playJourney);
-    if (resetBtn) resetBtn.addEventListener('click', resetJourney);
   }
 
   function fixStageLabels() {
@@ -1684,9 +1515,9 @@
   }
 
   function bindStageDetail() {
-    document.querySelectorAll('.stage-node').forEach(node => {
-      node.addEventListener('click', () => {
-        const stage = node.dataset.stage;
+    document.querySelectorAll('.journey-step').forEach(step => {
+      step.addEventListener('click', () => {
+        const stage = step.dataset.stage;
         const data = stageData[stage];
         if (!data) return;
 
@@ -1701,6 +1532,10 @@
         title.textContent = data.title;
         desc.textContent = data.desc;
         question.textContent = data.question;
+
+        // Visual feedback
+        document.querySelectorAll('.journey-step').forEach(s => s.classList.remove('active'));
+        step.classList.add('active');
       });
     });
   }
@@ -1747,38 +1582,19 @@
     const pBody  = document.getElementById('chain-panel-body');
     const pEx    = document.getElementById('chain-panel-ex');
 
-    document.querySelectorAll('.chain-node').forEach(node => {
-      node.addEventListener('click', () => {
-        const d = chainData[node.dataset.chain];
+    document.querySelectorAll('.chain-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const d = chainData[card.dataset.chain];
         if (!d) return;
         pTitle.textContent = d.title;
         pSub.textContent   = d.sub;
         pBody.textContent  = d.body;
         pEx.textContent    = d.ex;
         panel.classList.add('visible');
-        document.querySelectorAll('.chain-node').forEach(n => n.classList.remove('chain-active'));
-        node.classList.add('chain-active');
+        document.querySelectorAll('.chain-card').forEach(c => c.classList.remove('chain-active'));
+        card.classList.add('chain-active');
       });
     });
-
-    // Path + arrow animation on scroll
-    const svg = document.querySelector('.strategy-chain-svg');
-    const drawChain = () => {
-      document.querySelectorAll('.chain-path-anim').forEach((p, i) => {
-        setTimeout(() => {
-          p.classList.add('drawn');
-          const arr = document.getElementById('cp' + (i+1) + '-arr');
-          if (arr) arr.style.opacity = '1';
-        }, i * 250);
-      });
-    };
-    if (svg && 'IntersectionObserver' in window) {
-      new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) { drawChain(); }
-      }, { threshold: 0.25 }).observe(svg);
-    } else {
-      drawChain();
-    }
   }
 
   /* ─── 관계 맵 빌드 + 토글 ────────────────────────────────────── */
@@ -1817,9 +1633,9 @@
     relmapAreas.forEach(a => {
       html += `
         <g class="relmap-node" data-area="${a.key}">
-          <circle class="rl-bg" cx="${a.cx}" cy="${a.cy}" r="40" fill="${a.fill}" opacity=".85"/>
-          <text x="${a.cx}" y="${a.cy - 6}" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="10" font-weight="bold" style="pointer-events:none">${a.label[0]}</text>
-          <text x="${a.cx}" y="${a.cy + 8}" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="10" font-weight="bold" style="pointer-events:none">${a.label[1]}</text>
+          <circle class="rl-bg" cx="${a.cx}" cy="${a.cy}" r="50" fill="${a.fill}" opacity=".85"/>
+          <text x="${a.cx}" y="${a.cy - 8}" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="11" font-weight="bold" style="pointer-events:none">${a.label[0]}</text>
+          <text x="${a.cx}" y="${a.cy + 10}" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="11" font-weight="bold" style="pointer-events:none">${a.label[1]}</text>
         </g>`;
     });
     svg.innerHTML = html;
@@ -1855,6 +1671,11 @@
     const relmap    = document.getElementById('relmap-wrap');
     if (!btnCard || !btnRelmap) return;
 
+    // Initialize: show relmap by default
+    cards.classList.add('hidden');
+    relmap.classList.add('on');
+    buildRelationMap();
+
     btnCard.addEventListener('click', () => {
       btnCard.classList.add('active'); btnRelmap.classList.remove('active');
       cards.classList.remove('hidden'); relmap.classList.remove('on');
@@ -1870,7 +1691,6 @@
   injectStyles();
   assignZachmanCoordinates();
   fixStageLabels();
-  ensureJourneyControls();
   bindZachmanExplorer();
   bindJourneyAnimator();
   bindSubjectExplorer();

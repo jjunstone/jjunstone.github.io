@@ -1649,7 +1649,7 @@ IT 전략 부서</p>
               <div class="meta-chain chain-4">
                 <div class="meta-card" style="border-color: rgba(23, 60, 120, 0.28);">
                   <p class="meta-card-title strategy">주문 체결 처리</p>
-                  <p class="meta-card-body">TRADE 생성
+                  <p class="meta-card-body">EXECUTION 생성
 POSITION 갱신</p>
                 </div>
                 <div class="meta-arrow">→</div>
@@ -1702,10 +1702,10 @@ LEDGER 기록</p>
                 </div>
 
                 <div class="meta-entity-card" style="border-color: rgba(124, 38, 31, 0.28);">
-                  <p class="meta-entity-name problem">TRADE</p>
-                  <p class="meta-entity-desc">주문-체결 이력</p>
+                  <p class="meta-entity-name problem">EXECUTION</p>
+                  <p class="meta-entity-desc">체결 (거래 허브)</p>
                   <div class="meta-pills">
-                    <span class="meta-pill">거래 이력 관리</span>
+                    <span class="meta-pill">거래 생명주기 중심</span>
                   </div>
                 </div>
 
@@ -1830,7 +1830,7 @@ LEDGER 기록</p>
         title: '핵심 엔터티 (Core Entity)',
         sub: '전략이 구체화된 데이터 구조의 핵심',
         body: '위의 모든 분석이 이 엔터티들의 설계로 귀결된다. 엔터티는 단순한 테이블이 아니라 비즈니스 전략의 실체다.',
-        ex: 'ASSET (자산): 표준화된 금융투자상품 마스터\nLEDGER (원장): 시계열 선분 이력 기반 거래 원장\nPOSITION (포지션): 계좌별 실시간 잔고 집계\nTRADE (체결): 주문-체결-정산 거래 이력'
+        ex: 'ASSET (자산): 표준화된 금융투자상품 마스터\nLEDGER (원장): 시계열 선분 이력 기반 거래 원장\nPOSITION (포지션): 계좌별 실시간 잔고 집계\nEXECUTION (체결): 주문→체결→정산 생명주기의 허브 엔터티'
       }
     };
 

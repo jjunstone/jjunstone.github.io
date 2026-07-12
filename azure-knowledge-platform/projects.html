@@ -6,11 +6,11 @@
   <title>Projects — Junseok Lee</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
   <style>
     :root {
-      --topbar-h: 52px;
+      --topbar-h: 92px;
       --sidebar-w: 240px;
       /* Light mode */
       --bg-light: #f8fafc;
@@ -29,6 +29,7 @@
       /* Common */
       --accent: #3b82f6;
       --accent-light: #eff6ff;
+      --gold: #d4af6a;
 
       --c-architecture: #8b5cf6;
       --c-automation:   #f59e0b;
@@ -89,21 +90,20 @@
     .brand-name { font-size: 15px; font-weight: 700; color: var(--text); transition: color .3s; }
     .brand-role { font-size: 11px; color: var(--text-light); transition: color .3s; }
 
-    .topbar-nav { display: flex; align-items: center; gap: 2px; flex: 1; }
+    .topbar-nav { display: flex; align-items: center; gap: 10px; flex: 1; }
     .tnav {
-      padding: 6px 16px; border-radius: 6px; font-size: 14px; font-weight: 500;
-      color: var(--text-light); cursor: pointer; transition: .15s;
-      text-decoration: none; border: none; background: transparent; font-family: inherit;
-      position: relative;
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 16px; border-radius: 10px; min-width: 180px;
+      color: var(--text-light); cursor: pointer; transition: .15s ease;
+      text-decoration: none; border: 1px solid var(--border); background: transparent;
+      font-family: inherit;
     }
-    .tnav:hover { color: var(--text); }
-    .tnav.active {
-      color: var(--accent); font-weight: 600;
-    }
-    .tnav.active::after {
-      content: ''; position: absolute; bottom: -17px; left: 16px; right: 16px;
-      height: 2px; background: var(--accent); border-radius: 1px;
-    }
+    .tnav:hover { border-color: var(--text-light); background: var(--bg); }
+    .tnav.active { border-color: var(--accent); background: var(--accent-light); }
+    .tnav-icon { font-size: 20px; line-height: 1; flex-shrink: 0; width: 22px; text-align: center; }
+    .tnav-body { display: flex; flex-direction: column; gap: 2px; line-height: 1.3; min-width: 0; }
+    .tnav-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .tnav-desc { font-size: 11.5px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .topbar-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
     .theme-toggle {
       width: 36px; height: 36px; border-radius: 7px; border: 1px solid var(--border);
@@ -131,8 +131,15 @@
       display: flex; align-items: center; gap: 40px; flex-wrap: wrap;
     }
     .page-title-wrap { flex-shrink: 0; }
-    .page-title { font-size: 36px; font-weight: 800; color: var(--text); line-height: 1; }
-    .page-sub { font-size: 13px; color: var(--text-muted); margin-top: 6px; }
+    .page-title {
+      font-family: 'Kalam', cursive; font-size: 38px; font-weight: 700; color: var(--text); line-height: 1.2;
+      position: relative; display: inline-block; padding-bottom: 6px;
+    }
+    .page-title::after {
+      content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 3px;
+      background: var(--gold); border-radius: 1px;
+    }
+    .page-sub { font-size: 13px; color: var(--text-muted); margin-top: 10px; }
 
     .header-stats { display: flex; gap: 0; flex: 1; }
     .hstat {
@@ -388,10 +395,18 @@
   </a>
   
   <nav class="topbar-nav">
-    <a class="tnav" href="index.html" id="nav-home">Home</a>
-    <a class="tnav" href="projects.html" id="nav-projects">Projects</a>
-    <a class="tnav" href="technology-map.html" id="nav-techmap">Technology Map</a>
-    <a class="tnav" href="architecture-library.html" id="nav-arch">Architecture Library</a>
+    <a class="tnav" href="projects.html" id="nav-projects">
+      <span class="tnav-icon">📁</span>
+      <span class="tnav-body"><span class="tnav-title">Projects</span><span class="tnav-desc">운영 실무를 통해 수행한 프로젝트들</span></span>
+    </a>
+    <a class="tnav" href="technology-map.html" id="nav-techmap">
+      <span class="tnav-icon">🔧</span>
+      <span class="tnav-body"><span class="tnav-title">Technology Map</span><span class="tnav-desc">Azure 기술 스택과 실무 활용</span></span>
+    </a>
+    <a class="tnav" href="architecture-library.html" id="nav-arch">
+      <span class="tnav-icon">📐</span>
+      <span class="tnav-body"><span class="tnav-title">Architecture Library</span><span class="tnav-desc">구상해본 설계 스터디 (컨셉)</span></span>
+    </a>
   </nav>
   
   <div class="topbar-right">
@@ -413,7 +428,7 @@
     <div class="page-header-row">
       <div class="page-title-wrap">
         <div class="page-title">Projects</div>
-        <div class="page-sub">운영 경험과 설계 역량을 바탕으로 수행한 프로젝트들입니다.</div>
+        <div class="page-sub">실제 수행한 프로젝트 — Problem → Solution → Outcome</div>
       </div>
       <div class="header-stats">
         <div class="hstat">
@@ -438,9 +453,9 @@
           </div>
         </div>
         <div class="hstat" style="margin-right:0;">
-          <div class="hstat-icon" style="color:#7c3aed;">💡</div>
+          <div class="hstat-icon" style="color:#7c3aed;">📤</div>
           <div>
-            <div style="font-size:11px;color:var(--text-muted);margin-bottom:2px;">Concept</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-bottom:2px;">Proposed</div>
             <div style="display:flex;align-items:baseline;gap:3px;"><span class="hstat-val" style="color:#7c3aed;">5</span><span class="hstat-unit">개</span></div>
           </div>
         </div>
@@ -471,8 +486,8 @@
           <div class="fs-item-left"><span class="fs-dot" style="background:#d97706"></span><span>In Progress</span></div>
           <span class="fs-count" id="cnt-inprogress">6</span>
         </div>
-        <div class="fs-item" onclick="filterByStatus('Concept', this)">
-          <div class="fs-item-left"><span class="fs-dot" style="background:#7c3aed"></span><span>Concept</span></div>
+        <div class="fs-item" onclick="filterByStatus('Proposed', this)">
+          <div class="fs-item-left"><span class="fs-dot" style="background:#7c3aed"></span><span>Proposed</span></div>
           <span class="fs-count" id="cnt-concept">5</span>
         </div>
       </div>
@@ -610,35 +625,32 @@ const projects = [
   {
     id: 1,
     domain: 'Architecture',
-    status: 'Concept',
+    status: 'Proposed',
     title: '기업 Azure Landing Zone 설계',
     tags: ['Azure', 'Networking', 'Governance'],
-    desc: '온프레미스 환경을 Azure Enterprise Landing Zone으로 재설계한 프로젝트입니다.',
+    desc: '온프레미스 환경을 Azure Enterprise Landing Zone으로 재설계하기 위해 제안한 아키텍처입니다.',
     date: '2026.05',
     icon: 'architecture',
-    // ↓ 모달 틀 테스트용 샘플 데이터입니다. 실제 내용으로 교체해주세요.
-    //   diagram 경로에 실제 png를 넣으면 자동으로 표시되고, 없으면 "준비 중" placeholder가 뜹니다.
-    //   아이콘은 로고 파일 준비 전까지 이니셜로 임시 표시됩니다.
     detail: {
-      diagram: null, // 예: 'assets/diagrams/1.png'
+      diagram: null,
       techStack: [
         { name: 'Azure' },
         { name: 'Terraform' },
         { name: 'Entra ID' },
         { name: 'Azure Policy' },
-        { name: 'Firewall' }
+        { name: 'Azure Firewall' }
       ],
       whatIDesigned: [
-        'Landing Zone 아키텍처 설계 (샘플)',
-        'Hub-Spoke 네트워크 설계 (샘플)',
-        'Identity 및 접근 권한 모델 설계 (샘플)',
-        'Azure Policy 기반 거버넌스 설계 (샘플)'
+        'Management Group 계층 및 구독 분리 전략 설계',
+        'Hub-Spoke 네트워크 토폴로지 및 연결 구조 설계',
+        'Azure Policy 기반 거버넌스·규정 준수 체계 설계',
+        'IaC(Terraform)로 Landing Zone을 코드화하는 배포 구조 설계'
       ],
       whyDesign: [
-        { title: '표준화 (샘플)', desc: '일관된 아키텍처와 거버넌스로 운영 표준화' },
-        { title: '보안 강화 (샘플)', desc: 'Zero Trust 기반 보안 아키텍처로 위험 최소화' }
+        { title: '표준화', desc: '여러 팀·프로젝트가 일관된 보안·비용 정책 위에서 운영되도록 기반을 통일' },
+        { title: '확장성', desc: '신규 워크로드가 거버넌스 재설계 없이 빠르게 온보딩될 수 있는 구조 확보' }
       ],
-      keywords: ['Zero Trust', 'Hub & Spoke', 'Governance']
+      keywords: ['Landing Zone', 'Governance', 'Hub-Spoke']
     }
   },
   {
@@ -649,7 +661,27 @@ const projects = [
     tags: ['Azure OpenAI', 'Copilot Studio', 'RAG'],
     desc: 'Azure OpenAI와 Copilot Studio를 활용한 사내 AI 플랫폼 구축 프로젝트입니다.',
     date: '2026.04',
-    icon: 'ai'
+    icon: 'ai',
+    detail: {
+      diagram: null,
+      techStack: [
+        { name: 'Azure OpenAI' },
+        { name: 'Copilot Studio' },
+        { name: 'RAG' },
+        { name: 'Azure AI Search' }
+      ],
+      whatIDesigned: [
+        'Azure OpenAI 기반 사내 문서 검색·질의응답 파이프라인 설계',
+        'RAG 구조로 사내 문서를 벡터 인덱싱해 환각 최소화',
+        'Copilot Studio로 부서별 업무 시나리오에 맞는 챗봇 인터페이스 구성',
+        '사용자 접근 권한에 따른 문서 노출 범위 제어'
+      ],
+      whyDesign: [
+        { title: '정확성', desc: 'RAG로 사내 문서 근거 기반 답변을 제공해 환각 리스크 최소화' },
+        { title: '접근성', desc: '비개발 부서도 챗봇 인터페이스로 쉽게 AI를 활용할 수 있도록 설계' }
+      ],
+      keywords: ['Azure OpenAI', 'RAG', 'Copilot Studio']
+    }
   },
   {
     id: 3,
@@ -659,17 +691,56 @@ const projects = [
     tags: ['Power Automate', 'Forms', 'PAD'],
     desc: 'Power Automate와 Forms, PAD를 활용하여 자산 관리 업무를 자동화한 프로젝트입니다.',
     date: '2026.03',
-    icon: 'automation'
+    icon: 'automation',
+    detail: {
+      diagram: null,
+      techStack: [
+        { name: 'Power Automate' },
+        { name: 'Microsoft Forms' },
+        { name: 'Power Automate Desktop' }
+      ],
+      whatIDesigned: [
+        'Forms로 자산 신청·반납 요청 접수 프로세스 표준화',
+        'Power Automate로 승인 라우팅 및 알림 자동화',
+        'PAD로 반복적인 자산 대장 갱신 작업 자동화',
+        '자산 현황 대시보드 연동으로 실시간 현황 파악 가능하도록 구성'
+      ],
+      whyDesign: [
+        { title: '효율성', desc: '수기로 관리하던 자산 대장을 자동화해 처리 시간 단축' },
+        { title: '정확성', desc: '승인 누락·중복 신청 등 휴먼 에러 최소화' }
+      ],
+      keywords: ['Power Automate', 'Forms', 'PAD']
+    }
   },
   {
     id: 4,
     domain: 'Identity',
-    status: 'Concept',
+    status: 'Proposed',
     title: 'Hybrid Identity 전환 설계',
     tags: ['Entra ID', 'AD', 'SSO', 'Zero Trust'],
-    desc: '온프레미스 AD 환경을 Entra ID 기반으로 전환하기 위한 설계 프로젝트입니다.',
+    desc: '온프레미스 AD 환경을 Entra ID 기반으로 전환하기 위해 제안한 설계입니다.',
     date: '2026.02',
-    icon: 'identity'
+    icon: 'identity',
+    detail: {
+      diagram: null,
+      techStack: [
+        { name: 'Entra ID' },
+        { name: 'Entra Connect' },
+        { name: 'Conditional Access' },
+        { name: 'Active Directory' }
+      ],
+      whatIDesigned: [
+        '온프레미스 AD와 Entra ID 간 동기화 범위 및 방식(Password Hash Sync) 설계',
+        'SSO 확장을 위한 인증 흐름 및 Conditional Access 정책 설계',
+        '동기화 서버 이중화를 통한 단일 장애점 제거 방안 수립',
+        '단계적 마이그레이션 로드맵(파일럿 → 전사 확대) 설계'
+      ],
+      whyDesign: [
+        { title: '연속성', desc: '기존 온프레미스 인증 체계와의 충돌 없이 점진적으로 전환' },
+        { title: '보안 강화', desc: 'Conditional Access로 위치·디바이스 기반 접근 통제 도입' }
+      ],
+      keywords: ['Hybrid Identity', 'Entra Connect', 'SSO']
+    }
   },
   {
     id: 5,
@@ -679,27 +750,85 @@ const projects = [
     tags: ['Purview', 'DLP', 'Compliance'],
     desc: 'DLP 및 Microsoft Purview 정책을 표준화하여 정보보호 체계를 강화한 프로젝트입니다.',
     date: '2026.01',
-    icon: 'security'
+    icon: 'security',
+    detail: {
+      diagram: null,
+      techStack: [
+        { name: 'Microsoft Purview' },
+        { name: 'DLP' },
+        { name: 'Compliance Manager' }
+      ],
+      whatIDesigned: [
+        '문서 민감도 라벨링 체계 및 자동 분류 규칙 설계',
+        '부서별 DLP 정책(외부 공유 차단, 다운로드 제한) 수립',
+        'Compliance Manager로 규정 준수 현황 추적 체계 구성',
+        '정책 적용 전 Simulation 모드로 영향도 사전 검증'
+      ],
+      whyDesign: [
+        { title: '리스크 최소화', desc: '기밀 문서 외부 유출 경로를 사전에 차단' },
+        { title: '업무 연속성', desc: '과도한 차단으로 인한 업무 방해를 최소화하도록 단계적 적용' }
+      ],
+      keywords: ['Purview', 'DLP', 'Data Classification']
+    }
   },
   {
     id: 6,
     domain: 'Infrastructure',
-    status: 'Concept',
+    status: 'Proposed',
     title: 'Hybrid Infrastructure 현대화 설계',
     tags: ['Azure Arc', 'Backup', 'ASR'],
-    desc: '온프레미스 인프라를 Azure 기반으로 현대화하기 위한 설계 프로젝트입니다.',
+    desc: '온프레미스 인프라를 Azure 기반으로 현대화하기 위해 제안한 설계입니다.',
     date: '2026.01',
-    icon: 'infra'
+    icon: 'infra',
+    detail: {
+      diagram: null,
+      techStack: [
+        { name: 'Azure Arc' },
+        { name: 'Azure Backup' },
+        { name: 'Azure Site Recovery' }
+      ],
+      whatIDesigned: [
+        'Azure Arc로 온프레미스 서버를 단일 관리 콘솔에 통합하는 구조 설계',
+        '백업·복구 전략을 서비스 중요도에 따라 계층화(RPO/RTO)',
+        '기존 운영 절차와의 충돌을 최소화하는 점진적 이전 전략 수립',
+        'Azure Bastion으로 공개 IP 없이 VM 원격 접근 보안 확보'
+      ],
+      whyDesign: [
+        { title: '통합 관리', desc: '온프레미스·클라우드를 하나의 콘솔에서 관리해 운영 부담 감소' },
+        { title: '복원력', desc: '서비스 중요도별 백업/DR 전략으로 장애 대응력 확보' }
+      ],
+      keywords: ['Azure Arc', 'Hybrid Infra', 'Business Continuity']
+    }
   },
   {
     id: 7,
     domain: 'Architecture',
-    status: 'Concept',
+    status: 'Proposed',
     title: 'Zero Trust 네트워크 아키텍처 설계',
     tags: ['Zero Trust', 'Azure Firewall', 'Private Endpoint'],
-    desc: '전사 네트워크를 Zero Trust 원칙에 따라 재설계한 아키텍처 프로젝트입니다.',
+    desc: '전사 네트워크를 Zero Trust 원칙에 따라 재설계하기 위해 제안한 아키텍처입니다.',
     date: '2025.12',
-    icon: 'architecture'
+    icon: 'architecture',
+    detail: {
+      diagram: null,
+      techStack: [
+        { name: 'Zero Trust' },
+        { name: 'Azure Firewall' },
+        { name: 'Private Endpoint' },
+        { name: 'Conditional Access' }
+      ],
+      whatIDesigned: [
+        '암묵적 신뢰 제거를 원칙으로 한 네트워크 세그멘테이션 설계',
+        'PaaS 서비스 전체를 Private Endpoint로 전환해 인터넷 노출 제거',
+        'Conditional Access와 네트워크 정책을 연동한 다층 방어 구조 설계',
+        '마이크로 세그멘테이션을 통한 내부 이동(lateral movement) 차단'
+      ],
+      whyDesign: [
+        { title: '공격 표면 최소화', desc: '인터넷 노출 지점을 제거해 침해 가능성을 원천 차단' },
+        { title: '다층 방어', desc: '네트워크·ID·디바이스를 결합한 종합적 접근 통제' }
+      ],
+      keywords: ['Zero Trust', 'Private Endpoint', 'Network Segmentation']
+    }
   },
   {
     id: 8,
@@ -709,7 +838,25 @@ const projects = [
     tags: ['Power Automate Desktop', 'PAD', 'Unattended'],
     desc: 'Power Automate Desktop을 활용한 인쇄 환경 자동화 구축 프로젝트입니다.',
     date: '2025.11',
-    icon: 'automation'
+    icon: 'automation',
+    detail: {
+      diagram: null,
+      techStack: [
+        { name: 'Power Automate Desktop' },
+        { name: 'Unattended RPA' }
+      ],
+      whatIDesigned: [
+        '반복적인 프린터 드라이버·설정 배포 작업을 PAD로 자동화',
+        'Unattended 모드로 야간 배치 실행 스케줄 구성',
+        '오류 발생 시 자동 재시도 및 알림 로직 설계',
+        '신규 PC 배포 시 표준 인쇄 환경 자동 적용 프로세스 구성'
+      ],
+      whyDesign: [
+        { title: '표준화', desc: '수작업 설정 편차를 없애고 전사 동일한 인쇄 환경 확보' },
+        { title: '운영 부담 감소', desc: '반복 업무를 자동화해 IT 인력의 단순 작업 최소화' }
+      ],
+      keywords: ['PAD', 'RPA', 'Unattended Automation']
+    }
   },
   {
     id: 9,
@@ -719,7 +866,26 @@ const projects = [
     tags: ['Palo Alto', 'NAC', 'Firewall'],
     desc: 'Palo Alto 방화벽 정책을 체계적으로 관리하기 위한 운영 체계 구축 프로젝트입니다.',
     date: '2025.11',
-    icon: 'security'
+    icon: 'security',
+    detail: {
+      diagram: null,
+      techStack: [
+        { name: 'Palo Alto' },
+        { name: 'NAC' },
+        { name: 'Firewall' }
+      ],
+      whatIDesigned: [
+        '방화벽 정책을 업무 목적별로 분류하고 명명 규칙 표준화',
+        'NAC 연동으로 미등록 디바이스의 네트워크 접근 차단',
+        '정책 변경 시 승인 절차와 변경 이력 관리 체계 수립',
+        '불필요한 Any-Any 정책을 세분화하여 최소 권한 원칙 적용'
+      ],
+      whyDesign: [
+        { title: '가시성 확보', desc: '방화벽 정책 현황을 체계적으로 파악 가능하도록 표준화' },
+        { title: '최소 권한', desc: '과도하게 허용된 정책을 점진적으로 축소해 공격 표면 감소' }
+      ],
+      keywords: ['Palo Alto', 'NAC', 'Least Privilege']
+    }
   },
   {
     id: 10,
@@ -729,7 +895,26 @@ const projects = [
     tags: ['Copilot Studio', 'M365', 'Power Platform'],
     desc: 'Copilot Studio를 활용한 사내 업무 지원 챗봇 개발 프로젝트입니다.',
     date: '2025.10',
-    icon: 'ai'
+    icon: 'ai',
+    detail: {
+      diagram: null,
+      techStack: [
+        { name: 'Copilot Studio' },
+        { name: 'M365' },
+        { name: 'Power Platform' }
+      ],
+      whatIDesigned: [
+        '자주 묻는 사내 IT/총무 문의를 처리하는 챗봇 대화 흐름 설계',
+        'Power Automate 연동으로 챗봇이 실제 티켓을 자동 생성하도록 구성',
+        'Teams 채널에 챗봇을 배포해 접근성 확보',
+        '응답 정확도 개선을 위한 지식 소스(SharePoint 문서) 연동'
+      ],
+      whyDesign: [
+        { title: '응답 속도', desc: '반복 문의에 대한 즉각적인 자동 응답으로 대기 시간 감소' },
+        { title: '업무 경감', desc: '단순 문의를 챗봇이 처리해 담당자의 반복 업무 부담 완화' }
+      ],
+      keywords: ['Copilot Studio', 'Power Platform', 'Chatbot']
+    }
   },
   {
     id: 11,
@@ -739,7 +924,26 @@ const projects = [
     tags: ['AD', 'GPO', 'RBAC'],
     desc: '기존 Active Directory 계정 관리 프로세스를 체계화하고 자동화한 프로젝트입니다.',
     date: '2025.09',
-    icon: 'identity'
+    icon: 'identity',
+    detail: {
+      diagram: null,
+      techStack: [
+        { name: 'Active Directory' },
+        { name: 'GPO' },
+        { name: 'RBAC' }
+      ],
+      whatIDesigned: [
+        '계정 생성·변경·비활성화 프로세스를 표준 워크플로우로 정립',
+        'GPO 기반 그룹별 보안 정책(암호 정책, 잠금 정책) 표준화',
+        'RBAC 모델로 부서별 최소 권한 접근 체계 설계',
+        '휴면 계정 정기 점검 및 자동 비활성화 프로세스 구성'
+      ],
+      whyDesign: [
+        { title: '일관성', desc: '담당자별로 상이했던 계정 관리 방식을 표준 절차로 통일' },
+        { title: '보안 강화', desc: '최소 권한 원칙 적용으로 과도한 권한 부여 리스크 감소' }
+      ],
+      keywords: ['Active Directory', 'RBAC', 'Access Governance']
+    }
   },
   {
     id: 12,
@@ -749,7 +953,26 @@ const projects = [
     tags: ['MSSQL', 'SSMS', 'Linked Server'],
     desc: 'MSSQL 서버 성능 튜닝과 보안 강화를 수행한 인프라 프로젝트입니다.',
     date: '2025.08',
-    icon: 'infra'
+    icon: 'infra',
+    detail: {
+      diagram: null,
+      techStack: [
+        { name: 'MSSQL' },
+        { name: 'SSMS' },
+        { name: 'Linked Server' }
+      ],
+      whatIDesigned: [
+        '쿼리 실행 계획 분석을 통한 인덱스 최적화',
+        'Linked Server 연결 구조 점검 및 불필요 연결 정리',
+        '접근 계정 권한을 최소 권한 원칙에 따라 재정비',
+        '정기 백업·유지보수 작업(인덱스 재구성) 스케줄 자동화'
+      ],
+      whyDesign: [
+        { title: '성능 개선', desc: '병목 쿼리를 개선해 응답 속도 단축' },
+        { title: '보안 강화', desc: '과도한 권한을 가진 연결 계정을 정리해 위험 최소화' }
+      ],
+      keywords: ['MSSQL', 'Performance Tuning', 'Database Security']
+    }
   },
   {
     id: 13,
@@ -759,17 +982,55 @@ const projects = [
     tags: ['Copilot', 'M365', 'SharePoint'],
     desc: 'Microsoft 365 Copilot을 사내에 도입하고 전사 교육을 진행한 프로젝트입니다.',
     date: '2025.08',
-    icon: 'workplace'
+    icon: 'workplace',
+    detail: {
+      diagram: null,
+      techStack: [
+        { name: 'Copilot' },
+        { name: 'M365' },
+        { name: 'SharePoint' }
+      ],
+      whatIDesigned: [
+        '도입 전 Purview 데이터 분류 및 과도 공유 파일 정리 선행 작업 설계',
+        '부서별 Copilot 활용 시나리오(회의 요약, 문서 초안) 정의',
+        '사내 교육 커리큘럼 및 실습 자료 구성',
+        '도입 효과 측정을 위한 사용 현황 모니터링 체계 수립'
+      ],
+      whyDesign: [
+        { title: '안전한 도입', desc: '거버넌스 선행 조치로 민감 데이터 노출 리스크 방지' },
+        { title: '실질적 활용', desc: '실습 중심 교육으로 실제 업무 적용률 제고' }
+      ],
+      keywords: ['Copilot', 'Change Management', 'M365']
+    }
   },
   {
     id: 14,
     domain: 'Architecture',
-    status: 'Concept',
+    status: 'Proposed',
     title: 'Hub-Spoke 네트워크 설계',
     tags: ['Azure', 'Hub & Spoke', 'VPN Gateway'],
-    desc: 'Azure 기반 Hub-Spoke 네트워크 토폴로지 설계 프로젝트입니다.',
+    desc: 'Azure 기반 Hub-Spoke 네트워크 토폴로지를 제안한 설계입니다.',
     date: '2025.07',
-    icon: 'architecture'
+    icon: 'architecture',
+    detail: {
+      diagram: null,
+      techStack: [
+        { name: 'Azure' },
+        { name: 'Hub & Spoke' },
+        { name: 'VPN Gateway' }
+      ],
+      whatIDesigned: [
+        '중앙 Hub VNet에 공용 서비스(방화벽, VPN Gateway) 배치 설계',
+        'Spoke VNet별 워크로드 분리 및 Peering 구조 설계',
+        '온프레미스 연결을 위한 VPN Gateway 이중화 구성',
+        '트래픽 흐름에 따른 라우팅 테이블 및 NSG 규칙 설계'
+      ],
+      whyDesign: [
+        { title: '중앙 관리', desc: '보안·연결 지점을 Hub에 집중해 일관된 정책 적용' },
+        { title: '확장성', desc: '신규 워크로드를 Spoke 추가만으로 손쉽게 확장 가능' }
+      ],
+      keywords: ['Hub-Spoke', 'VNet Peering', 'Network Architecture']
+    }
   },
   {
     id: 15,
@@ -779,7 +1040,26 @@ const projects = [
     tags: ['Forms', 'Power Automate', 'SharePoint'],
     desc: 'Microsoft Forms와 Power Automate를 연계한 업무 프로세스 자동화 프로젝트입니다.',
     date: '2025.07',
-    icon: 'automation'
+    icon: 'automation',
+    detail: {
+      diagram: null,
+      techStack: [
+        { name: 'Microsoft Forms' },
+        { name: 'Power Automate' },
+        { name: 'SharePoint' }
+      ],
+      whatIDesigned: [
+        '부서별 신청서를 Forms로 표준화하여 데이터 수집 방식 통일',
+        'Power Automate로 승인자 라우팅 및 알림 자동화',
+        '승인 완료 데이터를 SharePoint 리스트에 자동 적재',
+        '처리 현황을 대시보드로 시각화해 진행 상태 추적 가능하도록 구성'
+      ],
+      whyDesign: [
+        { title: '처리 속도', desc: '수작업 결재 대비 승인 소요 시간 단축' },
+        { title: '투명성', desc: '신청부터 승인까지 전 과정을 추적 가능하도록 가시화' }
+      ],
+      keywords: ['Power Automate', 'Forms', 'Process Automation']
+    }
   },
   {
     id: 16,
@@ -789,7 +1069,26 @@ const projects = [
     tags: ['Sentinel', 'KQL', 'Defender'],
     desc: 'Microsoft Sentinel 기반 보안 모니터링 및 대응 체계 구축 프로젝트입니다.',
     date: '2025.06',
-    icon: 'security'
+    icon: 'security',
+    detail: {
+      diagram: null,
+      techStack: [
+        { name: 'Microsoft Sentinel' },
+        { name: 'KQL' },
+        { name: 'Defender' }
+      ],
+      whatIDesigned: [
+        '주요 로그 소스(Entra ID, Defender, 방화벽)를 Sentinel에 통합 연동',
+        'KQL 기반 위협 탐지 규칙 및 알림 조건 설계',
+        'Sentinel Playbook으로 초기 대응(계정 잠금 등) 자동화',
+        '정기 보안 리포트 자동 생성 및 배포 체계 구성'
+      ],
+      whyDesign: [
+        { title: '탐지 속도', desc: '통합 모니터링으로 위협 인지까지의 시간 단축' },
+        { title: '대응 자동화', desc: 'Playbook으로 초기 대응 시간을 최소화해 피해 확산 방지' }
+      ],
+      keywords: ['Microsoft Sentinel', 'KQL', 'SOC']
+    }
   },
   {
     id: 17,
@@ -799,7 +1098,26 @@ const projects = [
     tags: ['SharePoint', 'Teams', 'M365'],
     desc: '전사 인트라넷 플랫폼을 SharePoint Online 기반으로 구축한 프로젝트입니다.',
     date: '2025.05',
-    icon: 'workplace'
+    icon: 'workplace',
+    detail: {
+      diagram: null,
+      techStack: [
+        { name: 'SharePoint' },
+        { name: 'Teams' },
+        { name: 'M365' }
+      ],
+      whatIDesigned: [
+        '부서별 정보 구조(IA)와 권한 체계를 반영한 사이트 설계',
+        '공지사항·문서함·조직도를 통합한 허브 사이트 구성',
+        'Teams와 연동해 협업 워크스페이스 접근성 확보',
+        '검색 최적화를 위한 메타데이터 및 콘텐츠 유형 설계'
+      ],
+      whyDesign: [
+        { title: '접근성', desc: '분산돼 있던 사내 정보를 단일 진입점으로 통합' },
+        { title: '협업 강화', desc: 'Teams 연동으로 문서 작업과 커뮤니케이션을 자연스럽게 연결' }
+      ],
+      keywords: ['SharePoint Online', 'Intranet', 'M365']
+    }
   },
   {
     id: 18,
@@ -809,8 +1127,28 @@ const projects = [
     tags: ['Purview', 'Data Catalog', 'Azure SQL'],
     desc: '전사 데이터 자산을 분류하고 거버넌스 체계를 수립하는 설계 프로젝트입니다.',
     date: '2025.04',
-    icon: 'data'
+    icon: 'data',
+    detail: {
+      diagram: null,
+      techStack: [
+        { name: 'Microsoft Purview' },
+        { name: 'Data Catalog' },
+        { name: 'Azure SQL' }
+      ],
+      whatIDesigned: [
+        '전사 데이터 자산을 도메인별로 분류하는 데이터 카탈로그 설계',
+        '민감도 기반 데이터 분류 체계 및 라벨링 규칙 수립',
+        '데이터 소유자(Owner)·관리자(Steward) 역할 및 책임 정의',
+        'Azure SQL 데이터베이스의 계보(Lineage) 추적 체계 설계'
+      ],
+      whyDesign: [
+        { title: '가시성', desc: '흩어져 있던 데이터 자산의 소재와 흐름을 명확히 파악' },
+        { title: '책임성', desc: '데이터별 소유자를 지정해 품질·보안 관리 책임을 명확화' }
+      ],
+      keywords: ['Data Governance', 'Purview', 'Data Catalog']
+    }
   }
+
 ];
 
 /* ══ SVG Icons per type ══ */
@@ -914,7 +1252,10 @@ function getFiltered() {
 }
 
 function statusClass(s) {
-  return { 'Completed':'st-completed', 'In Progress':'st-inprogress', 'Concept':'st-concept' }[s] || '';
+  return { 'Completed':'st-completed', 'In Progress':'st-inprogress', 'Proposed':'st-concept' }[s] || '';
+}
+function statusLabel(s) {
+  return { 'Completed':'완료', 'In Progress':'진행중', 'Proposed':'제안' }[s] || s;
 }
 function domainClass(d) {
   return 'dom-' + d.toLowerCase().replace(/\s+/g,'-');
@@ -930,7 +1271,7 @@ function renderGrid(list) {
       <div class="card-visual">
         <div class="card-badges">
           <span class="card-domain ${domainClass(p.domain)}">${p.domain}</span>
-          <span class="card-status ${statusClass(p.status)}">${p.status}</span>
+          <span class="card-status ${statusClass(p.status)}">${statusLabel(p.status)}</span>
         </div>
         ${icons[p.icon] || icons.architecture}
       </div>
@@ -1031,21 +1372,20 @@ function setView(v) {
 }
 
 /* ══ Project Detail Modal ══ */
-// detail이 없는 프로젝트는 기존 tags를 재사용해 임시 콘텐츠를 생성합니다.
-// whatIDesigned/whyDesign은 실제 내용이 없어 (샘플)로 표시되며, 이후 실제 내용으로 교체가 필요합니다.
+// detail이 없는 프로젝트는 기존 tags를 재사용해 기본 콘텐츠를 생성합니다.
 function getProjectDetail(p) {
   if (p.detail) return p.detail;
   return {
     diagram: null,
     techStack: p.tags.map(t => ({ name: t })),
     whatIDesigned: [
-      `${p.title} 아키텍처 설계 (샘플)`,
-      `${p.domain} 영역 표준화 (샘플)`,
-      `운영 자동화 및 모니터링 체계 구성 (샘플)`
+      `${p.title} 설계 및 구현`,
+      `${p.domain} 영역 표준화`,
+      `운영 자동화 및 모니터링 체계 구성`
     ],
     whyDesign: [
-      { title: '표준화 (샘플)', desc: '일관된 구조로 운영 효율성과 유지보수성을 확보' },
-      { title: '확장성 (샘플)', desc: '향후 요구사항 변화에 유연하게 대응 가능한 설계' }
+      { title: '표준화', desc: '일관된 구조로 운영 효율성과 유지보수성을 확보' },
+      { title: '확장성', desc: '향후 요구사항 변화에 유연하게 대응 가능한 설계' }
     ],
     keywords: p.tags
   };

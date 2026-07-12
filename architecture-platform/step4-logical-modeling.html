@@ -266,20 +266,11 @@
       </div>
     </div>
 
-    <!-- ─── NAV DOTS ─── -->
-    <div class="nav-dots">
-      <div class="nav-dot" data-step="1" onclick="navigateToStep(1)">1</div>
-      <div class="nav-dot" data-step="2" onclick="navigateToStep(2)">2</div>
-      <div class="nav-dot" data-step="3" onclick="navigateToStep(3)">3</div>
-      <div class="nav-dot" data-step="4" onclick="navigateToStep(4)">4</div>
-      <div class="nav-dot" data-step="5" onclick="navigateToStep(5)">5</div>
-      <div class="nav-dot" data-step="6" onclick="navigateToStep(6)">6</div>
-    </div>
-
     <!-- ─── TITLE ─── -->
     <div class="title-block">
       <p class="eyebrow">Step 4 / 6</p>
-      <h1 class="main-title">논리 모델<br>&amp; 정규화</h1>
+        <span class="title-wm">04</span>
+      <h1 class="main-title">논리 모델<br><span class="main-title-ln2">&amp; 정규화</span></h1>
       <p class="subtitle-text">CRUD 정합성이 검증된 12개 엔터티를 정교한 관계 모델로 표현하고, 정규화를 통해 데이터 무결성의 수학적 기반을 확보한다.</p>
     </div>
 
@@ -741,31 +732,38 @@ SETTLEMENT -- 정산 (결제 완료)
             <span class="norm-chevron">▼</span>
           </div>
           <div class="norm-body">
-            <div class="norm-problem">❌ 문제: 관심종목 속성에 여러 값이 쉼표로 구분되어 저장됨 → 원자값 위반, 특정 종목 조회/삽입/삭제가 극히 어려움</div>
+            <div class="norm-problem">❌ 문제: POSITION 테이블에 해당 포지션을 구성한 체결 번호들을 파이프(|)로 이어 한 칼럼에 저장 → 특정 체결의 기여분 조회·삭제가 불가능하고 SQL 집계 연산 불가</div>
             <div class="ba-grid">
               <div class="ba-box ba-bad">
                 <div class="ba-head">❌ Before — 1NF 위반</div>
                 <table class="ba-table">
-                  <thead><tr><th>고객ID</th><th>관심종목 (반복값)</th></tr></thead>
+                  <thead><tr><th>ACCOUNT_ID</th><th>ASSET_ID</th><th>SOURCE_EXECS (반복)</th><th>QTY</th></tr></thead>
                   <tbody>
-                    <tr><td>1001</td><td>삼성, LG, SK</td></tr>
-                    <tr><td>1002</td><td>현대, 기아</td></tr>
+                    <tr><td>A001</td><td>005930</td><td>E001|E002|E003</td><td>300</td></tr>
+                    <tr><td>A002</td><td>066570</td><td>E004|E005</td><td>200</td></tr>
                   </tbody>
                 </table>
               </div>
               <div class="ba-box ba-good">
                 <div class="ba-head">✅ After — 1NF 준수</div>
                 <table class="ba-table">
-                  <thead><tr><th>고객ID</th><th>종목코드</th></tr></thead>
+                  <thead><tr><th>ACCOUNT_ID</th><th>ASSET_ID</th><th>QTY</th></tr></thead>
                   <tbody>
-                    <tr><td>1001</td><td>005930 (삼성전자)</td></tr>
-                    <tr><td>1001</td><td>066570 (LG전자)</td></tr>
-                    <tr><td>1002</td><td>005380 (현대차)</td></tr>
+                    <tr><td>A001</td><td>005930</td><td>300</td></tr>
+                    <tr><td>A002</td><td>066570</td><td>200</td></tr>
+                  </tbody>
+                </table>
+                <table class="ba-table second">
+                  <thead><tr><th>ACCOUNT_ID</th><th>ASSET_ID</th><th>EXEC_ID</th></tr></thead>
+                  <tbody>
+                    <tr><td>A001</td><td>005930</td><td>E001</td></tr>
+                    <tr><td>A001</td><td>005930</td><td>E002</td></tr>
+                    <tr><td>A001</td><td>005930</td><td>E003</td></tr>
                   </tbody>
                 </table>
               </div>
             </div>
-            <div class="norm-fix">✅ 해결: 반복 속성을 별도 엔터티로 분리 → 종목 수 제한 없음, 특정 종목 삽입·삭제 자유로워짐</div>
+            <div class="norm-fix">✅ 해결: POSITION_EXECUTION 브릿지 테이블로 분리 → 특정 체결의 포지션 기여분 조회·취소 가능, 체결 건수 제한 없음</div>
           </div>
         </div>
         <!-- 2NF -->
@@ -775,31 +773,31 @@ SETTLEMENT -- 정산 (결제 완료)
             <span class="norm-chevron">▼</span>
           </div>
           <div class="norm-body">
-            <div class="norm-problem">❌ 문제: 복합 PK (계좌ID + 자산코드) 중 자산코드에만 종속된 '자산명'이 반복 저장 → 삼성전자 이름 변경 시 수백만 행 수정</div>
+            <div class="norm-problem">❌ 문제: PRICE_HISTORY의 복합 PK (ASSET_ID, PRICE_DATE)에서 ASSET_NAME이 ASSET_ID에만 종속 → 삼성전자 이름 변경 시 수백만 가격 이력 행을 모두 수정해야 함</div>
             <div class="ba-grid">
               <div class="ba-box ba-bad">
                 <div class="ba-head">❌ Before — 2NF 위반</div>
                 <table class="ba-table">
-                  <thead><tr><th>계좌ID</th><th>자산코드</th><th>자산명</th><th>수량</th></tr></thead>
+                  <thead><tr><th>ASSET_ID</th><th>PRICE_DATE</th><th>ASSET_NAME</th><th>CLOSE_PRICE</th></tr></thead>
                   <tbody>
-                    <tr><td>A001</td><td>005930</td><td>삼성전자</td><td>100</td></tr>
-                    <tr><td>A001</td><td>066570</td><td>LG전자</td><td>50</td></tr>
-                    <tr><td>A002</td><td>005930</td><td style="color:var(--maroon);font-weight:700;">삼성전자 ← 중복</td><td>200</td></tr>
+                    <tr><td>005930</td><td>2024-01-01</td><td>삼성전자</td><td>72,000</td></tr>
+                    <tr><td>005930</td><td>2024-01-02</td><td style="color:var(--maroon);font-weight:700;">삼성전자 ← 중복</td><td>73,400</td></tr>
+                    <tr><td>066570</td><td>2024-01-01</td><td>LG전자</td><td>91,000</td></tr>
                   </tbody>
                 </table>
               </div>
               <div class="ba-box ba-good">
                 <div class="ba-head">✅ After — 2NF 준수</div>
                 <table class="ba-table">
-                  <thead><tr><th>계좌ID</th><th>자산코드</th><th>수량</th></tr></thead>
+                  <thead><tr><th>ASSET_ID</th><th>PRICE_DATE</th><th>CLOSE_PRICE</th></tr></thead>
                   <tbody>
-                    <tr><td>A001</td><td>005930</td><td>100</td></tr>
-                    <tr><td>A001</td><td>066570</td><td>50</td></tr>
-                    <tr><td>A002</td><td>005930</td><td>200</td></tr>
+                    <tr><td>005930</td><td>2024-01-01</td><td>72,000</td></tr>
+                    <tr><td>005930</td><td>2024-01-02</td><td>73,400</td></tr>
+                    <tr><td>066570</td><td>2024-01-01</td><td>91,000</td></tr>
                   </tbody>
                 </table>
                 <table class="ba-table second">
-                  <thead><tr><th>자산코드</th><th>자산명</th></tr></thead>
+                  <thead><tr><th>ASSET_ID</th><th>ASSET_NAME</th></tr></thead>
                   <tbody>
                     <tr><td>005930</td><td>삼성전자</td></tr>
                     <tr><td>066570</td><td>LG전자</td></tr>
@@ -807,7 +805,7 @@ SETTLEMENT -- 정산 (결제 완료)
                 </table>
               </div>
             </div>
-            <div class="norm-fix">✅ 해결: 자산 정보 분리 → ASSET 테이블 1행만 수정. 수정 이상 방지. 참조 무결성으로 자동 보장.</div>
+            <div class="norm-fix">✅ 해결: ASSET_NAME을 ASSET_MST로 분리 → 자산명 변경 시 ASSET_MST 1행만 수정. PRICE_HISTORY 수백만 행은 무변경.</div>
           </div>
         </div>
         <!-- 3NF -->
@@ -817,39 +815,39 @@ SETTLEMENT -- 정산 (결제 완료)
             <span class="norm-chevron">▼</span>
           </div>
           <div class="norm-body">
-            <div class="norm-problem">❌ 문제: 계좌 → 지점코드 → 지점명/주소. PK가 아닌 '지점코드'가 '지점명'을 결정하는 이행 종속 → 지점명 변경 시 모든 계좌 레코드 수정</div>
+            <div class="norm-problem">❌ 문제: ORDER_MST에 시장/거래소 정보를 직접 저장 → ORDER_ID(PK)가 아닌 MARKET_CODE가 MARKET_NAME을 결정하는 이행 종속 → KRX 명칭 변경 시 모든 주문 레코드 수정</div>
             <div class="ba-grid">
               <div class="ba-box ba-bad">
                 <div class="ba-head">❌ Before — 3NF 위반</div>
                 <table class="ba-table">
-                  <thead><tr><th>계좌ID</th><th>지점코드</th><th>지점명</th><th>지점주소</th></tr></thead>
+                  <thead><tr><th>ORDER_ID</th><th>ASSET_ID</th><th>MARKET_CODE</th><th>MARKET_NAME</th></tr></thead>
                   <tbody>
-                    <tr><td>A001</td><td>01</td><td>강남</td><td>강남구...</td></tr>
-                    <tr><td>A002</td><td>01</td><td style="color:var(--maroon);font-weight:700;">강남 ← 중복</td><td style="color:var(--maroon);">강남구...</td></tr>
-                    <tr><td>A003</td><td>02</td><td>여의도</td><td>영등포구...</td></tr>
+                    <tr><td>O001</td><td>005930</td><td>KRX</td><td>한국거래소</td></tr>
+                    <tr><td>O002</td><td>066570</td><td>KRX</td><td style="color:var(--maroon);font-weight:700;">한국거래소 ← 중복</td></tr>
+                    <tr><td>O003</td><td>US0378</td><td>NASDAQ</td><td>나스닥</td></tr>
                   </tbody>
                 </table>
               </div>
               <div class="ba-box ba-good">
                 <div class="ba-head">✅ After — 3NF 준수</div>
                 <table class="ba-table">
-                  <thead><tr><th>계좌ID</th><th>지점코드</th></tr></thead>
+                  <thead><tr><th>ORDER_ID</th><th>ASSET_ID</th><th>MARKET_CODE</th></tr></thead>
                   <tbody>
-                    <tr><td>A001</td><td>01</td></tr>
-                    <tr><td>A002</td><td>01</td></tr>
-                    <tr><td>A003</td><td>02</td></tr>
+                    <tr><td>O001</td><td>005930</td><td>KRX</td></tr>
+                    <tr><td>O002</td><td>066570</td><td>KRX</td></tr>
+                    <tr><td>O003</td><td>US0378</td><td>NASDAQ</td></tr>
                   </tbody>
                 </table>
                 <table class="ba-table second">
-                  <thead><tr><th>지점코드</th><th>지점명</th><th>지점주소</th></tr></thead>
+                  <thead><tr><th>MARKET_CODE</th><th>MARKET_NAME</th></tr></thead>
                   <tbody>
-                    <tr><td>01</td><td>강남</td><td>강남구...</td></tr>
-                    <tr><td>02</td><td>여의도</td><td>영등포구...</td></tr>
+                    <tr><td>KRX</td><td>한국거래소</td></tr>
+                    <tr><td>NASDAQ</td><td>나스닥</td></tr>
                   </tbody>
                 </table>
               </div>
             </div>
-            <div class="norm-fix">✅ 해결: 지점 정보 분리 → 지점명 변경 시 지점 테이블 1행만 수정. 계좌 테이블 무변경.</div>
+            <div class="norm-fix">✅ 해결: MARKET_MST 분리 → 거래소 명칭 변경 시 MARKET_MST 1행만 수정. ORDER_MST는 무변경. 신규 해외 거래소 추가도 MARKET_MST에만 반영.</div>
           </div>
         </div>
       </div>
