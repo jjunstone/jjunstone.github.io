@@ -386,6 +386,30 @@
     }
     .pm-check-list li::before { content: '✓'; position: absolute; left: 0; color: #16a34a; font-weight: 700; }
 
+    .pm-problem-text {
+      font-size: 13px; color: var(--text-muted); line-height: 1.7;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px;
+    }
+
+    .pm-challenge-list { display: flex; flex-direction: column; gap: 10px; }
+    .pm-challenge-item { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+    .pm-challenge-issue {
+      font-size: 12px; color: var(--text-muted); line-height: 1.55; display: flex; gap: 6px; margin-bottom: 6px;
+    }
+    .pm-challenge-issue::before { content: '⚠'; flex-shrink: 0; opacity: .7; }
+    .pm-challenge-resolution {
+      font-size: 12.5px; color: var(--text); line-height: 1.55; display: flex; gap: 6px; font-weight: 500;
+    }
+    .pm-challenge-resolution::before { content: '→'; flex-shrink: 0; color: var(--accent); font-weight: 700; }
+
+    .pm-outcome-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+    .pm-outcome-card {
+      background: var(--accent-light); border: 1px solid rgba(59,130,246,.2); border-radius: 10px;
+      padding: 14px 12px; text-align: center;
+    }
+    .pm-outcome-value { font-size: 17px; font-weight: 800; color: var(--accent); line-height: 1.25; margin-bottom: 4px; word-break: keep-all; }
+    .pm-outcome-label { font-size: 11px; color: var(--text-muted); line-height: 1.4; word-break: keep-all; }
+
     .pm-why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
     .pm-why-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
     .pm-why-title { font-size: 12.5px; font-weight: 700; color: var(--text); margin-bottom: 5px; }
@@ -451,21 +475,21 @@
           <div class="hstat-icon">📁</div>
           <div>
             <div style="font-size:11px;color:var(--text-muted);margin-bottom:2px;">전체 프로젝트</div>
-            <div style="display:flex;align-items:baseline;gap:3px;"><span class="hstat-val">18</span><span class="hstat-unit">개</span></div>
+            <div style="display:flex;align-items:baseline;gap:3px;"><span class="hstat-val">19</span><span class="hstat-unit">개</span></div>
           </div>
         </div>
         <div class="hstat">
           <div class="hstat-icon" style="color:#16a34a;">✅</div>
           <div>
             <div style="font-size:11px;color:var(--text-muted);margin-bottom:2px;">Completed</div>
-            <div style="display:flex;align-items:baseline;gap:3px;"><span class="hstat-val" style="color:#16a34a;">7</span><span class="hstat-unit">개</span></div>
+            <div style="display:flex;align-items:baseline;gap:3px;"><span class="hstat-val" style="color:#16a34a;">9</span><span class="hstat-unit">개</span></div>
           </div>
         </div>
         <div class="hstat">
           <div class="hstat-icon" style="color:#d97706;">🕐</div>
           <div>
             <div style="font-size:11px;color:var(--text-muted);margin-bottom:2px;">In Progress</div>
-            <div style="display:flex;align-items:baseline;gap:3px;"><span class="hstat-val" style="color:#d97706;">6</span><span class="hstat-unit">개</span></div>
+            <div style="display:flex;align-items:baseline;gap:3px;"><span class="hstat-val" style="color:#d97706;">5</span><span class="hstat-unit">개</span></div>
           </div>
         </div>
         <div class="hstat" style="margin-right:0;">
@@ -492,15 +516,15 @@
         <div class="fs-title">상태</div>
         <div class="fs-item active" onclick="filterByStatus('all', this)">
           <div class="fs-item-left"><span>All</span></div>
-          <span class="fs-count" id="cnt-all">18</span>
+          <span class="fs-count" id="cnt-all">19</span>
         </div>
         <div class="fs-item" onclick="filterByStatus('Completed', this)">
           <div class="fs-item-left"><span class="fs-dot" style="background:#16a34a"></span><span>Completed</span></div>
-          <span class="fs-count" id="cnt-completed">7</span>
+          <span class="fs-count" id="cnt-completed">9</span>
         </div>
         <div class="fs-item" onclick="filterByStatus('In Progress', this)">
           <div class="fs-item-left"><span class="fs-dot" style="background:#d97706"></span><span>In Progress</span></div>
-          <span class="fs-count" id="cnt-inprogress">6</span>
+          <span class="fs-count" id="cnt-inprogress">5</span>
         </div>
         <div class="fs-item" onclick="filterByStatus('Proposed', this)">
           <div class="fs-item-left"><span class="fs-dot" style="background:#7c3aed"></span><span>Proposed</span></div>
@@ -512,23 +536,23 @@
         <div class="fs-title">분야</div>
         <div class="fs-item" onclick="filterByDomain('all', this)">
           <div class="fs-item-left"><span class="fs-icon">⊞</span><span>All</span></div>
-          <span class="fs-count">18</span>
+          <span class="fs-count">19</span>
         </div>
         <div class="fs-item" onclick="filterByDomain('Architecture', this)">
           <div class="fs-item-left"><span class="fs-icon">⊞</span><span>Architecture</span></div>
-          <span class="fs-count">6</span>
+          <span class="fs-count">3</span>
         </div>
         <div class="fs-item" onclick="filterByDomain('Automation', this)">
           <div class="fs-item-left"><span class="fs-icon">⚙</span><span>Automation</span></div>
-          <span class="fs-count">4</span>
+          <span class="fs-count">3</span>
         </div>
         <div class="fs-item" onclick="filterByDomain('AI', this)">
           <div class="fs-item-left"><span class="fs-icon">🌐</span><span>AI</span></div>
-          <span class="fs-count">3</span>
+          <span class="fs-count">2</span>
         </div>
         <div class="fs-item" onclick="filterByDomain('Identity', this)">
           <div class="fs-item-left"><span class="fs-icon">👤</span><span>Identity</span></div>
-          <span class="fs-count">3</span>
+          <span class="fs-count">2</span>
         </div>
         <div class="fs-item" onclick="filterByDomain('Security', this)">
           <div class="fs-item-left"><span class="fs-icon">🛡</span><span>Security</span></div>
@@ -602,6 +626,11 @@
     <div class="pm-title" id="pmTitle"></div>
     <div class="pm-desc" id="pmDesc"></div>
 
+    <div class="pm-section" id="pmProblemSection">
+      <div class="pm-section-title">🎯 Problem</div>
+      <div class="pm-problem-text" id="pmProblemText"></div>
+    </div>
+
     <div class="pm-section" id="pmDiagramSection">
       <div class="pm-section-title">🗺️ Architecture Diagram</div>
       <div class="pm-diagram-wrap">
@@ -622,6 +651,16 @@
     <div class="pm-section" id="pmDesignedSection">
       <div class="pm-section-title">✅ What I Designed</div>
       <ul class="pm-check-list" id="pmDesignedList"></ul>
+    </div>
+
+    <div class="pm-section" id="pmChallengeSection">
+      <div class="pm-section-title">🧗 Challenge &amp; Solution</div>
+      <div class="pm-challenge-list" id="pmChallengeList"></div>
+    </div>
+
+    <div class="pm-section" id="pmOutcomeSection">
+      <div class="pm-section-title">📈 Outcome</div>
+      <div class="pm-outcome-grid" id="pmOutcomeGrid"></div>
     </div>
 
     <div class="pm-section" id="pmWhySection">
@@ -668,6 +707,7 @@ const projects = [
         'Azure Policy 기반 거버넌스·규정 준수 체계 설계',
         'IaC(Terraform)로 Landing Zone을 코드화하는 배포 구조 설계'
       ],
+      problem: '여러 팀·프로젝트가 개별적으로 Azure를 사용하면 구독 구조, 네트워크, 보안 정책이 제각각으로 운영되어 거버넌스 공백과 관리 비용 증가로 이어질 수 있습니다. 이런 문제를 사전에 방지할 수 있는 표준 Landing Zone 구조를 제안했습니다.',
       whyDesign: [
         { title: '표준화', desc: '여러 팀·프로젝트가 일관된 보안·비용 정책 위에서 운영되도록 기반을 통일' },
         { title: '확장성', desc: '신규 워크로드가 거버넌스 재설계 없이 빠르게 온보딩될 수 있는 구조 확보' }
@@ -678,7 +718,7 @@ const projects = [
   {
     id: 2,
     domain: 'AI',
-    status: 'In Progress',
+    status: 'Completed',
     title: '사내 AI 업무지원 플랫폼 구축',
     tags: ['Azure OpenAI', 'Copilot Studio', 'RAG'],
     desc: 'Azure OpenAI와 Copilot Studio를 활용한 사내 AI 플랫폼 구축 프로젝트입니다.',
@@ -697,6 +737,15 @@ const projects = [
         'RAG 구조로 사내 문서를 벡터 인덱싱해 환각 최소화',
         'Copilot Studio로 부서별 업무 시나리오에 맞는 챗봇 인터페이스 구성',
         '사용자 접근 권한에 따른 문서 노출 범위 제어'
+      ],
+      problem: '사내 지원 업무에서 유사한 문의와 응대가 반복적으로 발생했고, 관련 정보가 여러 곳에 흩어져 있어 매번 같은 내용을 재확인하며 응대해야 하는 비효율이 있었습니다. 이를 하나의 AI 기반 업무지원 플랫폼으로 통합했습니다.',
+      challenge: [
+        { issue: 'AI가 외부 정보가 아닌 사내 관리 문서만 근거로 답변하도록 제한해야 했음', resolution: 'RAG 구조로 사내 문서만 벡터 인덱싱하여 검색·응답하도록 구성' },
+        { issue: '질문 유형에 따라 서로 다른 정보가 섞이지 않고 적절한 에이전트가 응답해야 했음', resolution: '질문 유형별로 에이전트를 분기하는 라우팅 로직을 설계' },
+      ],
+      outcome: [
+        { value: '24/7', label: '비업무시간(공휴일·주말)에도 문의 대응' },
+        { value: '반복 문의 감소', label: '담당자 응대 부담 완화' },
       ],
       whyDesign: [
         { title: '정확성', desc: 'RAG로 사내 문서 근거 기반 답변을 제공해 환각 리스크 최소화' },
@@ -726,6 +775,14 @@ const projects = [
         'Power Automate로 승인 라우팅 및 알림 자동화',
         'PAD로 반복적인 자산 대장 갱신 작업 자동화',
         '자산 현황 대시보드 연동으로 실시간 현황 파악 가능하도록 구성'
+      ],
+      problem: '자산 수령·반납 처리와 AD 계정 등록·해제를 매번 수동으로 처리하면서 시간이 많이 들었고, 휴먼에러로 처리가 누락되는 경우가 있었습니다.',
+      challenge: [
+        { issue: 'AD를 다루는 과정이 필요해 PAD(프리미엄 라이선스)를 사용했는데, 담당자 PC가 꺼져 있으면 플로우가 동작하지 않았음', resolution: 'Unattended 라이선스를 도입해 사용자 PC 상태와 무관하게 실행되는 무인 환경을 구축' },
+      ],
+      outcome: [
+        { value: 'AD 직접 수정 → 승인 기반 처리', label: '처리 방식 전환' },
+        { value: '24/7', label: '무인 자동 실행' },
       ],
       whyDesign: [
         { title: '효율성', desc: '수기로 관리하던 자산 대장을 자동화해 처리 시간 단축' },
@@ -757,6 +814,7 @@ const projects = [
         '동기화 서버 이중화를 통한 단일 장애점 제거 방안 수립',
         '단계적 마이그레이션 로드맵(파일럿 → 전사 확대) 설계'
       ],
+      problem: '인증 체계가 온프레미스 AD에 한정돼 있어, SSO 확장이나 위치·디바이스 기반 Conditional Access 같은 보안 기능을 도입하기 어려운 상황이었습니다. 이를 해소하기 위해 Entra ID 기반 Hybrid Identity 전환을 제안했습니다.',
       whyDesign: [
         { title: '연속성', desc: '기존 온프레미스 인증 체계와의 충돌 없이 점진적으로 전환' },
         { title: '보안 강화', desc: 'Conditional Access로 위치·디바이스 기반 접근 통제 도입' }
@@ -785,6 +843,10 @@ const projects = [
         '부서별 DLP 정책(외부 공유 차단, 다운로드 제한) 수립',
         'Compliance Manager로 규정 준수 현황 추적 체계 구성',
         '정책 적용 전 Simulation 모드로 영향도 사전 검증'
+      ],
+      problem: '부서마다 문서 보안 기준이 달라 동일한 민감도의 문서라도 보호 수준이 일관되지 않았고, 외부로 유출될 수 있는 경로에 대한 체계적인 통제가 부족했습니다.',
+      challenge: [
+        { issue: '정책을 한 번에 전면 적용하면 부서 업무에 차질이 생길 위험이 있었음', resolution: 'Simulation 모드로 영향도를 사전 검증한 뒤 부서별로 단계적으로 정책을 적용' },
       ],
       whyDesign: [
         { title: '리스크 최소화', desc: '기밀 문서 외부 유출 경로를 사전에 차단' },
@@ -815,6 +877,7 @@ const projects = [
         '기존 운영 절차와의 충돌을 최소화하는 점진적 이전 전략 수립',
         'Azure Bastion으로 공개 IP 없이 VM 원격 접근 보안 확보'
       ],
+      problem: '온프레미스와 클라우드 인프라가 분리되어 있어 관리 콘솔이 이원화되어 있었고, 서비스 중요도에 따른 백업·복구 전략도 체계화되어 있지 않았습니다.',
       whyDesign: [
         { title: '통합 관리', desc: '온프레미스·클라우드를 하나의 콘솔에서 관리해 운영 부담 감소' },
         { title: '복원력', desc: '서비스 중요도별 백업/DR 전략으로 장애 대응력 확보' }
@@ -845,6 +908,7 @@ const projects = [
         'Conditional Access와 네트워크 정책을 연동한 다층 방어 구조 설계',
         '마이크로 세그멘테이션을 통한 내부 이동(lateral movement) 차단'
       ],
+      problem: '기존 네트워크가 내부망에 대한 암묵적 신뢰를 전제로 구성되어 있어, 내부 침투가 발생했을 때 확산을 막을 다층적 통제 수단이 부족했습니다.',
       whyDesign: [
         { title: '공격 표면 최소화', desc: '인터넷 노출 지점을 제거해 침해 가능성을 원천 차단' },
         { title: '다층 방어', desc: '네트워크·ID·디바이스를 결합한 종합적 접근 통제' }
@@ -873,6 +937,7 @@ const projects = [
         '오류 발생 시 자동 재시도 및 알림 로직 설계',
         '신규 PC 배포 시 표준 인쇄 환경 자동 적용 프로세스 구성'
       ],
+      problem: '신규 PC를 배포할 때마다 프린터 드라이버와 설정을 담당자가 수작업으로 맞추다 보니 PC별로 인쇄 환경이 제각각이었고, 매번 반복되는 작업이었습니다.',
       whyDesign: [
         { title: '표준화', desc: '수작업 설정 편차를 없애고 전사 동일한 인쇄 환경 확보' },
         { title: '운영 부담 감소', desc: '반복 업무를 자동화해 IT 인력의 단순 작업 최소화' }
@@ -902,6 +967,7 @@ const projects = [
         '정책 변경 시 승인 절차와 변경 이력 관리 체계 수립',
         '불필요한 Any-Any 정책을 세분화하여 최소 권한 원칙 적용'
       ],
+      problem: '방화벽 정책이 오랜 기간 누적되면서 목적이 불분명한 규칙과 과도하게 허용된 Any-Any 정책이 늘어나, 정책 현황을 한눈에 파악하기 어려운 상태였습니다.',
       whyDesign: [
         { title: '가시성 확보', desc: '방화벽 정책 현황을 체계적으로 파악 가능하도록 표준화' },
         { title: '최소 권한', desc: '과도하게 허용된 정책을 점진적으로 축소해 공격 표면 감소' }
@@ -930,6 +996,15 @@ const projects = [
         'Power Automate 연동으로 챗봇이 실제 티켓을 자동 생성하도록 구성',
         'Teams 채널에 챗봇을 배포해 접근성 확보',
         '응답 정확도 개선을 위한 지식 소스(SharePoint 문서) 연동'
+      ],
+      problem: '기존 헬프데스크 AI 플랫폼은 별도 사이트에 접속해야 하는 구조라 접근성이 떨어졌습니다.',
+      challenge: [
+        { issue: '별도 사이트 접속이 필요해 실제 사용률이 낮았음', resolution: '사내 메신저(Teams)에 사이드바 앱으로 추가해 접근 경로를 단순화' },
+        { issue: '기존 모델을 그대로 사용해 응답 품질과 모델 선택 폭에는 한계가 있었음', resolution: '프롬프트·에이전트 설정으로 응답 품질을 최대한 보완 (모델 자체 한계는 남아있는 과제)' },
+      ],
+      outcome: [
+        { value: 'Teams 사이드바', label: '접근 경로 단순화' },
+        { value: '사용량 증가', label: '도입 후 이용 빈도 상승' },
       ],
       whyDesign: [
         { title: '응답 속도', desc: '반복 문의에 대한 즉각적인 자동 응답으로 대기 시간 감소' },
@@ -960,6 +1035,7 @@ const projects = [
         'RBAC 모델로 부서별 최소 권한 접근 체계 설계',
         '휴면 계정 정기 점검 및 자동 비활성화 프로세스 구성'
       ],
+      problem: '계정 생성·변경·비활성화가 담당자별로 조금씩 다른 방식으로 처리되고 있었고, 휴면 계정을 정기적으로 점검하는 체계도 없었습니다.',
       whyDesign: [
         { title: '일관성', desc: '담당자별로 상이했던 계정 관리 방식을 표준 절차로 통일' },
         { title: '보안 강화', desc: '최소 권한 원칙 적용으로 과도한 권한 부여 리스크 감소' }
@@ -989,6 +1065,7 @@ const projects = [
         '접근 계정 권한을 최소 권한 원칙에 따라 재정비',
         '정기 백업·유지보수 작업(인덱스 재구성) 스케줄 자동화'
       ],
+      problem: '일부 쿼리에서 응답 지연이 발생하고 있었고, Linked Server 연결 계정에 필요 이상의 권한이 부여되어 있는 등 성능과 보안 두 측면에서 개선이 필요한 상태였습니다.',
       whyDesign: [
         { title: '성능 개선', desc: '병목 쿼리를 개선해 응답 속도 단축' },
         { title: '보안 강화', desc: '과도한 권한을 가진 연결 계정을 정리해 위험 최소화' }
@@ -1017,6 +1094,10 @@ const projects = [
         '부서별 Copilot 활용 시나리오(회의 요약, 문서 초안) 정의',
         '사내 교육 커리큘럼 및 실습 자료 구성',
         '도입 효과 측정을 위한 사용 현황 모니터링 체계 수립'
+      ],
+      problem: 'Copilot 라이선스가 추가로 지급됐지만 사용자 대부분이 활용법을 몰라 실질적인 사용률이 낮았습니다. 이를 해소하기 위해 전사 교육을 진행했습니다.',
+      challenge: [
+        { issue: '사용자별 IT 활용 수준 편차가 커서 동일한 커리큘럼으로는 교육 효과가 제한적이었음', resolution: '직군·수준별로 난이도를 구분한 실습 자료를 구성해 교육 진행' },
       ],
       whyDesign: [
         { title: '안전한 도입', desc: '거버넌스 선행 조치로 민감 데이터 노출 리스크 방지' },
@@ -1047,6 +1128,7 @@ const projects = [
         '온프레미스 연결을 위한 VPN Gateway 이중화 구성',
         '트래픽 흐름에 따른 라우팅 테이블 및 NSG 규칙 설계'
       ],
+      problem: '워크로드가 늘어날 때마다 네트워크 연결 구조와 보안 정책을 매번 새로 설계해야 했고, 일관된 확장 기준이 될 표준 토폴로지가 필요했습니다.',
       whyDesign: [
         { title: '중앙 관리', desc: '보안·연결 지점을 Hub에 집중해 일관된 정책 적용' },
         { title: '확장성', desc: '신규 워크로드를 Spoke 추가만으로 손쉽게 확장 가능' }
@@ -1075,6 +1157,14 @@ const projects = [
         'Power Automate로 승인자 라우팅 및 알림 자동화',
         '승인 완료 데이터를 SharePoint 리스트에 자동 적재',
         '처리 현황을 대시보드로 시각화해 진행 상태 추적 가능하도록 구성'
+      ],
+      problem: 'AD, 보안그룹, 홈페이지 접근권한 등 수정이 필요한 요청들이 각기 다른 양식으로 접수되고 있어, 처리 기준이 일관되지 않고 대응이 느렸습니다.',
+      challenge: [
+        { issue: '서로 다른 형태의 요청을 하나의 플랫폼으로 통합해야 했음', resolution: 'Forms 기반 단일 신청 양식으로 통일하고, 승인자 라우팅과 SharePoint 리스트 자동 적재까지 연계' },
+      ],
+      outcome: [
+        { value: '개별 요청 방식 → 단일 폼', label: '요청 창구 통합' },
+        { value: '실시간 추적', label: '처리 현황 대시보드 시각화' },
       ],
       whyDesign: [
         { title: '처리 속도', desc: '수작업 결재 대비 승인 소요 시간 단축' },
@@ -1105,6 +1195,7 @@ const projects = [
         'Sentinel Playbook으로 초기 대응(계정 잠금 등) 자동화',
         '정기 보안 리포트 자동 생성 및 배포 체계 구성'
       ],
+      problem: '보안 이벤트 로그가 Entra ID, Defender, 방화벽 등 여러 시스템에 흩어져 있어, 이상 징후를 통합적으로 파악하고 신속히 대응하기 어려웠습니다.',
       whyDesign: [
         { title: '탐지 속도', desc: '통합 모니터링으로 위협 인지까지의 시간 단축' },
         { title: '대응 자동화', desc: 'Playbook으로 초기 대응 시간을 최소화해 피해 확산 방지' }
@@ -1134,6 +1225,7 @@ const projects = [
         'Teams와 연동해 협업 워크스페이스 접근성 확보',
         '검색 최적화를 위한 메타데이터 및 콘텐츠 유형 설계'
       ],
+      problem: '공지사항, 문서함, 조직도 같은 사내 정보가 여러 채널에 흩어져 있어, 필요한 정보를 찾는 데 시간이 걸렸습니다.',
       whyDesign: [
         { title: '접근성', desc: '분산돼 있던 사내 정보를 단일 진입점으로 통합' },
         { title: '협업 강화', desc: 'Teams 연동으로 문서 작업과 커뮤니케이션을 자연스럽게 연결' }
@@ -1163,11 +1255,58 @@ const projects = [
         '데이터 소유자(Owner)·관리자(Steward) 역할 및 책임 정의',
         'Azure SQL 데이터베이스의 계보(Lineage) 추적 체계 설계'
       ],
+      problem: '전사 데이터 자산이 어디에 있고 어떻게 흐르는지 명확히 파악되지 않았고, 데이터별 책임 소유자도 지정되어 있지 않아 품질·보안 관리에 공백이 있었습니다.',
       whyDesign: [
         { title: '가시성', desc: '흩어져 있던 데이터 자산의 소재와 흐름을 명확히 파악' },
         { title: '책임성', desc: '데이터별 소유자를 지정해 품질·보안 관리 책임을 명확화' }
       ],
       keywords: ['Data Governance', 'Purview', 'Data Catalog']
+    }
+  },
+  {
+    id: 19,
+    domain: 'Infrastructure',
+    status: 'Completed',
+    title: '회의실 PC 중앙관리 Active Directory 구축',
+    tags: ['Active Directory', 'GPO', 'VMware vSphere'],
+    desc: 'Windows Server 2022 기반 AD DS를 구축하고 DNS, GPO, DHCP, 방화벽 정책을 적용해 회의실 PC 중앙관리 인프라를 구축했습니다.',
+    date: '2026.08',
+    icon: 'infra',
+    detail: {
+      diagram: '../etc/Images/meeting-room-ad.webp',
+      techStack: [
+        { name: 'Windows Server 2022' },
+        { name: 'Active Directory' },
+        { name: 'DNS' },
+        { name: 'GPO' },
+        { name: 'VMware vSphere' },
+        { name: 'Firewall' }
+      ],
+      whatIDesigned: [
+        'Windows Server 2022 기반 AD DS 구축 및 회의실 전용 도메인 구성',
+        'DNS 서비스 구성 및 도메인 이름 해석 환경 구축',
+        '회의실 공용 PC 도메인 조인을 통한 중앙 관리 체계 구축',
+        'OU 및 사용자·그룹 구조 설계',
+        'GPO 기반 회의실 PC 보안·운영 정책 적용',
+        'Domain Admin만 Domain Join이 가능하도록 권한 정책 구성',
+        'DMZ-WiFi Zone 간 방화벽 정책 구성으로 AD 필수 서비스만 허용',
+        'DHCP 예약 및 고정 IP 정책 적용으로 네트워크 표준화'
+      ],
+      problem: '회의실 공용 PC가 개별적으로 관리되고 있어 PC마다 보안 설정과 계정 정책이 제각각이었고, 별도 제약 없이 도메인에 조인할 수 있어 통제가 필요한 상태였습니다.',
+      challenge: [
+        { issue: '회의실 PC는 여러 사람이 함께 쓰는 공용 장비라 일반 사용자 PC와 동일한 방식으로 도메인 조인을 허용할 수 없었음', resolution: 'Domain Admin 계정만 Domain Join이 가능하도록 권한을 제한하고, 전용 OU(MeetingRoom)로 분리해 관리' },
+      ],
+      outcome: [
+        { value: '중앙 관리', label: 'AD·GPO 기반 회의실 PC 통합 관리' },
+        { value: '최소 권한', label: 'Domain Join 권한을 Admin으로 제한' },
+        { value: '운영 표준화', label: '신규 회의실 PC 추가 시 동일 정책 즉시 적용' },
+      ],
+      whyDesign: [
+        { title: '중앙 관리', desc: 'AD와 GPO를 통한 회의실 PC 통합 관리로 운영 효율성 향상' },
+        { title: '보안 강화', desc: '최소 권한 원칙 및 방화벽 정책으로 AD 필수 서비스만 허용해 보안성 강화' },
+        { title: '운영 표준화', desc: '도메인 정책과 네트워크 구성 표준화로 신규 회의실 PC 추가 시간 단축' }
+      ],
+      keywords: ['Active Directory', 'GPO', 'DNS', 'VMware', 'DHCP', 'Firewall']
     }
   }
 
@@ -1489,6 +1628,41 @@ function renderProjectModal(p) {
   document.getElementById('pmEyebrow').textContent = `${p.domain} · ${p.status}`;
   document.getElementById('pmTitle').textContent = p.title;
   document.getElementById('pmDesc').textContent = p.desc;
+
+  // Problem
+  const problemSection = document.getElementById('pmProblemSection');
+  if (d && d.problem) {
+    problemSection.style.display = '';
+    document.getElementById('pmProblemText').textContent = d.problem;
+  } else {
+    problemSection.style.display = 'none';
+  }
+
+  // Challenge & Solution
+  const challengeSection = document.getElementById('pmChallengeSection');
+  if (d && d.challenge && d.challenge.length) {
+    challengeSection.style.display = '';
+    document.getElementById('pmChallengeList').innerHTML = d.challenge.map(c => `
+      <div class="pm-challenge-item">
+        <div class="pm-challenge-issue">${escapeHtml(c.issue)}</div>
+        <div class="pm-challenge-resolution">${escapeHtml(c.resolution)}</div>
+      </div>`).join('');
+  } else {
+    challengeSection.style.display = 'none';
+  }
+
+  // Outcome
+  const outcomeSection = document.getElementById('pmOutcomeSection');
+  if (d && d.outcome && d.outcome.length) {
+    outcomeSection.style.display = '';
+    document.getElementById('pmOutcomeGrid').innerHTML = d.outcome.map(o => `
+      <div class="pm-outcome-card">
+        <div class="pm-outcome-value">${escapeHtml(o.value)}</div>
+        <div class="pm-outcome-label">${escapeHtml(o.label)}</div>
+      </div>`).join('');
+  } else {
+    outcomeSection.style.display = 'none';
+  }
 
   // Diagram
   const imgEl = document.getElementById('pmDiagramImg');
