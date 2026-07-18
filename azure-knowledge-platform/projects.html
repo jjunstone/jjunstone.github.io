@@ -404,7 +404,7 @@
 
     .pm-outcome-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
     .pm-outcome-card {
-      background: var(--accent-light); border: 1px solid rgba(59,130,246,.2); border-radius: 10px;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
       padding: 14px 12px; text-align: center;
     }
     .pm-outcome-value { font-size: 17px; font-weight: 800; color: var(--accent); line-height: 1.25; margin-bottom: 4px; word-break: keep-all; }
@@ -475,21 +475,21 @@
           <div class="hstat-icon">📁</div>
           <div>
             <div style="font-size:11px;color:var(--text-muted);margin-bottom:2px;">전체 프로젝트</div>
-            <div style="display:flex;align-items:baseline;gap:3px;"><span class="hstat-val">19</span><span class="hstat-unit">개</span></div>
+            <div style="display:flex;align-items:baseline;gap:3px;"><span class="hstat-val">20</span><span class="hstat-unit">개</span></div>
           </div>
         </div>
         <div class="hstat">
           <div class="hstat-icon" style="color:#16a34a;">✅</div>
           <div>
             <div style="font-size:11px;color:var(--text-muted);margin-bottom:2px;">Completed</div>
-            <div style="display:flex;align-items:baseline;gap:3px;"><span class="hstat-val" style="color:#16a34a;">9</span><span class="hstat-unit">개</span></div>
+            <div style="display:flex;align-items:baseline;gap:3px;"><span class="hstat-val" style="color:#16a34a;">11</span><span class="hstat-unit">개</span></div>
           </div>
         </div>
         <div class="hstat">
           <div class="hstat-icon" style="color:#d97706;">🕐</div>
           <div>
             <div style="font-size:11px;color:var(--text-muted);margin-bottom:2px;">In Progress</div>
-            <div style="display:flex;align-items:baseline;gap:3px;"><span class="hstat-val" style="color:#d97706;">5</span><span class="hstat-unit">개</span></div>
+            <div style="display:flex;align-items:baseline;gap:3px;"><span class="hstat-val" style="color:#d97706;">4</span><span class="hstat-unit">개</span></div>
           </div>
         </div>
         <div class="hstat" style="margin-right:0;">
@@ -516,15 +516,15 @@
         <div class="fs-title">상태</div>
         <div class="fs-item active" onclick="filterByStatus('all', this)">
           <div class="fs-item-left"><span>All</span></div>
-          <span class="fs-count" id="cnt-all">19</span>
+          <span class="fs-count" id="cnt-all">20</span>
         </div>
         <div class="fs-item" onclick="filterByStatus('Completed', this)">
           <div class="fs-item-left"><span class="fs-dot" style="background:#16a34a"></span><span>Completed</span></div>
-          <span class="fs-count" id="cnt-completed">9</span>
+          <span class="fs-count" id="cnt-completed">11</span>
         </div>
         <div class="fs-item" onclick="filterByStatus('In Progress', this)">
           <div class="fs-item-left"><span class="fs-dot" style="background:#d97706"></span><span>In Progress</span></div>
-          <span class="fs-count" id="cnt-inprogress">5</span>
+          <span class="fs-count" id="cnt-inprogress">4</span>
         </div>
         <div class="fs-item" onclick="filterByStatus('Proposed', this)">
           <div class="fs-item-left"><span class="fs-dot" style="background:#7c3aed"></span><span>Proposed</span></div>
@@ -536,7 +536,7 @@
         <div class="fs-title">분야</div>
         <div class="fs-item" onclick="filterByDomain('all', this)">
           <div class="fs-item-left"><span class="fs-icon">⊞</span><span>All</span></div>
-          <span class="fs-count">19</span>
+          <span class="fs-count">20</span>
         </div>
         <div class="fs-item" onclick="filterByDomain('Architecture', this)">
           <div class="fs-item-left"><span class="fs-icon">⊞</span><span>Architecture</span></div>
@@ -560,7 +560,7 @@
         </div>
         <div class="fs-item" onclick="filterByDomain('Infrastructure', this)">
           <div class="fs-item-left"><span class="fs-icon">⊟</span><span>Infrastructure</span></div>
-          <span class="fs-count">3</span>
+          <span class="fs-count">4</span>
         </div>
         <div class="fs-item" onclick="filterByDomain('Workplace', this)">
           <div class="fs-item-left"><span class="fs-icon">👥</span><span>Workplace</span></div>
@@ -593,6 +593,7 @@
       <!-- Toolbar -->
       <div class="proj-toolbar">
         <select class="sort-select" onchange="sortProjects(this.value)">
+          <option value="priority" selected>중요도순</option>
           <option value="date-desc">최신순</option>
           <option value="date-asc">오래된순</option>
           <option value="title">이름순</option>
@@ -685,6 +686,7 @@
 const projects = [
   {
     id: 1,
+    priority: 2,
     domain: 'Architecture',
     status: 'Proposed',
     title: '기업 Azure Landing Zone 설계',
@@ -705,24 +707,29 @@ const projects = [
         'Management Group 계층 및 구독 분리 전략 설계',
         'Hub-Spoke 네트워크 토폴로지 및 연결 구조 설계',
         'Azure Policy 기반 거버넌스·규정 준수 체계 설계',
-        'IaC(Terraform)로 Landing Zone을 코드화하는 배포 구조 설계'
+        'IaC(Terraform)로 Landing Zone을 코드화하는 배포 구조 설계',
+        '구독별 역할(Platform/Landing Zone)을 분리하고 RBAC 경계를 설계',
+        '중앙 Log Analytics Workspace로 전 구독의 진단 로그를 통합 수집하는 구조 설계',
+        '명명 규칙(Naming Convention)과 태깅 전략을 수립해 리소스 추적성과 비용 가시성 확보'
       ],
       problem: '여러 팀·프로젝트가 개별적으로 Azure를 사용하면 구독 구조, 네트워크, 보안 정책이 제각각으로 운영되어 거버넌스 공백과 관리 비용 증가로 이어질 수 있습니다. 이런 문제를 사전에 방지할 수 있는 표준 Landing Zone 구조를 제안했습니다.',
       whyDesign: [
         { title: '표준화', desc: '여러 팀·프로젝트가 일관된 보안·비용 정책 위에서 운영되도록 기반을 통일' },
-        { title: '확장성', desc: '신규 워크로드가 거버넌스 재설계 없이 빠르게 온보딩될 수 있는 구조 확보' }
+        { title: '확장성', desc: '신규 워크로드가 거버넌스 재설계 없이 빠르게 온보딩될 수 있는 구조 확보' },
+        { title: '추적성', desc: '태깅·로깅을 표준화해 리소스 현황과 비용을 부서·프로젝트 단위로 추적 가능' }
       ],
       keywords: ['Landing Zone', 'Governance', 'Hub-Spoke']
     }
   },
   {
     id: 2,
+    priority: 5,
     domain: 'AI',
     status: 'Completed',
     title: '사내 AI 업무지원 플랫폼 구축',
     tags: ['Azure OpenAI', 'Copilot Studio', 'RAG'],
     desc: 'Azure OpenAI와 Copilot Studio를 활용한 사내 AI 플랫폼 구축 프로젝트입니다.',
-    date: '2026.04',
+    date: '2025.11',
     icon: 'ai',
     detail: {
       diagram: '../etc/Images/AI SUPPORT.png',
@@ -756,12 +763,13 @@ const projects = [
   },
   {
     id: 3,
+    priority: 8,
     domain: 'Automation',
     status: 'Completed',
     title: '자산 관리 업무 자동화',
     tags: ['Power Automate', 'Forms', 'PAD'],
     desc: 'Power Automate와 Forms, PAD를 활용하여 자산 관리 업무를 자동화한 프로젝트입니다.',
-    date: '2026.03',
+    date: '2025.02',
     icon: 'automation',
     detail: {
       diagram: '../etc/Images/ASSET AUTOMATE.png',
@@ -793,12 +801,13 @@ const projects = [
   },
   {
     id: 4,
+    priority: 11,
     domain: 'Identity',
     status: 'Proposed',
     title: 'Hybrid Identity 전환 설계',
     tags: ['Entra ID', 'AD', 'SSO', 'Zero Trust'],
     desc: '온프레미스 AD 환경을 Entra ID 기반으로 전환하기 위해 제안한 설계입니다.',
-    date: '2026.02',
+    date: '2025.12',
     icon: 'identity',
     detail: {
       diagram: '../etc/Images/Hybrid Identity.png',
@@ -812,24 +821,29 @@ const projects = [
         '온프레미스 AD와 Entra ID 간 동기화 범위 및 방식(Password Hash Sync) 설계',
         'SSO 확장을 위한 인증 흐름 및 Conditional Access 정책 설계',
         '동기화 서버 이중화를 통한 단일 장애점 제거 방안 수립',
-        '단계적 마이그레이션 로드맵(파일럿 → 전사 확대) 설계'
+        '단계적 마이그레이션 로드맵(파일럿 → 전사 확대) 설계',
+        'Pass-through Authentication도 검토했으나, 온프레미스 인증 서버 의존도를 낮추기 위해 Password Hash Sync로 최종 결정',
+        'Self-Service Password Reset(SSPR) 적용 범위 및 정책 설계',
+        'OU 기반 동기화 필터링 규칙으로 Entra ID 동기화 대상 계정 범위 설계'
       ],
       problem: '인증 체계가 온프레미스 AD에 한정돼 있어, SSO 확장이나 위치·디바이스 기반 Conditional Access 같은 보안 기능을 도입하기 어려운 상황이었습니다. 이를 해소하기 위해 Entra ID 기반 Hybrid Identity 전환을 제안했습니다.',
       whyDesign: [
         { title: '연속성', desc: '기존 온프레미스 인증 체계와의 충돌 없이 점진적으로 전환' },
-        { title: '보안 강화', desc: 'Conditional Access로 위치·디바이스 기반 접근 통제 도입' }
+        { title: '보안 강화', desc: 'Conditional Access로 위치·디바이스 기반 접근 통제 도입' },
+        { title: '운영 부담 감소', desc: 'SSPR 도입으로 비밀번호 재설정 관련 문의를 사용자가 직접 처리하도록 전환' }
       ],
       keywords: ['Hybrid Identity', 'Entra Connect', 'SSO']
     }
   },
   {
     id: 5,
+    priority: 12,
     domain: 'Security',
     status: 'Completed',
     title: '정보보호 정책 표준화 (DLP/Purview)',
     tags: ['Purview', 'DLP', 'Compliance'],
     desc: 'DLP 및 Microsoft Purview 정책을 표준화하여 정보보호 체계를 강화한 프로젝트입니다.',
-    date: '2026.01',
+    date: '2025.08',
     icon: 'security',
     detail: {
       diagram: '../etc/Images/DLP.png',
@@ -857,12 +871,13 @@ const projects = [
   },
   {
     id: 6,
+    priority: 7,
     domain: 'Infrastructure',
     status: 'Proposed',
     title: 'Hybrid Infrastructure 현대화 설계',
     tags: ['Azure Arc', 'Backup', 'ASR'],
     desc: '온프레미스 인프라를 Azure 기반으로 현대화하기 위해 제안한 설계입니다.',
-    date: '2026.01',
+    date: '2026.02',
     icon: 'infra',
     detail: {
       diagram: '../etc/Images/Hybrid Infrastructure.png',
@@ -875,24 +890,29 @@ const projects = [
         'Azure Arc로 온프레미스 서버를 단일 관리 콘솔에 통합하는 구조 설계',
         '백업·복구 전략을 서비스 중요도에 따라 계층화(RPO/RTO)',
         '기존 운영 절차와의 충돌을 최소화하는 점진적 이전 전략 수립',
-        'Azure Bastion으로 공개 IP 없이 VM 원격 접근 보안 확보'
+        'Azure Bastion으로 공개 IP 없이 VM 원격 접근 보안 확보',
+        '온프레미스-Azure 간 연결을 ExpressRoute와 VPN 이중 경로로 설계해 단일 회선 장애에 대비',
+        'Azure Monitor 기반으로 온프레미스 서버까지 포함한 통합 성능·상태 모니터링 체계 설계',
+        '기존 Windows Server 라이선스를 Azure Hybrid Benefit으로 재활용해 전환 비용을 낮추는 방안 검토'
       ],
       problem: '온프레미스와 클라우드 인프라가 분리되어 있어 관리 콘솔이 이원화되어 있었고, 서비스 중요도에 따른 백업·복구 전략도 체계화되어 있지 않았습니다.',
       whyDesign: [
         { title: '통합 관리', desc: '온프레미스·클라우드를 하나의 콘솔에서 관리해 운영 부담 감소' },
-        { title: '복원력', desc: '서비스 중요도별 백업/DR 전략으로 장애 대응력 확보' }
+        { title: '복원력', desc: '서비스 중요도별 백업/DR 전략으로 장애 대응력 확보' },
+        { title: '비용 효율', desc: 'Azure Hybrid Benefit 등 기존 라이선스 자산을 활용해 전환 비용 최소화' }
       ],
       keywords: ['Azure Arc', 'Hybrid Infra', 'Business Continuity']
     }
   },
   {
     id: 7,
+    priority: 4,
     domain: 'Architecture',
     status: 'Proposed',
     title: 'Zero Trust 네트워크 아키텍처 설계',
     tags: ['Zero Trust', 'Azure Firewall', 'Private Endpoint'],
     desc: '전사 네트워크를 Zero Trust 원칙에 따라 재설계하기 위해 제안한 아키텍처입니다.',
-    date: '2025.12',
+    date: '2026.04',
     icon: 'architecture',
     detail: {
       diagram: '../etc/Images/Network architecture.png',
@@ -906,24 +926,29 @@ const projects = [
         '암묵적 신뢰 제거를 원칙으로 한 네트워크 세그멘테이션 설계',
         'PaaS 서비스 전체를 Private Endpoint로 전환해 인터넷 노출 제거',
         'Conditional Access와 네트워크 정책을 연동한 다층 방어 구조 설계',
-        '마이크로 세그멘테이션을 통한 내부 이동(lateral movement) 차단'
+        '마이크로 세그멘테이션을 통한 내부 이동(lateral movement) 차단',
+        '접속 시점 한 번이 아니라 세션 내내 신뢰도를 재평가하는 Continuous Access Evaluation 정책 설계',
+        '관리자 권한을 상시 부여하는 대신 필요할 때만 부여하는 Just-In-Time 접근(PIM) 정책 설계',
+        '네트워크 접근 로그를 SIEM에 연계해 이상 접근을 탐지하는 체계 설계'
       ],
       problem: '기존 네트워크가 내부망에 대한 암묵적 신뢰를 전제로 구성되어 있어, 내부 침투가 발생했을 때 확산을 막을 다층적 통제 수단이 부족했습니다.',
       whyDesign: [
         { title: '공격 표면 최소화', desc: '인터넷 노출 지점을 제거해 침해 가능성을 원천 차단' },
-        { title: '다층 방어', desc: '네트워크·ID·디바이스를 결합한 종합적 접근 통제' }
+        { title: '다층 방어', desc: '네트워크·ID·디바이스를 결합한 종합적 접근 통제' },
+        { title: '가시성 확보', desc: '접근 로그를 SIEM에 통합해 이상 징후를 신속히 탐지' }
       ],
       keywords: ['Zero Trust', 'Private Endpoint', 'Network Segmentation']
     }
   },
   {
     id: 8,
+    priority: 20,
     domain: 'Automation',
     status: 'Completed',
     title: 'PAD 인쇄 설정 환경 구축',
     tags: ['Power Automate Desktop', 'PAD', 'Unattended'],
     desc: 'Power Automate Desktop을 활용한 인쇄 환경 자동화 구축 프로젝트입니다.',
-    date: '2025.11',
+    date: '2024.11',
     icon: 'automation',
     detail: {
       diagram: '../etc/Images/PAD Printing.png',
@@ -947,12 +972,13 @@ const projects = [
   },
   {
     id: 9,
+    priority: 13,
     domain: 'Security',
     status: 'In Progress',
     title: 'Palo Alto 정책 관리 체계 구축',
     tags: ['Palo Alto', 'NAC', 'Firewall'],
     desc: 'Palo Alto 방화벽 정책을 체계적으로 관리하기 위한 운영 체계 구축 프로젝트입니다.',
-    date: '2025.11',
+    date: '2025.04',
     icon: 'security',
     detail: {
       diagram: null,
@@ -967,7 +993,15 @@ const projects = [
         '정책 변경 시 승인 절차와 변경 이력 관리 체계 수립',
         '불필요한 Any-Any 정책을 세분화하여 최소 권한 원칙 적용'
       ],
-      problem: '방화벽 정책이 오랜 기간 누적되면서 목적이 불분명한 규칙과 과도하게 허용된 Any-Any 정책이 늘어나, 정책 현황을 한눈에 파악하기 어려운 상태였습니다.',
+      problem: '방화벽 정책이 지속적으로 추가되면서 동일하거나 유사한 정책이 중복 생성되고 있었고, 정책명과 관리 기준도 담당자마다 달라 운영 일관성이 떨어졌습니다. 정책 변경 이력을 추적하거나 불필요한 정책을 식별하는 데도 많은 시간이 걸려, 체계적인 관리 기준이 필요한 상태였습니다.',
+      challenge: [
+        { issue: '기존 정책의 사용 여부와 중복 여부를 한눈에 파악하기 어려웠고, 정책명 규칙이 없어 유지보수 효율이 떨어졌음', resolution: '정책을 업무 목적과 서비스 유형별로 재분류하고 Naming Rule 및 정책 작성 기준을 수립했으며, 사용하지 않는 정책과 중복 정책을 식별할 수 있는 관리 체계를 마련' },
+      ],
+      outcome: [
+        { value: '정책 재분류', label: '업무 목적·서비스 유형별 표준화' },
+        { value: 'Naming Rule', label: '정책 관리 체계 정립' },
+        { value: '중복·미사용 정책 식별', label: '유지보수 효율성 향상' },
+      ],
       whyDesign: [
         { title: '가시성 확보', desc: '방화벽 정책 현황을 체계적으로 파악 가능하도록 표준화' },
         { title: '최소 권한', desc: '과도하게 허용된 정책을 점진적으로 축소해 공격 표면 감소' }
@@ -977,12 +1011,13 @@ const projects = [
   },
   {
     id: 10,
+    priority: 18,
     domain: 'AI',
     status: 'Completed',
     title: 'Copilot Studio 챗봇 개발',
     tags: ['Copilot Studio', 'M365', 'Power Platform'],
     desc: 'Copilot Studio를 활용한 사내 업무 지원 챗봇 개발 프로젝트입니다.',
-    date: '2025.10',
+    date: '2025.07',
     icon: 'ai',
     detail: {
       diagram: null,
@@ -1015,12 +1050,13 @@ const projects = [
   },
   {
     id: 11,
+    priority: 10,
     domain: 'Identity',
     status: 'Completed',
     title: 'AD 계정 관리 체계 개선',
     tags: ['AD', 'GPO', 'RBAC'],
     desc: '기존 Active Directory 계정 관리 프로세스를 체계화하고 자동화한 프로젝트입니다.',
-    date: '2025.09',
+    date: '2025.05',
     icon: 'identity',
     detail: {
       diagram: null,
@@ -1035,7 +1071,14 @@ const projects = [
         'RBAC 모델로 부서별 최소 권한 접근 체계 설계',
         '휴면 계정 정기 점검 및 자동 비활성화 프로세스 구성'
       ],
-      problem: '계정 생성·변경·비활성화가 담당자별로 조금씩 다른 방식으로 처리되고 있었고, 휴면 계정을 정기적으로 점검하는 체계도 없었습니다.',
+      problem: '입사자·퇴사자 처리 과정에서 인사팀과 인프라보안팀이 각자 다른 절차로 업무를 진행하고 있었고, AD 계정 생성·변경·비활성화도 담당자별로 방식이 조금씩 달라 하나의 흐름으로 자동화하기 어려운 구조였습니다.',
+      challenge: [
+        { issue: '인사팀과 인프라보안팀이 각자 다른 기준으로 입·퇴사 절차를 처리하고 있어, 하나의 자동화 프로세스로 묶기 어려웠음', resolution: '두 팀의 절차를 하나의 표준 프로세스로 정리하고, PAD로 자동화하기 쉬운 형태로 단계를 재구성' },
+      ],
+      outcome: [
+        { value: '인사팀 + 인프라보안팀', label: '절차를 단일 표준 프로세스로 통합' },
+        { value: '자동화 기반 마련', label: '정리된 절차를 PAD로 자동화 가능한 구조로 전환' },
+      ],
       whyDesign: [
         { title: '일관성', desc: '담당자별로 상이했던 계정 관리 방식을 표준 절차로 통일' },
         { title: '보안 강화', desc: '최소 권한 원칙 적용으로 과도한 권한 부여 리스크 감소' }
@@ -1045,12 +1088,13 @@ const projects = [
   },
   {
     id: 12,
+    priority: 15,
     domain: 'Infrastructure',
     status: 'Completed',
     title: 'MSSQL 성능 및 보안 개선',
     tags: ['MSSQL', 'SSMS', 'Linked Server'],
     desc: 'MSSQL 서버 성능 튜닝과 보안 강화를 수행한 인프라 프로젝트입니다.',
-    date: '2025.08',
+    date: '2025.06',
     icon: 'infra',
     detail: {
       diagram: null,
@@ -1075,12 +1119,13 @@ const projects = [
   },
   {
     id: 13,
+    priority: 19,
     domain: 'Workplace',
     status: 'In Progress',
     title: 'Copilot 사내 도입 및 교육',
     tags: ['Copilot', 'M365', 'SharePoint'],
     desc: 'Microsoft 365 Copilot을 사내에 도입하고 전사 교육을 진행한 프로젝트입니다.',
-    date: '2025.08',
+    date: '2025.03',
     icon: 'workplace',
     detail: {
       diagram: null,
@@ -1108,12 +1153,13 @@ const projects = [
   },
   {
     id: 14,
+    priority: 9,
     domain: 'Architecture',
     status: 'Proposed',
     title: 'Hub-Spoke 네트워크 설계',
     tags: ['Azure', 'Hub & Spoke', 'VPN Gateway'],
     desc: 'Azure 기반 Hub-Spoke 네트워크 토폴로지를 제안한 설계입니다.',
-    date: '2025.07',
+    date: '2026.01',
     icon: 'architecture',
     detail: {
       diagram: null,
@@ -1126,24 +1172,29 @@ const projects = [
         '중앙 Hub VNet에 공용 서비스(방화벽, VPN Gateway) 배치 설계',
         'Spoke VNet별 워크로드 분리 및 Peering 구조 설계',
         '온프레미스 연결을 위한 VPN Gateway 이중화 구성',
-        '트래픽 흐름에 따른 라우팅 테이블 및 NSG 규칙 설계'
+        '트래픽 흐름에 따른 라우팅 테이블 및 NSG 규칙 설계',
+        'Virtual WAN 방식도 검토했으나, 초기 구축 복잡도를 낮추기 위해 Hub-Spoke를 우선 설계로 채택',
+        'Spoke 간 직접 통신이 필요한 예외 케이스를 대비한 선택적 Peering 정책 설계',
+        'DDoS Protection과 Azure Firewall을 Hub에 배치해 위협 대응을 중앙화'
       ],
       problem: '워크로드가 늘어날 때마다 네트워크 연결 구조와 보안 정책을 매번 새로 설계해야 했고, 일관된 확장 기준이 될 표준 토폴로지가 필요했습니다.',
       whyDesign: [
         { title: '중앙 관리', desc: '보안·연결 지점을 Hub에 집중해 일관된 정책 적용' },
-        { title: '확장성', desc: '신규 워크로드를 Spoke 추가만으로 손쉽게 확장 가능' }
+        { title: '확장성', desc: '신규 워크로드를 Spoke 추가만으로 손쉽게 확장 가능' },
+        { title: '비용 효율', desc: '공용 서비스를 Hub에 집중 배치해 Spoke마다 중복 구성하는 비용 절감' }
       ],
       keywords: ['Hub-Spoke', 'VNet Peering', 'Network Architecture']
     }
   },
   {
     id: 15,
+    priority: 14,
     domain: 'Automation',
     status: 'In Progress',
     title: 'Forms 기반 프로세스 자동화',
     tags: ['Forms', 'Power Automate', 'SharePoint'],
     desc: 'Microsoft Forms와 Power Automate를 연계한 업무 프로세스 자동화 프로젝트입니다.',
-    date: '2025.07',
+    date: '2025.01',
     icon: 'automation',
     detail: {
       diagram: null,
@@ -1175,42 +1226,52 @@ const projects = [
   },
   {
     id: 16,
+    priority: 3,
     domain: 'Security',
-    status: 'In Progress',
-    title: '보안 모니터링 환경 구축',
-    tags: ['Sentinel', 'KQL', 'Defender'],
-    desc: 'Microsoft Sentinel 기반 보안 모니터링 및 대응 체계 구축 프로젝트입니다.',
-    date: '2025.06',
+    status: 'Completed',
+    title: 'ISO 27001 취약점 진단 자동화 대시보드 구축',
+    tags: ['PowerShell', 'Logpresso', 'ISO 27001'],
+    desc: 'ISO 27001 인증 유지를 위한 Windows Server 취약점 진단 84개 항목을 PowerShell로 자동 점검하고, Logpresso 대시보드로 시각화한 프로젝트입니다.',
+    date: '2025.09',
     icon: 'security',
     detail: {
       diagram: null,
       techStack: [
-        { name: 'Microsoft Sentinel' },
-        { name: 'KQL' },
-        { name: 'Defender' }
+        { name: 'PowerShell' },
+        { name: 'Logpresso' },
+        { name: 'Windows Server' }
       ],
       whatIDesigned: [
-        '주요 로그 소스(Entra ID, Defender, 방화벽)를 Sentinel에 통합 연동',
-        'KQL 기반 위협 탐지 규칙 및 알림 조건 설계',
-        'Sentinel Playbook으로 초기 대응(계정 잠금 등) 자동화',
-        '정기 보안 리포트 자동 생성 및 배포 체계 구성'
+        'ISO 27001 취약점 진단 기준 84개 항목을 점검하는 Windows Server용 PowerShell 스크립트 개발',
+        '점검 결과를 서버 로컬에 생성하고 Logpresso로 수집·연동',
+        '항목별 준수 여부를 한눈에 확인할 수 있는 대시보드 구성',
+        '기준 미충족 항목을 식별해 조치할 수 있도록 시각화'
       ],
-      problem: '보안 이벤트 로그가 Entra ID, Defender, 방화벽 등 여러 시스템에 흩어져 있어, 이상 징후를 통합적으로 파악하고 신속히 대응하기 어려웠습니다.',
+      problem: 'ISO 27001 인증 유지를 위해서는 Windows Server 취약점 진단 기준 84개 항목을 주기적으로 점검해야 했는데, 서버마다 수작업으로 확인하다 보니 시간이 많이 들고 누락 위험도 있었습니다.',
+      challenge: [
+        { issue: '84개 항목을 서버별로 수작업 점검하면 시간이 오래 걸리고 결과를 취합해 전체 현황을 파악하기 어려웠음', resolution: 'PowerShell 스크립트로 84개 항목을 자동 점검하도록 구현하고, 결과를 Logpresso로 수집해 항목별 준수 여부를 대시보드로 시각화' },
+      ],
+      outcome: [
+        { value: '84개 항목', label: '자동 점검' },
+        { value: 'PowerShell → Logpresso', label: '자동 수집·시각화 파이프라인' },
+        { value: '대시보드 기반', label: '미준수 항목 식별 및 조치 지원' },
+      ],
       whyDesign: [
-        { title: '탐지 속도', desc: '통합 모니터링으로 위협 인지까지의 시간 단축' },
-        { title: '대응 자동화', desc: 'Playbook으로 초기 대응 시간을 최소화해 피해 확산 방지' }
+        { title: '효율성', desc: '수작업 점검을 자동화해 84개 항목을 반복적으로 빠르게 확인' },
+        { title: '가시성', desc: '대시보드로 항목별 준수 여부를 한눈에 파악하고 미흡한 부분을 바로 조치' }
       ],
-      keywords: ['Microsoft Sentinel', 'KQL', 'SOC']
+      keywords: ['ISO 27001', 'PowerShell', 'Logpresso', 'Compliance']
     }
   },
   {
     id: 17,
+    priority: 16,
     domain: 'Workplace',
     status: 'Completed',
     title: 'SharePoint 인트라넷 구축',
     tags: ['SharePoint', 'Teams', 'M365'],
     desc: '전사 인트라넷 플랫폼을 SharePoint Online 기반으로 구축한 프로젝트입니다.',
-    date: '2025.05',
+    date: '2024.12',
     icon: 'workplace',
     detail: {
       diagram: null,
@@ -1225,7 +1286,14 @@ const projects = [
         'Teams와 연동해 협업 워크스페이스 접근성 확보',
         '검색 최적화를 위한 메타데이터 및 콘텐츠 유형 설계'
       ],
-      problem: '공지사항, 문서함, 조직도 같은 사내 정보가 여러 채널에 흩어져 있어, 필요한 정보를 찾는 데 시간이 걸렸습니다.',
+      problem: '공지사항, 문서함, 조직도 같은 사내 정보가 여러 채널에 흩어져 있어, 필요한 정보를 찾는 데 시간이 걸렸습니다. 또한 각 팀이 보유한 자료를 사내 업무지원 AI 플랫폼에서 활용하려면 라이선스에 포함된 기능을 팀별로 사용할 수 있도록 안내가 필요했습니다.',
+      challenge: [
+        { issue: '팀마다 SharePoint 및 관련 기능 활용 수준 차이가 커서, 동일한 설명으로는 팀별 이해도 차이가 컸음', resolution: '각 팀을 대상으로 기능을 소개하고 사용법을 안내하는 세션을 진행해 라이선스에 포함된 기능을 실제로 활용할 수 있도록 지원' },
+      ],
+      outcome: [
+        { value: '팀별 안내 진행', label: '부서 자료를 AI 플랫폼에서 활용 가능하도록 지원' },
+        { value: '기존 라이선스 활용', label: '추가 비용 없이 보유 기능 확산' },
+      ],
       whyDesign: [
         { title: '접근성', desc: '분산돼 있던 사내 정보를 단일 진입점으로 통합' },
         { title: '협업 강화', desc: 'Teams 연동으로 문서 작업과 커뮤니케이션을 자연스럽게 연결' }
@@ -1235,12 +1303,13 @@ const projects = [
   },
   {
     id: 18,
+    priority: 6,
     domain: 'Data',
     status: 'In Progress',
     title: '데이터 거버넌스 체계 설계',
     tags: ['Purview', 'Data Catalog', 'Azure SQL'],
     desc: '전사 데이터 자산을 분류하고 거버넌스 체계를 수립하는 설계 프로젝트입니다.',
-    date: '2025.04',
+    date: '2026.03',
     icon: 'data',
     detail: {
       diagram: null,
@@ -1265,6 +1334,7 @@ const projects = [
   },
   {
     id: 19,
+    priority: 1,
     domain: 'Infrastructure',
     status: 'Completed',
     title: '회의실 PC 중앙관리 Active Directory 구축',
@@ -1307,6 +1377,36 @@ const projects = [
         { title: '운영 표준화', desc: '도메인 정책과 네트워크 구성 표준화로 신규 회의실 PC 추가 시간 단축' }
       ],
       keywords: ['Active Directory', 'GPO', 'DNS', 'VMware', 'DHCP', 'Firewall']
+    }
+  },
+  {
+    id: 20,
+    priority: 17,
+    domain: 'Infrastructure',
+    status: 'Completed',
+    title: 'Logpresso SIEM 버전 업그레이드',
+    tags: ['Logpresso', 'SIEM', 'Migration'],
+    desc: '기존 Logpresso 환경을 신규 버전으로 업그레이드하고, 기존 프로젝트와 수집 정책을 이전한 프로젝트입니다.',
+    date: '2025.10',
+    icon: 'infra',
+    detail: {
+      diagram: null,
+      techStack: [
+        { name: 'Logpresso' }
+      ],
+      whatIDesigned: [
+        '벤더와 협업하여 Logpresso 환경을 신규 버전으로 안정적으로 이관'
+      ],
+      problem: '기존 Logpresso 환경이 구버전이라 최신 기능을 활용하기 어려웠고, 버전을 올리는 과정에서 기존에 구성해 둔 프로젝트와 수집 정책을 안정적으로 유지할 필요가 있었습니다.',
+      outcome: [
+        { value: '벤더 협업', label: '안정적인 버전 이관 진행' },
+        { value: '신규 버전 적용', label: '최신 기능 활용 기반 확보' },
+      ],
+      whyDesign: [
+        { title: '최신화', desc: '최신 버전으로 업그레이드해 기능 활용 범위를 확장' },
+        { title: '안정성', desc: '벤더와 협업해 이관 과정의 리스크를 최소화' }
+      ],
+      keywords: ['Logpresso', 'SIEM', 'Migration']
     }
   }
 
@@ -1451,7 +1551,7 @@ function stackInitial(name) {
 let currentStatus = 'all';
 let currentDomain = 'all';
 let currentTag = null;
-let currentSort = 'date-desc';
+let currentSort = 'priority';
 let currentView = 'grid';
 let currentPage = 1;
 const PAGE_SIZE = 6;
@@ -1475,6 +1575,7 @@ function getFiltered() {
 
   // Sort
   list.sort((a, b) => {
+    if (currentSort === 'priority')  return a.priority - b.priority;
     if (currentSort === 'date-desc') return b.date.localeCompare(a.date);
     if (currentSort === 'date-asc')  return a.date.localeCompare(b.date);
     return a.title.localeCompare(b.title);
