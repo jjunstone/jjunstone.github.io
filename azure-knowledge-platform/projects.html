@@ -1358,17 +1358,17 @@ const projects = [
         '회의실 공용 PC 도메인 조인을 통한 중앙 관리 체계 구축',
         'OU 및 사용자·그룹 구조 설계',
         'GPO 기반 회의실 PC 보안·운영 정책 적용',
-        'Domain Admin만 Domain Join이 가능하도록 권한 정책 구성',
+        'MeetingRoom 전용 OU에서 Authenticated Users의 Computer Object 생성 권한을 제거하고 관리자 계정에만 위임',
         'DMZ-WiFi Zone 간 방화벽 정책 구성으로 AD 필수 서비스만 허용',
         'DHCP 예약 및 고정 IP 정책 적용으로 네트워크 표준화'
       ],
       problem: '회의실 공용 PC가 개별적으로 관리되고 있어 PC마다 보안 설정과 계정 정책이 제각각이었고, 별도 제약 없이 도메인에 조인할 수 있어 통제가 필요한 상태였습니다.',
       challenge: [
-        { issue: '회의실 PC는 여러 사람이 함께 쓰는 공용 장비라 일반 사용자 PC와 동일한 방식으로 도메인 조인을 허용할 수 없었음', resolution: 'Domain Admin 계정만 Domain Join이 가능하도록 권한을 제한하고, 전용 OU(MeetingRoom)로 분리해 관리' },
+        { issue: '회의실 PC는 여러 사람이 함께 쓰는 공용 장비라 일반 사용자 PC와 동일한 방식으로 도메인 조인을 허용할 수 없었음', resolution: 'MeetingRoom 전용 OU를 분리하고, 해당 OU에서 Authenticated Users의 기본 Computer Object 생성 권한을 제거해 관리자 계정에만 Domain Join 권한을 위임' },
       ],
       outcome: [
         { value: '중앙 관리', label: 'AD·GPO 기반 회의실 PC 통합 관리' },
-        { value: '최소 권한', label: 'Domain Join 권한을 Admin으로 제한' },
+        { value: '최소 권한', label: 'OU 단위 권한 위임으로 Domain Join을 관리자 계정으로 제한' },
         { value: '운영 표준화', label: '신규 회의실 PC 추가 시 동일 정책 즉시 적용' },
       ],
       whyDesign: [
