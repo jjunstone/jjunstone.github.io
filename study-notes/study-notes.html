@@ -66,8 +66,34 @@
 
     /* HEADER */
     .header{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:36px;}
-    .home-link{font-size:.95rem;color:var(--navy);cursor:pointer;opacity:.7;transition:opacity .2s;}
-    .home-link:hover{opacity:1;}
+    .home-link{
+      display:inline-flex;align-items:center;gap:8px;
+      font-family:var(--font-hand);font-size:.92rem;font-weight:700;color:var(--navy);
+      background:var(--paper-light);border:1.5px solid var(--navy);border-radius:999px;
+      padding:9px 18px 9px 14px;cursor:pointer;
+      box-shadow:2px 2px 0 var(--navy);
+      transition:transform .15s ease,box-shadow .15s ease,background .15s ease,color .15s ease;
+    }
+    .home-link .home-icon{font-size:1.05rem;line-height:1;}
+    .home-link:hover{
+      background:var(--navy);color:var(--paper-light);
+      transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--gold);
+    }
+    .home-link:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--navy);}
+
+    /* PAGINATION */
+    .pagination{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;margin:36px 0 8px;}
+    .page-btn{
+      font-family:var(--font-hand);font-size:.9rem;font-weight:700;color:var(--ink-soft);
+      background:var(--paper-light);border:1.5px solid var(--line);border-radius:8px;
+      min-width:36px;height:36px;padding:0 10px;cursor:pointer;
+      transition:background .15s ease,color .15s ease,border-color .15s ease,transform .15s ease;
+    }
+    .page-btn:hover:not(:disabled){border-color:var(--navy);color:var(--navy);transform:translateY(-1px);}
+    .page-btn.active{background:var(--navy);border-color:var(--navy);color:#fff;}
+    .page-btn.page-nav{font-weight:600;}
+    .page-btn:disabled{opacity:.35;cursor:default;}
+    .page-ellipsis{color:var(--ink-soft);opacity:.6;padding:0 2px;}
 
     .title-block{margin-bottom:36px;}
     .eyebrow{font-weight:700;font-size:.9rem;letter-spacing:.1em;text-transform:uppercase;margin:0 0 8px;color:var(--navy);}
@@ -128,6 +154,29 @@
     .modal-summary{margin:0;padding:0;list-style:none;}
     .modal-summary li{font-size:.9rem;color:var(--ink-soft);line-height:1.65;padding-left:16px;position:relative;margin-bottom:6px;}
     .modal-summary li::before{content:"–";position:absolute;left:0;color:var(--gold);}
+
+    .fulltext-toggle{
+      display:inline-flex;align-items:center;gap:6px;
+      font-family:var(--font-hand);font-size:.85rem;font-weight:700;color:var(--navy);
+      background:none;border:1.5px dashed var(--line);border-radius:999px;
+      padding:7px 14px;cursor:pointer;transition:border-color .15s ease,background .15s ease;
+    }
+    .fulltext-toggle:hover{border-color:var(--navy);background:rgba(23,60,120,.05);}
+    .fulltext-toggle-icon{display:inline-block;transition:transform .2s ease;font-size:.75rem;}
+    .fulltext-toggle.open .fulltext-toggle-icon{transform:rotate(90deg);}
+    .modal-fulltext{
+      margin:0;padding:0;list-style:none;
+      max-height:0;overflow:hidden;opacity:0;
+      transition:max-height .3s ease,opacity .25s ease,margin-top .3s ease;
+    }
+    .modal-fulltext.open{max-height:2000px;opacity:1;margin-top:14px;}
+    .modal-fulltext li{
+      font-size:.87rem;color:var(--ink-soft);line-height:1.7;
+      padding:8px 0 8px 16px;position:relative;
+      border-bottom:1px dashed var(--line);
+    }
+    .modal-fulltext li:last-child{border-bottom:none;}
+    .modal-fulltext li::before{content:"·";position:absolute;left:0;color:var(--gold);}
     .modal-takeaway{font-size:.9rem;color:var(--ink);line-height:1.7;background:rgba(154,119,41,.08);border-left:3px solid var(--gold);padding:12px 16px;border-radius:4px;font-style:italic;margin:0;}
     .modal-tags{display:flex;flex-wrap:wrap;gap:6px;}
     .modal-tag{font-size:.76rem;padding:3px 10px;border-radius:12px;background:rgba(0,0,0,.05);color:var(--ink-soft);}
@@ -173,7 +222,7 @@
   <main>
 
     <div class="header">
-      <div class="home-link" onclick="goHome()">← 홈</div>
+      <button class="home-link" onclick="goHome()"><span class="home-icon">🏠</span>홈으로</button>
     </div>
 
     <div class="title-block">
@@ -197,6 +246,7 @@
 
     <div class="note-grid" id="note-grid"></div>
     <p class="empty-state" id="empty-state">해당하는 노트가 없어요.</p>
+    <div class="pagination" id="pagination"></div>
 
   </main>
 </div>
@@ -211,6 +261,12 @@
     <div class="modal-section">
       <p class="modal-section-label">핵심 요약</p>
       <ul class="modal-summary" id="modal-summary"></ul>
+    </div>
+    <div class="modal-section" id="modal-fulltext-section">
+      <button class="fulltext-toggle" id="fulltext-toggle" onclick="toggleFullText()">
+        <span class="fulltext-toggle-icon">▸</span> 원문 전체 보기
+      </button>
+      <ul class="modal-fulltext" id="modal-fulltext"></ul>
     </div>
     <div class="modal-section" id="modal-takeaway-section">
       <p class="modal-section-label">내 생각 / 적용 포인트</p>
@@ -368,70 +424,551 @@ const NOTES = [
   {
     id: 5,
     category: 'frontend',
-    title: '웹의 탄생과 프론트엔드 발전 (1강)',
-    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리', url: '#' },
+    title: '웹의 탄생과 3대 기술',
+    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 1강', url: '#' },
     summary: [
-      '인터넷(도로망)과 웹(우편 시스템)의 차이, HTML·URL·HTTP 3대 기술 정리',
-      'CSS로 구조와 표현 분리, JS 등장으로 이벤트·DOM 조작이 가능해짐',
-      '브라우저 전쟁 이후 표준화 필요성, 렌더링 5단계(읽기→렌더트리→레이아웃→페인트→리플로우)',
-      'jQuery에서 React로 이어지는 라이브러리 발전, 컴포넌트·상태 관리 개념 등장',
-      'Node.js·npm으로 코드 공유 생태계 형성, 트랜스파일링·번들링·트리셰이킹 등 빌드 개념',
-      'SPA와 CSR/SSR/하이드레이션 개념, 프론트엔드·백엔드 역할 분리(API 기반)'
+      '인터넷은 전 세계 컴퓨터를 연결하는 네트워크 인프라(도로망), 웹은 그 위에서 문서를 URL 주소로 배달하는 우편 시스템 — 이메일·FTP도 인터넷 위에서 동작하지만 웹과는 별개의 시스템',
+      '1989년 팀 버너스리가 연구 자료 공유를 위해 하이퍼텍스트 개념을 제안하며 웹이 시작됨. 하이퍼링크는 오늘날 우리가 쓰는 링크의 원형',
+      '1991년 웹의 3대 기술 등장 — HTML(문서 구조, H1은 제목·P는 문단), URL(문서 고유 주소), HTTP(문서를 요청하고 받는 통신 규칙)'
     ],
-    tags: ['웹역사', 'CSS', 'JavaScript', 'React', 'Build Tools']
+    fullText: [
+      '인터넷은 전 세계 컴퓨터를 연결하는 네트워크 인프라, 즉 도로망과 같습니다.',
+      '웹은 인터넷이라는 도로망 위에서 문서라는 소포를 URL이라는 주소에 따라 배달하는 우편 시스템과 같습니다.',
+      '이메일, FTP 등도 인터넷 위에서 동작하지만 웹과는 다른 별개의 시스템입니다.',
+      '팀 버너스리가 연구 자료 공유를 위해 하이퍼텍스트 개념을 제안하며 웹이 시작되었습니다.',
+      '하이퍼링크는 문서 안에서 다른 문서로 이동하는 링크로, 오늘날 우리가 쓰는 링크의 시작입니다.',
+      '웹은 원래 단순한 문서 공유 시스템에서 출발했습니다.',
+      'HTML (HyperText Markup Language): 문서의 구조를 정의하는 언어입니다.',
+      'H1 태그는 제목, P 태그는 문단을 나타냅니다.',
+      'URL (Uniform Resource Locator): 문서의 고유한 주소입니다.',
+      'HTTP (HyperText Transfer Protocol): 문서를 요청하고 받는 통신 규칙입니다.'
+    ],
+    tags: ['웹역사', 'HTML', 'URL', 'HTTP']
   },
   {
     id: 6,
-    category: 'backend',
-    title: '백엔드와 데이터베이스의 등장 (2, 3강)',
-    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리', url: '#' },
+    category: 'frontend',
+    title: '정적인 웹 페이지의 한계와 CSS의 등장',
+    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 1강', url: '#' },
     summary: [
-      'CGI 등장으로 서버가 요청마다 동적으로 HTML을 조립하는 SSR 개념 시작',
-      '텍스트 파일 저장의 한계로 RDBMS 등장 — 테이블·조인·SQL·정규화·ACID·인덱스',
-      '확장성 문제로 NoSQL(MongoDB·Redis·Cassandra) 등장, 서비스 특성에 맞춰 RDBMS와 선택적 사용',
-      '클라우드 DB·서버리스(Firebase, Superbase)로 설치·관리 부담이 클라우드 업체로 이전',
-      'S3 등 클라우드 스토리지 등장, 객체 스토리지(버킷·객체·키)와 CDN 개념',
-      '보안(인증/인가)·성능(캐싱/비동기/트랜잭션)·확장성(수직/수평)과 모놀리스→마이크로서비스 전환'
+      '초기 웹 페이지는 링크가 달린 텍스트 형태의 정적인 페이지였음',
+      'HTML 태그 안에 스타일을 직접 넣는 방식은 페이지가 많아질수록 유지보수가 어려워지는 문제가 있었음',
+      'CSS(Cascading Style Sheets) 등장(1996년) — 구조와 표현을 분리하여 디자인을 담당',
+      'CSS 파일 하나만 수정해도 모든 페이지 디자인이 한 번에 변경됨. 캐스케이드는 스타일이 위에서 아래로 흘러 적용되는 원리',
+      '웹이 "읽는 것"에서 "보는 것"으로 진화하기 시작했음'
     ],
-    tags: ['Backend', 'RDBMS', 'NoSQL', 'Storage', 'Microservices']
+    fullText: [
+      '초기 웹 페이지는 링크가 달린 텍스트 형태의 정적인 페이지였습니다.',
+      'HTML 태그 안에 스타일을 직접 넣는 방식은 페이지가 많아질수록 유지보수가 어려워지는 문제가 있었습니다.',
+      'CSS (Cascading Style Sheets) 등장 (1996년): 구조와 표현을 분리하여 디자인을 담당합니다.',
+      'CSS 파일 하나만 수정해도 모든 페이지 디자인이 한 번에 변경됩니다.',
+      '캐스케이드는 스타일이 위에서 아래로 흘러 적용되는 원리입니다.',
+      "웹이 '읽는 것'에서 '보는 것'으로 진화하기 시작했습니다."
+    ],
+    tags: ['CSS', '웹역사', '스타일링']
   },
   {
     id: 7,
-    category: 'ai',
-    title: 'AI 기술의 발전: 머신러닝부터 LLM까지 (5, 6강)',
-    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리', url: '#' },
+    category: 'frontend',
+    title: 'JavaScript의 등장과 동적인 웹',
+    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 1강', url: '#' },
     summary: [
-      '규칙 기반 시스템의 한계(조합 폭발, 유지보수 취약성)에서 머신러닝으로 전환한 배경',
-      '머신러닝은 데이터에서 패턴을 학습, 딥러닝은 특징 추출까지 자동으로 수행',
-      '신경망 구조(은닉층·가중치·활성화 함수)와 CNN, 딥러닝 폭발의 3요인(데이터·GPU·오픈소스)',
-      'Word2Vec → RNN/LSTM → Transformer(어텐션)로 이어지는 자연어 처리 발전사',
-      '토큰·임베딩·temperature/top-p·할루시네이션·지식 단절 등 LLM 핵심 개념 정리'
+      '웹 페이지가 아무것도 반응하지 않는 한계를 극복하기 위해 JavaScript가 개발됨',
+      'Java와 JavaScript는 완전히 다른 언어이며, 이름만 비슷한 것은 마케팅 때문',
+      'JavaScript는 브라우저 안에서 실행되는 언어로, 동적인 동작을 가능하게 함',
+      '버튼 클릭 시 팝업, 실시간 입력 검증, 페이지 새로고침 없는 화면 변경 등이 가능해짐',
+      '핵심 개념 — 이벤트(사용자의 클릭·키 입력 등에 반응하는 신호를 잡는 것), DOM 조작(브라우저가 HTML 요소를 내부 지도처럼 저장하고 JS가 이 지도를 수정해 화면을 변경하는 것 — HTML이 무대 세팅이라면 DOM 조작은 공연 중 소품을 바꾸는 것)',
+      '웹이 드디어 "반응"하기 시작했음'
     ],
-    tags: ['AI', 'Deep Learning', 'LLM', 'Transformer', 'NLP']
+    fullText: [
+      '웹 페이지가 아무것도 반응하지 않는 한계를 극복하기 위해 JavaScript가 개발되었습니다.',
+      'Java와 JavaScript는 완전히 다른 언어이며, 이름만 비슷한 것은 마케팅 때문입니다.',
+      'JavaScript는 브라우저 안에서 실행되는 언어로, 동적인 동작을 가능하게 합니다.',
+      '버튼 클릭 시 팝업, 실시간 입력 검증, 페이지 새로고침 없는 화면 변경 등이 가능합니다.',
+      '핵심 개념: 이벤트: 사용자의 행동(클릭, 키 입력 등)에 반응하는 신호를 잡는 것입니다.',
+      'DOM 조작 (DOM Manipulation): 브라우저가 HTML 요소를 내부 지도(DOM)처럼 저장하고, JavaScript가 이 지도를 수정하여 화면을 변경하는 것입니다.',
+      'HTML이 무대 세팅이라면, DOM 조작은 공연 중 소품을 바꾸는 것과 같습니다.',
+      "웹이 드디어 '반응'하기 시작했습니다."
+    ],
+    tags: ['JavaScript', 'DOM', '이벤트']
   },
   {
     id: 8,
-    category: 'backend',
-    title: '웹 서버·배포·트래픽 관리 (4강)',
-    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리', url: '#' },
+    category: 'frontend',
+    title: '브라우저 전쟁과 표준화의 필요성',
+    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 1강', url: '#' },
     summary: [
-      '웹 서버(Apache)와 WAS의 역할 차이, C10K 문제와 이를 해결한 Nginx의 이벤트 기반 구조',
-      'Git·GitHub로 협업하고 Docker로 환경을 컨테이너화, CI/CD로 빌드·배포 자동화',
-      '도메인 구매부터 DNS 레코드, HTTPS/SSL 인증서(Let\'s Encrypt)까지 배포 파이프라인 정리',
-      '수직/수평 확장과 로드 밸런서·오토 스케일링으로 트래픽 급증에 대응하는 방법'
+      '넷스케이프와 인터넷 익스플로러 간의 경쟁으로 브라우저마다 다르게 작동하는 문제가 발생',
+      '같은 코드를 써도 브라우저마다 다르게 보이는 "크로스 브라우저 이슈"가 개발자들을 괴롭혔음',
+      '브라우저 렌더링 과정 — 읽기(HTML·CSS 파일을 읽어 요소·스타일 정보 파악) → 렌더 트리(화면에 보여줄 요소만 추리기) → 레이아웃(각 요소의 위치·크기 계산) → 페인트(색상·이미지 등을 입혀 화면 완성)',
+      '리플로우 — JS로 DOM을 수정하면 레이아웃 계산을 다시 해야 하는데, 이 과정이 많으면 성능이 저하됨. 프론트엔드 최적화의 핵심은 리플로우를 줄이는 것'
     ],
-    tags: ['DevOps', 'CI/CD', 'Docker', 'DNS', 'Load Balancing']
+    fullText: [
+      '넷스케이프와 인터넷 익스플로러 간의 경쟁으로 브라우저마다 다르게 작동하는 문제가 발생했습니다.',
+      "같은 코드를 써도 브라우저마다 다르게 보이는 '크로스 브라우저 이슈'가 개발자들을 괴롭혔습니다.",
+      '브라우저 렌더링 과정: 읽기: HTML, CSS 파일을 읽어 페이지 요소와 스타일 정보를 파악합니다.',
+      '그릴 목록 추리기 (Render Tree): 화면에 보여줄 요소만 골라냅니다.',
+      '자리 잡기 (Layout): 각 요소의 화면 위치와 크기를 계산합니다.',
+      '색칠하기 (Paint): 요소에 색상, 이미지 등을 입혀 화면을 완성합니다.',
+      '리플로우 (Reflow): JavaScript로 DOM을 수정하면 레이아웃 계산을 다시 해야 하는데, 이 과정이 많으면 성능이 저하됩니다.',
+      '프론트엔드 최적화의 핵심은 리플로우를 줄이는 것입니다.'
+    ],
+    tags: ['브라우저', '렌더링', '리플로우']
   },
   {
     id: 9,
-    category: 'ai',
-    title: 'AI 오케스트레이션: LangChain·LangGraph·LangSmith (7, 8강)',
-    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리', url: '#' },
+    category: 'frontend',
+    title: '라이브러리 전쟁: jQuery에서 React까지',
+    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 1강', url: '#' },
     summary: [
-      '단일 경로로만 동작하는 RAG 파이프라인의 한계를 넘어서는 오케스트레이션 개념',
-      'LangChain(표준 부품 연결)·LangGraph(노드·엣지로 흐름 제어)·LangSmith(모니터링)의 역할 구분',
-      'AX(AI Transformation)에서는 데이터 오너십·플로우 설계·평가셋 관리가 도메인 전문가의 핵심 역할',
-      '세무 상담 시나리오로 본 세 도구의 실제 조합 방식(데이터 연결→판단 흐름→모니터링)'
+      '웹이 단순 문서에서 쇼핑몰·소셜 네트워크 등으로 확장되며 JS 코드량이 폭발적으로 증가',
+      '초기 JavaScript는 대규모 애플리케이션에 적합하지 않아 관리가 어려워졌음',
+      'jQuery 등장(2006년) — 브라우저마다 달랐던 DOM 조작 방식을 통일하고 코드 길이를 줄여 크로스 브라우저 문제를 해결',
+      '웹이 더 복잡해지며 jQuery만으로는 부족해졌고, 데이터와 화면 업데이트 관리가 힘들어졌음',
+      'React 등장(2013년) — 데이터 변경 시 화면이 알아서 바뀌는 철학으로, 개발자는 데이터 관리에만 집중하고 화면 업데이트는 React가 담당하는 구조',
+      '핵심 개념 — 추상화(복잡한 동작을 숨기고 간단한 명령어만 사용하게 함, 커피 머신 비유), 재사용성(컴포넌트 개념으로 UI 틀을 만들어 어디서든 재사용, 상품 카드 틀 비유), 상태 관리(장바구니 정보 등 앱이 기억해야 하는 모든 정보를 관리, 복잡하게 얽히면 버그 발생)',
+      '프론트엔드는 더 이상 화면 꾸미기가 아닌, UI 아키텍처 설계·상태 관리·성능 최적화·API 통신 등 엔지니어링 영역이 됨. "퍼블리셔"에서 "프론트엔드 개발자"라는 용어가 생기기 시작'
+    ],
+    fullText: [
+      '웹이 단순 문서에서 쇼핑몰, 소셜 네트워크 등으로 확장되면서 JavaScript 코드량이 폭발적으로 증가했습니다.',
+      '초기 JavaScript는 대규모 애플리케이션에 적합하지 않아 관리가 어려워졌습니다.',
+      'jQuery 등장 (2006년): 브라우저마다 달랐던 DOM 조작 방식을 통일하고 코드 길이를 줄여 크로스 브라우저 문제를 해결했습니다.',
+      '웹이 더 복잡해지면서 jQuery만으로는 부족해졌고, 데이터와 화면 업데이트 관리가 힘들어졌습니다.',
+      'React 등장 (2013년): 데이터 변경 시 화면이 알아서 바뀌는 철학으로 개발자는 데이터 관리에만 집중하고 화면 업데이트는 React가 담당하는 구조입니다.',
+      '핵심 개념: 추상화 (Abstraction): 복잡한 동작을 숨기고 간단한 명령어만 사용하게 합니다. (커피 머신 비유)',
+      '재사용성: 컴포넌트 개념으로 UI 틀을 만들어 어디서든 재사용합니다. (상품 카드 틀 비유)',
+      '상태 관리 (State Management): 앱이 기억해야 하는 모든 정보(장바구니 정보 등)를 관리하며, 복잡하게 얽히면 버그가 발생할 수 있습니다.',
+      '프론트엔드는 더 이상 화면 꾸미기가 아닌, UI 아키텍처 설계, 상태 관리, 성능 최적화, API 통신 등 엔지니어링 영역이 되었습니다.',
+      "'퍼블리셔'에서 '프론트엔드 개발자'라는 용어가 생기기 시작했습니다."
+    ],
+    tags: ['jQuery', 'React', '상태 관리', '컴포넌트']
+  },
+  {
+    id: 10,
+    category: 'frontend',
+    title: 'Node.js와 npm: 코드 공유 생태계',
+    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 1강', url: '#' },
+    summary: [
+      '라이브러리가 많아지면서 코드 공유 및 관리의 필요성이 대두됨',
+      'Node.js 등장(2009년) — JavaScript를 브라우저 밖에서도 실행할 수 있게 해주는 런타임 환경. 런타임은 코드가 실제로 돌아가는 환경(악기 비유)',
+      'npm(Node Package Manager) 등장(2010년) — 프로그래밍 세계의 앱 스토어처럼, 개발자들이 만든 라이브러리 패키지를 명령어 한 줄로 다운로드받을 수 있음',
+      'npm install [패키지명] 명령어로 라이브러리를 설치. package.json 파일은 프로젝트의 의존성 명세서 역할',
+      '의존성(Dependency) — 내가 쓰는 라이브러리가 다른 라이브러리에 의존하는 연쇄 관계를 npm이 자동으로 관리. 프론트엔드는 "조립식 산업"이 됨'
+    ],
+    fullText: [
+      '라이브러리가 많아지면서 코드 공유 및 관리의 필요성이 대두되었습니다.',
+      'Node.js 등장 (2009년): JavaScript를 브라우저 밖에서도 실행할 수 있게 해주는 런타임 환경입니다.',
+      '런타임은 코드가 실제로 돌아가는 환경입니다. (악기 비유)',
+      'npm (Node Package Manager) 등장 (2010년): 프로그래밍 세계의 앱 스토어처럼, 개발자들이 만든 라이브러리 패키지를 명령어 한 줄로 다운로드받을 수 있습니다.',
+      'npm install [패키지명] 명령어로 라이브러리를 설치합니다.',
+      'package.json 파일은 프로젝트의 의존성 명세서 역할을 합니다.',
+      '의존성 (Dependency): 내가 쓰는 라이브러리가 다른 라이브러리에 의존하는 연쇄 관계를 npm이 자동으로 관리합니다.',
+      "프론트엔드는 '조립식 산업'이 되었습니다."
+    ],
+    tags: ['Node.js', 'npm', '패키지 관리']
+  },
+  {
+    id: 11,
+    category: 'frontend',
+    title: '빌드 과정: 트랜스파일링부터 최적화까지',
+    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 1강', url: '#' },
+    summary: [
+      '최신 JavaScript 문법이나 여러 파일로 나눈 코드를 브라우저가 이해하고 빠르게 실행하기 위한 "빌드" 과정이 필요',
+      '트랜스파일링(Transpiling) — 최신 문법으로 작성된 코드를 오래된 브라우저도 이해할 수 있는 표준 문법으로 자동 번역(예: Babel)',
+      '번들링(Bundling) — 수십·수백 개의 파일로 쪼개진 코드를 하나 또는 몇 개로 묶어 파일 요청 수를 줄임(예: Webpack, Vite). 여러 권의 노트를 한 권으로 합쳐 가방에 넣는 것에 비유',
+      '트리셰이킹(Tree Shaking) — 번들링 시 사용하지 않는 코드를 자동으로 제거(나무 흔들어 열매·잎사귀 떨어뜨리는 비유)',
+      '프로덕션 최적화(Minification) — 개발 시 사용된 긴 변수명·주석·공백 등을 제거해 파일 크기를 최소화(책 인쇄 전 여백·메모 제거 비유)',
+      '개발자가 작성한 코드와 실제 서비스에 배포되는 코드는 빌드 과정을 거치며 달라짐'
+    ],
+    fullText: [
+      "최신 JavaScript 문법이나 여러 파일로 나눈 코드를 브라우저가 이해하고 빠르게 실행하기 위한 '빌드' 과정이 필요합니다.",
+      '빌드 관련 4가지 핵심 개념: 트랜스파일링 (Transpiling): 최신 문법으로 작성된 코드를 오래된 브라우저도 이해할 수 있는 표준 문법으로 자동 번역합니다. (예: Babel)',
+      '번들링 (Bundling): 수십, 수백 개의 파일로 쪼개진 코드를 하나 또는 몇 개로 묶어 파일 요청 수를 줄입니다. (예: Webpack, Vite)',
+      '여러 권의 노트를 한 권으로 합쳐 가방에 넣는 것에 비유할 수 있습니다.',
+      '트리셰이킹 (Tree Shaking): 번들링 시 사용하지 않는 코드를 자동으로 제거합니다. (나무 흔들어 열매/잎사귀 떨어뜨리는 것에 비유)',
+      '프로덕션 최적화 (Minification): 개발 시 사용된 긴 변수명, 주석, 공백 등을 제거하여 파일 크기를 최소화합니다. (책 인쇄 전 여백/메모 제거 비유)',
+      '개발자가 작성한 코드와 실제 서비스에 배포되는 코드는 빌드 과정을 거치며 달라집니다.'
+    ],
+    tags: ['빌드', 'Webpack', 'Babel', 'Tree Shaking']
+  },
+  {
+    id: 12,
+    category: 'frontend',
+    title: 'SPA의 등장과 프론트엔드·백엔드의 분리',
+    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 1강', url: '#' },
+    summary: [
+      'MPA(페이지 이동 시 전체 HTML을 새로 불러와 화면이 깜빡임) vs SPA(HTML은 하나, JS가 화면만 동적 변경해 앱처럼 부드러운 UX)',
+      'CSR(브라우저에서 JS가 화면을 그림 — 빠른 전환·상태 유지 vs 초기 로딩 느림·SEO 약화) vs SSR(서버에서 HTML을 미리 완성, 초기 로딩 빠르고 SEO 유리)',
+      '하이드레이션 — SSR로 받은 정적 HTML에 JS를 주입해 인터랙티브하게 만드는 과정(마른 식물에 물 주기 비유). 요즘은 SSR+CSR 하이브리드(Next.js)가 대세',
+      'SPA 등장 이후 프론트엔드는 UI 로직·API 호출·데이터 처리를 담당, 백엔드는 API(요청하면 데이터를 주는 창고) 제공에 집중 — 역할 분리가 명확해짐'
+    ],
+    fullText: [
+      'MPA (Multi-Page Application): 페이지 이동 시 전체 HTML 파일을 새로 불러와 화면이 깜빡이는 방식입니다.',
+      'SPA (Single Page Application): HTML 파일은 하나이며, JavaScript가 페이지 이동 시 화면만 동적으로 변경하여 앱처럼 부드러운 사용자 경험을 제공합니다.',
+      '클라이언트 사이드 렌더링 (CSR): 브라우저에서 JavaScript가 실행되어 화면을 그리는 방식입니다.',
+      '장점: 빠른 전환, 상태 유지, 모바일 최적화 UX.',
+      '단점: 초기 로딩 속도 저하, SEO(검색 엔진 최적화) 약화.',
+      'SSR (Server-Side Rendering): 서버에서 미리 HTML을 완성하여 브라우저에 보내므로 초기 로딩이 빠르고 SEO에 유리합니다.',
+      '하이드레이션 (Hydration): SSR로 받은 정적 HTML에 JavaScript를 주입하여 인터랙티브하게 만드는 과정입니다. (마른 식물에 물 주기 비유)',
+      '요즘은 SSR과 CSR을 혼합하는 하이브리드 방식(예: Next.js)이 대세입니다.',
+      'SPA 등장 이후 프론트엔드 개발은 복잡해졌고, 프론트엔드 개발자는 UI 로직, API 호출, 데이터 처리 등을 담당하게 되었습니다.',
+      'API (Application Programming Interface): 백엔드가 제공하는 데이터 창고로, 특정 주소로 요청하면 데이터를 주는 약속입니다.',
+      '서버는 데이터를 주는 역할만 하고, 화면을 그리는 것은 프론트엔드가 책임지게 되면서 역할 분리가 명확해졌습니다.',
+      '프론트엔드는 더 이상 디자인이 아닌, UI 아키텍처 설계, 상태 관리, 성능 최적화, API 통신 등 엔지니어링 영역이 되었습니다.'
+    ],
+    tags: ['SPA', 'CSR', 'SSR', 'API']
+  },
+  {
+    id: 13,
+    category: 'backend',
+    title: '백엔드의 탄생과 데이터베이스의 필요성',
+    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 2, 3강', url: '#' },
+    summary: [
+      '초기 웹은 단순 문서 파일이었으나, 방명록·검색 기능을 위해 서버가 요청마다 동적으로 결과를 만들어야 했음',
+      'CGI(1993년) — 서버가 요청을 받아 HTML을 조립해 응답하는 방식. 서버 사이드 렌더링(SSR)의 시작, 서버 역할이 "보관"에서 "제조"로 변화',
+      '백엔드 언어(PHP·Python·Java·Node.js·Go 등)의 공통 개념 — 변수·조건문·반복문·함수·클래스·예외 처리 등',
+      '동적으로 생성되는 데이터를 저장·관리할 필요에서 데이터베이스가 등장. 초기엔 텍스트 파일로 저장했지만 데이터가 늘며 중복·불일치·검색 비효율 문제 발생'
+    ],
+    fullText: [
+      '초기 웹은 단순한 문서 파일 형태였으나, 방명록이나 검색 기능 구현을 위해 서버가 요청에 따라 동적으로 결과를 만들어야 했습니다.',
+      'CGI (Common Gateway Interface) 등장 (1993년): 서버가 요청을 받아 그 자리에서 HTML을 조립하여 응답하는 방식입니다.',
+      '방문자가 글을 남기면 CGI 스크립트가 내용을 저장하고, 모든 글을 담은 HTML 페이지를 새로 만들어 응답합니다.',
+      '서버 사이드 렌더링 (SSR): 서버가 화면을 직접 만들어주는 방식입니다.',
+      '프론트엔드의 클라이언트 사이드 렌더링(CSR)과 대비됩니다.',
+      "서버의 역할이 파일을 보관하는 것에서 파일을 '제조'하는 것으로 바뀌었습니다.",
+      '백엔드 언어: PHP, Python, Java, Node.js, Go 등이 서버에서 화면 제조를 담당합니다.',
+      '핵심 공통 개념: 변수, 조건문, 반복문, 함수, 데이터 타입, 클래스, 예외 처리, 모듈/라이브러리.',
+      '로그인 기능 예시: if (ID 존재 && 비밀번호 일치) { 로그인 성공 } else { 로그인 실패 } 와 같이 조건문으로 구현됩니다.',
+      '방명록 글이나 검색 결과 등 동적으로 생성되는 데이터를 저장하고 관리하기 위해 데이터베이스가 필요해졌습니다.',
+      '초기에는 서버 내 텍스트 파일로 데이터를 저장했으나, 데이터 양이 많아지면서 중복, 불일치, 검색 비효율, 동시 수정 문제 등이 발생했습니다.'
+    ],
+    tags: ['CGI', 'SSR', 'Backend 기초', '데이터베이스']
+  },
+  {
+    id: 14,
+    category: 'backend',
+    title: '관계형 데이터베이스(RDBMS)의 등장',
+    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 2, 3강', url: '#' },
+    summary: [
+      '관계형 데이터베이스 모델(1970년) — 에드거 F. 코드가 데이터를 표(테이블) 형태로 저장하고 SQL로 관리하는 방식을 제안',
+      '표(Table) — 행(데이터)과 열(속성)로 구성. 조인(Join) — 여러 표를 연결하여 원하는 정보를 가져오는 기능',
+      'SQL(Structured Query Language) — 데이터를 조회하고 조작하는 언어. 정규화(Normalization) — 데이터 중복을 제거하고 일관성을 유지하는 설계 원칙',
+      '주요 RDBMS — Oracle(1977년, 기업용 시장 장악), MySQL(1995년, 오픈소스), PostgreSQL(학술 연구 시작, 기능·안정성 우수)',
+      'ACID 원칙 — 데이터의 정확성과 일관성을 보장하는 원칙(원자성·일관성·격리성·지속성). 인덱스(Index) — 빠른 데이터 검색을 위한 목차와 같은 기능'
+    ],
+    fullText: [
+      '관계형 데이터베이스 모델 (1970년): 에드거 F. 코드가 데이터를 표(테이블) 형태로 저장하고 SQL로 관리하는 방식을 제안했습니다.',
+      '표(Table): 행(데이터)과 열(속성)로 구성됩니다.',
+      '조인 (Join): 여러 표를 연결하여 원하는 정보를 가져오는 기능입니다.',
+      'SQL (Structured Query Language): 데이터를 조회하고 조작하는 언어입니다.',
+      '정규화 (Normalization): 데이터 중복을 제거하고 일관성을 유지하는 설계 원칙입니다.',
+      '주요 RDBMS: Oracle (1977년, 기업용 시장 장악), MySQL (1995년, 오픈 소스), PostgreSQL (학술 연구 시작, 기능/안정성 우수).',
+      'ACID 원칙: 데이터의 정확성과 일관성을 보장하는 원칙 (원자성, 일관성, 격리성, 지속성).',
+      '인덱스 (Index): 빠른 데이터 검색을 위한 목차와 같은 기능입니다.'
+    ],
+    tags: ['RDBMS', 'SQL', 'ACID']
+  },
+  {
+    id: 15,
+    category: 'backend',
+    title: '확장성 문제와 NoSQL의 등장',
+    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 2, 3강', url: '#' },
+    summary: [
+      '2000년대 중반 인터넷 폭발 성장으로 데이터 규모가 커지면서 RDBMS의 확장성 한계가 드러남',
+      'RDBMS는 서버 한 대에서 처리하는 방식(수직 확장)에 기반하나, 대규모 서비스는 서버를 여러 대(수평 확장)로 늘려야 했음',
+      'NoSQL(Not Only SQL) — 정확성의 일부를 포기하는 대신 속도와 확장성을 얻은 데이터베이스. 스키마리스(Schemaless) — 표처럼 미리 칸을 정해두지 않고 유연하게 데이터를 저장',
+      '대표적인 NoSQL — MongoDB(메모장처럼 데이터를 저장, 구조가 유연), Redis(빠른 임시 저장소로 자주 읽는 데이터를 메모리에 올려 바로 꺼내줌), Cassandra(대규모 데이터를 여러 서버에 나눠 저장, 쓰기 속도가 빠름)',
+      '서비스 특성에 따라 RDBMS와 NoSQL 중 적합한 것을 선택(은행 시스템 vs 소셜 미디어)'
+    ],
+    fullText: [
+      '2000년대 중반 인터넷 폭발 성장으로 데이터 규모가 커지면서 RDBMS의 확장성 한계가 드러났습니다.',
+      'RDBMS는 서버 한 대에서 처리하는 방식(수직 확장)에 기반하나, 대규모 서비스는 서버를 여러 대(수평 확장)로 늘려야 했습니다.',
+      'NoSQL (Not Only SQL): 정확성의 일부를 포기하는 대신 속도와 확장성을 얻은 데이터베이스입니다.',
+      '스키마리스 (Schemaless): 표처럼 미리 칸을 정해두지 않고 유연하게 데이터를 저장합니다.',
+      '대표적인 NoSQL: MongoDB: 메모장처럼 데이터를 저장하며 구조가 유연합니다.',
+      'Redis: 빠른 임시 저장소로, 자주 읽는 데이터를 메모리에 올려놓고 바로 꺼내줍니다.',
+      'Cassandra: 대규모 데이터를 여러 서버에 나눠 저장하는 데 특화되어 쓰기 속도가 빠릅니다.',
+      '서비스 특성에 따라 RDBMS와 NoSQL 중 적합한 것을 선택합니다. (은행 시스템 vs 소셜 미디어)'
+    ],
+    tags: ['NoSQL', 'MongoDB', 'Redis', 'Cassandra']
+  },
+  {
+    id: 16,
+    category: 'backend',
+    title: '클라우드 DB와 서버리스의 확산',
+    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 2, 3강', url: '#' },
+    summary: [
+      '클라우드 서비스(AWS RDS 등) 등장으로 DB 설치·관리·업데이트·백업·용량 관리를 클라우드 업체가 대신하게 됨',
+      '관리형 DB — DB를 직접 설치·관리하는 대신 클라우드 업체의 서비스를 이용. 서버리스(Serverless) — 서버는 존재하지만 개발자가 서버 관리에 신경 쓰지 않아도 되는 방식',
+      'Firebase — DB·인증·스토리지를 한 번에 제공하며 앱 개발을 간소화',
+      'Superbase — Firebase와 달리 관계형 DB(PostgreSQL) 기반으로, SQL 사용 및 복잡한 관계 데이터 처리가 가능하며 오픈소스. DB·인증·스토리지·API 자동 생성·실시간 DB 기능을 통합 제공'
+    ],
+    fullText: [
+      '클라우드 서비스(AWS RDS 등) 등장으로 DB 설치, 관리, 업데이트, 백업, 용량 관리를 클라우드 업체가 대신하게 되었습니다.',
+      '관리형 DB: DB를 직접 설치/관리하는 대신 클라우드 업체의 서비스를 이용합니다.',
+      '서버리스 (Serverless): 서버는 존재하지만 개발자가 서버 관리에 신경 쓰지 않아도 되는 방식입니다.',
+      'Firebase: DB, 인증, 스토리지를 한 번에 제공하며 앱 개발을 간소화했습니다.',
+      'Superbase: Firebase와 달리 관계형 DB(PostgreSQL) 기반으로, SQL 사용 및 복잡한 관계 데이터 처리가 가능하며 오픈 소스입니다.',
+      'DB, 인증, 스토리지, API 자동 생성, 실시간 DB 기능을 통합 제공합니다.'
+    ],
+    tags: ['서버리스', 'Firebase', 'Superbase']
+  },
+  {
+    id: 17,
+    category: 'backend',
+    title: '스토리지의 역사: 파일 시스템에서 클라우드 스토리지까지',
+    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 2, 3강', url: '#' },
+    summary: [
+      '컴퓨터는 원래 파일을 저장하는 기기였으며, 파일 시스템은 파일과 폴더로 이루어진 저장 구조',
+      '웹 등장 이후 이미지·영상 등 바이너리 데이터가 증가하고 사용자가 파일을 올리기 시작하면서 서버 저장 방식의 한계가 드러남 — 서버 고장 시 파일 유실, 확장성 문제, 트래픽 감당 불가',
+      '클라우드 스토리지(2006년, Amazon S3) — 파일 저장을 서버에서 분리하여 안전하고 확장 가능한 방식으로 제공',
+      '객체 스토리지 — 버킷(파일 저장소)·객체(파일)·키(파일 이름) 개념으로 작동하며 폴더 구조가 없음',
+      'CDN(Content Delivery Network) — 파일을 전 세계 여러 곳에 미리 복사해두어 사용자에게 가장 가까운 서버에서 빠르게 전달(캐싱 활용)',
+      '파일은 DB에 저장하지 않고 스토리지에 저장하며, DB에는 파일의 위치(URL)만 저장하는 것이 일반적. 파일 접근 권한은 스토리지 단에서 퍼블릭/프라이빗 설정 및 프리사인드 URL로 관리'
+    ],
+    fullText: [
+      '컴퓨터는 원래 파일을 저장하는 기기였으며, 파일 시스템은 파일과 폴더로 이루어진 저장 구조입니다.',
+      '웹 등장 이후 이미지, 영상 등 바이너리 데이터가 증가하고 사용자가 파일을 올리기 시작하면서 서버 저장 방식의 한계가 드러났습니다.',
+      '서버 고장 시 파일 유실, 확장성 문제, 트래픽 감당 불가 등의 문제가 발생했습니다.',
+      '클라우드 스토리지 (2006년, Amazon S3): 파일 저장을 서버에서 분리하여 안전하고 확장 가능한 방식으로 제공합니다.',
+      '객체 스토리지: 버킷(파일 저장소), 객체(파일), 키(파일 이름) 개념으로 작동하며 폴더 구조가 없습니다.',
+      'CDN (Content Delivery Network): 파일을 전 세계 여러 곳에 미리 복사해두어 사용자에게 가장 가까운 서버에서 빠르게 전달합니다. (캐싱 활용)',
+      '파일은 DB에 저장하지 않고 스토리지에 저장하며, DB에는 파일의 위치(URL)만 저장하는 것이 일반적입니다.',
+      '파일 접근 권한은 스토리지 단에서 퍼블릭/프라이빗 설정 및 프리사인드 URL로 관리합니다.'
+    ],
+    tags: ['스토리지', 'S3', 'CDN', '객체 스토리지']
+  },
+  {
+    id: 18,
+    category: 'backend',
+    title: '백엔드 보안, 성능, 확장성 고려사항',
+    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 2, 3강', url: '#' },
+    summary: [
+      '보안 — 비밀번호는 해싱 처리하고, 인증(누구인지 확인)과 인가(권한 확인)가 중요',
+      '성능: 비동기 처리 — 요청 처리 중 기다리는 시간을 활용하여 다른 요청을 처리(멀티스레드, 이벤트 루프)',
+      '성능: 캐싱 — 자주 요청되는 데이터를 메모리에 올려놓고 빠르게 제공(Redis, CDN)',
+      '성능: 트랜잭션(ACID) — 데이터 작업의 원자성·일관성·격리성·지속성을 보장하여 데이터 오류를 방지',
+      '확장성: 수직 확장(서버 성능을 높이는 방식, 비싸고 한계 있음) vs 수평 확장(서버 대수를 늘리는 방식, 대규모 서비스의 핵심)',
+      '로드 밸런서 — 여러 서버로 요청을 분배하여 부하를 조절. 분산 시스템 — 여러 서버가 협력하여 작업을 처리하는 구조'
+    ],
+    fullText: [
+      '보안: 비밀번호는 해싱 처리하고, 인증(누구인지 확인)과 인가(권한 확인)가 중요합니다.',
+      '성능: 비동기 처리: 요청 처리 중 기다리는 시간을 활용하여 다른 요청을 처리합니다. (멀티스레드, 이벤트 루프)',
+      '캐싱: 자주 요청되는 데이터를 메모리에 올려놓고 빠르게 제공합니다. (Redis, CDN)',
+      '트랜잭션 (ACID): 데이터 작업의 원자성, 일관성, 격리성, 지속성을 보장하여 데이터 오류를 방지합니다.',
+      '확장성: 수직 확장: 서버 성능을 높이는 방식 (비싸고 한계 있음).',
+      '수평 확장: 서버 대수를 늘리는 방식 (대규모 서비스의 핵심).',
+      '로드 밸런서: 여러 서버로 요청을 분배하여 부하를 조절합니다.',
+      '분산 시스템: 여러 서버가 협력하여 작업을 처리하는 구조입니다.'
+    ],
+    tags: ['보안', '성능', '확장성', '캐싱']
+  },
+  {
+    id: 19,
+    category: 'backend',
+    title: '모놀리스에서 마이크로서비스로의 전환',
+    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 2, 3강', url: '#' },
+    summary: [
+      '모놀리스(Monolith) — 모든 기능이 하나의 코드 덩어리에 포함된 구조로, 기능 수정 시 전체 재배포 및 장애 전파의 문제가 있음',
+      '마이크로서비스(Microservices) — 기능을 서비스별로 분리하여 독립적으로 운영하며, API 게이트웨이와 메시지 큐를 통해 서비스 간 통신을 관리',
+      '메시지 큐 — 서비스 간 비동기 통신을 지원하여 장애 발생 시에도 데이터 유실을 방지(치킨 주문 알림 서비스 비유)',
+      'DevOps — 마이크로서비스 관리 및 배포 자동화를 위한 CI/CD·Docker·모니터링·로깅 등의 개념이 중요해짐',
+      '백엔드 개발은 코딩뿐 아니라 운영까지 포함하는 포괄적인 영역'
+    ],
+    fullText: [
+      '모놀리스 (Monolith): 모든 기능이 하나의 코드 덩어리에 포함된 구조로, 기능 수정 시 전체 재배포 및 장애 전파의 문제가 있습니다.',
+      '마이크로서비스 (Microservices): 기능을 서비스별로 분리하여 독립적으로 운영하며, API 게이트웨이와 메시지 큐를 통해 서비스 간 통신을 관리합니다.',
+      '메시지 큐: 서비스 간 비동기 통신을 지원하여 장애 발생 시에도 데이터 유실을 방지합니다. (치킨 주문 알림 서비스 비유)',
+      'DevOps: 마이크로서비스 관리 및 배포 자동화를 위한 CI/CD, Docker, 모니터링, 로깅 등의 개념이 중요해졌습니다.',
+      '백엔드 개발은 코딩뿐 아니라 운영까지 포함하는 포괄적인 영역입니다.'
+    ],
+    tags: ['마이크로서비스', 'DevOps', '메시지 큐']
+  },
+  {
+    id: 20,
+    category: 'backend',
+    title: '웹 서버와 배포의 기초',
+    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 4강', url: '#' },
+    summary: [
+      '서버 — 24시간 켜져 있고 인터넷에 연결된 컴퓨터로, IP 주소를 통해 식별됨',
+      'IP 주소와 도메인 — 숫자로 된 IP 주소를 사람이 읽기 쉬운 이름(도메인)으로 변환하는 시스템이 DNS. 포트 번호는 컴퓨터 내 여러 프로그램을 구분(로컬호스트 3000의 3000)',
+      '웹 서버 — 요청받은 주소에 해당하는 파일을 찾아 응답하는 소프트웨어(자판기 비유). Apache는 초기 웹 서버 시대를 연 오픈소스 소프트웨어',
+      'WAS(Web Application Server) — 백엔드 코드를 실행하여 동적인 웹 페이지를 생성. 웹 서버는 정적 파일을 전달, WAS는 동적 처리를 담당(자판기 vs 카페 바리스타 비유)',
+      'C10K 문제 — 동시 접속자 수가 많아질수록 서버가 처리할 수 있는 요청 수에 한계가 발생하는 문제',
+      'Nginx — C10K 문제를 해결하기 위해 등장한 웹 서버로, 하나의 프로세스가 여러 요청을 동시에 처리하는 이벤트 기반 아키텍처 사용. 리버스 프록시는 모든 요청을 받아 뒤쪽 서버로 연결(병원 안내 데스크 비유)',
+      '배포(Deployment) — 코드를 서버에 올려 누구나 사용할 수 있게 만드는 과정. FTP는 초기 방식이었으나 파일 누락·작업 덮어쓰기·환경 불일치 문제가 있었음',
+      'Git — 코드 변경 이력 관리·팀 협업 지원(세이브 포인트 비유). GitHub는 Git 저장소를 클라우드에 공유하는 서비스',
+      'Docker — 코드와 환경을 함께 포장해 어디서든 동일하게 실행(밀키트 비유). 컨테이너는 코드+실행 환경을 담은 상자, 이미지는 컨테이너를 만드는 설계도(붕어빵 틀 비유)',
+      'CI/CD — 코드 변경 시 자동으로 테스트·빌드·배포하는 과정(공장 컨베이어 벨트 비유). GitHub Actions가 대표적인 도구'
+    ],
+    fullText: [
+      '서버: 24시간 켜져 있고 인터넷에 연결된 컴퓨터로, IP 주소를 통해 식별됩니다.',
+      'IP 주소와 도메인: 숫자로 된 IP 주소를 사람이 읽기 쉬운 이름(도메인)으로 변환하는 시스템이 DNS입니다.',
+      '포트 번호: 컴퓨터 내 여러 프로그램을 구분하는 번호입니다. (로컬호스트 3000의 3000)',
+      '웹 서버: 요청받은 주소에 해당하는 파일을 찾아 응답하는 소프트웨어입니다. (자판기 비유)',
+      'Apache: 초기 웹 서버 시대를 연 오픈 소스 소프트웨어입니다.',
+      'WAS (Web Application Server): 백엔드 코드를 실행하여 동적인 웹 페이지를 생성합니다.',
+      '웹 서버는 정적 파일을 전달하고, WAS는 동적 처리를 담당합니다. (자판기 vs 카페 바리스타 비유)',
+      'C10K 문제: 동시 접속자 수가 많아질수록 서버가 처리할 수 있는 요청 수에 한계가 발생하는 문제입니다.',
+      'Nginx: C10K 문제를 해결하기 위해 등장한 웹 서버로, 하나의 프로세스가 여러 요청을 동시에 처리하는 이벤트 기반 아키텍처를 사용합니다.',
+      '리버스 프록시: 모든 요청을 받아 뒤쪽 서버로 연결해주는 창구 역할을 합니다. (병원 안내 데스크 비유)',
+      '배포 (Deployment): 코드를 서버에 올려 누구나 사용할 수 있게 만드는 과정입니다.',
+      'FTP: 초기 파일 전송 방식이었으나, 파일 누락, 작업 덮어쓰기, 환경 불일치 등의 문제가 있었습니다.',
+      'Git: 코드 변경 이력을 관리하고 팀 협업을 지원하는 시스템입니다. (세이브 포인트 비유)',
+      'GitHub: Git 저장소를 클라우드에 공유하는 서비스입니다.',
+      'Docker: 코드와 환경을 함께 포장하여 어디서든 동일하게 실행되도록 합니다. (밀키트 비유)',
+      '컨테이너: 코드와 실행 환경을 담은 상자.',
+      '이미지: 컨테이너를 만드는 설계도 (붕어빵 틀 비유).',
+      'CI/CD (Continuous Integration/Continuous Deployment): 코드 변경 시 자동으로 테스트, 빌드, 배포하는 과정입니다. (공장 컨베이어 벨트 비유)',
+      'GitHub Actions가 대표적인 도구입니다.'
+    ],
+    tags: ['웹 서버', 'WAS', 'Nginx', 'Docker', 'CI/CD']
+  },
+  {
+    id: 21,
+    category: 'backend',
+    title: '도메인, HTTPS, 트래픽 관리',
+    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 4강', url: '#' },
+    summary: [
+      '도메인 구매 — ICANN, 레지스트리, 리셀러(가비아, 고대디 등)를 통해 도메인 사용 권리를 임대',
+      'DNS(Domain Name System) — 도메인 이름을 IP 주소로 변환하는 시스템. DNS 레코드(A·CNAME·MX·TXT·NS)는 도메인 설정 정보, DNS 캐시로 인한 전파 지연(TTL 값) 존재',
+      "HTTPS — HTTP 통신을 SSL/TLS로 암호화하여 보안을 강화한 것. Let's Encrypt는 무료 SSL 인증서 발급·자동 갱신 지원, 현대 배포 플랫폼(Vercel 등)은 이를 자동화",
+      '서버 다운 — 사용자가 몰릴 경우 서버 한 대로 트래픽을 감당하지 못해 발생. 수직 확장 vs 수평 확장(대규모 서비스의 핵심)',
+      '로드 밸런서(음식점 자리 안내 비유)로 트래픽 분산, 오토 스케일링으로 트래픽 변화에 따라 서버를 자동 증감(클라우드 기반)'
+    ],
+    fullText: [
+      '도메인 구매: ICANN, 레지스트리, 리셀러(가비아, 고대디 등)를 통해 도메인 사용 권리를 임대합니다.',
+      'DNS (Domain Name System): 도메인 이름을 IP 주소로 변환하는 시스템입니다.',
+      'DNS 레코드: 도메인 설정 정보 (A, CNAME, MX, TXT, NS 레코드 등).',
+      'DNS 캐시: 전파 지연으로 인해 설정 변경이 즉시 적용되지 않을 수 있습니다 (TTL 값).',
+      'HTTPS: HTTP 통신을 SSL/TLS로 암호화하여 보안을 강화한 것입니다.',
+      '인증서: 서버가 신뢰할 수 있는 출처임을 보증하는 역할을 합니다.',
+      "Let's Encrypt: 무료 SSL 인증서 발급 및 자동 갱신을 지원합니다.",
+      '현대 배포 플랫폼(Vercel 등)은 도메인 연결 및 SSL 인증서 발급을 자동화합니다.',
+      '서버 다운: 사용자가 몰릴 경우 서버 한 대로 트래픽을 감당하지 못해 발생하는 문제입니다.',
+      '확장성: 수직 확장: 서버 성능 향상 (비용 높고 한계 있음).',
+      '수평 확장: 서버 대수 증가 (대규모 서비스의 핵심).',
+      '로드 밸런서: 여러 서버로 트래픽을 분산하여 부하를 조절합니다. (음식점 자리 안내 비유)',
+      'Nginx도 로드 밸런서 역할을 할 수 있습니다.',
+      '오토 스케일링: 트래픽 변화에 따라 서버를 자동으로 늘리거나 줄입니다. (클라우드 기반)'
+    ],
+    tags: ['DNS', 'HTTPS', 'SSL', '로드 밸런서', '오토 스케일링']
+  },
+  {
+    id: 22,
+    category: 'ai',
+    title: '규칙 기반 시스템의 한계와 머신러닝의 등장',
+    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 5, 6강', url: '#' },
+    summary: [
+      '기존 프로그래밍(규칙 기반 시스템)은 입력·출력이 명확한 결정론적 문제에 적합하지만, 이미지 인식·자연어 처리처럼 예외가 많은 문제엔 한계',
+      '조합 폭발(모든 경우의 수를 규칙으로 정의하기 어려움, 고양이 귀·수염 규칙 예시)과 유지보수 문제(규칙이 늘수록 취약해짐, 스팸 필터 예시)',
+      '머신러닝 — 규칙을 사람이 쓰는 대신 데이터로부터 패턴을 학습. "데이터+규칙=결과"(기존)에서 "데이터+결과=규칙"(머신러닝)으로 발상 전환',
+      '학습(Training) — 데이터와 정답(레이블)으로 모델을 찾아내는 과정. 특징(Feature)의 품질이 성능을 좌우했으며, 추천 시스템·신용 평가·이상 탐지 등에 초기 응용됨'
+    ],
+    fullText: [
+      '기존 프로그래밍 방식(규칙 기반 시스템)은 입력과 출력의 관계가 명확한 결정론적 시스템에 적합합니다.',
+      '그러나 이미지 인식, 자연어 처리 등 예외가 많고 경계가 흐릿한 문제에는 한계가 있습니다.',
+      '조합 폭발 (Combinatorial Explosion): 모든 경우의 수를 규칙으로 정의하기 어렵습니다. (고양이 귀, 수염 규칙 예시)',
+      '유지보수 문제: 규칙이 늘어날수록 시스템이 취약해지고 새로운 패턴에 쉽게 무너집니다. (스팸 필터 예시)',
+      '규칙을 사람이 직접 쓰는 대신, 데이터를 통해 컴퓨터가 스스로 규칙(패턴)을 찾게 하는 방식입니다.',
+      '정의: 데이터로부터 패턴을 학습하여 새로운 데이터에 대한 예측이나 판단을 내리는 방법입니다.',
+      '작동 방식: 데이터 + 규칙 = 결과 (기존 프로그래밍) vs. 데이터 + 결과 = 규칙 (머신러닝)',
+      '학습 (Training): 데이터와 정답(레이블)을 입력하여 컴퓨터가 규칙(모델)을 찾아내는 과정입니다.',
+      '특징 (Feature): 모델이 학습에 사용하는 데이터의 속성(단어 빈도, 발신자 도메인 등)으로, 피처 엔지니어링의 품질이 모델 성능을 결정했습니다.',
+      '초기 응용 사례: 추천 시스템, 신용 평가, 이상 탐지 등.'
+    ],
+    tags: ['AI 기초', '머신러닝', 'Feature']
+  },
+  {
+    id: 23,
+    category: 'ai',
+    title: '딥러닝: 특징 추출의 자동화',
+    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 5, 6강', url: '#' },
+    summary: [
+      '머신러닝의 한 분류로, 특징 추출까지 모델이 스스로 학습',
+      '인공신경망(Artificial Neural Network) — 여러 층(Layer)으로 쌓인 뉴런(노드)들이 가중치와 편향을 통해 연산하고 활성화 함수를 거쳐 출력을 내는 구조',
+      '은닉층(Hidden Layer) — 초기층은 선, 중간층은 귀/눈, 깊은 층은 얼굴/몸통 등 추상적인 특징을 추출. 깊이(Deep) — 은닉층이 많을수록 더 복잡하고 추상적인 패턴을 표현 가능(ResNet 152층 예시)',
+      'CNN(Convolutional Neural Network) — 이미지의 공간적 구조를 활용하여 필터(커널)로 국소적 패턴을 감지',
+      '딥러닝 폭발의 3가지 요인(2010년대) — 대규모 레이블 데이터(ImageNet 예시), GPU 연산 능력(NVIDIA CUDA 등장), 클라우드와 오픈소스 소프트웨어(TensorFlow, PyTorch 공개)',
+      '알렉스넷(2012년) — 이미지넷 대회에서 획기적인 성능 향상을 보이며 딥러닝 시대를 엶',
+      '학습 원리 — 손실 함수를 통해 모델의 예측 오류를 계산하고, 역전파와 경사 하강법으로 가중치를 조정해 손실을 최소화. 과적합 방지 기법: 드롭아웃, 정규화',
+      '딥러닝의 성공 사례 — 이미지 인식(ResNet), 음성 인식, 번역(NMT), 게임(AlphaGo), 의료 영상 분석 등'
+    ],
+    fullText: [
+      '머신러닝의 한 분류로, 특징 추출까지 모델이 스스로 학습합니다.',
+      '인공신경망 (Artificial Neural Network): 여러 층(Layer)으로 쌓인 뉴런(노드)들이 가중치와 편향을 통해 연산하고 활성화 함수를 거쳐 출력을 내는 구조입니다.',
+      '은닉층 (Hidden Layer): 초기층은 선, 중간층은 귀/눈, 깊은 층은 얼굴/몸통 등 추상적인 특징을 추출합니다.',
+      '깊이 (Deep): 은닉층이 많을수록 더 복잡하고 추상적인 패턴을 표현할 수 있습니다. (ResNet 152층 예시)',
+      'CNN (Convolutional Neural Network): 이미지의 공간적 구조를 활용하여 필터(커널)로 국소적 패턴을 감지합니다.',
+      '딥러닝 폭발의 3가지 요인 (2010년대): 대규모 레이블 데이터: 인터넷, 스마트폰, 소셜 미디어 발달로 방대한 데이터가 축적되었습니다. (ImageNet 데이터셋 예시)',
+      'GPU 연산 능력: 병렬 처리에 특화된 GPU가 행렬 연산을 효율적으로 처리하여 학습 속도를 비약적으로 향상시켰습니다. (NVIDIA CUDA 등장)',
+      '클라우드와 오픈소스 소프트웨어: GPU 접근성 향상 및 TensorFlow, PyTorch 등 프레임워크 공개로 연구 개발이 가속화되었습니다.',
+      '알렉스넷 (2012년): 이미지넷 대회에서 획기적인 성능 향상을 보이며 딥러닝 시대를 열었습니다.',
+      '딥러닝 학습 원리: 손실 함수를 통해 모델의 예측 오류를 계산하고, 역전파와 경사 하강법으로 가중치를 조정하여 손실을 최소화합니다.',
+      '과적합 (Overfitting) 방지 기법: 드롭아웃, 정규화.',
+      '딥러닝의 성공 사례: 이미지 인식(ResNet), 음성 인식, 번역(NMT), 게임(AlphaGo), 의료 영상 분석 등.'
+    ],
+    tags: ['딥러닝', 'CNN', 'ResNet', 'AlexNet']
+  },
+  {
+    id: 24,
+    category: 'ai',
+    title: 'LLM의 등장과 자연어 처리',
+    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 5, 6강', url: '#' },
+    summary: [
+      '딥러닝의 한계 — 특정 작업에만 특화되었고, 범용적인 언어 이해 및 생성이 불가능했음',
+      '자연어 처리(NLP) 발전 — 원핫 인코딩(단어를 고유 번호로 표현했으나 의미적 유사성 파악이 어려움)',
+      'Word2Vec(2013년) — 단어를 벡터 공간에 표현하여 의미적 유사성을 수치화(왕-남자+여자=여왕 예시)',
+      'RNN/LSTM — 순차 데이터 처리에 강점을 보였으나 기울기 소실 및 병렬 처리 한계가 있었음',
+      'Transformer(2017년) — 어텐션 메커니즘을 통해 모든 한계를 극복하고 LLM 시대를 엶. 어텐션은 각 단어가 다른 단어들과 얼마나 관련 있는지 Q(쿼리)·K(키)·V(값)로 계산해 중요한 정보에 집중',
+      'LLM 핵심 개념 — 토큰(텍스트 처리 기본 단위, 한국어는 영어보다 토큰 수가 많아 컨텍스트 효율이 낮음), 임베딩(단어를 의미적 유사성이 반영된 숫자 벡터로 변환, 사과-배 유사도 예시), temperature/top-p(생성 결과의 다양성과 일관성을 조절)',
+      '할루시네이션(존재하지 않는 정보를 사실처럼 생성), 지식 단절(훈련 데이터 시점 이후의 정보는 알지 못함), 컨텍스트 윈도우 제약(한 번에 처리할 수 있는 토큰 수의 한계)',
+      'API 활용 — 외부 도구를 통해 LLM을 제어하고 자동화할 수 있음(시스템 프롬프트, 메시지 배열 활용)'
+    ],
+    fullText: [
+      '딥러닝의 한계: 특정 작업에만 특화되었고, 범용적인 언어 이해 및 생성이 불가능했습니다.',
+      '자연어 처리 (NLP) 역사의 발전: 원핫 인코딩: 단어를 고유 번호로 표현했으나 의미적 유사성 파악이 어려웠습니다.',
+      'Word2Vec (2013년): 단어를 벡터 공간에 표현하여 의미적 유사성을 수치화했습니다. (왕-남자+여자=여왕 예시)',
+      'RNN/LSTM: 순차 데이터 처리에 강점을 보였으나 기울기 소실 및 병렬 처리 한계가 있었습니다.',
+      'Transformer (2017년): 어텐션 메커니즘을 통해 모든 한계를 극복하고 LLM 시대를 열었습니다.',
+      '어텐션 (Attention): 각 단어가 다른 단어들과 얼마나 관련 있는지 Q(쿼리), K(키), V(값)로 계산하여 중요한 정보에 집중합니다.',
+      'LLM의 핵심 개념: 토큰 (Token): LLM이 텍스트를 처리하는 기본 단위 (단어, 단어 일부, 글자 조합).',
+      '한국어는 영어보다 토큰 수가 많아 컨텍스트 효율이 낮습니다.',
+      '임베딩 (Embedding): 단어를 의미적 유사성을 반영하는 숫자 벡터로 변환합니다. (사과-배 유사도 예시)',
+      '템퍼처/탑 P: 생성 결과의 다양성과 일관성을 조절하는 파라미터입니다.',
+      '할루시네이션 (Hallucination): 존재하지 않는 정보를 사실처럼 생성하는 현상입니다.',
+      '지식 단절 (Knowledge Cutoff): 훈련 데이터 시점 이후의 정보는 알지 못합니다.',
+      '컨텍스트 윈도우 제약: 한 번에 처리할 수 있는 토큰 수의 한계가 있습니다.',
+      'API 활용: 외부 도구를 통해 LLM을 제어하고 자동화할 수 있습니다. (시스템 프롬프트, 메시지 배열 활용)'
+    ],
+    tags: ['LLM', 'Transformer', '토큰', '임베딩', '할루시네이션']
+  },
+  {
+    id: 25,
+    category: 'ai',
+    title: 'AI 오케스트레이션: LangChain·LangGraph·LangSmith',
+    source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 7, 8강', url: '#' },
+    summary: [
+      '단순 파이프라인의 한계 — 기존 RAG 챗봇은 단일 경로로만 작동하여 복잡한 업무 처리에 한계가 있었음',
+      '오케스트레이션 — AI가 여러 단계를 거쳐 복잡하고 지능적인 작업을 수행하도록 설계하는 것. 주요 도구: LangChain, LangGraph, LangSmith',
+      'LangChain — LLM과의 대화를 위한 표준 부품 공급소로, 프롬프트 템플릿·모델 연결 추상화·체인 연결 기능을 제공',
+      'LangGraph — 노드(작업 단위)와 엣지(이동 경로)를 사용하여 제어 흐름(루프, 분기)을 설계하는 도구(편의점 물 구매 시나리오 비유)',
+      'LangSmith — AI 시스템의 가시성을 확보하여 디버깅 및 성능 개선을 지원(AI 시스템 CCTV 비유)',
+      'AX(AI Transformation) — AI를 활용하여 업무를 자동화하고 혁신하는 과정에서 도메인 전문가의 역할이 중요. 데이터 오너십, 플로우 차트 설계, 씨앗 평가셋 관리가 핵심',
+      '세무 상담 시나리오 — 랭체인(데이터 연결), 랭그래프(판단 흐름 설계), 랭스미스(모니터링/개선)를 활용하여 복잡한 업무를 자동화할 수 있음'
+    ],
+    fullText: [
+      '단순 파이프라인의 한계: 7강에서 만든 RAG 챗봇은 단일 경로로만 작동하여 복잡한 업무 처리에 한계가 있었습니다.',
+      '오케스트레이션: AI가 여러 단계를 거쳐 복잡하고 지능적인 작업을 수행하도록 설계하는 것입니다.',
+      '주요 도구: LangChain, LangGraph, LangSmith.',
+      'LangChain: LLM과의 대화를 위한 표준 부품 공급소로, 프롬프트 템플릿, 모델 연결 추상화, 체인 연결 기능을 제공합니다.',
+      'LangGraph: 노드(작업 단위)와 엣지(이동 경로)를 사용하여 제어 흐름(루프, 분기)을 설계하는 도구입니다. (편의점 물 구매 시나리오 비유)',
+      'LangSmith: AI 시스템의 가시성을 확보하여 디버깅 및 성능 개선을 지원합니다. (AI 시스템 CCTV 비유)',
+      'AX (AI Transformation): AI를 활용하여 업무를 자동화하고 혁신하는 과정에서 도메인 전문가의 역할이 중요합니다.',
+      '데이터 오너십: 어떤 데이터를 AI에 사용할지 결정합니다.',
+      '플로우 차트 설계: 코딩 없이 업무 논리를 정의합니다.',
+      '씨앗 평가셋 관리: AI 모델 성능 평가를 위한 테스트 데이터를 준비합니다.',
+      '세무 상담 시나리오: 랭체인(데이터 연결), 랭그래프(판단 흐름 설계), 랭스미스(모니터링/개선)를 활용하여 복잡한 업무를 자동화할 수 있습니다.'
     ],
     tags: ['LangChain', 'LangGraph', 'LangSmith', 'Orchestration', 'AX']
   },
@@ -441,6 +978,8 @@ const NOTES = [
 
 let activeCategory = 'all';
 let searchQuery = '';
+let currentPage = 1;
+const PAGE_SIZE = 9;
 
 const LOCAL_KEY = 'studyNotes:localNotes';
 
@@ -487,6 +1026,7 @@ function renderFormCategories() {
 
 function setCategory(key) {
   activeCategory = key;
+  currentPage = 1;
   document.querySelectorAll('.cat-pill').forEach(p => {
     p.classList.remove('active');
     p.style.background = '';
@@ -506,6 +1046,7 @@ function setCategory(key) {
 
 function onSearch() {
   searchQuery = document.getElementById('search-input').value.trim().toLowerCase();
+  currentPage = 1;
   render();
 }
 
@@ -524,17 +1065,26 @@ function render() {
   const grid = document.getElementById('note-grid');
   const empty = document.getElementById('empty-state');
   const countNote = document.getElementById('count-note');
+  const paginationEl = document.getElementById('pagination');
 
   countNote.textContent = `${list.length}개의 노트`;
 
   if (!list.length) {
     grid.innerHTML = '';
     empty.classList.add('show');
+    paginationEl.innerHTML = '';
     return;
   }
   empty.classList.remove('show');
 
-  grid.innerHTML = list.map((n, i) => {
+  const totalPages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
+  if (currentPage > totalPages) currentPage = totalPages;
+  if (currentPage < 1) currentPage = 1;
+
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const pageItems = list.slice(start, start + PAGE_SIZE);
+
+  grid.innerHTML = pageItems.map((n, i) => {
     const info = catInfo(n.category);
     const preview = n.summary && n.summary[0] ? n.summary[0] : '';
     return `
@@ -551,6 +1101,50 @@ function render() {
         <div class="nc-tags">${(n.tags || []).map(t => `<span class="nc-tag">${t}</span>`).join('')}</div>
       </article>`;
   }).join('');
+
+  renderPagination(totalPages);
+}
+
+function renderPagination(totalPages) {
+  const paginationEl = document.getElementById('pagination');
+  if (totalPages <= 1) {
+    paginationEl.innerHTML = '';
+    return;
+  }
+
+  let html = `<button class="page-btn page-nav" ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">‹ 이전</button>`;
+
+  const pages = [];
+  for (let p = 1; p <= totalPages; p++) {
+    if (p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1) {
+      pages.push(p);
+    } else if (pages[pages.length - 1] !== '…') {
+      pages.push('…');
+    }
+  }
+
+  pages.forEach(p => {
+    if (p === '…') {
+      html += `<span class="page-ellipsis">…</span>`;
+    } else {
+      html += `<button class="page-btn ${p === currentPage ? 'active' : ''}" onclick="goToPage(${p})">${p}</button>`;
+    }
+  });
+
+  html += `<button class="page-btn page-nav" ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">다음 ›</button>`;
+
+  paginationEl.innerHTML = html;
+}
+
+function goToPage(p) {
+  currentPage = p;
+  render();
+  document.getElementById('note-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function toggleFullText() {
+  document.getElementById('modal-fulltext').classList.toggle('open');
+  document.getElementById('fulltext-toggle').classList.toggle('open');
 }
 
 function openModal(id) {
@@ -571,6 +1165,19 @@ function openModal(id) {
   }
 
   document.getElementById('modal-summary').innerHTML = (n.summary || []).map(s => `<li>${s}</li>`).join('');
+
+  const fulltextSection = document.getElementById('modal-fulltext-section');
+  const fulltextList = document.getElementById('modal-fulltext');
+  const fulltextToggle = document.getElementById('fulltext-toggle');
+  if (n.fullText && n.fullText.length) {
+    fulltextSection.style.display = '';
+    fulltextList.innerHTML = n.fullText.map(s => `<li>${s}</li>`).join('');
+    fulltextList.classList.remove('open');
+    fulltextToggle.classList.remove('open');
+    fulltextToggle.innerHTML = '<span class="fulltext-toggle-icon">▸</span> 원문 전체 보기';
+  } else {
+    fulltextSection.style.display = 'none';
+  }
 
   const takeawaySection = document.getElementById('modal-takeaway-section');
   if (n.takeaway) {
