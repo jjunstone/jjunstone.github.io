@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="ko" style="background:#0f172a">
+<html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="color-scheme" content="dark light" />
   <title>Technology Map — Junseok Lee</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1446,7 +1445,6 @@ renderQuickNav();
   function setTheme(t) {
     if (t === 'light') {
       html.classList.add('light-mode');
-      html.style.background = '#f8fafc';
       localStorage.setItem('theme', 'light');
       if (sunIcon && moonIcon) {
         sunIcon.style.display = 'block';
@@ -1454,7 +1452,6 @@ renderQuickNav();
       }
     } else {
       html.classList.remove('light-mode');
-      html.style.background = '#0f172a';
       localStorage.setItem('theme', 'dark');
       if (sunIcon && moonIcon) {
         sunIcon.style.display = 'none';

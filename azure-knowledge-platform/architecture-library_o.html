@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="ko" style="background:#0f172a">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="color-scheme" content="dark light">
   <title>Architecture Library — Junseok Lee</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -243,6 +242,28 @@
       font-weight: 600;
     }
 
+    .status-filter {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    
+    .status-filter label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-light);
+      cursor: pointer;
+      user-select: none;
+    }
+    
+    .status-filter input {
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+    }
+
     /* ── Category Section ── */
     .category-section {
       margin-bottom: 56px;
@@ -335,6 +356,106 @@
       background: rgba(59,130,246,.12);
       border-color: rgba(59,130,246,.4);
     }
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .category-dot.identity { color: #f87171; }
+    .category-dot.security { color: #fbbf24; }
+    .category-dot.network { color: #60a5fa; }
+    .category-dot.infrastructure { color: #34d399; }
+    .category-dot.data-ai { color: #c084fc; }
+    .category-dot.automation { color: #22d3ee; }
+    .category-dot.workplace { color: #fb923c; }
+    .category-dot.other { color: #a78bfa; }
+
+    /* ── Architecture Grid ── */
+    .architecture-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .arch-card {
+      background: rgba(8, 15, 27, .44);
+      border: 1px solid rgba(255, 255, 255, .065);
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .arch-card:hover {
+      border-color: rgba(59,130,246,.3);
+      background: rgba(8, 15, 27, .65);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .3);
+    }
+
+    .arch-card-image {
+      width: 100%;
+      height: 160px;
+      background: linear-gradient(135deg, rgba(59,130,246,.1), rgba(59,130,246,.05));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid rgba(255, 255, 255, .065);
+    }
+
+    .arch-card-image img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 8px;
+    }
+
+    .arch-card-image.placeholder {
+      font-size: 48px;
+      color: rgba(255, 255, 255, .2);
+    }
+
+    .arch-card-content {
+      padding: 16px;
+    }
+
+    .arch-card-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .arch-card-desc {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .arch-card-services {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .service-badge {
+      font-size: 10px;
+      background: rgba(59,130,246,.1);
+      border: 1px solid rgba(59,130,246,.2);
+      border-radius: 4px;
+      padding: 4px 8px;
+      color: var(--accent);
+    }
+
+    .arch-card-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: rgba(255, 255, 255, .4);
+      border-top: 1px solid rgba(255, 255, 255, .05);
+      padding-top: 8px;
+    }
 
     /* ── Modal ── */
     .modal-overlay {
@@ -394,6 +515,23 @@
       background: rgba(59,130,246,.1);
     }
 
+    .modal-image {
+      width: 100%;
+      max-height: 400px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      object-fit: cover;
+    }
+
+    .modal-image.placeholder {
+      background: linear-gradient(135deg, rgba(59,130,246,.1), rgba(6,182,212,.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 64px;
+      color: rgba(59,130,246,.2);
+    }
+
     .modal-header {
       margin-bottom: 28px;
     }
@@ -415,6 +553,14 @@
       font-weight: 700;
       margin-bottom: 12px;
       color: var(--text);
+      transition: color .3s;
+    }
+
+    .modal-desc {
+      font-size: 14px;
+      color: var(--text-light);
+      line-height: 1.7;
+      margin-bottom: 24px;
       transition: color .3s;
     }
 
@@ -511,8 +657,21 @@
     }
 
     @media (max-width: 768px) {
+      .architecture-grid {
+        grid-template-columns: 1fr;
+      }
+
       .modal-panel {
         padding: 24px 18px;
+      }
+
+      .nav {
+        gap: 0;
+        font-size: 12px;
+      }
+
+      .nav-item {
+        padding: 8px 12px;
       }
     }
   </style>
@@ -524,8 +683,8 @@
     <a href="../index.html" class="topbar-brand" title="홈으로 돌아가기">
       <div class="logo-icon">☁</div>
       <div class="brand-info">
-        <div class="brand-name">이준석</div>
-        <div class="brand-role">Azure Platform Engineer</div>
+        <div class="brand-name">Junseok Lee</div>
+        <div class="brand-role">Enterprise Platform Engineer</div>
       </div>
     </a>
     
@@ -873,41 +1032,6 @@
         link.classList.remove('active');
       }
     });
-
-    // 라이트/다크 모드 토글 로직
-    (function() {
-      const html = document.documentElement;
-      const theme = localStorage.getItem('theme') || 'dark';
-      const toggle = document.getElementById('theme-toggle');
-      const sunIcon = toggle?.querySelector('.sun-icon');
-      const moonIcon = toggle?.querySelector('.moon-icon');
-
-      function setTheme(t) {
-        if (t === 'light') {
-          html.classList.add('light-mode');
-          html.style.background = '#f8fafc';
-          localStorage.setItem('theme', 'light');
-          if (sunIcon && moonIcon) {
-            sunIcon.style.display = 'block';
-            moonIcon.style.display = 'none';
-          }
-        } else {
-          html.classList.remove('light-mode');
-          html.style.background = '#0f172a';
-          localStorage.setItem('theme', 'dark');
-          if (sunIcon && moonIcon) {
-            sunIcon.style.display = 'none';
-            moonIcon.style.display = 'block';
-          }
-        }
-      }
-
-      setTheme(theme);
-      toggle?.addEventListener('click', () => {
-        const current = localStorage.getItem('theme') || 'dark';
-        setTheme(current === 'dark' ? 'light' : 'dark');
-      });
-    })();
   </script>
 </body>
 </html>

@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="ko" style="background:#0f172a">
+<html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="color-scheme" content="dark light" />
   <title>Projects — Junseok Lee</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,6 +38,19 @@
       --accent-light: #eff6ff;
       --gold: #d4af6a;
 
+      --c-architecture: #8b5cf6;
+      --c-automation:   #f59e0b;
+      --c-ai:           #10b981;
+      --c-identity:     #3b82f6;
+      --c-security:     #ef4444;
+      --c-infra:        #8b5cf6;
+      --c-workplace:    #06b6d4;
+      --c-data:         #6366f1;
+
+      --st-completed: #16a34a;
+      --st-inprogress: #d97706;
+      --st-concept: #7c3aed;
+      
       /* Default to dark */
       --bg: var(--bg-dark);
       --bg-panel: var(--bg-panel-dark);
@@ -145,6 +157,7 @@
     .hstat-icon { font-size: 20px; }
     .hstat-val { font-size: 26px; font-weight: 800; color: var(--text); line-height: 1; }
     .hstat-unit { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .hstat-label { font-size: 12px; color: var(--text-muted); margin-bottom: 2px; }
 
     .header-search {
       display: flex; align-items: center; gap: 8px;
@@ -1903,7 +1916,6 @@ render();
   function setTheme(t) {
     if (t === 'light') {
       html.classList.add('light-mode');
-      html.style.background = '#f8fafc';
       localStorage.setItem('theme', 'light');
       if (sunIcon && moonIcon) {
         sunIcon.style.display = 'block';
@@ -1911,7 +1923,6 @@ render();
       }
     } else {
       html.classList.remove('light-mode');
-      html.style.background = '#0f172a';
       localStorage.setItem('theme', 'dark');
       if (sunIcon && moonIcon) {
         sunIcon.style.display = 'none';
