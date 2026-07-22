@@ -156,7 +156,7 @@
     .sd-section-head { display: flex; align-items: center; gap: 7px; margin-bottom: 9px; }
     .sd-section-num {
       width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
-      background: var(--accent-light); color: var(--accent);
+      background: rgba(59,130,246,.14); color: var(--accent);
       display: grid; place-items: center; font-size: 9.5px; font-weight: 700;
     }
     .sd-section-title { font-size: 11.5px; font-weight: 700; color: var(--text); }
@@ -170,9 +170,9 @@
     .sd-chips { display: flex; flex-wrap: wrap; gap: 5px; }
     .sd-chip {
       padding: 3px 9px; border-radius: 999px; font-size: 10.5px; font-weight: 500;
-      background: var(--accent-light); color: var(--accent-dark); border: 1px solid #dbeafe;
+      background: rgba(59,130,246,.14); color: var(--accent); border: 1px solid rgba(59,130,246,.3);
     }
-    .sd-chip-arch { background: #f0fdf4; color: #16a34a; border-color: #dcfce7; }
+    .sd-chip-arch { background: rgba(22,163,74,.14); color: #16a34a; border-color: rgba(22,163,74,.3); }
 
     /* ── Main content ── */
     .main {
@@ -187,6 +187,11 @@
     }
     .page-header-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
     .page-title-block { display: flex; align-items: baseline; gap: 12px; }
+    .page-stats { display: flex; align-items: center; gap: 14px; margin-top: 7px; }
+    .stat-item { display: flex; align-items: baseline; gap: 5px; }
+    .stat-num { font-size: 18px; font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+    .stat-label { font-size: 10.5px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
+    .stat-divider { width: 1px; height: 14px; background: var(--border); }
     .page-title {
       font-family: 'Kalam', cursive; font-size: 24px; font-weight: 700; color: var(--text);
       position: relative; display: inline-block; padding-bottom: 4px;
@@ -285,9 +290,15 @@
       padding: 13px 15px; cursor: pointer; z-index: 5;
       box-shadow: 0 2px 12px rgba(0,0,0,.06);
       transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+      animation: mmIn .45s ease both;
     }
-    .mm-node:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,.1); }
+    .mm-node:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(0,0,0,.12), 0 0 0 5px color-mix(in srgb, var(--n-color) 16%, transparent);
+      border-color: var(--n-color);
+    }
     .mm-node.active { border-color: var(--n-color); box-shadow: 0 0 0 3px color-mix(in srgb, var(--n-color) 14%, transparent), 0 8px 24px rgba(0,0,0,.1); }
+    @keyframes mmIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .mm-node-kicker {
       display: inline-flex; align-items: center; gap: 5px;
       font-size: 9.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
@@ -331,18 +342,20 @@
       background: var(--bg-panel); border: 1.5px solid var(--border);
       box-shadow: 0 2px 10px rgba(0,0,0,.05); cursor: pointer;
       box-sizing: border-box;
-      transition: transform .15s ease, border-color .15s ease;
+      transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+      animation: mnIn .35s ease both;
     }
-    .mn:hover { transform: translateY(-2px); border-color: #93c5fd; }
-    .mn.mn-root { cursor: default; border-color: var(--accent); background: var(--accent-light); }
+    .mn:hover { transform: translateY(-3px); border-color: #93c5fd; box-shadow: 0 8px 20px rgba(0,0,0,.1); }
+    .mn.mn-root { cursor: default; border-color: var(--accent); background: rgba(59,130,246,.14); }
     .mn.mn-active { border-color: #16a34a; box-shadow: 0 0 0 3px rgba(22,163,74,.1), 0 2px 10px rgba(0,0,0,.05); }
+    @keyframes mnIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     .mn-kicker { font-size: 9px; color: var(--text-light); letter-spacing: .08em; text-transform: uppercase; display: block; margin-bottom: 3px; font-weight: 600; }
     .mn-title { font-size: 12px; font-weight: 700; color: var(--text); line-height: 1.2; }
     .mn-sub { display: block; margin-top: 3px; color: var(--text-muted); font-size: 10px; line-height: 1.4; }
 
     .canvas-hint {
       position: absolute; bottom: 14px; left: 14px;
-      background: rgba(255,255,255,.92); border: 1px solid var(--border);
+      background: var(--bg-panel); border: 1px solid var(--border);
       border-radius: 8px; padding: 7px 14px; font-size: 10.5px; color: var(--text-muted);
       backdrop-filter: blur(8px); z-index: 20; pointer-events: none; line-height: 1.6;
     }
@@ -351,18 +364,18 @@
       display: flex; align-items: center; gap: 6px; z-index: 20;
     }
     .zoom-pct {
-      background: white; border: 1px solid var(--border); border-radius: 6px;
+      background: var(--bg-panel); border: 1px solid var(--border); border-radius: 6px;
       padding: 5px 10px; font-size: 11px; color: var(--text-muted);
     }
     .zoom-btn {
       width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border);
-      background: white; cursor: pointer; display: grid; place-items: center;
+      background: var(--bg-panel); cursor: pointer; display: grid; place-items: center;
       font-size: 16px; color: var(--text-muted); line-height: 1; transition: .15s;
     }
     .zoom-btn:hover { background: var(--bg); color: var(--text); }
     .zoom-reset {
       padding: 5px 10px; border-radius: 6px; border: 1px solid var(--border);
-      background: white; cursor: pointer; font-size: 11px; color: var(--text-muted);
+      background: var(--bg-panel); cursor: pointer; font-size: 11px; color: var(--text-muted);
       font-family: inherit; transition: .15s;
     }
     .zoom-reset:hover { background: var(--bg); color: var(--text); }
@@ -465,6 +478,11 @@
         <button class="overview-btn" onclick="toggleOverview(true)">Overview</button>
       </div>
     </div>
+    <div class="page-stats" id="pageStats">
+      <div class="stat-item"><span class="stat-num" id="statCategories">0</span><span class="stat-label">Categories</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat-item"><span class="stat-num" id="statServices">0</span><span class="stat-label">Services</span></div>
+    </div>
   </div>
 
   <!-- View tabs -->
@@ -545,6 +563,14 @@
   </div>
 </div>
 
+<!-- ══ Service Detail Modal ══ -->
+<div class="modal-overlay" id="serviceOverlay" onclick="if(event.target===this) toggleServiceModal(false)">
+  <div class="modal-panel">
+    <button class="modal-close" onclick="toggleServiceModal(false)">✕</button>
+    <div id="serviceModalBody"><!-- Populated by JS --></div>
+  </div>
+</div>
+
 
 <script>
 /* ════════════════════════════════════════════════════════
@@ -564,7 +590,7 @@ const graph = {
       '계정 생명주기(입사·이동·퇴사) 자동화로 누락과 지연 제거',
       'Hybrid Sync(Entra Connect) 구조 설계 및 동기화 범위 정의'
     ],
-    keyServices:['Entra ID','RBAC','PIM','Conditional Access','Entra Connect'],
+    keyServices:['Entra ID','RBAC','PIM','Conditional Access','Entra Connect','Workload ID','Entitlement Management','Global Secure Access'],
     archFocus:['Identity Governance Platform','Zero Trust Architecture','Hybrid Identity Integration'],
     children:{
       entra:{
@@ -611,6 +637,33 @@ const graph = {
         design:['동기화 범위(OU/그룹) 명확히 정의 — 불필요 계정 동기화 방지','Password Hash Sync vs Pass-through Authentication 방식 선택','동기화 지연·충돌 모니터링 체계 구축','동기화 서버 이중화로 단일 장애점 제거'],
         related:['Entra ID','RBAC','Conditional Access'],
         archFit:['Hybrid Identity Integration','Zero Trust Architecture']
+      },
+      workloadid:{
+        title:'Entra Workload ID (Workload Identity Federation)',
+        desc:'CI/CD 파이프라인과 앱이 시크릿 없이 Entra ID로 인증하는 워크로드 신원 체계',
+        role:['GitHub Actions·Azure DevOps 등 외부 워크로드가 인증서·비밀번호 없이 Azure에 인증','Federated Credential로 OIDC 토큰을 Entra ID 토큰으로 교환해 자격증명 노출 원천 차단'],
+        when:['CI/CD 파이프라인에서 Service Principal 비밀번호를 코드·설정에 저장하고 싶지 않을 때','외부 클라우드(AWS/GCP) 워크로드가 Azure 리소스에 접근해야 할 때','Kubernetes Pod가 Managed Identity 없이 Azure 리소스를 사용할 때'],
+        design:['Federated Credential Subject — 저장소·브랜치·환경 단위로 신뢰 범위 최소화','App Registration에 RBAC 최소 권한만 부여 — Owner/Contributor 남용 지양','토큰 수명(Token Lifetime)과 Audience 값 검증 로직 확인','기존 Service Principal 비밀 인증을 단계적으로 Federated Credential로 전환'],
+        related:['Entra ID','RBAC','GitHub Actions','Managed Identity'],
+        archFit:['Zero Trust Architecture','Secretless CI/CD Pipeline']
+      },
+      governance:{
+        title:'Entra ID Governance (Entitlement Management)',
+        desc:'Access Package 기반으로 접근 요청·승인·주기적 재검토를 표준화하는 신원 거버넌스',
+        role:['앱·그룹·SharePoint 사이트 묶음을 Access Package로 패키징해 셀프서비스 요청 제공','승인 워크플로우와 만료 기간을 정책으로 강제해 권한 누적(Privilege Creep) 방지'],
+        when:['대규모 조직에서 수동 권한 부여·회수 프로세스가 병목이 될 때','외부 협력사·파트너에게 기간 한정 접근 패키지를 제공할 때','ISO 27001·SOX 감사를 위해 정기 Access Review 이력이 필요할 때'],
+        design:['Access Package 범위를 업무 단위로 세분화 — 과도하게 큰 패키지 지양','승인자 다단계 구성 시 SLA(응답 기한) 명시','Recurring Access Review 주기를 리소스 민감도에 따라 차등 설정','PIM과 결합해 상시 권한과 임시 권한을 계층적으로 관리'],
+        related:['Entra ID','PIM','RBAC','Conditional Access'],
+        archFit:['Identity Governance Platform','Access Lifecycle Management']
+      },
+      gsa:{
+        title:'Entra Global Secure Access (Private/Internet Access)',
+        desc:'VPN을 대체하는 Microsoft판 Security Service Edge(SSE) — ID 기반으로 모든 트래픽에 Zero Trust 적용',
+        role:['Private Access: 온프레미스 앱에 VPN 없이 ID 기반 접근 터널 제공','Internet Access: M365·인터넷 트래픽에 조건부 접근·위협 방어를 클라우드 엣지에서 일괄 적용'],
+        when:['기존 사이트-투-사이트·클라이언트 VPN을 단계적으로 걷어내고 싶을 때','원격 근무자의 모든 트래픽에 Conditional Access를 적용하고 싶을 때','내부 레거시 앱을 퍼블릭 노출 없이 외부 사용자에게 열어야 할 때'],
+        design:['기존 VPN과 병행 운영 기간을 두고 앱 단위로 점진적 전환','트래픽 프로파일(M365/Private/Internet)별 정책 분리 설계','디바이스 규정 준수 상태를 Conditional Access 조건에 포함','클라이언트(Global Secure Access Client) 배포 범위와 예외 그룹 사전 정의'],
+        related:['Entra ID','Conditional Access','Intune','VPN Gateway'],
+        archFit:['Zero Trust Network Access','SSE Architecture']
       }
     }
   },
@@ -626,7 +679,7 @@ const graph = {
       'DNS 설계 — 퍼블릭/프라이빗 네임 해석 분리 필수',
       'NSG와 Azure Firewall의 역할 명확히 분리 (분산 제어 vs 중앙 제어)'
     ],
-    keyServices:['VNet','VPN Gateway','Azure Firewall','Application Gateway','Private Link','ExpressRoute'],
+    keyServices:['VNet','VPN Gateway','Azure Firewall','Application Gateway','Private Link','ExpressRoute','Azure Front Door','Virtual WAN'],
     archFocus:['Hybrid Secure Network','Landing Zone Connectivity','Secure Application Delivery'],
     children:{
       vnet:{
@@ -682,6 +735,24 @@ const graph = {
         design:['ExpressRoute Gateway SKU를 트래픽 규모에 맞게 선정','이중화 회선(Primary/Secondary)으로 고가용성 확보','VPN Gateway를 백업 경로로 함께 구성','ExpressRoute Circuit 대역폭 모니터링 및 확장 계획 수립'],
         related:['VNet','VPN Gateway','Azure Firewall','Private Link'],
         archFit:['Hybrid Secure Network','Landing Zone Connectivity']
+      },
+      frontdoor:{
+        title:'Azure Front Door',
+        desc:'글로벌 엣지 기반의 CDN + WAF + 레이어7 로드밸런서 — 전세계 사용자에게 가장 가까운 엣지로 트래픽 라우팅',
+        role:['정적 콘텐츠 캐싱과 동적 콘텐츠 가속을 글로벌 엣지 POP에서 동시 처리','WAF로 리전 진입 전 애플리케이션 계층 공격을 사전 차단'],
+        when:['여러 리전에 배포된 앱을 사용자 위치 기준 최적 경로로 라우팅할 때','글로벌 서비스의 콘텐츠 전송 속도와 가용성을 함께 높이고 싶을 때','오리진(App Service·AKS 등) 앞단에서 WAF·DDoS 방어를 표준화할 때'],
+        design:['Origin Group으로 다중 리전 백엔드의 상태 기반 자동 페일오버 구성','캐싱 규칙을 콘텐츠 유형별로 세분화 — 과도한 캐싱은 최신성 저해','WAF 규칙셋(OWASP)과 커스텀 규칙을 함께 적용해 오탐 최소화','Private Link Origin으로 오리진을 퍼블릭 노출 없이 연결'],
+        related:['Application Gateway + WAF','Azure Firewall'],
+        archFit:['Global Content Delivery','Edge Security Architecture']
+      },
+      vwan:{
+        title:'Azure Virtual WAN',
+        desc:'다지사·다리전 네트워크를 허브 라우팅 자동화로 단순화하는 대규모 네트워크 관리 서비스',
+        role:['여러 허브를 Microsoft 글로벌 백본으로 자동 연결해 수동 피어링 부담 제거','지사 SD-WAN·VPN·ExpressRoute 연결을 단일 콘솔에서 통합 관리'],
+        when:['수십 개 지사·리전을 개별 허브-스포크로 관리하기 복잡해졌을 때','SD-WAN 파트너 장비와 Azure를 표준화된 방식으로 연동할 때','리전 간 트래픽을 Microsoft 백본으로 최적 경로 라우팅하고 싶을 때'],
+        design:['허브 규모(단위 용량)를 예상 트래픽 기준으로 사전 산정','보안 허브(Secure Hub) 구성 시 Azure Firewall 연동 여부 결정','라우팅 정책(Route Table)으로 허브 간 트래픽 격리·통제','기존 Hub-Spoke에서 전환 시 마이그레이션 순서 단계화'],
+        related:['ExpressRoute','VPN Gateway','Azure Firewall'],
+        archFit:['Global Network Architecture','SD-WAN Integration']
       }
     }
   },
@@ -697,7 +768,7 @@ const graph = {
       'Defender for Cloud 권고사항을 정기 검토해 보안 기준선(Baseline) 유지',
       'Azure Policy로 리소스가 보안 기준을 벗어나지 못하도록 선제 강제'
     ],
-    keyServices:['Microsoft Sentinel','Defender for Cloud','Key Vault','Microsoft Purview','Azure Policy','Defender for Cloud Apps'],
+    keyServices:['Microsoft Sentinel','Defender for Cloud','Key Vault','Microsoft Purview','Azure Policy','Defender for Cloud Apps','Security Copilot','Defender EASM'],
     archFocus:['Security Operations Center (SOC)','Cloud Security Architecture','Compliance Automation'],
     children:{
       sentinel:{
@@ -753,6 +824,24 @@ const graph = {
         design:['Conditional Access App Control로 세션 실시간 제어 연동','이상 행위 탐지 정책(대량 다운로드·비정상 위치 접속) 커스터마이징','승인 SaaS 카탈로그 관리로 섀도우 IT 가시성 확보','Purview DLP 정책과 연계해 민감 데이터 유출 차단'],
         related:['Conditional Access','Entra ID','Microsoft Purview','Intune'],
         archFit:['Zero Trust Access Model','SaaS Security Posture']
+      },
+      securitycopilot:{
+        title:'Microsoft Security Copilot',
+        desc:'자연어로 보안 인시던트를 조사하고 대응을 제안하는 생성형 AI 기반 SOC 보조 도구',
+        role:['Sentinel·Defender 로그를 자연어 질의로 조사해 분석가의 트리아지 시간 단축','인시던트 요약, 공격 스토리라인 재구성, 대응 스크립트 초안 자동 생성'],
+        when:['SOC 인력 부족으로 알림(Alert) 처리 적체가 발생할 때','신입 분석가의 조사 역량을 표준화된 프롬프트로 보완할 때','인시던트 보고서를 경영진용으로 빠르게 요약해야 할 때'],
+        design:['Sentinel·Defender·Entra ID 등 연결할 데이터 소스 범위를 사전 정의','생성된 대응 제안은 분석가 검토 후 실행 — 자동 실행은 신중히 접근','민감 로그 데이터의 AI 처리 범위를 조직 정책에 맞게 제한','Promptbook으로 반복 조사 시나리오를 표준화해 재사용'],
+        related:['Microsoft Sentinel','Defender for Cloud','Log Analytics Workspace'],
+        archFit:['AI-Augmented SOC','Security Operations Automation']
+      },
+      easm:{
+        title:'Microsoft Defender EASM (External Attack Surface Management)',
+        desc:'조직이 인지하지 못한 외부 노출 자산까지 자동 탐색해 공격 표면을 가시화',
+        role:['도메인·서브도메인·IP·인증서를 크롤링해 그림자 IT·미관리 자산을 발견','발견된 자산의 취약점·만료 인증서·오픈 포트를 지속 모니터링'],
+        when:['인수합병·부서별 개별 구축으로 관리 안 된 외부 자산이 의심될 때','정기 모의해킹 전 공격자 관점의 노출 자산 인벤토리가 필요할 때','자회사·브랜드 전체의 디지털 자산 현황을 파악해야 할 때'],
+        design:['초기 Seed(도메인·조직명) 입력 후 자동 탐색 범위 검증 필수','발견된 자산은 소유권 확인 후 정식 인벤토리에 편입','고위험 노출(만료 인증서·오픈 관리 포트)에 우선순위 대응','Defender for Cloud·Sentinel과 연계해 탐지-대응 흐름 통합'],
+        related:['Defender for Cloud','Microsoft Sentinel','Azure Policy'],
+        archFit:['Attack Surface Visibility','Proactive Security Posture']
       }
     }
   },
@@ -768,7 +857,7 @@ const graph = {
       '기존 운영 절차와의 충돌 최소화 — 점진적 이전 전략 수립',
       'Azure Bastion으로 공개 IP 없이 VM 원격 접근 보안 확보'
     ],
-    keyServices:['Virtual Machine','Azure Arc','Azure Backup','Storage Account','Site Recovery'],
+    keyServices:['Virtual Machine','Azure Arc','Azure Backup','Storage Account','Site Recovery','Azure Local','Azure VMware Solution','Azure File Sync'],
     archFocus:['Hybrid Cloud Platform','Business Continuity Architecture','Infrastructure Modernization'],
     children:{
       vm:{
@@ -815,6 +904,33 @@ const graph = {
         design:['RPO/RTO 목표를 서비스 중요도별로 계층화해 복제 정책 차등 적용','정기 DR 드릴(Failover Test)로 실제 복구 가능 여부 검증','네트워크·IP 매핑을 보조 리전에도 동일하게 사전 구성','복제 대역폭·비용을 고려한 복제 주기 설정'],
         related:['Virtual Machine','Azure Backup','VNet','Storage Account'],
         archFit:['Business Continuity Architecture','Disaster Recovery Design']
+      },
+      azurelocal:{
+        title:'Azure Local (구 Azure Stack HCI)',
+        desc:'온프레미스·엣지에서 Azure Arc로 연결되는 하이퍼컨버지드 인프라 — Azure Stack HCI의 후신',
+        role:['데이터센터·지사·공장 등 엣지에서 VM·컨테이너·AVD를 온프레미스에 구동','Azure Arc를 통해 클라우드와 동일한 관리·보안·정책을 오프라인 환경에도 적용'],
+        when:['규제·지연시간·연결성 문제로 워크로드를 온프레미스에 유지해야 할 때','지사·공장 등 엣지 사이트에서 로컬 컴퓨트가 필요할 때','기존 Azure Stack HCI 환경을 최신 관리 체계로 전환할 때'],
+        design:['클러스터 노드 수는 워크로드 가용성 요구사항에 맞춰 산정(단일 노드부터 지원)','Arc 등록 후 Azure Policy·Defender·Monitor를 온프레미스에도 동일 적용','연결 끊김(Disconnected) 상황에서의 로컬 운영 지속성 사전 검증','라이선싱은 물리 코어 기준 구독형 — 사용량 예측 후 비용 설계'],
+        related:['Azure Arc','Virtual Machine','Azure Backup'],
+        archFit:['Hybrid Cloud Platform','Edge Computing Architecture']
+      },
+      avs:{
+        title:'Azure VMware Solution (AVS)',
+        desc:'온프레미스 VMware 환경(vSphere·vSAN·NSX)을 재설계 없이 그대로 Azure에서 구동',
+        role:['기존 VMware 운영 도구·스킬셋을 그대로 유지한 채 인프라만 Azure로 이전','온프레미스 데이터센터 철수(Exit) 프로젝트의 표준 경로로 활용'],
+        when:['VM 재설계·앱 재구성 없이 데이터센터를 신속히 철수해야 할 때','VMware 라이선스·운영 인력을 유지하며 클라우드로 확장하고 싶을 때','재해복구 사이트를 온프레미스 대신 Azure에 구성할 때'],
+        design:['노드 수·클러스터 구성을 워크로드 용량과 vSAN 중복 정책 기준 산정','기존 온프레미스와 AVS 간 네트워크 연결(ExpressRoute) 설계 선행','NSX-T 네트워킹 정책을 Azure 네트워크 모델에 맞게 재검토','장기적으로는 Azure Native 서비스 전환 로드맵을 별도 수립'],
+        related:['ExpressRoute','Azure Arc','Virtual Machine'],
+        archFit:['Data Center Exit Strategy','Hybrid Cloud Platform']
+      },
+      filesync:{
+        title:'Azure File Sync',
+        desc:'온프레미스 파일 서버를 Azure Files와 동기화해 로컬 캐시처럼 운영하는 하이브리드 스토리지',
+        role:['온프레미스 Windows Server를 Azure Files의 캐시 노드로 전환','Cloud Tiering으로 자주 쓰지 않는 파일은 클라우드에만 보관해 로컬 용량 절감'],
+        when:['지사별 파일 서버를 유지하되 백업·용량 관리 부담을 줄이고 싶을 때','파일 서버 노후화 교체 시점에 클라우드 저장소로 단계적 전환할 때','여러 지사 간 동일 파일 세트를 동기화해야 할 때'],
+        design:['Cloud Tiering 정책 — 로컬 보관 비율을 접근 빈도 기준 산정','Sync Group 단위로 지사별 동기화 범위 분리','기존 파일 권한(NTFS ACL)이 Azure Files에도 동일 적용되는지 검증','대역폭 제한(Throttling)으로 지사 회선 영향 최소화'],
+        related:['Storage Account','Azure Backup','Azure Arc'],
+        archFit:['Hybrid File Storage','Branch Office Modernization']
       }
     }
   },
@@ -830,7 +946,7 @@ const graph = {
       'Branch 전략(Git Flow vs Trunk-based) 팀 규모에 맞게 선택',
       '배포 실패 시 자동 롤백 조건과 알림 흐름 사전 정의'
     ],
-    keyServices:['GitHub Actions','Azure DevOps','Terraform / Bicep','Container Registry','Landing Zone'],
+    keyServices:['GitHub Actions','Azure DevOps','Terraform / Bicep','Container Registry','Landing Zone','AKS','GitHub Copilot','Container Apps'],
     archFocus:['CI/CD Automation Platform','Infrastructure as Code','DevSecOps Foundation'],
     children:{
       actions:{
@@ -877,6 +993,33 @@ const graph = {
         design:['관리 그룹 계층 설계 — 조직 구조와 정책 상속 범위 일치','Azure Policy로 필수 태그·리전·SKU 강제','Hub-Spoke 네트워크와 연동한 구독 분리 전략','IaC(Terraform/Bicep)로 Landing Zone 자체를 코드로 관리'],
         related:['Azure Policy','RBAC','VNet','Terraform / Bicep'],
         archFit:['Landing Zone Governance','Enterprise-scale Architecture']
+      },
+      aks:{
+        title:'Azure Kubernetes Service (AKS)',
+        desc:'완전 관리형 Kubernetes로 컨테이너 오케스트레이션의 운영 부담을 클라우드에 위임',
+        role:['컨트롤 플레인을 Azure가 관리 — 워커 노드 스케일링과 워크로드 배포에 집중','Managed Identity·Azure CNI·AGIC 등 Azure 네이티브 서비스와 긴밀히 통합'],
+        when:['마이크로서비스 아키텍처를 컨테이너 기반으로 운영할 때','트래픽 변동에 따라 자동 스케일링이 필요한 워크로드일 때','멀티 테넌트 환경에서 네임스페이스 기반 리소스 격리가 필요할 때'],
+        design:['Node Pool을 워크로드 특성별로 분리(System/User Pool)','Workload Identity로 Pod가 시크릿 없이 Azure 리소스에 접근','Azure Policy for AKS로 클러스터 보안 기준선 강제','Cluster Autoscaler + HPA 조합으로 노드·Pod 이중 스케일링 설계'],
+        related:['Azure Container Registry','Entra Workload ID','Application Gateway','Defender for Containers'],
+        archFit:['Container Orchestration Platform','Microservices Architecture']
+      },
+      ghcopilot:{
+        title:'GitHub Copilot',
+        desc:'IDE·PR·CLI 전반에서 코드 제안과 리뷰를 보조하는 AI 페어 프로그래머',
+        role:['코드 작성 중 실시간 자동완성·함수 생성으로 반복 코딩 시간 단축','Pull Request 요약, 코드 리뷰 코멘트 초안 등 개발 라이프사이클 전반을 보조'],
+        when:['개발팀 전체의 코딩 생산성을 표준 도구로 끌어올리고 싶을 때','반복적인 보일러플레이트·테스트 코드 작성 부담을 줄이고 싶을 때','PR 리뷰 병목을 AI 초안으로 완화하고 싶을 때'],
+        design:['조직 정책으로 공개 코드 매칭(Public Code Matching) 허용 여부 설정','사내 코드베이스를 학습 데이터로 사용하지 않도록 정책 확인','생성 코드는 반드시 리뷰·테스트 통과 후 병합 — 자동 신뢰 지양','라이선스·보안 취약점 스캔 도구와 병행 운영'],
+        related:['GitHub Actions','Azure DevOps','Entra ID'],
+        archFit:['AI-Assisted Development','Developer Productivity Platform']
+      },
+      containerapps:{
+        title:'Azure Container Apps',
+        desc:'Kubernetes를 직접 운영하지 않고 컨테이너를 서버리스로 실행하는 관리형 런타임',
+        role:['AKS 대비 클러스터 운영 부담 없이 컨테이너·마이크로서비스를 배포','KEDA 기반 이벤트 드리븐 오토스케일링으로 트래픽 0까지 축소 가능'],
+        when:['소규모 팀이 Kubernetes 운영 인력 없이 컨테이너를 쓰고 싶을 때','트래픽 변동이 큰 API·백그라운드 작업을 사용한 만큼만 과금하고 싶을 때','AKS는 과한 마이크로서비스·배치 작업을 단순하게 배포할 때'],
+        design:['Scale Rule(HTTP·큐 기반)로 워크로드 특성에 맞는 오토스케일 기준 설정','Dapr 사이드카로 서비스 간 통신·상태 관리를 코드 변경 없이 표준화','Revision 기반 배포로 트래픽 분할(Blue-Green/Canary) 구성','AKS와의 선택 기준을 사전에 문서화 — 세밀한 제어가 필요하면 AKS로'],
+        related:['Azure Container Registry','GitHub Actions','AKS'],
+        archFit:['Serverless Containers','Event-Driven Architecture']
       }
     }
   },
@@ -892,7 +1035,7 @@ const graph = {
       '민감 데이터 접근 제어 — AI 모델에 불필요한 데이터 노출 차단',
       'AI 서비스 토큰 비용 구조 이해 후 캐싱·모델 선택 최적화'
     ],
-    keyServices:['Azure SQL/Blob','AI Search','Azure OpenAI','Data Factory','Copilot Studio','Document Intelligence'],
+    keyServices:['Azure SQL/Blob','AI Search','Azure OpenAI','Data Factory','Copilot Studio','Document Intelligence','Microsoft Fabric','Microsoft Foundry'],
     archFocus:['Enterprise RAG Platform','Knowledge Retrieval System','Generative AI Services'],
     children:{
       sql:{
@@ -948,6 +1091,24 @@ const graph = {
         design:['Prebuilt Model(청구서·영수증) vs Custom Model — 표준 양식이면 Prebuilt 우선','신뢰도(Confidence) 임계값 설정 — 낮은 신뢰도 항목은 수동 검토 흐름 설계','대용량 배치 처리 시 비동기 API 활용','AI Search Custom Skill로 파이프라인에 통합'],
         related:['AI Search','Blob Storage','Azure OpenAI','Power Automate'],
         archFit:['Document Processing Pipeline','Intelligent Data Extraction']
+      },
+      fabric:{
+        title:'Microsoft Fabric',
+        desc:'Data Factory·Synapse·Power BI를 OneLake 위에 통합한 SaaS형 엔드투엔드 분석 플랫폼',
+        role:['수집(Data Factory)·엔지니어링·웨어하우징·BI를 단일 플랫폼과 단일 라이선스로 통합','OneLake라는 단일 논리적 레이크 위에서 모든 워크로드가 데이터를 중복 없이 공유'],
+        when:['여러 분석 도구(ADF·Synapse·Power BI)를 개별 관리하는 복잡도를 줄이고 싶을 때','부서 간 데이터 사일로 없이 하나의 레이크하우스로 통합하고 싶을 때','비즈니스 사용자가 Copilot으로 셀프서비스 분석까지 확장하고 싶을 때'],
+        design:['Capacity(F SKU) 단위 과금 구조 이해 후 워크로드별 사용량 산정','Workspace를 도메인·팀 단위로 분리해 거버넌스 경계 명확화','OneLake 바로가기(Shortcut)로 기존 ADLS 데이터 이중 저장 없이 참조','Purview와 연동해 전사 데이터 카탈로그·민감도 라벨 일관 적용'],
+        related:['Azure Data Factory','Azure SQL','Microsoft Purview'],
+        archFit:['Unified Analytics Platform','Modern Data Lakehouse']
+      },
+      foundry:{
+        title:'Microsoft Foundry (구 Azure AI Foundry)',
+        desc:'모델 선택·에이전트 구축·평가·거버넌스를 한 곳에서 다루는 엔터프라이즈 AI 플랫폼',
+        role:['Azure OpenAI뿐 아니라 다양한 파운데이션 모델을 카탈로그에서 선택·배포','에이전트 오케스트레이션, 평가(Evaluation), 콘텐츠 안전, 모니터링까지 AI 앱 라이프사이클 전체를 관리'],
+        when:['단일 모델 호출을 넘어 여러 도구를 사용하는 AI 에이전트를 구축할 때','여러 LLM 벤더(모델)를 비교·전환 가능한 구조로 설계할 때','AI 앱의 응답 품질·안전성을 배포 전후로 지속 평가해야 할 때'],
+        design:['Foundry Project 단위로 모델·데이터·에이전트 리소스를 격리 관리','Content Safety·Entra ID 인증을 기본 배포 파이프라인에 포함','Evaluation 파이프라인으로 프롬프트·모델 변경의 품질 영향 사전 검증','Private Endpoint로 엔터프라이즈 네트워크 격리 구성'],
+        related:['Azure OpenAI','AI Search','Microsoft Purview','Entra ID'],
+        archFit:['Enterprise AI Platform','Agentic AI Architecture']
       }
     }
   },
@@ -963,7 +1124,7 @@ const graph = {
       'Tag 전략으로 팀·프로젝트·환경별 비용 추적 체계 수립',
       'Power Automate로 M365·Azure 경계를 넘나드는 자동화 흐름 설계'
     ],
-    keyServices:['Azure Monitor','Log Analytics','Cost Management','Azure Automation','Power Automate'],
+    keyServices:['Azure Monitor','Log Analytics','Cost Management','Azure Automation','Power Automate','Application Insights','Azure Advisor','Resource Graph'],
     archFocus:['Operational Excellence Platform','Monitoring & Alerting','Automated Operations'],
     children:{
       monitor:{
@@ -1010,6 +1171,33 @@ const graph = {
         design:['Cloud Flow vs Desktop Flow(PAD) — 클라우드 서비스는 Cloud, 로컬 앱은 PAD','Unattended RPA(PAD)는 서버에 배포해 24/7 무인 실행 구성','AI Builder: 사전 학습 모델 vs Custom Model — 범용 양식이면 사전 학습 우선','플로우 오류 처리 — Scope + Configure run after로 오류 분기 설계'],
         related:['Teams','SharePoint','Outlook','AI Builder','Azure Functions'],
         archFit:['Business Process Automation','M365 Integration Hub']
+      },
+      appinsights:{
+        title:'Application Insights',
+        desc:'앱 성능(APM)과 사용자 행동을 추적하는 Azure Monitor의 애플리케이션 모니터링 구성요소',
+        role:['요청 응답시간·예외·종속성 호출을 자동 계측해 장애 지점을 신속히 특정','사용자 흐름(Funnel)·이탈률 분석으로 프로덕트 관점의 사용성 데이터도 제공'],
+        when:['프로덕션 앱의 성능 저하·오류 원인을 코드 라인 단위로 추적해야 할 때','마이크로서비스 간 호출 체인을 추적(Distributed Tracing)해야 할 때','배포 후 사용자 행동 변화를 정량적으로 확인하고 싶을 때'],
+        design:['Sampling 비율 조정으로 고트래픽 환경의 수집 비용 최적화','Availability Test로 외부에서 주기적 헬스체크 자동화','Application Map으로 서비스 간 의존성 시각화 후 병목 식별','Alert Rule을 SLO(목표 응답시간·오류율) 기준으로 설계'],
+        related:['Azure Monitor','Log Analytics Workspace','AKS'],
+        archFit:['Application Performance Monitoring','Observability Platform']
+      },
+      advisor:{
+        title:'Azure Advisor',
+        desc:'비용·보안·안정성·성능·운영 우수성 5개 영역의 개선 권고를 자동 생성하는 무료 진단 도구',
+        role:['리소스 구성을 지속 스캔해 과잉 프로비저닝·미사용 리소스·보안 취약점을 식별','권고사항을 영향도 기준으로 우선순위화해 실행 가능한 액션으로 제시'],
+        when:['정기적인 비용·보안 점검 루틴을 표준화하고 싶을 때','신규 환경 구축 후 모범 사례 대비 현황을 빠르게 진단할 때','경영진 보고용으로 개선 기회를 정량적 근거와 함께 제시할 때'],
+        design:['Advisor Score로 영역별 개선 추이를 시계열로 추적','권고사항을 Azure Automation·Logic Apps와 연동해 일부 자동 조치','예외(Postpone/Dismiss) 처리 시 사유를 기록해 감사 추적 확보','월 1회 정기 리뷰 주기를 팀 프로세스에 편입'],
+        related:['Cost Management','Azure Policy','Defender for Cloud'],
+        archFit:['Cloud Governance','Continuous Optimization']
+      },
+      resourcegraph:{
+        title:'Azure Resource Graph',
+        desc:'KQL로 대규모 구독 전체의 리소스를 초 단위로 질의·감사하는 전역 검색 엔진',
+        role:['수백~수천 개 리소스를 개별 조회 없이 한 번의 쿼리로 전역 탐색','태그 누락·정책 비준수·특정 SKU 사용 현황 등을 대시보드화'],
+        when:['다수 구독·관리 그룹 환경에서 특정 조건의 리소스를 빠르게 찾아야 할 때','거버넌스 감사(태그·네이밍 규칙 준수 여부)를 정기적으로 수행할 때','Workbook·Power BI로 리소스 현황 대시보드를 구성할 때'],
+        design:['자주 쓰는 쿼리는 저장(Query) 후 팀과 공유해 재사용','Change History로 리소스 구성 변경 이력 추적','대규모 결과는 페이징 처리 — 단일 쿼리 응답 한도 고려','Azure Policy 비준수 리소스를 Resource Graph 쿼리로 교차 검증'],
+        related:['Azure Policy','Log Analytics Workspace','Cost Management'],
+        archFit:['Enterprise Governance at Scale','Resource Inventory Platform']
       }
     }
   },
@@ -1025,7 +1213,7 @@ const graph = {
       'Exchange 메일 보안 — DMARC·DKIM·SPF 설정과 Defender 연동',
       'SharePoint 정보 아키텍처 — 사이트·라이브러리·권한 구조 표준화'
     ],
-    keyServices:['M365 Admin Center','Exchange Online','SharePoint Online','Microsoft Teams','Copilot for M365','Intune'],
+    keyServices:['M365 Admin Center','Exchange Online','SharePoint Online','Microsoft Teams','Copilot for M365','Intune','Windows 365','Viva'],
     archFocus:['Modern Workplace Platform','Secure Collaboration','AI-Powered Productivity'],
     children:{
       m365admin:{
@@ -1081,6 +1269,24 @@ const graph = {
         design:['규정 준수 정책(암호화·OS 버전·백신)을 디바이스 유형별로 세분화','App Protection Policy로 비관리 디바이스에서도 데이터 유출 방지','Autopilot으로 신규 디바이스 자동 프로비저닝 구성','Conditional Access와 연동해 비규정 준수 디바이스 접근 차단'],
         related:['Conditional Access','Entra ID','Defender for Cloud Apps'],
         archFit:['Zero Trust Access Model','Secure Remote Work Architecture']
+      },
+      windows365:{
+        title:'Windows 365 (Cloud PC)',
+        desc:'개인화된 Windows 데스크톱을 클라우드에서 스트리밍하는 완전 관리형 Cloud PC 서비스',
+        role:['사용자별로 고정 사양의 개인 Cloud PC를 구독형으로 제공 — 로컬 기기와 무관하게 동일 경험','Intune으로 디바이스처럼 관리되며 Conditional Access로 접근 제어'],
+        when:['BYOD·계약직 등 회사 자산 지급이 어려운 인력에게 표준 업무환경을 제공할 때','고사양 로컬 PC 없이 그래픽·개발 작업이 필요한 경우','신규 입사자 온보딩 시간을 디바이스 배송 없이 단축하고 싶을 때'],
+        design:['사용자 프로필별 사양(vCPU/RAM) 선정 — 업무 유형에 따라 계층화','Intune Compliance Policy로 Cloud PC 보안 기준선 통일','Conditional Access로 관리되지 않는 로컬 기기에서의 접속 제한','네트워크 요건(Azure Network Connection) 사전 검증 — 지연시간 영향 큼'],
+        related:['Microsoft Intune','Conditional Access','Entra ID'],
+        archFit:['Secure Remote Work Architecture','Modern Endpoint Strategy']
+      },
+      viva:{
+        title:'Microsoft Viva (Insights / Engage)',
+        desc:'M365 사용 데이터를 기반으로 직원 경험·생산성·조직 건강도를 가시화하는 EX 플랫폼',
+        role:['협업 패턴(회의 시간·업무 외 시간 근무 등)을 분석해 번아웃 리스크를 조기 파악','Copilot 도입 효과를 Copilot Dashboard로 정량 측정해 ROI 근거 제공'],
+        when:['Copilot for M365 도입 후 실제 생산성 향상을 데이터로 증명해야 할 때','조직 전체의 회의 과부하·협업 패턴을 데이터 기반으로 진단할 때','임원·매니저에게 팀 단위 인사이트를 정기 리포트로 제공할 때'],
+        design:['개인 식별 데이터는 집계·익명화 원칙 준수 — 개인 성과 평가 도구로 오용 금지','Viva Insights 접근 권한을 매니저·HR 역할별로 분리','Copilot Dashboard로 기능별 사용률과 시간 절감 효과 추적','설문(Viva Pulse)과 결합해 정량 데이터에 정성적 맥락 보강'],
+        related:['Copilot for Microsoft 365','Teams','Entra ID'],
+        archFit:['Employee Experience Platform','AI Adoption Measurement']
       }
     }
   },
@@ -1139,6 +1345,7 @@ function positionNodes() {
     const y = cy + r * Math.sin(angle);
     node.style.left = (x - 84) + 'px';
     node.style.top  = (y - 50) + 'px';
+    node.style.animationDelay = (i * 40) + 'ms';
   });
 }
 
@@ -1162,7 +1369,10 @@ function drawMainLines() {
     line.setAttribute('stroke', 'rgba(59,130,246,.25)');
     line.setAttribute('stroke-width', '1.5');
     line.setAttribute('stroke-dasharray', '4 3');
+    line.style.opacity = '0';
+    line.style.transition = `opacity .5s ease ${i * 40}ms`;
     mmSvg.appendChild(line);
+    requestAnimationFrame(() => requestAnimationFrame(() => { line.style.opacity = '1'; }));
   });
 }
 
@@ -1195,7 +1405,7 @@ function renderSubgraph(mainKey, selChild) {
     const x = CX_START + i * (CW + GAP), y = CY;
     const node = document.createElement('div');
     node.className = 'mn' + (selChild === key ? ' mn-active' : '');
-    node.style.cssText = `left:${x}px;top:${y}px;width:${CW}px;`;
+    node.style.cssText = `left:${x}px;top:${y}px;width:${CW}px;animation-delay:${i * 45}ms;`;
     const shortDesc = item.desc.length > 44 ? item.desc.slice(0,44) + '…' : item.desc;
     node.innerHTML = `<span class="mn-kicker">Service</span><div class="mn-title">${item.title}</div><span class="mn-sub">${shortDesc}</span>`;
     node.addEventListener('click', () => selectChild(mainKey, key));
@@ -1206,7 +1416,10 @@ function renderSubgraph(mainKey, selChild) {
     line.setAttribute('x2', x); line.setAttribute('y2', y + 35);
     line.setAttribute('stroke', 'rgba(59,130,246,.3)');
     line.setAttribute('stroke-width', '1.5');
+    line.style.opacity = '0';
+    line.style.transition = `opacity .4s ease ${i * 45}ms`;
     sgSvg.appendChild(line);
+    requestAnimationFrame(() => requestAnimationFrame(() => { line.style.opacity = '1'; }));
   });
 
   sgCanvas.style.width = (CX_START + children.length * (CW + GAP) + 20) + 'px';
@@ -1244,19 +1457,20 @@ function renderSidebarMain(key) {
   document.getElementById('sidebarDetail').innerHTML = html;
 }
 
-function renderSidebarChild(mainKey, childKey) {
+function renderServiceModal(mainKey, childKey) {
   const c = graph[mainKey].children[childKey];
   let html = `
-    <div class="sd-eyebrow clickable" onclick="setFocus('${mainKey}')">← ${graph[mainKey].title}</div>
-    <div class="sd-title">${c.title}</div>
-    <div class="sd-desc">${c.desc}</div>
+    <div class="sd-eyebrow clickable" onclick="toggleServiceModal(false)">← ${graph[mainKey].title}</div>
+    <h2>${c.title}</h2>
+    <p class="modal-context">${c.desc}</p>
     ${sdSection('1','역할 (What)', c.role, 'list')}
     ${sdSection('2','사용 시나리오 (When)', c.when, 'list')}
     ${sdSection('3','설계 포인트 (Design)', c.design, 'list')}
     ${sdSection('4','함께 사용하는 서비스', c.related, 'chips')}
     ${sdSection('5','적용 가능한 아키텍처', c.archFit, 'arch')}
   `;
-  document.getElementById('sidebarDetail').innerHTML = html;
+  document.getElementById('serviceModalBody').innerHTML = html;
+  toggleServiceModal(true);
 }
 
 /* ════════════════════════════════════════════════════════
@@ -1276,7 +1490,7 @@ function selectChild(mainKey, childKey) {
   currentMain = mainKey;
   currentChild = childKey;
   document.querySelectorAll('.mm-node').forEach(n => n.classList.toggle('active', n.dataset.key === mainKey));
-  renderSidebarChild(mainKey, childKey);
+  renderServiceModal(mainKey, childKey);
   renderSubgraph(mainKey, childKey);
   updateQuickNav(mainKey);
 }
@@ -1302,6 +1516,15 @@ function toggleOverview(show) {
   document.getElementById('overviewOverlay').classList.toggle('show', show);
 }
 window.toggleOverview = toggleOverview;
+
+function toggleServiceModal(show) {
+  document.getElementById('serviceOverlay').classList.toggle('show', show);
+}
+window.toggleServiceModal = toggleServiceModal;
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') toggleServiceModal(false);
+});
 
 /* ════════════════════════════════════════════════════════
    ZOOM / PAN
@@ -1418,6 +1641,25 @@ document.addEventListener('click', e => {
 
 renderNodes();
 renderQuickNav();
+animatePageStats();
+
+function animatePageStats() {
+  const totalServices = CAT_KEYS.reduce((sum, k) => sum + Object.keys(graph[k].children || {}).length, 0);
+  animateCount(document.getElementById('statCategories'), CAT_KEYS.length, 700);
+  animateCount(document.getElementById('statServices'), totalServices, 900);
+}
+
+function animateCount(el, target, duration) {
+  if (!el) return;
+  const start = performance.now();
+  function tick(now) {
+    const p = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(eased * target);
+    if (p < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
 
 /* Deep-link support: ?cat=security or ?cat=security&svc=sentinel */
 (function initFromQuery(){
