@@ -415,24 +415,6 @@
       padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;
       background: rgba(59,130,246,.14); color: var(--accent); border: 1px solid rgba(59,130,246,.3);
     }
-
-    .pm-decision-list { display: flex; flex-direction: column; gap: 12px; }
-    .pm-decision-item { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
-    .pm-decision-question { font-size: 12.5px; font-weight: 700; color: var(--text); margin-bottom: 8px; line-height: 1.5; }
-    .pm-decision-row { display: flex; gap: 6px; font-size: 12px; line-height: 1.6; margin-bottom: 4px; }
-    .pm-decision-label { flex-shrink: 0; font-weight: 600; min-width: 60px; }
-    .pm-decision-alt .pm-decision-label { color: var(--text-light); }
-    .pm-decision-alt .pm-decision-text { color: var(--text-muted); }
-    .pm-decision-chosen .pm-decision-label { color: var(--accent); }
-    .pm-decision-chosen .pm-decision-text { color: var(--text); font-weight: 500; }
-
-    .pm-code-block {
-      background: #0d1420; border: 1px solid var(--border); border-radius: 10px;
-      padding: 14px 16px; overflow-x: auto; font-size: 12px; line-height: 1.6;
-      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-      color: #cbd5e1; white-space: pre;
-    }
-    .pm-code-caption { font-size: 11px; color: var(--text-light); margin-top: 6px; }
   </style>
 </head>
 <body>
@@ -680,17 +662,6 @@
     <div class="pm-section" id="pmWhySection">
       <div class="pm-section-title">💡 Why This Design?</div>
       <div class="pm-why-grid" id="pmWhyGrid"></div>
-    </div>
-
-    <div class="pm-section" id="pmDecisionsSection">
-      <div class="pm-section-title">🧭 Key Decisions</div>
-      <div class="pm-decision-list" id="pmDecisionsList"></div>
-    </div>
-
-    <div class="pm-section" id="pmCodeSection">
-      <div class="pm-section-title">💻 Code / Config Reference</div>
-      <pre class="pm-code-block" id="pmCodeBlock"></pre>
-      <div class="pm-code-caption" id="pmCodeCaption"></div>
     </div>
 
     <div class="pm-section" id="pmKeywordsSection">
@@ -1324,27 +1295,7 @@ const projects = [
       'Logpresso',
       'Windows Server',
       'Compliance Monitoring'
-    ],
-    codeBlock: `# 84개 점검 항목 중 하나: 계정 잠금 임계값 점검 예시 (실제 서버명/도메인은 마스킹)
-function Test-AccountLockoutThreshold {
-    $policy = (net accounts) | Select-String "Lockout threshold"
-    $threshold = [int]($policy -replace '\\D+', '')
-
-    $result = [PSCustomObject]@{
-        CheckId   = "ISO-A9-4-3"
-        ServerName = $env:COMPUTERNAME
-        Item      = "Account Lockout Threshold"
-        Expected  = "<= 5"
-        Actual    = $threshold
-        Compliant = ($threshold -le 5 -and $threshold -gt 0)
-        CheckedAt = (Get-Date -Format "yyyy-MM-dd HH:mm:ss")
-    }
-    return $result
-}
-
-# 결과를 JSON으로 직렬화 후 Logpresso 수집 경로로 전송
-Test-AccountLockoutThreshold | ConvertTo-Json | Out-File "\\\\logserver\\collect\\$env:COMPUTERNAME.json"`,
-    codeCaption: '84개 점검 항목 중 계정 잠금 정책 점검 로직 예시 (실제 서버/도메인 정보는 마스킹 처리)'
+    ]
   }
 },
   {
@@ -1454,72 +1405,13 @@ Test-AccountLockoutThreshold | ConvertTo-Json | Out-File "\\\\logserver\\collect
         { value: '중앙 관리', label: 'AD·GPO 기반 회의실 PC 통합 관리' },
         { value: '최소 권한', label: 'OU 단위 권한 위임으로 Domain Join을 관리자 계정으로 제한' },
         { value: '운영 표준화', label: '신규 회의실 PC 추가 시 동일 정책 즉시 적용' },
-        { value: 'GPO 4종', label: 'Defender·BitLocker·Update·전용 정책이 실제 PC에 적용됨을 gpresult로 검증' },
       ],
       whyDesign: [
         { title: '중앙 관리', desc: 'AD와 GPO를 통한 회의실 PC 통합 관리로 운영 효율성 향상' },
         { title: '보안 강화', desc: '최소 권한 원칙 및 방화벽 정책으로 AD 필수 서비스만 허용해 보안성 강화' },
         { title: '운영 표준화', desc: '도메인 정책과 네트워크 구성 표준화로 신규 회의실 PC 추가 시간 단축' }
       ],
-      keyDecisions: [
-        {
-          question: 'DC를 DMZ에 두는 건 일반적으로 권장되지 않는 구성인데, 왜 이렇게 배치했나?',
-          alternative: '내부망에 DC를 두고 회의실 네트워크와 VPN/전용 회선으로 연결',
-          chosen: '물리적으로 격리된 회의실 전용 WiFi Zone 안에 DC를 두고, 방화벽에서 AD 필수 포트(DNS/Kerberos/LDAP 등)만 화이트리스트로 허용',
-          reason: '이 DC가 인터넷에 직접 노출되지 않고 회의실 PC 대상 서비스만 제공하므로, 내부망과 완전히 통합하기보다 스코프를 좁혀 리스크를 제한하는 편이 관리·장애 격리 측면에서 유리하다고 판단'
-        },
-        {
-          question: '회의실 PC의 도메인 조인 권한을 어떻게 제한할 것인가?',
-          alternative: '기본값(Authenticated Users에게 컴퓨터 객체 생성 권한 부여)을 그대로 사용',
-          chosen: 'MeetingRoom 전용 OU를 분리하고 Authenticated Users의 Computer Object 생성 권한을 제거, 관리자 계정에만 위임',
-          reason: '공용 장비 특성상 임의 조인을 허용하면 통제 불가능한 디바이스가 늘어날 위험이 있어, 초기 구성 부담을 감수하더라도 최소 권한 원칙을 적용'
-        }
-      ],
-      keywords: ['Active Directory', 'GPO', 'DNS', 'VMware', 'DHCP', 'Firewall'],
-      codeBlock: `# 1) 대조군: 기본 Computers OU — 별도 위임 없음, Authenticated Users는 READ만 보유
-PS C:\\> dsacls "CN=Computers,DC=corp,DC=example,DC=com"
-
-Access list:
-Allow BUILTIN\\Administrators           FULL CONTROL
-Allow NT AUTHORITY\\SYSTEM              FULL CONTROL
-Allow CORP\\Domain Admins               FULL CONTROL
-Allow CORP\\Enterprise Admins           FULL CONTROL
-Allow Authenticated Users               READ
-Inherited from: DC=corp,DC=example,DC=com
-
-
-# 2) MeetingRoom OU — Delegation of Control Wizard로 운영 계정에만 최소 권한 위임
-PS C:\\> dsacls "OU=MeetingRoom,OU=Computers,DC=corp,DC=example,DC=com"
-
-Access list:
-Allow BUILTIN\\Administrators           FULL CONTROL
-Allow NT AUTHORITY\\SYSTEM              FULL CONTROL
-Allow CORP\\Domain Admins               FULL CONTROL
-Allow CORP\\MeetingRoom_Admin
-        CREATE COMPUTER OBJECTS
-        DELETE COMPUTER OBJECTS
-        READ ALL PROPERTIES
-        WRITE ALL PROPERTIES
-        RESET PASSWORD
-        READ PERMISSIONS
-Allow Authenticated Users               READ
-Inherited from: OU=Computers,DC=corp,DC=example,DC=com
-
-
-# 3) 실제 회의실 PC에서의 GPO 적용 검증
-C:\\>gpresult /r
-
-Computer Settings
------------------
-CN=MR-5F-001,OU=MeetingRoom,OU=Computers,DC=corp,DC=example,DC=com
-
-Applied Group Policy Objects
-----------------------------
-    MeetingRoom_PC_Policy
-    Windows Defender Policy
-    BitLocker Policy
-    Windows Update Policy`,
-      codeCaption: '기본 OU 대비 MeetingRoom OU에만 Delegation of Control로 최소 권한이 위임됐음을 대조로 확인. 실제 회의실 PC(MR-5F-001)에 GPO 4종이 정상 적용됨을 gpresult로 검증.'
+      keywords: ['Active Directory', 'GPO', 'DNS', 'VMware', 'DHCP', 'Firewall']
     }
   },
   {
@@ -1965,36 +1857,6 @@ function renderProjectModal(p) {
       </div>`).join('');
   } else {
     whySection.style.display = 'none';
-  }
-
-  // Key Decisions
-  const decisionsSection = document.getElementById('pmDecisionsSection');
-  if (d && d.keyDecisions && d.keyDecisions.length) {
-    decisionsSection.style.display = '';
-    document.getElementById('pmDecisionsList').innerHTML = d.keyDecisions.map(k => `
-      <div class="pm-decision-item">
-        <div class="pm-decision-question">${escapeHtml(k.question)}</div>
-        <div class="pm-decision-row pm-decision-alt">
-          <span class="pm-decision-label">대안</span>
-          <span class="pm-decision-text">${escapeHtml(k.alternative)}</span>
-        </div>
-        <div class="pm-decision-row pm-decision-chosen">
-          <span class="pm-decision-label">선택</span>
-          <span class="pm-decision-text">${escapeHtml(k.chosen)} — ${escapeHtml(k.reason)}</span>
-        </div>
-      </div>`).join('');
-  } else {
-    decisionsSection.style.display = 'none';
-  }
-
-  // Code / Config Reference
-  const codeSection = document.getElementById('pmCodeSection');
-  if (d && d.codeBlock) {
-    codeSection.style.display = '';
-    document.getElementById('pmCodeBlock').textContent = d.codeBlock;
-    document.getElementById('pmCodeCaption').textContent = d.codeCaption || '';
-  } else {
-    codeSection.style.display = 'none';
   }
 
   // Keywords

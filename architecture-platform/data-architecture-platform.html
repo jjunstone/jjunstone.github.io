@@ -146,16 +146,22 @@
     }
 
     .home-link {
+      display: inline-block;
       font-family: var(--font-script);
+      font-weight: 700;
       font-size: 0.95rem;
-      color: var(--navy);
+      color: white;
+      background: var(--navy);
+      padding: 8px 16px;
+      border-radius: 20px;
       cursor: pointer;
-      opacity: 0.7;
-      transition: opacity 0.2s;
+      box-shadow: 0 3px 8px rgba(23, 60, 120, 0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
     }
 
     .home-link:hover {
-      opacity: 1;
+      transform: translateY(-1px);
+      box-shadow: 0 5px 12px rgba(23, 60, 120, 0.4);
     }
 
     .title-block {

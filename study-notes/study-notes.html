@@ -151,32 +151,52 @@
     .modal-source a{text-decoration:underline;text-underline-offset:2px;}
     .modal-section{margin-bottom:18px;}
     .modal-section-label{font-size:.72rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin:0 0 8px;}
-    .modal-summary{margin:0;padding:0;list-style:none;}
-    .modal-summary li{font-size:.9rem;color:var(--ink-soft);line-height:1.65;padding-left:16px;position:relative;margin-bottom:6px;}
-    .modal-summary li::before{content:"–";position:absolute;left:0;color:var(--gold);}
-
-    .fulltext-toggle{
-      display:inline-flex;align-items:center;gap:6px;
-      font-family:var(--font-hand);font-size:.85rem;font-weight:700;color:var(--navy);
-      background:none;border:1.5px dashed var(--line);border-radius:999px;
-      padding:7px 14px;cursor:pointer;transition:border-color .15s ease,background .15s ease;
+    .modal-video{
+      position:relative;width:100%;aspect-ratio:16/9;
+      border-radius:8px;overflow:hidden;margin:0 0 20px;
+      background:#000;cursor:pointer;
+      border:2px solid var(--ink);
+      box-shadow:3px 3px 0 var(--gold);
     }
-    .fulltext-toggle:hover{border-color:var(--navy);background:rgba(23,60,120,.05);}
-    .fulltext-toggle-icon{display:inline-block;transition:transform .2s ease;font-size:.75rem;}
-    .fulltext-toggle.open .fulltext-toggle-icon{transform:rotate(90deg);}
-    .modal-fulltext{
-      margin:0;padding:0;list-style:none;
-      max-height:0;overflow:hidden;opacity:0;
-      transition:max-height .3s ease,opacity .25s ease,margin-top .3s ease;
+    .modal-video img{width:100%;height:100%;object-fit:cover;display:block;}
+    .modal-video iframe{width:100%;height:100%;border:0;display:block;}
+    .modal-video-play{
+      position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+      background:rgba(0,0,0,.25);transition:background .15s ease;
     }
-    .modal-fulltext.open{max-height:2000px;opacity:1;margin-top:14px;}
-    .modal-fulltext li{
-      font-size:.87rem;color:var(--ink-soft);line-height:1.7;
-      padding:8px 0 8px 16px;position:relative;
+    .modal-video:hover .modal-video-play{background:rgba(0,0,0,.4);}
+    .modal-video-play::before{
+      content:"▶";display:flex;align-items:center;justify-content:center;
+      width:60px;height:60px;border-radius:50%;
+      background:var(--maroon);color:#fff;font-size:1.3rem;padding-left:4px;
+      box-shadow:0 4px 14px rgba(0,0,0,.4);
+      transition:transform .15s ease;
+    }
+    .modal-video:hover .modal-video-play::before{transform:scale(1.08);}
+    .modal-keywords{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px;}
+    .modal-keyword-chip{
+      font-family:var(--font-hand);font-size:.82rem;font-weight:700;
+      color:var(--paper-light);background:var(--navy);
+      padding:6px 14px;border-radius:999px;
+      box-shadow:2px 2px 0 var(--gold);
+    }
+    .modal-body{margin:0;padding:0;list-style:none;counter-reset:body-line;}
+    .modal-body li{
+      counter-increment:body-line;
+      font-size:.93rem;color:var(--ink);line-height:1.75;
+      padding:13px 0 13px 38px;position:relative;
       border-bottom:1px dashed var(--line);
     }
-    .modal-fulltext li:last-child{border-bottom:none;}
-    .modal-fulltext li::before{content:"·";position:absolute;left:0;color:var(--gold);}
+    .modal-body li:last-child{border-bottom:none;}
+    .modal-body li::before{
+      content:counter(body-line);
+      position:absolute;left:0;top:13px;
+      width:22px;height:22px;border-radius:50%;
+      background:var(--gold);color:#fff;
+      font-family:var(--font-hand);font-weight:800;font-size:.72rem;
+      display:flex;align-items:center;justify-content:center;
+      flex-shrink:0;
+    }
     .modal-takeaway{font-size:.9rem;color:var(--ink);line-height:1.7;background:rgba(154,119,41,.08);border-left:3px solid var(--gold);padding:12px 16px;border-radius:4px;font-style:italic;margin:0;}
     .modal-tags{display:flex;flex-wrap:wrap;gap:6px;}
     .modal-tag{font-size:.76rem;padding:3px 10px;border-radius:12px;background:rgba(0,0,0,.05);color:var(--ink-soft);}
@@ -231,6 +251,23 @@
       <p class="subtitle-text">영상이나 자료를 보고 공부한 내용을 짧게 정리한 노트 모음. 백엔드·프론트엔드·AI·바이브 코딩 등 분야는 계속 늘어날 예정이다.</p>
     </div>
 
+    <div class="roadmap-block">
+      <p class="section-label">학습 로드맵</p>
+      <div class="roadmap" id="roadmap"></div>
+    </div>
+
+    <div class="stats-block">
+      <div class="stats-donut-wrap">
+        <div class="stats-donut" id="stats-donut">
+          <div class="stats-donut-hole">
+            <span id="stats-total">0</span>
+            <span class="stats-total-label">노트</span>
+          </div>
+        </div>
+      </div>
+      <div class="stats-legend" id="stats-legend"></div>
+    </div>
+
     <div class="controls">
       <div class="cat-pills" id="cat-pills"></div>
       <div class="controls-right">
@@ -258,23 +295,14 @@
     <span class="modal-cat" id="modal-cat"></span>
     <h2 class="modal-title" id="modal-title"></h2>
     <p class="modal-source" id="modal-source"></p>
+    <div class="modal-video" id="modal-video" style="display:none;"></div>
+    <div class="modal-keywords" id="modal-keywords"></div>
     <div class="modal-section">
-      <p class="modal-section-label">핵심 요약</p>
-      <ul class="modal-summary" id="modal-summary"></ul>
-    </div>
-    <div class="modal-section" id="modal-fulltext-section">
-      <button class="fulltext-toggle" id="fulltext-toggle" onclick="toggleFullText()">
-        <span class="fulltext-toggle-icon">▸</span> 원문 전체 보기
-      </button>
-      <ul class="modal-fulltext" id="modal-fulltext"></ul>
+      <ul class="modal-body" id="modal-body"></ul>
     </div>
     <div class="modal-section" id="modal-takeaway-section">
       <p class="modal-section-label">내 생각 / 적용 포인트</p>
       <p class="modal-takeaway" id="modal-takeaway"></p>
-    </div>
-    <div class="modal-section" id="modal-tags-section">
-      <p class="modal-section-label">태그</p>
-      <div class="modal-tags" id="modal-tags"></div>
     </div>
     <button class="modal-delete" id="modal-delete" style="display:none;">🗑 이 노트 삭제</button>
   </div>
@@ -355,6 +383,14 @@ const CATEGORIES = [
   { key:'vibe-coding',  label:'Vibe Coding',  color:'#9a7729', icon:'✨' },
 ];
 
+const ROADMAP = [
+  { stage:'web',           lecture:'1강',     icon:'🌐', label:'웹의 탄생과\n프론트엔드 발전',     color:'#7c261f' },
+  { stage:'db',             lecture:'2·3강',   icon:'🗄️', label:'백엔드와\n데이터베이스',           color:'#173c78' },
+  { stage:'deploy',         lecture:'4강',     icon:'🚀', label:'배포와\n트래픽 관리',              color:'#2c5f8a' },
+  { stage:'ai',             lecture:'5·6강',   icon:'🤖', label:'머신러닝부터\nLLM까지',            color:'#4e5533' },
+  { stage:'orchestration',  lecture:'7·8강',   icon:'🧭', label:'AI\n오케스트레이션',              color:'#6b6023' },
+];
+
 /* ══════════════════════════════════════════════════════════════
    NOTES — 새 노트 추가는 이 배열에 객체 하나 추가하면 끝.
    HTML/CSS는 건드릴 필요 없음.
@@ -424,6 +460,7 @@ const NOTES = [
   {
     id: 5,
     category: 'frontend',
+    stage: 'web',
     title: '웹의 탄생과 3대 기술',
     source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 1강', url: '#' },
     summary: [
@@ -448,6 +485,7 @@ const NOTES = [
   {
     id: 6,
     category: 'frontend',
+    stage: 'web',
     title: '정적인 웹 페이지의 한계와 CSS의 등장',
     source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 1강', url: '#' },
     summary: [
@@ -470,6 +508,7 @@ const NOTES = [
   {
     id: 7,
     category: 'frontend',
+    stage: 'web',
     title: 'JavaScript의 등장과 동적인 웹',
     source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 1강', url: '#' },
     summary: [
@@ -495,6 +534,7 @@ const NOTES = [
   {
     id: 8,
     category: 'frontend',
+    stage: 'web',
     title: '브라우저 전쟁과 표준화의 필요성',
     source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 1강', url: '#' },
     summary: [
@@ -518,6 +558,7 @@ const NOTES = [
   {
     id: 9,
     category: 'frontend',
+    stage: 'web',
     title: '라이브러리 전쟁: jQuery에서 React까지',
     source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 1강', url: '#' },
     summary: [
@@ -546,6 +587,7 @@ const NOTES = [
   {
     id: 10,
     category: 'frontend',
+    stage: 'web',
     title: 'Node.js와 npm: 코드 공유 생태계',
     source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 1강', url: '#' },
     summary: [
@@ -570,6 +612,7 @@ const NOTES = [
   {
     id: 11,
     category: 'frontend',
+    stage: 'web',
     title: '빌드 과정: 트랜스파일링부터 최적화까지',
     source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 1강', url: '#' },
     summary: [
@@ -594,6 +637,7 @@ const NOTES = [
   {
     id: 12,
     category: 'frontend',
+    stage: 'web',
     title: 'SPA의 등장과 프론트엔드·백엔드의 분리',
     source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 1강', url: '#' },
     summary: [
@@ -621,6 +665,7 @@ const NOTES = [
   {
     id: 13,
     category: 'backend',
+    stage: 'db',
     title: '백엔드의 탄생과 데이터베이스의 필요성',
     source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 2, 3강', url: '#' },
     summary: [
@@ -647,6 +692,7 @@ const NOTES = [
   {
     id: 14,
     category: 'backend',
+    stage: 'db',
     title: '관계형 데이터베이스(RDBMS)의 등장',
     source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 2, 3강', url: '#' },
     summary: [
@@ -671,6 +717,7 @@ const NOTES = [
   {
     id: 15,
     category: 'backend',
+    stage: 'db',
     title: '확장성 문제와 NoSQL의 등장',
     source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 2, 3강', url: '#' },
     summary: [
@@ -695,6 +742,7 @@ const NOTES = [
   {
     id: 16,
     category: 'backend',
+    stage: 'db',
     title: '클라우드 DB와 서버리스의 확산',
     source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 2, 3강', url: '#' },
     summary: [
@@ -716,6 +764,7 @@ const NOTES = [
   {
     id: 17,
     category: 'backend',
+    stage: 'db',
     title: '스토리지의 역사: 파일 시스템에서 클라우드 스토리지까지',
     source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 2, 3강', url: '#' },
     summary: [
@@ -741,6 +790,7 @@ const NOTES = [
   {
     id: 18,
     category: 'backend',
+    stage: 'db',
     title: '백엔드 보안, 성능, 확장성 고려사항',
     source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 2, 3강', url: '#' },
     summary: [
@@ -766,6 +816,7 @@ const NOTES = [
   {
     id: 19,
     category: 'backend',
+    stage: 'db',
     title: '모놀리스에서 마이크로서비스로의 전환',
     source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 2, 3강', url: '#' },
     summary: [
@@ -787,6 +838,7 @@ const NOTES = [
   {
     id: 20,
     category: 'backend',
+    stage: 'deploy',
     title: '웹 서버와 배포의 기초',
     source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 4강', url: '#' },
     summary: [
@@ -827,6 +879,7 @@ const NOTES = [
   {
     id: 21,
     category: 'backend',
+    stage: 'deploy',
     title: '도메인, HTTPS, 트래픽 관리',
     source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 4강', url: '#' },
     summary: [
@@ -857,6 +910,7 @@ const NOTES = [
   {
     id: 22,
     category: 'ai',
+    stage: 'ai',
     title: '규칙 기반 시스템의 한계와 머신러닝의 등장',
     source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 5, 6강', url: '#' },
     summary: [
@@ -882,6 +936,7 @@ const NOTES = [
   {
     id: 23,
     category: 'ai',
+    stage: 'ai',
     title: '딥러닝: 특징 추출의 자동화',
     source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 5, 6강', url: '#' },
     summary: [
@@ -913,6 +968,7 @@ const NOTES = [
   {
     id: 24,
     category: 'ai',
+    stage: 'ai',
     title: 'LLM의 등장과 자연어 처리',
     source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 5, 6강', url: '#' },
     summary: [
@@ -946,6 +1002,7 @@ const NOTES = [
   {
     id: 25,
     category: 'ai',
+    stage: 'orchestration',
     title: 'AI 오케스트레이션: LangChain·LangGraph·LangSmith',
     source: { platform: '수업 노트', title: '웹 개발 히스토리 정리 · 7, 8강', url: '#' },
     summary: [
@@ -1142,9 +1199,21 @@ function goToPage(p) {
   document.getElementById('note-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function toggleFullText() {
-  document.getElementById('modal-fulltext').classList.toggle('open');
-  document.getElementById('fulltext-toggle').classList.toggle('open');
+function getYouTubeId(url) {
+  if (!url) return null;
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtube\.com\/embed\/|youtube\.com\/shorts\/|youtu\.be\/)([\w-]{11})/
+  ];
+  for (const p of patterns) {
+    const m = url.match(p);
+    if (m) return m[1];
+  }
+  return null;
+}
+
+function playModalVideo(videoId) {
+  const el = document.getElementById('modal-video');
+  el.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" title="YouTube video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
 }
 
 function openModal(id) {
@@ -1164,20 +1233,22 @@ function openModal(id) {
     srcEl.innerHTML = '';
   }
 
-  document.getElementById('modal-summary').innerHTML = (n.summary || []).map(s => `<li>${s}</li>`).join('');
-
-  const fulltextSection = document.getElementById('modal-fulltext-section');
-  const fulltextList = document.getElementById('modal-fulltext');
-  const fulltextToggle = document.getElementById('fulltext-toggle');
-  if (n.fullText && n.fullText.length) {
-    fulltextSection.style.display = '';
-    fulltextList.innerHTML = n.fullText.map(s => `<li>${s}</li>`).join('');
-    fulltextList.classList.remove('open');
-    fulltextToggle.classList.remove('open');
-    fulltextToggle.innerHTML = '<span class="fulltext-toggle-icon">▸</span> 원문 전체 보기';
+  const videoEl = document.getElementById('modal-video');
+  const videoId = n.source ? getYouTubeId(n.source.url) : null;
+  if (videoId) {
+    videoEl.style.display = '';
+    videoEl.innerHTML = `<img src="https://img.youtube.com/vi/${videoId}/hqdefault.jpg" alt="${n.title} 썸네일"><div class="modal-video-play"></div>`;
+    videoEl.onclick = () => playModalVideo(videoId);
   } else {
-    fulltextSection.style.display = 'none';
+    videoEl.style.display = 'none';
+    videoEl.innerHTML = '';
+    videoEl.onclick = null;
   }
+
+  document.getElementById('modal-keywords').innerHTML = (n.tags || []).map(t => `<span class="modal-keyword-chip">${t}</span>`).join('');
+
+  const bodyContent = (n.fullText && n.fullText.length) ? n.fullText : (n.summary || []);
+  document.getElementById('modal-body').innerHTML = bodyContent.map(s => `<li>${s}</li>`).join('');
 
   const takeawaySection = document.getElementById('modal-takeaway-section');
   if (n.takeaway) {
@@ -1185,14 +1256,6 @@ function openModal(id) {
     document.getElementById('modal-takeaway').textContent = n.takeaway;
   } else {
     takeawaySection.style.display = 'none';
-  }
-
-  const tagsSection = document.getElementById('modal-tags-section');
-  if (n.tags && n.tags.length) {
-    tagsSection.style.display = '';
-    document.getElementById('modal-tags').innerHTML = n.tags.map(t => `<span class="modal-tag">${t}</span>`).join('');
-  } else {
-    tagsSection.style.display = 'none';
   }
 
   const deleteBtn = document.getElementById('modal-delete');
@@ -1217,6 +1280,7 @@ function deleteLocalNote(id) {
 
 function closeModal() {
   document.getElementById('modal-overlay').classList.remove('show');
+  document.getElementById('modal-video').innerHTML = '';
 }
 
 function goHome() {
