@@ -842,6 +842,33 @@ const graph = {
         design:['초기 Seed(도메인·조직명) 입력 후 자동 탐색 범위 검증 필수','발견된 자산은 소유권 확인 후 정식 인벤토리에 편입','고위험 노출(만료 인증서·오픈 관리 포트)에 우선순위 대응','Defender for Cloud·Sentinel과 연계해 탐지-대응 흐름 통합'],
         related:['Defender for Cloud','Microsoft Sentinel','Azure Policy'],
         archFit:['Attack Surface Visibility','Proactive Security Posture']
+      },
+      idprotection:{
+        title:'Microsoft Entra ID Protection',
+        desc:'사용자·로그인 위험도를 자동 산출해 Conditional Access와 함께 실시간 대응하는 위험 기반 신원 보호 엔진',
+        role:['유출된 자격증명·비정상 로그인 패턴을 학습해 사용자·로그인 단위 위험도(Low/Medium/High)를 실시간 산출','위험 탐지 결과를 Conditional Access 정책 조건으로 넘겨 자동 차단·MFA 강제·비밀번호 재설정을 트리거'],
+        when:['유출된 자격증명(Leaked Credentials)이나 비정상 위치 로그인을 자동 탐지해야 할 때','수동 모니터링만으로는 대응 속도가 부족한 대량 계정 환경에서','Zero Trust 접근 모델에 정적 조건뿐 아니라 동적 위험 신호를 포함하고 싶을 때'],
+        design:['User Risk Policy·Sign-in Risk Policy를 분리 설계 — 위험 유형별 대응 강도 차등','Report-only 모드로 오탐률 검증 후 단계적으로 강제 적용','High Risk는 자동 계정 차단, Medium은 MFA 재인증 등 대응 수준 계층화','위험 탐지 로그를 Sentinel Analytics Rule과 연동해 SOC 조사 흐름에 통합'],
+        related:['Entra ID','Conditional Access','Microsoft Sentinel','PIM'],
+        archFit:['Zero Trust Access Model','Risk-Based Identity Security']
+      },
+      defenderendpoint:{
+        title:'Microsoft Defender for Endpoint',
+        desc:'PC·서버 엔드포인트의 위협을 실시간 탐지·조사·자동 대응하는 EDR(Endpoint Detection and Response) 플랫폼',
+        role:['엔드포인트의 프로세스·파일·네트워크 행위를 지속 모니터링해 악성 행위를 실시간 탐지','공격 스토리라인(Attack Story)을 자동 재구성하고 감염 디바이스 격리 등 자동 대응 실행'],
+        when:['랜섬웨어·악성코드 등 엔드포인트 위협에 대한 실시간 탐지·대응 체계가 필요할 때','다수의 워크스테이션·서버를 보유한 조직에서 수동 백신 점검의 한계를 넘어서야 할 때','법무법인처럼 민감 문서를 다루는 엔드포인트의 유출·침해 흔적을 조사해야 할 때'],
+        design:['Automated Investigation & Response(AIR)의 자동 대응 범위를 조직 정책에 맞게 신중히 설정','Attack Surface Reduction 규칙을 업무 앱과 충돌 없는 범위에서 단계적으로 적용','Defender for Cloud·Sentinel과 연동해 엔드포인트 알림을 통합 인시던트로 상관 분석','Device Group 기준으로 격리·자동화 정책을 부서·중요도별로 차등 적용'],
+        related:['Microsoft Sentinel','Defender for Cloud','Intune','Microsoft Defender for Identity'],
+        archFit:['Endpoint Detection & Response','Security Operations Center']
+      },
+      defenderidentity:{
+        title:'Microsoft Defender for Identity',
+        desc:'온프레미스 Active Directory의 신원 기반 공격(Pass-the-Hash, DCSync 등)을 탐지하는 하이브리드 ID 위협 보호 서비스',
+        role:['도메인 컨트롤러 트래픽을 분석해 계정 탈취·권한 상승·횡적 이동(Lateral Movement) 시도를 탐지','클라우드에서는 보이지 않는 온프레미스 AD 고유의 공격 기법을 실시간으로 가시화'],
+        when:['온프레미스 AD가 여전히 남아있는 하이브리드 환경에서 ID 기반 공격을 탐지해야 할 때','Entra ID Protection만으로는 커버되지 않는 온프레미스 인증 트래픽 위협에 대응할 때','내부자 위협이나 권한 상승 시도를 조기에 포착해야 하는 규제 산업 환경에서'],
+        design:['도메인 컨트롤러마다 Sensor 배포 필요 — 성능 영향 사전 검증 후 단계적 배포','Sentinel과 연동해 온프레미스 ID 위협과 클라우드 위협을 하나의 인시던트로 상관 분석','Lateral Movement Path 시각화 결과를 특권 계정 관리(PIM) 정책 개선에 반영','민감 계정(Sensitive Accounts) 태깅으로 관리자 계정에 대한 탐지 민감도 상향'],
+        related:['Microsoft Sentinel','Microsoft Defender for Endpoint','Entra Connect','PIM'],
+        archFit:['Hybrid Identity Threat Protection','Security Operations Center']
       }
     }
   },
@@ -1109,6 +1136,15 @@ const graph = {
         design:['Foundry Project 단위로 모델·데이터·에이전트 리소스를 격리 관리','Content Safety·Entra ID 인증을 기본 배포 파이프라인에 포함','Evaluation 파이프라인으로 프롬프트·모델 변경의 품질 영향 사전 검증','Private Endpoint로 엔터프라이즈 네트워크 격리 구성'],
         related:['Azure OpenAI','AI Search','Microsoft Purview','Entra ID'],
         archFit:['Enterprise AI Platform','Agentic AI Architecture']
+      },
+      apim:{
+        title:'Azure API Management',
+        desc:'여러 백엔드 API·AI 서비스를 하나의 통합 게이트웨이로 노출하고 정책을 강제하는 관리형 API 프록시',
+        role:['내부 API와 Azure OpenAI 등 AI 엔드포인트를 표준화된 단일 게이트웨이로 노출','Rate Limit, 인증, 캐싱, 버전 관리를 백엔드 코드 수정 없이 정책으로 강제'],
+        when:['RAG·OpenAI 백엔드를 여러 클라이언트 앱에 안전하게 노출해야 할 때','API 버전 관리·문서화(Developer Portal)를 표준화하고 싶을 때','LLM 토큰 사용량을 팀·앱 단위로 제한하고 과금 추적이 필요할 때'],
+        design:['Subscription Key + Entra ID OAuth 조합으로 클라이언트 인증 계층화','Azure OpenAI용 Token Limit 정책으로 팀별 토큰 소비량 제어','응답 캐싱 정책으로 반복 질의의 지연시간·비용 절감','Private Endpoint 연결로 백엔드 API를 퍼블릭 노출 없이 프록시'],
+        related:['Azure OpenAI','AI Search','Entra ID','Application Gateway + WAF'],
+        archFit:['Enterprise RAG Platform','API Governance & Gateway']
       }
     }
   },
