@@ -488,28 +488,28 @@
           <div class="hstat-icon">📁</div>
           <div>
             <div style="font-size:11px;color:var(--text-muted);margin-bottom:2px;">전체 프로젝트</div>
-            <div style="display:flex;align-items:baseline;gap:3px;"><span class="hstat-val">20</span><span class="hstat-unit">개</span></div>
+            <div style="display:flex;align-items:baseline;gap:3px;"><span class="hstat-val" id="hstat-total">20</span><span class="hstat-unit">개</span></div>
           </div>
         </div>
         <div class="hstat">
           <div class="hstat-icon" style="color:#16a34a;">✅</div>
           <div>
             <div style="font-size:11px;color:var(--text-muted);margin-bottom:2px;">Completed</div>
-            <div style="display:flex;align-items:baseline;gap:3px;"><span class="hstat-val" style="color:#16a34a;">11</span><span class="hstat-unit">개</span></div>
+            <div style="display:flex;align-items:baseline;gap:3px;"><span class="hstat-val" id="hstat-completed" style="color:#16a34a;">11</span><span class="hstat-unit">개</span></div>
           </div>
         </div>
         <div class="hstat">
           <div class="hstat-icon" style="color:#d97706;">🕐</div>
           <div>
             <div style="font-size:11px;color:var(--text-muted);margin-bottom:2px;">In Progress</div>
-            <div style="display:flex;align-items:baseline;gap:3px;"><span class="hstat-val" style="color:#d97706;">4</span><span class="hstat-unit">개</span></div>
+            <div style="display:flex;align-items:baseline;gap:3px;"><span class="hstat-val" id="hstat-inprogress" style="color:#d97706;">4</span><span class="hstat-unit">개</span></div>
           </div>
         </div>
         <div class="hstat" style="margin-right:0;">
           <div class="hstat-icon" style="color:#7c3aed;">📤</div>
           <div>
             <div style="font-size:11px;color:var(--text-muted);margin-bottom:2px;">Proposed</div>
-            <div style="display:flex;align-items:baseline;gap:3px;"><span class="hstat-val" style="color:#7c3aed;">5</span><span class="hstat-unit">개</span></div>
+            <div style="display:flex;align-items:baseline;gap:3px;"><span class="hstat-val" id="hstat-proposed" style="color:#7c3aed;">5</span><span class="hstat-unit">개</span></div>
           </div>
         </div>
       </div>
@@ -549,39 +549,39 @@
         <div class="fs-title">분야</div>
         <div class="fs-item" onclick="filterByDomain('all', this)">
           <div class="fs-item-left"><span class="fs-icon">⊞</span><span>All</span></div>
-          <span class="fs-count">20</span>
+          <span class="fs-count" id="cnt-dom-all">20</span>
         </div>
         <div class="fs-item" onclick="filterByDomain('Architecture', this)">
           <div class="fs-item-left"><span class="fs-icon">⊞</span><span>Architecture</span></div>
-          <span class="fs-count">3</span>
+          <span class="fs-count" id="cnt-dom-Architecture">3</span>
         </div>
         <div class="fs-item" onclick="filterByDomain('Automation', this)">
           <div class="fs-item-left"><span class="fs-icon">⚙</span><span>Automation</span></div>
-          <span class="fs-count">3</span>
+          <span class="fs-count" id="cnt-dom-Automation">3</span>
         </div>
         <div class="fs-item" onclick="filterByDomain('AI', this)">
           <div class="fs-item-left"><span class="fs-icon">🌐</span><span>AI</span></div>
-          <span class="fs-count">2</span>
+          <span class="fs-count" id="cnt-dom-AI">2</span>
         </div>
         <div class="fs-item" onclick="filterByDomain('Identity', this)">
           <div class="fs-item-left"><span class="fs-icon">👤</span><span>Identity</span></div>
-          <span class="fs-count">2</span>
+          <span class="fs-count" id="cnt-dom-Identity">2</span>
         </div>
         <div class="fs-item" onclick="filterByDomain('Security', this)">
           <div class="fs-item-left"><span class="fs-icon">🛡</span><span>Security</span></div>
-          <span class="fs-count">3</span>
+          <span class="fs-count" id="cnt-dom-Security">3</span>
         </div>
         <div class="fs-item" onclick="filterByDomain('Infrastructure', this)">
           <div class="fs-item-left"><span class="fs-icon">⊟</span><span>Infrastructure</span></div>
-          <span class="fs-count">4</span>
+          <span class="fs-count" id="cnt-dom-Infrastructure">4</span>
         </div>
         <div class="fs-item" onclick="filterByDomain('Workplace', this)">
           <div class="fs-item-left"><span class="fs-icon">👥</span><span>Workplace</span></div>
-          <span class="fs-count">2</span>
+          <span class="fs-count" id="cnt-dom-Workplace">2</span>
         </div>
         <div class="fs-item" onclick="filterByDomain('Data', this)">
           <div class="fs-item-left"><span class="fs-icon">⊟</span><span>Data</span></div>
-          <span class="fs-count">1</span>
+          <span class="fs-count" id="cnt-dom-Data">1</span>
         </div>
       </div>
 
@@ -1551,6 +1551,93 @@ Applied Group Policy Objects
       ],
       keywords: ['Logpresso', 'SIEM', 'Migration']
     }
+  },
+  {
+    id: 21,
+    priority: 0,
+    domain: 'Identity',
+    status: 'In Progress',
+    title: 'AD 그룹 기반 통합 권한 관리 체계',
+    tags: ['Active Directory', 'DLP', '방화벽', 'PowerShell'],
+    desc: 'AD 그룹 멤버십을 단일 신뢰 소스로 삼아, USB DLP 예외·방화벽 애플리케이션 접근 등 이기종 시스템의 접근 권한을 신청→승인→반영→회수까지 자동 전파하는 이벤트 기반 체계입니다.',
+    date: '2025.09',
+    icon: 'identity',
+    detail: {
+      diagram: null,
+      techStack: [
+        { name: 'Active Directory' },
+        { name: 'Symantec DLP' },
+        { name: '방화벽 (Palo Alto)' },
+        { name: 'PowerShell' },
+        { name: 'Classic ASP' },
+        { name: 'MSSQL' }
+      ],
+      whatIDesigned: [
+        'AD 그룹을 단일 신뢰 소스(Single Source of Truth)로 정의하고, 신청 → 승인 → AD 반영 → 만료 회수로 이어지는 상태 머신을 공통 패턴으로 설계',
+        'USB DLP 예외 신청 자동화(고정 AD 그룹 1개 기반)를 먼저 구축해 상태 머신·자동화 패턴을 검증',
+        '동일 패턴을 방화벽 애플리케이션 접근 허용 신청에 재적용 — 정책마다 반영 대상 AD 그룹이 달라지는 구조적 차이를 반영해 매 건 동적으로 대상 그룹을 조회하도록 일반화',
+        '3-Table DB 스키마(신청 이력 · 정책 정보 · 정책-사용자 매핑) 설계, fwgroup–adgroup 1:1 매핑으로 정책을 재사용 가능한 단위로 구성',
+        '신청자용 · 관리자용 Classic ASP 웹페이지 구현 — 관리자 페이지에서 기존 정책 선택 또는 신규 정책 즉시 생성 중 택1 가능하도록 설계, 어플리케이션명 기반 AD 그룹명 자동 제안 로직 포함',
+        'ABUDHABI 자동화 서버의 PowerShell 스케줄 작업이 승인 완료 건을 주기적으로 조회해 대상 AD 그룹에 반영·회수하는 파이프라인 구축 (이미 반영/회수된 건은 skip하는 멱등성 보장)'
+      ],
+      problem: 'DLP·방화벽 등 권한 관리 영역이 확장되며, 시스템별 개별 운영 방식으로는 관리 복잡도가 선형적으로 누적되는 구조적 한계가 드러났습니다. 권한 유형별 신청·처리 방식이 표준화되지 않아 시스템이 늘수록 관리 포인트가 분산됐고, 시한부 권한 회수가 수작업에 의존해 과다권한(over-provisioning) 리스크로 이어졌습니다.',
+      challenge: [
+        { issue: 'USB DLP는 예외 대상 AD 그룹이 z_ExceptionUSB 하나로 고정돼 있어 스크립트에 상수로 고정할 수 있었지만, 방화벽은 정책마다 반영 대상 AD 그룹이 달라 동일한 방식을 그대로 재사용할 수 없었음', resolution: '처리 시점마다 정책 테이블(tbFwPolicyInfo)에서 매핑된 adgroup을 동적으로 조회해 Add-ADGroupMember / Remove-ADGroupMember 대상으로 사용하도록 스크립트 구조를 일반화' },
+        { issue: 'USB는 신청 = 사실상 즉시 반영(익일 일괄 회수) 성격이었지만, 방화벽은 관리자 승인 단계가 추가되고 사용자별 시작일·종료일이 달라 회수 시점도 개인별로 상이함', resolution: '상태값을 requested → approved → added → removed(+ rejected)의 5단계로 세분화하고, 반영 대상은 approved AND policyid IS NOT NULL, 회수 대상은 added AND enddate ≤ 오늘 조건으로 조회 API를 분리 설계' },
+        { issue: 'ABUDHABI 서비스 계정의 AD 그룹 관리 권한 부족으로 USB 자동화 초기에 401 인증 오류가 있었던 이력이 있어, 방화벽에서도 동일 이슈 재현 가능성이 있었음', resolution: 'USB에서 검증된 이중 권한 부여 조치를 방화벽 서비스 계정에도 동일하게 적용해 재발 방지' }
+      ],
+      outcome: [
+        { value: '2개 시스템', label: 'USB DLP · 방화벽 애플리케이션 접근을 동일 아키텍처로 통합 관리' },
+        { value: 'AD 그룹 단일 축', label: '권한 유형이 늘어도 관리 포인트는 AD 그룹으로 수렴' },
+        { value: '5단계 상태값', label: 'requested~removed 상태 기준으로 모든 권한 변경 이력 추적 가능' }
+      ],
+      whyDesign: [
+        { title: 'Single Source of Truth', desc: 'AD 그룹 멤버십을 유일한 신뢰 소스로 정의해 시스템 간 권한 정의 불일치를 원천 차단' },
+        { title: 'Event-driven Automation', desc: '승인·만료라는 상태 변경을 트리거로 다운스트림 반영이 자동으로 전파되도록 설계' },
+        { title: '재사용 가능한 패턴', desc: 'USB에서 검증한 상태 머신·자동화 구조를 방화벽에 재적용해 두 번째 시스템부터는 설계 리스크를 최소화' }
+      ],
+      keywords: ['Single Source of Truth', 'Access Governance', 'Event-driven Automation']
+    }
+  },
+  {
+    id: 22,
+    priority: 2,
+    domain: 'Infrastructure',
+    status: 'Completed',
+    title: 'WSUS 패치 관리 운영 프로세스 구축',
+    tags: ['WSUS', 'IIS', 'Patch Management'],
+    desc: 'Windows Server 2016 기반 WSUS 환경에서 패치 배포 오류의 원인을 서버 단위로 분석하고, 테스트 그룹 검증 후 순차 반영하는 운영 프로세스를 구축했습니다.',
+    date: '2025.07',
+    icon: 'infra',
+    detail: {
+      diagram: null,
+      techStack: [
+        { name: 'WSUS' },
+        { name: 'Windows Server 2016' },
+        { name: 'IIS 10.0' },
+        { name: 'SQL Server' }
+      ],
+      whatIDesigned: [
+        '이벤트 로그 · 서버 상태 기반 원인 분석 → 테스트 그룹(Pilot) 검증 → 운영 그룹 순차 확대로 이어지는 3단계 롤아웃 절차 표준화',
+        'Upstream(Root)–Downstream(Replica) 이중 구조에서 오류를 서버 단위로 분리해 원인을 좁혀가는 분석 절차 수립',
+        'IIS AppPool Queue Length, web.config maxCachedUpdate 등 설정 값 조정 기준 정리',
+        'Upstream에서 대체(superseded)된 구버전 업데이트를 거부 처리해 불필요한 배포 항목 정리'
+      ],
+      problem: '사내 Windows PC 패치는 WSUS Upstream(Root)–Downstream(Replica) 이중 구조로 배포되고 있었으며, 배포 후 일부 PC군에서 간헐적으로 설치 오류(0x80244007)가 보고됐습니다. 원인 파악 없이 동일 패치를 재배포하면 오류가 반복되고, 반대로 조치를 전체 PC에 즉시 반영하면 영향이 전사로 확산될 위험이 있었습니다.',
+      challenge: [
+        { issue: '0x80244007 오류의 원인이 Upstream/Downstream 중 어느 쪽에 있는지 특정되지 않아 재발 방지 조치를 세울 수 없었음', resolution: 'Upstream · Downstream 서버를 분리 분석해 업데이트 누적으로 인한 처리 한도 초과를 원인으로 특정, IIS AppPool Queue Length를 2,000 → 25,000, maxCachedUpdate를 15,000 → 150,000으로 조정' },
+        { issue: '조치를 전체 PC에 즉시 반영할 경우 예상치 못한 부작용이 전사로 확산될 위험이 있었음', resolution: '테스트 그룹(Pilot)에 먼저 반영해 정상 여부를 검증한 뒤 운영 그룹으로 순차 확대하는 절차로 전환' }
+      ],
+      outcome: [
+        { value: '3단계 절차', label: '원인분석 → 테스트 → 순차반영으로 이어지는 재사용 가능한 롤아웃 절차 확립' },
+        { value: 'Upstream/Downstream 분리', label: '서버 단위 분석 방식으로 재현 · 해결 속도 단축' }
+      ],
+      whyDesign: [
+        { title: 'Root Cause Analysis', desc: '서버 단위로 원인을 좁혀갈 때 재현 · 해결 속도가 빨라짐을 확인' },
+        { title: 'Staged Rollout', desc: '변경 영향 범위를 통제 가능한 단위로 제한해 전사 확산 리스크 최소화' }
+      ],
+      keywords: ['WSUS', 'Patch Management', 'Root Cause Analysis']
+    }
   }
 
 ];
@@ -2030,6 +2117,35 @@ function closeDiagramLightbox() {
 
 /* ══ Init ══ */
 render();
+updateStatCounts();
+
+function updateStatCounts() {
+  const byId = (id) => document.getElementById(id);
+  const total = projects.length;
+
+  // 상태별 카운트 (헤더 상단 4개 카드 + 좌측 사이드바 '상태' 목록)
+  const completed  = projects.filter(p => p.status === 'Completed').length;
+  const inProgress = projects.filter(p => p.status === 'In Progress').length;
+  const proposed   = projects.filter(p => p.status === 'Proposed').length;
+
+  if (byId('hstat-total'))      byId('hstat-total').textContent = total;
+  if (byId('hstat-completed'))  byId('hstat-completed').textContent = completed;
+  if (byId('hstat-inprogress')) byId('hstat-inprogress').textContent = inProgress;
+  if (byId('hstat-proposed'))   byId('hstat-proposed').textContent = proposed;
+
+  if (byId('cnt-all'))         byId('cnt-all').textContent = total;
+  if (byId('cnt-completed'))   byId('cnt-completed').textContent = completed;
+  if (byId('cnt-inprogress'))  byId('cnt-inprogress').textContent = inProgress;
+  if (byId('cnt-concept'))     byId('cnt-concept').textContent = proposed;
+
+  // 분야별 카운트 (좌측 사이드바 '분야' 목록) — projects 배열에 등장하는 domain을 기준으로 자동 계산
+  const domains = ['Architecture', 'Automation', 'AI', 'Identity', 'Security', 'Infrastructure', 'Workplace', 'Data'];
+  if (byId('cnt-dom-all')) byId('cnt-dom-all').textContent = total;
+  domains.forEach(dom => {
+    const el = byId('cnt-dom-' + dom);
+    if (el) el.textContent = projects.filter(p => p.domain === dom).length;
+  });
+}
 
 // 라이트/다크 모드 토글 로직
 (function() {
