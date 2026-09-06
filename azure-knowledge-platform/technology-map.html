@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" style="background:#0f172a">
+<html lang="ko" style="background:#f8fafc">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -53,14 +53,14 @@
       --c-ops:        #0ea5e9;
       --c-workplace:  #10b981;
       
-      /* Default to dark */
-      --bg: var(--bg-dark);
-      --bg-panel: var(--bg-panel-dark);
-      --border: var(--border-dark);
-      --text: var(--text-dark-mode);
-      --text-muted: var(--text-muted-dark);
-      --text-light: var(--text-light-dark);
-      --bg-sidebar: var(--bg-panel-dark);
+      /* Default to light */
+      --bg: var(--bg-light);
+      --bg-panel: var(--bg-panel-light);
+      --border: var(--border-light);
+      --text: var(--text-light-mode);
+      --text-muted: var(--text-muted-light);
+      --text-light: var(--text-light-muted);
+      --bg-sidebar: var(--bg-panel-light);
     }
     
     html.light-mode {
@@ -80,11 +80,11 @@
     .topbar {
       position: fixed; top: 0; left: 0; right: 0; height: var(--topbar-h);
       background: var(--bg-panel); border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; z-index: 100; padding: 0 32px;
+      display: flex; align-items: center; justify-content: space-between; z-index: 100; padding: 0 32px;
       transition: background-color .3s, border-color .3s;
     }
     .topbar-brand {
-      display: flex; align-items: center; gap: 10px; margin-right: 44px; flex-shrink: 0;
+      display: flex; align-items: center; gap: 10px; flex: 1 1 0; min-width: 0;
       text-decoration: none;
     }
     .logo-icon {
@@ -97,10 +97,10 @@
     .brand-name { font-size: 15px; font-weight: 700; color: var(--text); transition: color .3s; }
     .brand-role { font-size: 11px; color: var(--text-light); transition: color .3s; }
 
-    .topbar-nav { display: flex; align-items: center; gap: 10px; flex: 1; }
+    .topbar-nav { display: flex; align-items: center; justify-content: center; gap: 10px; flex: 0 0 auto; }
     .tnav {
       display: flex; align-items: center; gap: 10px;
-      padding: 10px 16px; border-radius: 10px; min-width: 180px;
+      padding: 9px 15px; border-radius: 10px; min-width: 190px;
       color: var(--text-light); cursor: pointer; transition: .15s ease;
       text-decoration: none; border: 1px solid var(--border); background: transparent;
       font-family: inherit;
@@ -113,7 +113,7 @@
     .tnav-title { font-size: 14px; font-weight: 700; color: var(--text); }
     .tnav-desc { font-size: 11.5px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    .topbar-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+    .topbar-right { display: flex; align-items: center; justify-content: flex-end; gap: 12px; flex: 1 1 0; min-width: 0; }
     .theme-toggle {
       width: 36px; height: 36px; border-radius: 7px; border: 1px solid var(--border);
       background: transparent; display: grid; place-items: center; cursor: pointer;
@@ -152,7 +152,7 @@
     .sd-title { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 8px; line-height: 1.25; }
     .sd-desc { font-size: 12.5px; color: var(--text-muted); line-height: 1.7; margin-bottom: 18px; }
 
-    .sd-section { margin-bottom: 14px; padding: 13px 14px; border-radius: 12px; background: var(--bg); border: 1px solid var(--border); }
+    .sd-section { margin-bottom: 14px; padding: 13px 14px; border-radius: 12px; background: var(--bg-panel); border: 1px solid var(--border); }
     .sd-section-head { display: flex; align-items: center; gap: 7px; margin-bottom: 9px; }
     .sd-section-num {
       width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
@@ -170,9 +170,17 @@
     .sd-chips { display: flex; flex-wrap: wrap; gap: 5px; }
     .sd-chip {
       padding: 3px 9px; border-radius: 999px; font-size: 10.5px; font-weight: 500;
-      background: rgba(59,130,246,.14); color: var(--accent); border: 1px solid rgba(59,130,246,.3);
+      background: #ffffff; color: var(--accent); border: 1px solid rgba(59,130,246,.24);
+      box-shadow: 0 1px 2px rgba(15,23,42,.04);
     }
-    .sd-chip-arch { background: rgba(22,163,74,.14); color: #16a34a; border-color: rgba(22,163,74,.3); }
+    .sd-chip-arch { background: #ffffff; color: #166534; border-color: rgba(22,163,74,.28); }
+    .sd-note-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .sd-note {
+      background: #ffffff; border: 1px solid var(--border); border-radius: 10px;
+      padding: 10px 11px; min-height: 64px;
+    }
+    .sd-note-k { font-size: 9.5px; color: var(--text-light); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 5px; }
+    .sd-note-v { font-size: 12px; color: var(--text); font-weight: 700; line-height: 1.35; word-break: keep-all; }
 
     /* ── Main content ── */
     .main {
@@ -201,6 +209,16 @@
       background: var(--gold); border-radius: 1px;
     }
     .page-sub { font-size: 12px; color: var(--text-muted); }
+    .page-insights {
+      display: grid; grid-template-columns: repeat(3, minmax(160px, 1fr)); gap: 10px;
+      margin-top: 12px;
+    }
+    .page-insight {
+      background: #ffffff; border: 1px solid var(--border); border-radius: 10px;
+      padding: 11px 13px; box-shadow: 0 1px 3px rgba(15,23,42,.04);
+    }
+    .page-insight-label { display: block; font-size: 10px; color: var(--text-light); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 4px; }
+    .page-insight-value { font-size: 12.5px; color: var(--text); font-weight: 700; line-height: 1.4; }
 
     .header-actions { display: flex; align-items: center; gap: 8px; }
 
@@ -246,15 +264,16 @@
     .cat-quick-nav { display: flex; gap: 4px; flex-wrap: wrap; }
     .qn-btn {
       padding: 5px 11px; border-radius: 999px; font-size: 11.5px; font-weight: 500;
-      color: var(--text-muted); border: 1px solid var(--border); background: var(--bg-panel);
+      color: var(--text-muted); border: 1px solid var(--border); background: #ffffff;
       cursor: pointer; transition: .15s ease; font-family: inherit;
+      box-shadow: 0 1px 2px rgba(15,23,42,.04);
     }
     .qn-btn:hover { border-color: var(--accent); color: var(--accent); }
     .qn-btn.active { background: var(--accent); color: white; border-color: var(--accent); font-weight: 600; }
 
     /* ── Canvas area ── */
     .canvas-wrap { flex: 1; overflow: hidden; position: relative; display: flex; flex-direction: column; min-height: 0; }
-    .canvas-stage { flex: 1; position: relative; overflow: hidden; min-height: 0; }
+    .canvas-stage { flex: 1; position: relative; overflow: hidden; min-height: 0; background: #f8fafc; }
     .canvas-inner {
       position: absolute; inset: 0; cursor: grab;
       display: flex; align-items: center; justify-content: center;
@@ -286,7 +305,7 @@
     /* Domain nodes */
     .mm-node {
       position: absolute; width: 168px; border-radius: 14px;
-      background: var(--bg-panel); border: 1.5px solid var(--border);
+      background: #ffffff; border: 1.5px solid var(--border);
       padding: 13px 15px; cursor: pointer; z-index: 5;
       box-shadow: 0 2px 12px rgba(0,0,0,.06);
       transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
@@ -309,7 +328,7 @@
     .mm-node-desc { font-size: 10.5px; color: var(--text-muted); line-height: 1.5; margin-bottom: 8px; }
     .mm-node-foot { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
     .mm-node-tags { display: flex; flex-wrap: wrap; gap: 4px; }
-    .mm-node-tag { font-size: 9px; padding: 2px 7px; border-radius: 999px; background: var(--bg); border: 1px solid var(--border); color: var(--text-muted); }
+    .mm-node-tag { font-size: 9px; padding: 2px 7px; border-radius: 999px; background: #ffffff; border: 1px solid var(--border); color: var(--text-muted); }
 
     .mm-node[data-key="identity"]  { --n-color: var(--c-identity); }
     .mm-node[data-key="network"]   { --n-color: var(--c-network); }
@@ -323,7 +342,7 @@
     /* ── Subgraph strip ── */
     .subgraph-strip {
       height: 196px; flex-shrink: 0; border-top: 1px solid var(--border);
-      background: var(--bg-panel); display: flex; flex-direction: column; min-height: 0;
+      background: #ffffff; display: flex; flex-direction: column; min-height: 0;
     }
     .sg-head {
       display: flex; align-items: center; justify-content: space-between;
@@ -339,14 +358,14 @@
 
     .mn {
       position: absolute; padding: 10px 13px; border-radius: 11px; z-index: 3;
-      background: var(--bg-panel); border: 1.5px solid var(--border);
+      background: #ffffff; border: 1.5px solid var(--border);
       box-shadow: 0 2px 10px rgba(0,0,0,.05); cursor: pointer;
       box-sizing: border-box;
       transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
       animation: mnIn .35s ease both;
     }
     .mn:hover { transform: translateY(-3px); border-color: #93c5fd; box-shadow: 0 8px 20px rgba(0,0,0,.1); }
-    .mn.mn-root { cursor: default; border-color: var(--accent); background: rgba(59,130,246,.14); }
+    .mn.mn-root { cursor: default; border-color: var(--accent); background: #ffffff; }
     .mn.mn-active { border-color: #16a34a; box-shadow: 0 0 0 3px rgba(22,163,74,.1), 0 2px 10px rgba(0,0,0,.05); }
     @keyframes mnIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     .mn-kicker { font-size: 9px; color: var(--text-light); letter-spacing: .08em; text-transform: uppercase; display: block; margin-bottom: 3px; font-weight: 600; }
@@ -411,6 +430,19 @@
     .ov-rmitem { background: var(--bg); border: 1px solid var(--border); border-radius: 11px; padding: 11px 10px; font-size: 11.5px; color: var(--text); line-height: 1.55; }
     .ov-q { display: block; font-size: 9.5px; color: var(--accent); letter-spacing: .08em; margin-bottom: 5px; font-weight: 700; }
     .ov-quote { font-size: 12.5px; color: var(--text-muted); line-height: 1.8; font-style: italic; border-top: 1px solid var(--border); padding-top: 18px; text-align: center; }
+
+    @media (max-width: 980px) {
+      :root { --topbar-h: 132px; }
+      .topbar { flex-wrap: wrap; align-content: center; row-gap: 10px; padding: 14px 18px; }
+      .topbar-brand { flex: 1 1 50%; }
+      .topbar-right { flex: 1 1 40%; }
+      .topbar-nav { order: 3; width: 100%; }
+      .tnav { flex: 1; min-width: 0; justify-content: center; }
+      .tnav-desc { display: none; }
+      .page-insights { grid-template-columns: 1fr; }
+      .main { left: 0; }
+      .sidebar { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -433,10 +465,6 @@
     <a class="tnav" href="technology-map.html" id="nav-techmap">
       <span class="tnav-icon">🔧</span>
       <span class="tnav-body"><span class="tnav-title">Technology Map</span><span class="tnav-desc">Azure 기술 스택과 실무 활용</span></span>
-    </a>
-    <a class="tnav" href="architecture-library.html" id="nav-arch">
-      <span class="tnav-icon">📐</span>
-      <span class="tnav-body"><span class="tnav-title">Architecture Library</span><span class="tnav-desc">구상해본 설계 스터디 (컨셉)</span></span>
     </a>
   </nav>
   
@@ -482,6 +510,11 @@
       <div class="stat-item"><span class="stat-num" id="statCategories">0</span><span class="stat-label">Categories</span></div>
       <div class="stat-divider"></div>
       <div class="stat-item"><span class="stat-num" id="statServices">0</span><span class="stat-label">Services</span></div>
+    </div>
+    <div class="page-insights">
+      <div class="page-insight"><span class="page-insight-label">Primary View</span><div class="page-insight-value">프로젝트 경험을 기술 도메인별로 역추적</div></div>
+      <div class="page-insight"><span class="page-insight-label">Selection Flow</span><div class="page-insight-value">카테고리 → 서비스 → 역할/시나리오/설계 포인트</div></div>
+      <div class="page-insight"><span class="page-insight-label">Portfolio Signal</span><div class="page-insight-value">운영, 보안, 자동화, AI 플랫폼을 하나의 맵으로 연결</div></div>
     </div>
   </div>
 
@@ -1477,6 +1510,38 @@ function sdSection(num, title, items, type) {
   return `<div class="sd-section"><div class="sd-section-head"><span class="sd-section-num">${num}</span><span class="sd-section-title">${title}</span></div>${content}</div>`;
 }
 
+function sdNoteGrid(num, title, notes) {
+  if (!notes || !notes.length) return '';
+  const content = `<div class="sd-note-grid">${notes.map(n => `
+    <div class="sd-note">
+      <div class="sd-note-k">${n.k}</div>
+      <div class="sd-note-v">${n.v}</div>
+    </div>`).join('')}</div>`;
+  return `<div class="sd-section"><div class="sd-section-head"><span class="sd-section-num">${num}</span><span class="sd-section-title">${title}</span></div>${content}</div>`;
+}
+
+function categoryNotes(key, d) {
+  const serviceCount = Object.keys(d.children || {}).length;
+  const firstService = d.keyServices?.[0] || '핵심 서비스';
+  const primaryFocus = d.archFocus?.[0] || d.layer;
+  return [
+    { k:'Coverage', v:`${serviceCount}개 서비스 / ${d.tags?.join(' · ') || d.layer}` },
+    { k:'Anchor', v:firstService },
+    { k:'Project Fit', v:primaryFocus },
+    { k:'Evidence', v:'설계 포인트 · 사용 시나리오 · 연계 서비스로 설명' }
+  ];
+}
+
+function serviceNotes(mainKey, c) {
+  const category = graph[mainKey].title;
+  return [
+    { k:'Domain', v:category },
+    { k:'Primary Role', v:c.role?.[0] || c.desc },
+    { k:'Design Check', v:c.design?.[0] || '운영 기준 정의 필요' },
+    { k:'Integration', v:(c.related || []).slice(0,3).join(' · ') || '단독 서비스 검토' }
+  ];
+}
+
 function renderSidebarMain(key) {
   const d = graph[key];
   const color = getComputedStyle(document.documentElement).getPropertyValue('--c-' + key).trim() || '#3b82f6';
@@ -1486,9 +1551,10 @@ function renderSidebarMain(key) {
     <div class="sd-badge" style="background:${color}18;color:${color}"><span class="sd-dot"></span>${d.layer}</div>
     <div class="sd-title">${d.title}</div>
     <div class="sd-desc">${d.intro}</div>
-    ${sdSection('1','설계 포인트', d.design, 'list')}
-    ${sdSection('2','Key Services', d.keyServices, 'chips')}
-    ${sdSection('3','Architecture Focus', d.archFocus, 'arch')}
+    ${sdNoteGrid('1','요약 지표', categoryNotes(key, d))}
+    ${sdSection('2','설계 포인트', d.design, 'list')}
+    ${sdSection('3','Key Services', d.keyServices, 'chips')}
+    ${sdSection('4','적용 영역', d.archFocus, 'arch')}
   `;
   document.getElementById('sidebarDetail').innerHTML = html;
 }
@@ -1499,11 +1565,12 @@ function renderServiceModal(mainKey, childKey) {
     <div class="sd-eyebrow clickable" onclick="toggleServiceModal(false)">← ${graph[mainKey].title}</div>
     <h2>${c.title}</h2>
     <p class="modal-context">${c.desc}</p>
+    ${sdNoteGrid('0','실무 요약', serviceNotes(mainKey, c))}
     ${sdSection('1','역할 (What)', c.role, 'list')}
     ${sdSection('2','사용 시나리오 (When)', c.when, 'list')}
     ${sdSection('3','설계 포인트 (Design)', c.design, 'list')}
     ${sdSection('4','함께 사용하는 서비스', c.related, 'chips')}
-    ${sdSection('5','적용 가능한 아키텍처', c.archFit, 'arch')}
+    ${sdSection('5','적용 가능한 구조', c.archFit, 'arch')}
   `;
   document.getElementById('serviceModalBody').innerHTML = html;
   toggleServiceModal(true);
@@ -1716,7 +1783,7 @@ function animateCount(el, target, duration) {
 // 라이트/다크 모드 토글 로직
 (function() {
   const html = document.documentElement;
-  const theme = localStorage.getItem('theme') || 'dark';
+  const theme = 'light';
   const toggle = document.getElementById('theme-toggle');
   const sunIcon = toggle?.querySelector('.sun-icon');
   const moonIcon = toggle?.querySelector('.moon-icon');
