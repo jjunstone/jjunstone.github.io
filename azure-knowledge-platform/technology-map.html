@@ -106,6 +106,7 @@
       font-family: inherit;
     }
     .tnav:hover { border-color: var(--text-light); background: var(--bg); }
+    @media (max-width: 1240px) { .tnav { min-width: 0; flex: 1 1 0; } }
     .tnav.active { border-color: var(--accent); background: rgba(59,130,246,.14); }
     .tnav.active .tnav-title { color: var(--accent); }
     .tnav-icon { font-size: 20px; line-height: 1; flex-shrink: 0; width: 22px; text-align: center; }
@@ -436,8 +437,9 @@
       .topbar { flex-wrap: wrap; align-content: center; row-gap: 10px; padding: 14px 18px; }
       .topbar-brand { flex: 1 1 50%; }
       .topbar-right { flex: 1 1 40%; }
-      .topbar-nav { order: 3; width: 100%; }
-      .tnav { flex: 1; min-width: 0; justify-content: center; }
+      .topbar-nav { order: 3; flex: 1 0 100%; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+      .topbar-nav::-webkit-scrollbar { display: none; }
+      .tnav { flex: 0 0 auto; min-width: 0; justify-content: center; padding: 9px 14px; }
       .tnav-desc { display: none; }
       .page-insights { grid-template-columns: 1fr; }
       .main { left: 0; }
@@ -465,6 +467,10 @@
     <a class="tnav" href="technology-map.html" id="nav-techmap">
       <span class="tnav-icon">🔧</span>
       <span class="tnav-body"><span class="tnav-title">Technology Map</span><span class="tnav-desc">Azure 기술 스택과 실무 활용</span></span>
+    </a>
+    <a class="tnav" href="change-gate.html" id="nav-changegate">
+      <span class="tnav-icon">🛡️</span>
+      <span class="tnav-body"><span class="tnav-title">Change Gate</span><span class="tnav-desc">변경 요청을 직접 검토해보는 데모</span></span>
     </a>
   </nav>
   

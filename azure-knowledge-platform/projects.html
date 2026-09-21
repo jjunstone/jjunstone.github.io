@@ -75,11 +75,11 @@
       --text-light: var(--doc-gray);
       position: fixed; top: 0; left: 0; right: 0; height: var(--topbar-h);
       background: var(--bg-panel); border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between; z-index: 100; padding: 0 32px;
+      display: flex; align-items: center; z-index: 100; padding: 0 32px;
       transition: background-color .3s, border-color .3s;
     }
     .topbar-brand {
-      display: flex; align-items: center; gap: 10px; flex: 1 1 0; min-width: 0;
+      display: flex; align-items: center; gap: 10px; margin-right: 44px; flex-shrink: 0;
       text-decoration: none;
     }
     .logo-icon {
@@ -92,22 +92,23 @@
     .brand-name { font-size: 15px; font-weight: 700; color: var(--text); transition: color .3s; }
     .brand-role { font-size: 11px; color: var(--text-light); transition: color .3s; }
 
-    .topbar-nav { display: flex; align-items: center; justify-content: center; gap: 10px; flex: 0 0 auto; }
+    .topbar-nav { display: flex; align-items: center; gap: 10px; flex: 1; }
     .tnav {
       display: flex; align-items: center; gap: 10px;
-      padding: 9px 15px; border-radius: 10px; min-width: 190px;
+      padding: 10px 16px; border-radius: 10px; min-width: 180px;
       color: var(--text-light); cursor: pointer; transition: .15s ease;
       text-decoration: none; border: 1px solid var(--border); background: transparent;
       font-family: inherit;
     }
     .tnav:hover { border-color: var(--text-light); background: var(--bg); }
     .tnav.active { border-color: var(--accent); background: rgba(59,130,246,.14); }
+    @media (max-width: 1240px) { .tnav { min-width: 0; flex: 1 1 0; } }
     .tnav.active .tnav-title { color: var(--accent); }
     .tnav-icon { font-size: 20px; line-height: 1; flex-shrink: 0; width: 22px; text-align: center; }
     .tnav-body { display: flex; flex-direction: column; gap: 2px; line-height: 1.3; min-width: 0; }
     .tnav-title { font-size: 14px; font-weight: 700; color: var(--text); }
     .tnav-desc { font-size: 11.5px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .topbar-right { display: flex; align-items: center; justify-content: flex-end; gap: 12px; flex: 1 1 0; min-width: 0; }
+    .topbar-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
     .theme-toggle {
       width: 36px; height: 36px; border-radius: 7px; border: 1px solid var(--border);
       background: transparent; display: grid; place-items: center; cursor: pointer;
@@ -423,12 +424,15 @@
 
     /* ── Responsive ── */
     @media (max-width: 900px) {
-      :root { --topbar-h: 132px; }
+      /* Four top-level destinations: drop the descriptions and let the nav
+         scroll rather than squeezing the brand or the theme toggle. */
+      :root { --topbar-h: 138px; }
       .topbar { flex-wrap: wrap; align-content: center; row-gap: 10px; padding: 14px 18px; }
-      .topbar-brand { flex: 1 1 50%; }
-      .topbar-right { flex: 1 1 40%; }
-      .topbar-nav { order: 3; width: 100%; }
-      .tnav { flex: 1; min-width: 0; justify-content: center; }
+      .topbar-brand { flex: 1 1 auto; margin-right: 0; }
+      .topbar-right { flex: 0 0 auto; }
+      .topbar-nav { order: 3; flex: 1 0 100%; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+      .topbar-nav::-webkit-scrollbar { display: none; }
+      .tnav { flex: 0 0 auto; min-width: 0; justify-content: center; padding: 9px 14px; }
       .tnav-desc { display: none; }
       .docnb-sidebar { position: fixed; top: var(--topbar-h); bottom: 0; left: 0; width: 82vw; max-width: 320px;
         transform: translateX(-100%); transition: transform .22s ease; z-index: 60; box-shadow: 10px 0 30px rgba(0,0,0,.15); }
@@ -467,6 +471,14 @@
     <a class="tnav" href="technology-map.html" id="nav-techmap">
       <span class="tnav-icon">🔧</span>
       <span class="tnav-body"><span class="tnav-title">Technology Map</span><span class="tnav-desc">Azure 기술 스택과 실무 활용</span></span>
+    </a>
+    <a class="tnav" href="architecture-library.html" id="nav-arch">
+      <span class="tnav-icon">📐</span>
+      <span class="tnav-body"><span class="tnav-title">Architecture Library</span><span class="tnav-desc">구상해본 설계 스터디 (컨셉)</span></span>
+    </a>
+    <a class="tnav" href="change-gate.html" id="nav-changegate">
+      <span class="tnav-icon">🛡️</span>
+      <span class="tnav-body"><span class="tnav-title">Change Gate</span><span class="tnav-desc">변경 요청을 직접 검토해보는 데모</span></span>
     </a>
   </nav>
   
@@ -542,7 +554,7 @@
 const projects = [
   {
     id: 9,
-    priority: 8,
+    priority: 7,
     domain: 'Cloud',
     status: 'Proposed',
     title: 'Hybrid Cloud 기반 인프라 아키텍처 설계',
@@ -616,7 +628,7 @@ const projects = [
   },
   {
     id: 5,
-    priority: 4,
+    priority: 8,
     domain: 'AI',
     status: 'In Progress',
     title: '사내 AI 업무지원 플랫폼 구축',
@@ -675,12 +687,12 @@ const projects = [
   },
   {
     id: 6,
-    priority: 5,
+    priority: 2,
     domain: 'Automation',
     status: 'In Progress',
-    title: 'IT 자산 관리 및 업무 자동화 체계 구축',
-    tags: ['Power Automate', 'Forms', 'PAD', 'Unattended RPA'],
-    desc: 'Power Automate·Forms·PAD를 연계해 자산 관리 업무를 자동화하고, 인쇄 환경 자동화·Forms 기반 프로세스 자동화까지 아우르는 대표 Automation 프로젝트입니다.',
+    title: 'Power Automate 기반 IT 업무 자동화 체계 구축',
+    tags: ['Power Automate', 'Forms', 'Approval', 'SharePoint', 'Teams', 'PAD'],
+    desc: 'Power Automate를 중심으로 Forms, Approval, SharePoint, Teams, PAD를 연계하여 IT 업무의 요청·승인·처리·결과 공유를 자동화한 프로젝트입니다. 인턴 정책 해제, 인사 업데이트, 자산 관리 등 반복 업무를 대상으로 Workflow를 구축하고, PAD와 Unattended RPA를 활용해 PC 기반 작업까지 자동화했습니다.',
     date: '2024.11 ~ 2025.02',
     icon: 'automation',
     detail: {
@@ -688,48 +700,45 @@ const projects = [
       techStack: [
         { name: 'Power Automate' },
         { name: 'Microsoft Forms' },
+        { name: 'Approval' },
+        { name: 'SharePoint' },
+        { name: 'Teams' },
         { name: 'Power Automate Desktop' },
-        { name: 'Unattended RPA' },
-        { name: 'SharePoint' }
+        { name: 'Unattended RPA' }
       ],
       whatIDesigned: [
-        '[자산 관리] Forms로 자산 신청·반납 요청 접수 프로세스 표준화',
-        '[자산 관리] Power Automate로 승인 라우팅 및 알림 자동화',
-        '[자산 관리] PAD로 반복적인 자산 대장 갱신 작업 자동화',
-        '[자산 관리] 자산 현황 대시보드 연동으로 실시간 현황 파악 가능하도록 구성',
-        '[PAD 인쇄 환경] 반복적인 프린터 드라이버·설정 배포 작업을 PAD로 자동화',
-        '[PAD 인쇄 환경] Unattended 모드로 야간 배치 실행 스케줄 구성',
-        '[PAD 인쇄 환경] 오류 발생 시 자동 재시도 및 알림 로직 설계',
-        '[PAD 인쇄 환경] 신규 PC 배포 시 표준 인쇄 환경 자동 적용 프로세스 구성',
-        '[Forms 프로세스 자동화] 부서별 신청서를 Forms로 표준화하여 데이터 수집 방식 통일',
-        '[Forms 프로세스 자동화] Power Automate로 승인자 라우팅 및 알림 자동화',
-        '[Forms 프로세스 자동화] 승인 완료 데이터를 SharePoint 리스트에 자동 적재',
-        '[Forms 프로세스 자동화] 처리 현황을 대시보드로 시각화해 진행 상태 추적 가능하도록 구성'
+        '[Workflow] Forms → Power Automate → Approval → (PAD 실행 / SharePoint) → Teams 알림으로 이어지는 공통 자동화 구조 설계',
+        '[인턴 정책 해제] 정책 해제 요청을 승인 기반 자동 처리 Flow로 구성 — 요청 발생을 Trigger로 Flow 실행, 승인 결과에 따른 조건 분기, 승인된 건만 대상 PC Disabled 후속 작업 실행',
+        '[인사 업데이트] Outlook 입·퇴사 안내 메일 수신을 Trigger로 메일 내용을 분석해 필요한 작업을 SharePoint에 자동 생성',
+        '[자산 관리] Forms로 자산 신청·반납 요청 접수 프로세스 표준화, Power Automate로 승인 라우팅 및 알림 자동화, PAD로 반복적인 자산 대장 갱신 작업 자동화',
+        '[Forms 프로세스 자동화] 부서별 신청서를 Forms로 표준화하고 승인 완료 데이터를 SharePoint 리스트에 자동 적재',
+        '[PAD/Unattended] 담당자 PC 상태와 무관하게 실행되는 Unattended 환경 구성으로 야간 배치·무인 실행 지원'
       ],
-      problem: '자산 수령·반납 처리와 AD 계정 등록·해제를 매번 수동으로 처리하면서 시간이 많이 들었고, 휴먼에러로 처리가 누락되는 경우가 있었습니다. 신규 PC를 배포할 때마다 프린터 드라이버와 설정도 담당자가 수작업으로 맞추다 보니 PC별로 인쇄 환경이 제각각이었습니다. 또한 AD, 보안그룹, 홈페이지 접근권한 등 수정이 필요한 요청들이 각기 다른 양식으로 접수되고 있어, 처리 기준이 일관되지 않고 대응이 느렸습니다.',
+      problem: '자산 신청·반납, AD 계정 처리, 각종 IT 요청 등이 담당자의 수작업에 의존하고 있어 처리 누락과 업무 편차가 발생했습니다. 인턴 정책 해제 요청이나 입·퇴사자 인사 업데이트 메일도 사람이 직접 확인하고 다시 작업으로 옮기는 과정을 반복해야 했습니다. 또한 AD, 보안그룹, 홈페이지 접근권한 등 수정이 필요한 요청들이 각기 다른 양식으로 접수되고 있어, 처리 기준이 일관되지 않고 대응이 느렸습니다.',
       challenge: [
-        { issue: 'AD를 다루는 과정이 필요해 PAD(프리미엄 라이선스)를 사용했는데, 담당자 PC가 꺼져 있으면 플로우가 동작하지 않았음', resolution: 'Unattended 라이선스를 도입해 사용자 PC 상태와 무관하게 실행되는 무인 환경을 구축' },
+        { issue: 'AD를 다루는 과정이 필요해 PAD(프리미엄 라이선스)를 사용했는데, 담당자 PC가 꺼져 있으면 Flow가 동작하지 않았음', resolution: 'Unattended 라이선스를 도입해 사용자 PC 상태와 무관하게 실행되는 무인 환경을 구축' },
         { issue: '서로 다른 형태의 요청을 하나의 플랫폼으로 통합해야 했음', resolution: 'Forms 기반 단일 신청 양식으로 통일하고, 승인자 라우팅과 SharePoint 리스트 자동 적재까지 연계' },
+        { issue: '실제 운영 과정에서 Connector 권한(Unauthorized), Connection 오류, Dynamic Input 오류 등이 발생', resolution: 'Flow Run History를 기준으로 실패 단계를 추적해 Connector 계정 권한, 연결 상태·인증, 이전 단계 출력값을 각각 확인하는 방식으로 원인을 분리해 대응' },
       ],
       outcome: [
         { value: 'AD 직접 수정 → 승인 기반 처리', label: '처리 방식 전환' },
-        { value: '24/7', label: '무인 자동 실행 (자산 대장·인쇄 환경 배포)' },
+        { value: '24/7', label: '무인 자동 실행 (Unattended RPA)' },
         { value: '개별 요청 방식 → 단일 폼', label: '요청 창구 통합' },
-        { value: '실시간 추적', label: '처리 현황 대시보드 시각화' },
+        { value: '실시간 추적', label: 'SharePoint 이력화 + Teams 자동 알림' },
       ],
       whyDesign: [
-        { title: '효율성', desc: '수기로 관리하던 자산 대장을 자동화해 처리 시간 단축' },
+        { title: '효율성', desc: '수기로 처리하던 반복 업무를 자동화해 처리 시간 단축' },
         { title: '정확성', desc: '승인 누락·중복 신청 등 휴먼 에러 최소화' },
-        { title: '표준화', desc: '수작업 설정 편차를 없애고 전사 동일한 인쇄 환경 확보' },
         { title: '처리 속도', desc: '수작업 결재 대비 승인 소요 시간 단축' },
-        { title: '투명성', desc: '신청부터 승인까지 전 과정을 추적 가능하도록 가시화' }
+        { title: '투명성', desc: '신청부터 승인까지 전 과정을 SharePoint·Teams로 추적 가능하도록 가시화' },
+        { title: '확장성', desc: 'Power Automate를 Workflow Orchestrator로 삼아 AD·Mail·IT 요청 등으로 자동화 대상을 계속 확장할 수 있는 구조' }
       ],
-      keywords: ['Power Automate', 'Forms', 'PAD', 'RPA', 'Process Automation']
+      keywords: ['Power Automate', 'Forms', 'Approval', 'PAD', 'Unattended RPA', 'Workflow Orchestration']
     }
   },
   {
     id: 8,
-    priority: 7,
+    priority: 9,
     domain: 'Security',
     status: 'Completed',
     title: '정보보호 정책 및 데이터 보호 체계 구축',
@@ -763,7 +772,7 @@ const projects = [
   },
   {
     id: 3,
-    priority: 2,
+    priority: 10,
     domain: 'Security',
     status: 'In Progress',
     title: '네트워크 보안 정책 관리 체계 구축',
@@ -802,7 +811,7 @@ const projects = [
   },
   {
     id: 13,
-    priority: 12,
+    priority: 13,
     domain: 'Database',
     status: 'Completed',
     title: 'Database 운영·성능·보안 개선',
@@ -932,7 +941,7 @@ Test-AccountLockoutThreshold | ConvertTo-Json | Out-File "\\\\logserver\\collect
 },
   {
     id: 11,
-    priority: 10,
+    priority: 11,
     domain: 'Workplace',
     status: 'Completed',
     title: '기업 업무환경 및 클라우드 서비스 구축',
@@ -970,7 +979,7 @@ Test-AccountLockoutThreshold | ConvertTo-Json | Out-File "\\\\logserver\\collect
   },
   {
     id: 10,
-    priority: 9,
+    priority: 12,
     domain: 'Data',
     status: 'In Progress',
     title: '데이터 관리 및 거버넌스 체계 설계',
@@ -1001,7 +1010,7 @@ Test-AccountLockoutThreshold | ConvertTo-Json | Out-File "\\\\logserver\\collect
   },
   {
     id: 1,
-    priority: 0,
+    priority: 1,
     domain: 'Infrastructure',
     status: 'Completed',
     title: '사내 Windows 인프라 중앙관리 체계 구축',
@@ -1107,42 +1116,61 @@ Applied Group Policy Objects
   },
   {
     id: 12,
-    priority: 11,
+    priority: 6,
     domain: 'Infrastructure',
     status: 'Completed',
     title: '보안 이벤트 통합 모니터링 및 대응 체계 고도화',
-    tags: ['Logpresso', 'SIEM', 'Migration'],
-    desc: 'Logpresso 기반 SIEM 환경을 운영하며 신규 버전 이관 등 고도화를 진행한 프로젝트입니다.',
-    date: '2025.10',
+    tags: ['Logpresso', 'SIEM', 'Sonar Lite', 'Migration'],
+    desc: 'Logpresso STD 환경을 차세대 플랫폼인 Sonar Lite V4.0으로 전환하고, 기존 대시보드 쿼리를 신규 버전에 맞게 재작성해 SIEM 기능을 고도화한 프로젝트입니다.',
+    date: '2025.11 ~ 2025.12',
     icon: 'infra',
     detail: {
       diagram: null,
       techStack: [
-        { name: 'Logpresso' }
+        { name: 'Logpresso Sonar Lite V4.0' },
+        { name: 'Logpresso STD' },
+        { name: 'Rocky Linux 9.6' },
+        { name: 'PowerShell' },
+        { name: 'SIEM' }
       ],
       whatIDesigned: [
-        '벤더와 협업하여 Logpresso 환경을 신규 버전으로 안정적으로 이관'
+        '기존 Logpresso STD 환경을 신규 Sonar Lite V4.0 환경으로 전환하는 마이그레이션 계획 수립 (서버 OS Rocky Linux 8.7 → 9.6 재설치 포함)',
+        '기존 STD 환경의 설정값·쿼리·프로필을 신규 환경으로 수동 이관',
+        '전 서버(89대 Windows + 2대 Linux) 대상 기존 센트리 제거 및 Sonar용 센트리 재설치 자동화 배치 스크립트 실행 계획 수립',
+        '본 작업 전 점프 서버 3대에서 배치 스크립트 사전 테스트 진행으로 센트리 제거·재설치, 감사 정책 점검 기능을 검증',
+        '기존 STD 환경을 병행 운영 대상으로 유지해 서비스 공백 없이 전환되도록 설계 (신규 로그는 Sonar로 즉시 적재, 기존 로그는 STD에서 계속 조회 가능)',
+        '전환 후 기존에 구성돼 있던 대시보드들을 신규 버전 스키마/쿼리 문법에 맞게 직접 재작성하고 관련 옵션을 재구성'
       ],
-      problem: '기존 Logpresso 환경이 구버전이라 최신 기능을 활용하기 어려웠고, 버전을 올리는 과정에서 기존에 구성해 둔 프로젝트와 수집 정책을 안정적으로 유지할 필요가 있었습니다.',
+      problem: '기존 Logpresso STD 환경이 구버전이라 최신 SIEM 기능을 활용하기 어려웠고, 차세대 플랫폼인 Sonar Lite로 전환하려면 서버 OS 재설치부터 전 서버 센트리 재설치, 기존 대시보드·쿼리 이관까지 서비스 영향을 최소화하며 진행해야 하는 규모 있는 마이그레이션이었습니다.',
+      challenge: [
+        { issue: '기존 STD에 적재된 로그는 데이터 용량이 매우 커서, 그대로 마이그레이션하면 서비스 운영에 영향을 줄 정도로 부하가 클 것으로 판단됨', resolution: '기존 로그 데이터는 마이그레이션하지 않고, STD 환경을 별도 포트로 병행 유지해 필요 시 기존 SIEM에서 조회 가능하도록 결정' },
+        { issue: '전 서버(91대) 센트리를 제거·재설치하는 과정에서 로그 유실이나 알림 공백이 발생할 가능성이 있었음', resolution: '센트리가 로컬에 로그를 저장하는 구조임을 확인해 재설치 중에도 로그가 보존되고, 재연결 후 중단 기간의 로그가 일괄 수집되도록 설계. 재설치 기간의 일시적 Alert 중단은 외부 보안관제업체가 방화벽·엔드포인트 이벤트를 실시간 관제 중이므로 중요 이벤트 누락 가능성이 낮다고 판단하고 진행' },
+        { issue: '센트리 설치 없이 SNMP로 로그를 전송하는 시스템들도 있어, 일괄 재설치 계획에서 누락될 수 있다는 점을 팀 리더가 별도로 짚어줌', resolution: 'SNMP 기반으로 로그를 전송하는 시스템 목록을 별도로 확인해 재설치 대상에서 제외하고 정상 수집 여부를 점검' },
+        { issue: '전환 이후 기존에 구성해뒀던 대시보드들이 신규 버전의 쿼리 문법·스키마와 맞지 않아 그대로 쓸 수 없었음', resolution: '기존 대시보드의 쿼리를 신규 버전 문법에 맞게 직접 재작성하고, 관련 옵션도 신규 환경에 맞게 재구성' }
+      ],
       outcome: [
-        { value: '벤더 협업', label: '안정적인 버전 이관 진행' },
-        { value: '신규 버전 적용', label: '최신 기능 활용 기반 확보' },
+        { value: 'STD → Sonar Lite V4.0', label: '서비스 공백 없이 병행 운영 방식으로 전환 완료' },
+        { value: '91대', label: '전 서버 센트리 재설치 (89 Windows + 2 Linux)' },
+        { value: '로그 유실 없음', label: '센트리 로컬 저장 구조로 재설치 기간에도 로그 보존' },
+        { value: '대시보드 재구성', label: '기존 대시보드 쿼리를 신규 버전에 맞게 직접 재작성' }
       ],
       whyDesign: [
-        { title: '최신화', desc: '최신 버전으로 업그레이드해 기능 활용 범위를 확장' },
-        { title: '안정성', desc: '벤더와 협업해 이관 과정의 리스크를 최소화' }
+        { title: '서비스 영향 최소화', desc: '기존 STD와 신규 Sonar를 병행 운영하고, 센트리 재설치도 재부팅 없이 자동화 스크립트로 진행해 서비스 공백을 최소화' },
+        { title: '안전한 전환', desc: '본 작업 전 점프 서버에서 배치 스크립트를 사전 테스트해 리스크를 낮춘 뒤 전체 서버에 적용' },
+        { title: '데이터 무결성', desc: '대용량 기존 로그를 무리하게 마이그레이션하지 않고 병행 조회 가능한 구조로 유지해 데이터 손실 위험 회피' },
+        { title: '최신화', desc: '최신 버전으로 업그레이드해 향후 SIEM 기능 활용 범위를 확장' }
       ],
-      keywords: ['Logpresso', 'SIEM', 'Migration']
+      keywords: ['Logpresso', 'SIEM', 'Sonar Lite', 'Migration', 'Query Rewriting']
     }
   },
   {
     id: 2,
-    priority: 1,
+    priority: 0,
     domain: 'Identity',
     status: 'In Progress',
     title: '통합 Identity 및 접근권한 관리 체계 구축',
     tags: ['Active Directory', 'DLP', '방화벽', 'PowerShell', 'RBAC'],
-    desc: 'AD 그룹 멤버십을 단일 신뢰 소스로 삼아, USB DLP 예외·방화벽 애플리케이션 접근 등 이기종 시스템의 접근 권한을 신청→승인→반영→회수까지 자동 전파하는 이벤트 기반 체계입니다. 기존 AD 계정 관리 프로세스 표준화 작업도 이 체계의 기반이 되었습니다.',
+    desc: 'AD 그룹 멤버십을 단일 신뢰 소스로 삼아, USB DLP 예외·방화벽 애플리케이션 접근·보안 솔루션 접근 통제 등 이기종 시스템의 접근 권한을 신청→승인→반영→회수까지 자동 전파하는 이벤트 기반 체계입니다. 기존 AD 계정 관리 프로세스 표준화 작업도 이 체계의 기반이 되었습니다.',
     date: '2025.05 ~ 2025.09',
     icon: 'identity',
     detail: {
@@ -1161,6 +1189,7 @@ Applied Group Policy Objects
         '[AD 그룹 통합 권한관리] AD 그룹을 단일 신뢰 소스(Single Source of Truth)로 정의하고, 신청 → 승인 → AD 반영 → 만료 회수로 이어지는 상태 머신을 공통 패턴으로 설계',
         '[AD 그룹 통합 권한관리] USB DLP 예외 신청 자동화(고정 AD 그룹 1개 기반)를 먼저 구축해 상태 머신·자동화 패턴을 검증',
         '[AD 그룹 통합 권한관리] 동일 패턴을 방화벽 애플리케이션 접근 허용 신청에 재적용 — 정책마다 반영 대상 AD 그룹이 달라지는 구조적 차이를 반영해 매 건 동적으로 대상 그룹을 조회하도록 일반화',
+        '[AD 그룹 통합 권한관리] 관리자가 콘솔에서 개별 등록·승인하던 보안 솔루션 접근 통제에도 동일 패턴을 재적용 — 접근 허용 대상을 고정 AD 그룹으로 매핑해, 그룹 구성원 변경만으로 접근 권한이 자동 반영되도록 개선',
         '[AD 그룹 통합 권한관리] 3-Table DB 스키마(신청 이력 · 정책 정보 · 정책-사용자 매핑) 설계, fwgroup–adgroup 1:1 매핑으로 정책을 재사용 가능한 단위로 구성',
         '[AD 그룹 통합 권한관리] 신청자용 · 관리자용 Classic ASP 웹페이지 구현 — 관리자 페이지에서 기존 정책 선택 또는 신규 정책 즉시 생성 중 택1 가능하도록 설계, 어플리케이션명 기반 AD 그룹명 자동 제안 로직 포함',
         '[AD 그룹 통합 권한관리] 자동화 서버의 PowerShell 스케줄 작업이 승인 완료 건을 주기적으로 조회해 대상 AD 그룹에 반영·회수하는 파이프라인 구축 (이미 반영/회수된 건은 skip하는 멱등성 보장)',
@@ -1177,7 +1206,7 @@ Applied Group Policy Objects
         { issue: '인사팀과 인프라보안팀이 각자 다른 기준으로 입·퇴사 절차를 처리하고 있어, 하나의 자동화 프로세스로 묶기 어려웠음', resolution: '두 팀의 절차를 하나의 표준 프로세스로 정리하고, PAD로 자동화하기 쉬운 형태로 단계를 재구성' }
       ],
       outcome: [
-        { value: '2개 시스템', label: 'USB DLP · 방화벽 애플리케이션 접근을 동일 아키텍처로 통합 관리' },
+        { value: '3개 시스템', label: 'USB DLP · 방화벽 애플리케이션 접근 · 보안 솔루션 접근 통제를 동일 아키텍처로 통합 관리' },
         { value: 'AD 그룹 단일 축', label: '권한 유형이 늘어도 관리 포인트는 AD 그룹으로 수렴' },
         { value: '5단계 상태값', label: 'requested~removed 상태 기준으로 모든 권한 변경 이력 추적 가능' },
         { value: '인사팀 + 인프라보안팀', label: '입·퇴사 절차를 단일 표준 프로세스로 통합' }
@@ -1193,7 +1222,7 @@ Applied Group Policy Objects
   },
   {
     id: 7,
-    priority: 6,
+    priority: 5,
     domain: 'Infrastructure',
     status: 'In Progress',
     title: 'Windows 시스템 패치 관리 체계 구축',
@@ -1244,7 +1273,7 @@ Applied Group Policy Objects
   },
   {
     id: 14,
-    priority: 13,
+    priority: 4,
     domain: 'Security',
     status: 'In Progress',
     title: 'DB 접근제어 및 감사로그 관리체계 구축',
@@ -1472,10 +1501,10 @@ projectDocuments[2] = [
       ['프로젝트 기간', '2025.09 ~'],
       ['관련 기술', 'Active Directory · Symantec DLP · Palo Alto · PowerShell · Classic ASP · MSSQL'],
     ]},
-    { type: 'text', content: 'AD 그룹 멤버십을 단일 신뢰 소스로 삼아, USB DLP 예외·방화벽 애플리케이션 접근 등 이기종 시스템의 접근 권한을 신청→승인→반영→회수까지 자동 전파하는 이벤트 기반 체계입니다.' },
+    { type: 'text', content: 'AD 그룹 멤버십을 단일 신뢰 소스로 삼아, USB DLP 예외·방화벽 애플리케이션 접근·보안 솔루션 접근 통제 등 이기종 시스템의 접근 권한을 신청→승인→반영→회수까지 자동 전파하는 이벤트 기반 체계입니다.' },
     { type: 'heading', text: '추진 배경' },
     { type: 'text', content: 'USB 파일 이동 예외 처리는 기존에 제출용 USB 개별 Device ID를 추출해 DLP 예외 목록에 등록하는 방식으로 운영되었습니다. USB가 늘어날 때마다 Device ID 추출 → DLP 예외 등록 → 식별번호 라벨링 → 사용 종료 후 권한 회수까지 네 단계를 반복해야 했고, 제출용 USB 수량이 늘수록 관리 부담이 선형적으로 누적되는 구조였습니다.' },
-    { type: 'text', content: '이후 DLP·방화벽 등 권한 관리 영역이 확장되며, 시스템별 개별 운영 방식으로는 관리 복잡도가 계속 누적되는 동일한 한계가 반복적으로 드러났습니다. 권한 유형별 신청·처리 방식이 표준화되지 않아 시스템이 늘수록 관리 포인트가 분산됐고, 시한부 권한 회수가 수작업에 의존해 과다권한(over-provisioning) 리스크로 이어졌습니다.' },
+    { type: 'text', content: '이후 DLP·방화벽 등 권한 관리 영역이 확장되며, 시스템별 개별 운영 방식으로는 관리 복잡도가 계속 누적되는 동일한 한계가 반복적으로 드러났습니다. 권한 유형별 신청·처리 방식이 표준화되지 않아 시스템이 늘수록 관리 포인트가 분산됐고, 시한부 권한 회수가 수작업에 의존해 과다권한(over-provisioning) 리스크로 이어졌습니다. 사내에서 운영 중인 보안 솔루션 중에도, 관리자가 솔루션 관리 콘솔에 직접 접속해 접근 허용 대상자를 매 건 수동으로 등록·승인하는 방식으로 운영되던 것이 있어 동일한 관리 부담 문제를 안고 있었습니다.' },
     { type: 'heading', text: '현황 및 문제점' },
     { type: 'flow', steps: ['Device ID 개별 등록 방식 (AS-IS)', '신규 등록 · 관리 반복 부담 (문제)', '시스템 확장 시 관리 포인트 분산 (영향)'] },
     { type: 'text', content: 'USB는 Device 단위 관리라 새 USB를 살 때마다 재등록이 필요했고, 방화벽·DLP 등 권한 유형이 늘어날수록 시스템마다 다른 신청·반영 방식을 따로 운영해야 했습니다. 만료된 권한의 회수도 수작업에 의존해 실제 필요 이상으로 권한이 유지되는 경우가 발생할 수 있는 구조였습니다.' },
@@ -1490,7 +1519,7 @@ projectDocuments[2] = [
     { type: 'heading', text: '목표 및 범위' },
     { type: 'text', content: '권한 관리 기준을 시스템별 개별 관리에서 AD 그룹 기반의 중앙화된 구조로 전환하는 것을 목표로 합니다.' },
     { type: 'heading', text: 'Scope In' },
-    { type: 'list', items: ['USB DLP 예외 신청 자동화', '방화벽 애플리케이션 접근 허용 신청 자동화'] },
+    { type: 'list', items: ['USB DLP 예외 신청 자동화', '방화벽 애플리케이션 접근 허용 신청 자동화', '보안 솔루션 접근 통제 — 관리자 콘솔 수동 등록을 AD 그룹 기반 자동 반영으로 전환'] },
   ]),
   mkDoc(2, '03', [
     { type: 'heading', text: '업무 프로세스' },
@@ -1499,6 +1528,9 @@ projectDocuments[2] = [
     { type: 'heading', text: '방화벽 애플리케이션 접근 허용' },
     { type: 'flow', steps: ['신청', '승인', 'AD Group 반영 (5~10분 주기)', '시스템 권한 반영', '개인별 만료일 도래', '권한 회수 (일 1회)'] },
     { type: 'text', content: 'USB는 승인 즉시 반영되고 익일 일괄 회수되는 성격이었지만, 방화벽은 사용자별 시작일·종료일이 달라 반영·회수 주기를 짧은 스케줄(5~10분)과 일 1회 배치로 나누어 설계했습니다.' },
+    { type: 'heading', text: '보안 솔루션 접근 통제' },
+    { type: 'flow', steps: ['관리자가 솔루션 콘솔에 직접 접속해 사용자 등록 (AS-IS)', 'AD 그룹 멤버십 변경', 'PowerShell 스케줄 작업이 그룹 구성원 조회', '솔루션 관리 API/콘솔 반영', '접근 허용 완료'] },
+    { type: 'text', content: '해당 보안 솔루션은 관리자 PC(관리 콘솔)에서 접근을 허용할 사용자를 직접 등록·승인하는 구조로 운영되고 있었습니다. 이 솔루션의 접근 대상을 고정 AD 그룹 하나로 매핑해 두고, 그룹 구성원을 조회해 반영하는 로직을 앞서 방화벽에서 만든 자동화 파이프라인 구조 그대로 재사용했습니다. 이후로는 관리자가 AD 그룹 구성원만 갱신하면, 다음 스케줄 주기에 그 변경분이 솔루션 접근 허용 대상에 자동으로 반영됩니다.' },
     { type: 'heading', text: '시스템 아키텍처' },
     { type: 'architecture', image: '../etc/Images/ADgroup.png' },
     { type: 'flow', steps: ['Classic ASP (신청자·관리자 페이지)', 'MSSQL (신청 이력 · 정책 정보 · 매핑)', 'PowerShell (자동화 서버 스케줄 작업)', 'AD Group'] },
@@ -1563,11 +1595,12 @@ WHERE pu.adstatus = 'added' AND pu.enddate <= CAST(GETDATE() AS DATE)`, caption:
     { type: 'issue', problem: 'USB DLP는 예외 대상 AD 그룹이 하나로 고정돼 있어 스크립트에 상수로 고정할 수 있었지만, 방화벽은 정책마다 반영 대상 AD 그룹이 달라 동일한 방식을 그대로 재사용할 수 없었음', resolution: '처리 시점마다 정책 테이블(tbFwPolicyInfo)에서 매핑된 adgroup을 동적으로 조회해 Add-ADGroupMember / Remove-ADGroupMember 대상으로 사용하도록 스크립트 구조를 일반화' },
     { type: 'issue', problem: '초기 설계안은 정책 테이블에 appname 컬럼을 두어 어떤 어플리케이션용 정책인지 직접 관리하려 했음', resolution: '검토 결과 정책은 fwgroup/adgroup 단위로만 관리하고, 용도 설명은 remark 컬럼에 남기는 방식으로 단순화 — 정책 재사용성과 유지보수성을 우선한 결정' },
     { type: 'issue', problem: '자동화 서비스 계정의 AD 그룹 관리 권한 부족으로 USB 자동화 초기에 인증 오류가 있었던 이력이 있어, 방화벽에서도 동일 이슈 재현 가능성이 있었음', resolution: 'USB에서 검증된 이중 권한 부여 조치를 방화벽 서비스 계정에도 동일하게 적용해 재발 방지' },
+    { type: 'issue', problem: '보안 솔루션은 관리자가 콘솔에 직접 접속해 접근 허용 대상자를 매 건 수동으로 등록·승인하고 있어, 인원이 늘어날수록 관리자 몫의 반복 작업이 그대로 누적되는 구조였음', resolution: '해당 솔루션의 접근 허용 기준을 고정 AD 그룹 하나로 못 박고, 방화벽에서 검증한 그룹 조회·반영 자동화 로직을 그대로 재사용 — 관리자는 AD 그룹 구성원만 갱신하면 되고, 콘솔에서의 개별 등록·승인 작업은 자동화 스케줄이 대신 처리' },
     { type: 'heading', text: '주요 의사결정' },
     { type: 'decisionSimple', title: 'Single Source of Truth', desc: 'AD 그룹 멤버십을 유일한 신뢰 소스로 정의해 시스템 간 권한 정의 불일치를 원천 차단' },
     { type: 'decision', qid: 'DEC-001', question: '왜 기존 USB 예외처리(1테이블)와 다르게 3-테이블 구조로 분리했는가?', alternative: 'USB 예외처리처럼 신청·정책·사용자 정보를 하나의 테이블에서 함께 관리', chosen: '신청 이력(tbFwRequestHistory) · 정책 정보(tbFwPolicyInfo) · 정책-사용자 매핑(tbFwPolicyUser)을 분리', reason: '방화벽 신청은 하나의 신청에 여러 사용자가 포함될 수 있고, 동일 정책에 사용자가 추가되거나 사용자별 만료일이 서로 달라질 수 있는 구조라 USB와 동일한 1테이블 구조로는 표현이 어려웠음' },
     { type: 'decisionSimple', title: 'Event-driven Automation', desc: '승인·만료라는 상태 변경을 트리거로 다운스트림 반영이 자동으로 전파되도록 설계' },
-    { type: 'decisionSimple', title: '재사용 가능한 패턴', desc: 'USB에서 검증한 상태 머신·자동화 구조를 방화벽에 재적용해 두 번째 시스템부터는 설계 리스크를 최소화' },
+    { type: 'decisionSimple', title: '재사용 가능한 패턴', desc: 'USB에서 검증한 상태 머신·자동화 구조를 방화벽에, 이후 보안 솔루션 접근 통제에도 동일하게 재적용해 시스템이 늘어날수록 설계 리스크가 줄어드는 것을 확인' },
   ]),
   mkDoc(2, '06', [
     { type: 'heading', text: '운영' },
@@ -1578,13 +1611,13 @@ WHERE pu.adstatus = 'added' AND pu.enddate <= CAST(GETDATE() AS DATE)`, caption:
     ]},
     { type: 'heading', text: '결과 및 성과' },
     { type: 'metric', items: [
-      { value: '2개 시스템', label: 'USB DLP · 방화벽 애플리케이션 접근을 동일 아키텍처로 통합 관리' },
+      { value: '3개 시스템', label: 'USB DLP · 방화벽 애플리케이션 접근 · 보안 솔루션 접근 통제를 동일 아키텍처로 통합 관리' },
       { value: 'AD 그룹 단일 축', label: '권한 유형이 늘어도 관리 포인트는 AD 그룹으로 수렴' },
       { value: 'Device → User 전환', label: 'USB Device ID 개별 등록·관리 업무를 사용자 기반 예외 관리로 축소' },
-      { value: '자동 부여 · 자동 회수', label: '승인 이력 기반으로 권한이 자동 부여되고 만료 시 자동 회수' },
+      { value: '수동 등록 → 자동 반영', label: '관리자 콘솔의 개별 승인 등록 작업을 AD 그룹 멤버십 기반 자동 반영으로 전환' },
     ]},
     { type: 'heading', text: '회고' },
-    { type: 'text', content: 'USB DLP에서 먼저 검증한 상태 머신·자동화 패턴을 방화벽에 재적용하면서, 두 번째 시스템부터는 설계 리스크가 눈에 띄게 줄어드는 것을 확인했습니다. 상태값 명칭이나 테이블 구조처럼 세부적인 부분은 시스템 특성에 맞게 조정이 필요했지만, AD 그룹을 축으로 신청→승인→반영→회수를 잇는 큰 골격은 그대로 재사용할 수 있었습니다. 이는 권한 관리 영역이 앞으로 더 늘어나더라도 동일 패턴을 다시 재사용할 수 있다는 가능성을 보여줍니다.' },
+    { type: 'text', content: 'USB DLP에서 먼저 검증한 상태 머신·자동화 패턴을 방화벽, 이어서 보안 솔루션 접근 통제까지 재적용하면서, 시스템이 하나씩 늘어날수록 설계 리스크가 눈에 띄게 줄어드는 것을 확인했습니다. 상태값 명칭이나 반영 방식처럼 세부적인 부분은 시스템 특성에 맞게 조정이 필요했지만, AD 그룹을 축으로 신청→승인→반영→회수를 잇는 큰 골격은 그대로 재사용할 수 있었습니다. 이는 권한 관리 영역이 앞으로 더 늘어나더라도 동일 패턴을 다시 재사용할 수 있다는 가능성을 보여줍니다.' },
   ]),
 ];
 
@@ -1926,14 +1959,21 @@ projectDocuments[3] = [
     { type: 'heading', text: '시스템 아키텍처' },
     { type: 'architecture', image: '../etc/Images/paloalto.png' },
     { type: 'text', content: 'NAC과 연동해 미등록 디바이스의 네트워크 접근을 차단하고, 업무 목적별로 분류·표준화된 방화벽 정책을 반영하는 구조입니다.' },
-    { type: 'heading', text: '상세 설계' },
+    { type: 'heading', text: '설계 의도' },
+    { type: 'why', items: [
+      { title: '가시성 확보', desc: '방화벽 정책 현황을 체계적으로 파악 가능하도록 표준화' },
+      { title: '최소 권한', desc: '과도하게 허용된 정책을 점진적으로 축소해 공격 표면 감소' },
+    ]},
+  ]),
+  mkDoc(3, '04', [
+    { type: 'heading', text: '구현 내용' },
     { type: 'list', items: [
       '방화벽 정책을 업무 목적별로 분류하고 명명 규칙 표준화',
       'NAC 연동으로 미등록 디바이스의 네트워크 접근 차단',
       '정책 변경 시 승인 절차와 변경 이력 관리 체계 수립',
       '불필요한 Any-Any 정책을 세분화하여 최소 권한 원칙 적용',
     ]},
-    { type: 'heading', text: '보안 설계' },
+    { type: 'heading', text: '보안 설계 체크' },
     { type: 'checklist', items: [
       '방화벽 정책 현황을 체계적으로 파악 가능하도록 표준화',
       '과도하게 허용된 Any-Any 정책을 점진적으로 축소',
@@ -2037,74 +2077,129 @@ projectDocuments[5] = [
 projectDocuments[6] = [
   mkDoc(6, '01', [
     { type: 'metaTable', rows: [
-      ['문서명', '자산 관리 업무 자동화 — 관리문서'],
-      ['프로젝트명', '자산 관리 업무 자동화'],
+      ['문서명', 'Power Automate 기반 IT 업무 자동화 체계 — 관리문서'],
+      ['프로젝트명', 'Power Automate 기반 IT 업무 자동화 체계 구축'],
       ['문서번호', 'INF-AU-006'],
       ['작성자', '이준석'],
       ['프로젝트 상태', 'In Progress'],
       ['프로젝트 기간', '2024.11 ~ 2025.02'],
-      ['관련 기술', 'Power Automate · Microsoft Forms · Power Automate Desktop · Unattended RPA · SharePoint'],
+      ['관련 기술', 'Power Automate · Microsoft Forms · Approval · SharePoint · Teams · Power Automate Desktop · Unattended RPA'],
     ]},
-    { type: 'text', content: 'Power Automate·Forms·PAD를 연계해 자산 관리 업무를 자동화하고, 인쇄 환경 자동화·Forms 기반 프로세스 자동화까지 아우르는 대표 Automation 프로젝트입니다.' },
+    { type: 'text', content: 'Power Automate를 중심으로 Microsoft Forms, Approval, SharePoint, Teams, Power Automate Desktop을 연계하여 반복적인 IT 업무를 자동화했습니다. Power Automate를 단순 알림 도구가 아니라 업무 전체를 연결하는 Workflow Orchestrator로 활용한 것이 이 프로젝트의 핵심입니다.' },
     { type: 'heading', text: '추진 배경' },
-    { type: 'text', content: '자산 수령·반납 처리와 AD 계정 등록·해제를 매번 수동으로 처리하면서 시간이 많이 들었고, 휴먼에러로 처리가 누락되는 경우가 있었습니다. 신규 PC를 배포할 때마다 프린터 드라이버와 설정도 담당자가 수작업으로 맞추다 보니 PC별로 인쇄 환경이 제각각이었습니다. 또한 AD, 보안그룹, 홈페이지 접근권한 등 수정이 필요한 요청들이 각기 다른 양식으로 접수되고 있어, 처리 기준이 일관되지 않고 대응이 느렸습니다.' },
+    { type: 'text', content: '기존에는 자산 신청·반납, AD 계정 처리, 인턴 정책 해제, 인사 업데이트 반영 등 각종 IT 업무가 담당자의 수작업에 의존하고 있어 처리 누락과 업무 편차가 발생했습니다. 특히 인사 관련 입·퇴사 안내 메일도 사람이 직접 확인하고 다시 작업으로 옮기는 과정을 반복해야 했습니다.' },
     { type: 'heading', text: '현황 및 문제점' },
-    { type: 'flow', steps: ['수작업 처리 (AS-IS)', '휴먼에러 · 인쇄환경 편차 · 요청 창구 분산 (문제)', '처리 지연 · 관리 부담 누적 (영향)'] },
+    { type: 'flow', steps: ['수작업 요청·확인 (AS-IS)', '처리 누락 · 업무 편차 · 요청 창구 분산 (문제)', '처리 지연 · 관리 부담 누적 (영향)'] },
   ]),
   mkDoc(6, '02', [
-    { type: 'table', headers: ['요구사항', '관련 영역'], rows: [
-      ['자산 신청·반납 요청 접수 프로세스 표준화', '자산 관리'],
-      ['승인 라우팅 및 알림 자동화', '자산 관리'],
-      ['담당자 PC 상태와 무관하게 동작하는 무인 실행 환경', 'PAD 인쇄 환경'],
-      ['신규 PC 배포 시 표준 인쇄 환경 자동 적용', 'PAD 인쇄 환경'],
-      ['부서별 신청서를 단일 양식으로 표준화', 'Forms 프로세스 자동화'],
+    { type: 'table', headers: ['영역', '활용 기술', '역할'], rows: [
+      ['요청 접수', 'Microsoft Forms', '업무 요청 표준화'],
+      ['Workflow', 'Power Automate', '전체 업무 흐름 제어'],
+      ['승인', 'Approval', '승인 기반 업무 처리'],
+      ['업무 실행', 'PAD / Unattended RPA', 'PC·레거시 작업 자동 실행'],
+      ['결과 관리', 'SharePoint', '요청 및 처리 결과 이력화'],
+      ['알림', 'Teams', '처리 결과 및 예외 상황 공유'],
     ]},
     { type: 'heading', text: '목표 및 범위' },
-    { type: 'text', content: '수기·개별 방식으로 처리하던 자산·인쇄환경·수정요청 업무를 Forms-Power Automate-PAD로 이어지는 하나의 자동화 흐름으로 통합하는 것을 목표로 합니다.' },
+    { type: 'text', content: '요청 접수 → 승인 → 실제 작업 → 결과 기록 → 알림으로 이어지는 하나의 자동화 프로세스로 IT 업무를 전환하는 것을 목표로 합니다. 인턴 정책 해제, 인사 업데이트, 자산 관리를 대표 사례로 다루고, Power Automate를 축으로 향후 자동화 대상을 계속 확장할 수 있는 구조를 지향합니다.' },
   ]),
   mkDoc(6, '03', [
-    { type: 'heading', text: '자산 관리 자동화 — 아키텍처' },
+    { type: 'heading', text: '전체 자동화 구조' },
+    { type: 'flow', steps: ['사용자 요청 / 인사 메일', 'Microsoft Forms', 'Power Automate', 'Approval'] },
+    { type: 'process', steps: ['Approval', 'PAD 실행'] },
+    { type: 'process', steps: ['Approval', 'SharePoint (처리 이력)'] },
+    { type: 'flow', steps: ['PAD 실행 / SharePoint', 'Teams 알림'] },
+    { type: 'heading', text: '① 인턴 정책 해제 요청 자동 처리' },
+    { type: 'flow', steps: ['정책 해제 요청', 'Power Automate', '승인 요청'] },
+    { type: 'process', steps: ['승인', '대상 PC Disabled', 'SharePoint 결과 기록', 'Teams 알림'] },
+    { type: 'process', steps: ['반려', '처리 종료'] },
+    { type: 'list', items: [
+      '요청 발생을 Trigger로 Flow 실행',
+      '승인자에게 Approval 요청, 승인/반려 결과에 따른 조건 분기',
+      '승인된 요청에 대해서만 후속 작업(대상 PC Disabled) 실행',
+      '처리 결과 SharePoint 반영, 완료 결과 Teams 알림 연계',
+    ]},
+    { type: 'heading', text: '② 인사 업데이트 메일 자동 처리' },
+    { type: 'flow', steps: ['인사 업데이트 메일 수신', 'Power Automate Trigger', '메일 분석', '필요한 작업 생성', 'SharePoint 등록', '처리 결과 공유'] },
+    { type: 'list', items: [
+      'Outlook 메일 수신을 자동화 Trigger로 활용',
+      '입사/퇴사 안내 메일의 내용 기반으로 처리 대상 판단',
+      '필요한 작업을 SharePoint에 자동 생성하고 처리 상태를 중앙에서 관리',
+    ]},
+    { type: 'heading', text: 'Power Automate에서 직접 다룬 핵심 요소' },
+    { type: 'table', headers: ['요소', '역할'], rows: [
+      ['Trigger', '메일 수신 / 요청 발생 감지'],
+      ['Condition', '승인 여부 / 처리 대상 여부 판단'],
+      ['Approval', '담당자 승인 프로세스'],
+      ['Dynamic Content', '이전 단계에서 전달받은 데이터를 다음 단계에 활용'],
+      ['SharePoint Connector', '요청·처리 결과 저장'],
+      ['Teams Connector', '처리 결과 및 예외 상황 알림'],
+      ['Flow Run History', '실행 결과 및 실패 단계 확인'],
+    ]},
+    { type: 'heading', text: '자산 관리 자동화' },
     { type: 'architecture', image: '../etc/Images/ASSET AUTOMATE.png' },
     { type: 'list', items: [
       'Forms로 자산 신청·반납 요청 접수 프로세스 표준화',
       'Power Automate로 승인 라우팅 및 알림 자동화',
       'PAD로 반복적인 자산 대장 갱신 작업 자동화',
-      '자산 현황 대시보드 연동으로 실시간 현황 파악 가능하도록 구성',
     ]},
-    { type: 'heading', text: 'PAD 인쇄 환경 자동화 — 아키텍처' },
-    { type: 'architecture', image: '../etc/Images/PAD Printing.png' },
+    { type: 'heading', text: 'Power Automate → PAD로 확장되는 자동화' },
+    { type: 'flow', steps: ['Power Automate (업무 흐름 / 승인 / 데이터 처리)', 'PAD (실제 PC 조작)', 'PC / 레거시 업무'] },
     { type: 'list', items: [
-      '반복적인 프린터 드라이버·설정 배포 작업을 PAD로 자동화',
-      'Unattended 모드로 야간 배치 실행 스케줄 구성',
-      '오류 발생 시 자동 재시도 및 알림 로직 설계',
-      '신규 PC 배포 시 표준 인쇄 환경 자동 적용 프로세스 구성',
+      '자산 관리 — 반복적인 자산 대장 갱신, PC 관련 데이터 처리',
+      '무인 실행 — 담당자 PC에 의존하는 기존 실행 방식의 한계를 개선한 Unattended RPA 환경, 야간 배치 실행',
     ]},
-    { type: 'heading', text: 'Forms 기반 프로세스 자동화 — 설계' },
-    { type: 'list', items: [
-      '부서별 신청서를 Forms로 표준화하여 데이터 수집 방식 통일',
-      'Power Automate로 승인자 라우팅 및 알림 자동화',
-      '승인 완료 데이터를 SharePoint 리스트에 자동 적재',
-      '처리 현황을 대시보드로 시각화해 진행 상태 추적 가능하도록 구성',
+    { type: 'text', content: '핵심 설계는 세 줄로 요약됩니다 — Power Automate는 업무 흐름 제어, PAD는 실제 PC 작업 수행, Unattended는 사용자 개입 없는 실행 환경.' },
+  ]),
+  mkDoc(6, '04', [
+    { type: 'heading', text: '실제 운영에서 확인한 문제' },
+    { type: 'text', content: 'Flow 구성뿐 아니라 실제 실행 과정에서 발생하는 Connector 권한, Connection, Dynamic Input 관련 오류를 Flow Run History를 기준으로 확인하고 원인을 추적했습니다.' },
+    { type: 'heading', text: 'Troubleshooting' },
+    { type: 'table', headers: ['오류', '확인 방법'], rows: [
+      ['Invalid Connection', '연결 상태 및 인증 확인'],
+      ['Unauthorized', 'Connector 계정 권한 확인'],
+      ['Dynamic Inputs Error', '이전 단계 출력값 및 입력 파라미터 확인'],
     ]},
+    { type: 'heading', text: 'Flow 구조 3단' },
+    { type: 'process', steps: ['① Trigger — 업무 이벤트 발생 시 자동 실행', '② Process — 조건 확인 → 승인 → 후속 작업', '③ Result — 처리 결과 이력화 → 알림'] },
+    { type: 'text', content: 'SharePoint 또는 메일 등 업무 이벤트가 발생하면 자동으로 Flow가 실행되어 기존 수작업 확인 단계를 제거하고, 조건에 따라 처리 대상을 판단해 Approval을 거친 뒤 Branch 처리로 후속 자동화를 실행합니다. 결과는 성공/실패 여부를 확인해 SharePoint에 기록하고 Teams로 공유합니다.' },
   ]),
   mkDoc(6, '05', [
     { type: 'heading', text: '주요 이슈 및 해결' },
-    { type: 'issue', problem: 'AD를 다루는 과정이 필요해 PAD(프리미엄 라이선스)를 사용했는데, 담당자 PC가 꺼져 있으면 플로우가 동작하지 않았음', resolution: 'Unattended 라이선스를 도입해 사용자 PC 상태와 무관하게 실행되는 무인 환경을 구축' },
+    { type: 'issue', problem: 'AD를 다루는 과정이 필요해 PAD(프리미엄 라이선스)를 사용했는데, 담당자 PC가 꺼져 있으면 Flow가 동작하지 않았음', resolution: 'Unattended 라이선스를 도입해 사용자 PC 상태와 무관하게 실행되는 무인 환경을 구축' },
     { type: 'issue', problem: '서로 다른 형태의 요청을 하나의 플랫폼으로 통합해야 했음', resolution: 'Forms 기반 단일 신청 양식으로 통일하고, 승인자 라우팅과 SharePoint 리스트 자동 적재까지 연계' },
+    { type: 'issue', problem: '실제 운영 과정에서 Connector 권한(Unauthorized), Invalid Connection, Dynamic Input 오류가 발생', resolution: 'Flow Run History로 실패 단계를 추적해 Connector 계정 권한, 연결 상태·인증, 이전 단계 출력값을 각각 확인하는 방식으로 원인을 분리해 대응' },
     { type: 'heading', text: '주요 의사결정' },
-    { type: 'decisionSimple', title: '효율성', desc: '수기로 관리하던 자산 대장을 자동화해 처리 시간 단축' },
+    { type: 'decisionSimple', title: 'Workflow Orchestrator', desc: 'Power Automate를 단순 알림 도구가 아니라 업무 전체(요청-승인-실행-기록-알림)를 연결하는 축으로 설계' },
+    { type: 'decisionSimple', title: '효율성', desc: '수기로 처리하던 반복 업무를 자동화해 처리 시간 단축' },
     { type: 'decisionSimple', title: '정확성', desc: '승인 누락·중복 신청 등 휴먼 에러 최소화' },
-    { type: 'decisionSimple', title: '표준화', desc: '수작업 설정 편차를 없애고 전사 동일한 인쇄 환경 확보' },
   ]),
   mkDoc(6, '06', [
-    { type: 'metric', items: [
-      { value: 'AD 직접 수정 → 승인 기반 처리', label: '처리 방식 전환' },
-      { value: '24/7', label: '무인 자동 실행 (자산 대장·인쇄 환경 배포)' },
-      { value: '개별 요청 방식 → 단일 폼', label: '요청 창구 통합' },
-      { value: '실시간 추적', label: '처리 현황 대시보드 시각화' },
+    { type: 'heading', text: '현재 구현 현황' },
+    { type: 'table', headers: ['자동화', '내용'], rows: [
+      ['인턴 정책 해제', '요청 → 승인 → PC Disabled → 결과 반영 → Teams 알림'],
+      ['인사 업데이트', '메일 분석 → SharePoint 작업 생성 → 결과 공유'],
+      ['자산 관리', '신청/반납 → 승인 → 처리 → 이력 관리'],
+      ['Forms 프로세스', '요청 표준화 → 승인 → SharePoint 적재'],
+    ]},
+    { type: 'heading', text: '향후 자동화 대상' },
+    { type: 'list', items: [
+      'AD — 반복적인 계정/그룹 관련 요청, 단순 권한 변경 업무',
+      'Mail — 반복적인 안내 메일 분석, 메일 기반 업무 생성',
+      'Teams — 처리 결과 자동 알림, 예외/실패 상황 공유',
+      'IT 요청 — 반복성이 높은 요청 자동 처리, 요청 유형별 Workflow 분리',
+    ]},
+    { type: 'heading', text: 'Before / After' },
+    { type: 'table', headers: ['Before', 'After'], rows: [
+      ['수작업 요청', '자동 Trigger'],
+      ['담당자 판단', 'Approval 기반 처리'],
+      ['PC 직접 조작', 'PAD 자동 실행'],
+      ['처리 결과 개별 확인', 'SharePoint 이력화'],
+      ['담당자에게 별도 전달', 'Teams 자동 알림'],
+      ['담당자 PC 의존', 'Unattended 실행'],
     ]},
     { type: 'heading', text: '회고' },
-    { type: 'text', content: '이 프로젝트에서 제일 크게 배운 건, 자동화가 막히는 지점은 대부분 기술이 아니라 전제 조건이라는 점이었습니다. PAD 프리미엄 라이선스로는 담당자 PC가 꺼져 있으면 그만이었고, 이 문제는 코드를 더 잘 짠다고 풀리는 게 아니라 Unattended 라이선스라는 실행 환경 자체를 바꿔야 풀리는 문제였습니다. Forms 기반 프로세스 자동화도 마찬가지로, 승인 로직을 정교하게 짜기 전에 흩어져 있던 요청 양식부터 하나로 통일하는 게 먼저였습니다. 자동화는 도구를 얼마나 잘 다루는가보다, 그 앞단의 프로세스를 얼마나 단순하고 일관되게 정리해두는가에 더 좌우된다는 걸 확인한 프로젝트였습니다.' },
+    { type: 'text', content: '이 프로젝트에서 제일 크게 배운 건, 자동화가 막히는 지점은 대부분 기술이 아니라 전제 조건이라는 점이었습니다. PAD 프리미엄 라이선스로는 담당자 PC가 꺼져 있으면 그만이었고, 이 문제는 코드를 더 잘 짠다고 풀리는 게 아니라 Unattended 라이선스라는 실행 환경 자체를 바꿔야 풀리는 문제였습니다. 서로 다른 형태의 요청들을 Forms 하나로 통일한 것도 마찬가지로, 승인 로직을 정교하게 짜기 전에 입력 자체를 하나로 모으는 게 먼저였습니다. 그리고 Flow를 만들고 나서야 진짜 배움이 시작됐습니다 — Invalid Connection, Unauthorized, Dynamic Input 오류를 Flow Run History로 하나씩 추적하면서, 자동화는 한 번 만들면 끝이 아니라 계속 운영하고 디버깅해야 하는 살아있는 시스템이라는 걸 체감했습니다.' },
   ]),
 ];
 
@@ -2419,6 +2514,308 @@ Live Audit Log
   ]),
 ];
 
+/* ── #8 · Purview DLP 정보보호 정책 구축 (5개 문서) ── */
+projectDocuments[8] = [
+  mkDoc(8, '01', [
+    { type: 'metaTable', rows: [
+      ['문서명', '정보보호 정책 및 데이터 보호 체계 구축 — 관리문서'],
+      ['프로젝트명', '정보보호 정책 및 데이터 보호 체계 구축'],
+      ['문서번호', 'SEC-DLP-008'],
+      ['작성자', '이준석'],
+      ['프로젝트 상태', 'Completed'],
+      ['프로젝트 기간', '2025.08'],
+      ['관련 기술', 'Microsoft Purview · DLP · Compliance Manager'],
+    ]},
+    { type: 'text', content: 'DLP 및 Microsoft Purview 정책을 표준화하여 정보보호 체계를 강화한 프로젝트입니다.' },
+    { type: 'heading', text: '추진 배경' },
+    { type: 'text', content: '부서마다 문서 보안 기준이 달라 동일한 민감도의 문서라도 보호 수준이 일관되지 않았고, 외부로 유출될 수 있는 경로에 대한 체계적인 통제가 부족했습니다.' },
+    { type: 'heading', text: '현황 및 문제점' },
+    { type: 'flow', steps: ['부서별 상이한 문서 보안 기준 (AS-IS)', '외부 유출 경로 통제 부재 (문제)', '동일 민감도 문서도 보호 수준 불일치 (영향)'] },
+  ]),
+  mkDoc(8, '02', [
+    { type: 'table', headers: ['요구사항', '관련 영역'], rows: [
+      ['문서 민감도에 따른 자동 분류 규칙 필요', '라벨링'],
+      ['부서별 외부 공유·다운로드 통제 정책 필요', 'DLP 정책'],
+      ['규정 준수 현황을 지속적으로 추적할 수 있는 체계 필요', 'Compliance'],
+      ['정책 적용 전 업무 영향도를 사전에 검증할 수 있는 절차 필요', '리스크 관리'],
+    ]},
+    { type: 'heading', text: '목표 및 범위' },
+    { type: 'text', content: '기밀 문서의 외부 유출 경로를 사전에 차단하되, 과도한 차단으로 업무가 방해받지 않도록 단계적으로 적용하는 것을 목표로 합니다.' },
+  ]),
+  mkDoc(8, '03', [
+    { type: 'heading', text: '시스템 아키텍처' },
+    { type: 'architecture', image: '../etc/Images/DLP.png' },
+    { type: 'heading', text: '설계 의도' },
+    { type: 'why', items: [
+      { title: '리스크 최소화', desc: '기밀 문서 외부 유출 경로를 사전에 차단' },
+      { title: '업무 연속성', desc: '과도한 차단으로 인한 업무 방해를 최소화하도록 단계적 적용' },
+    ]},
+    { type: 'heading', text: '라벨링 및 정책 구조' },
+    { type: 'list', items: [
+      '문서 민감도 라벨링 체계 및 자동 분류 규칙 설계',
+      '부서별 DLP 정책(외부 공유 차단, 다운로드 제한) 수립',
+    ]},
+  ]),
+  mkDoc(8, '04', [
+    { type: 'text', content: '민감도 라벨링과 부서별 DLP 정책을 실제 적용하기에 앞서, Compliance Manager로 규정 준수 현황을 추적할 수 있는 체계를 먼저 구성했습니다.' },
+    { type: 'list', items: [
+      '문서 민감도 라벨링 체계 및 자동 분류 규칙 적용',
+      '부서별 DLP 정책(외부 공유 차단, 다운로드 제한) 수립',
+      'Compliance Manager로 규정 준수 현황 추적 체계 구성',
+      '정책 적용 전 Simulation 모드로 영향도 사전 검증',
+    ]},
+    { type: 'heading', text: '검증' },
+    { type: 'text', content: '정책을 전면 적용하기 전에 Simulation 모드로 먼저 돌려 실제 차단될 문서·사용자 범위를 확인한 뒤, 부서별로 단계적으로 정책을 적용했습니다.' },
+  ]),
+  mkDoc(8, '05', [
+    { type: 'heading', text: '주요 이슈 및 해결' },
+    { type: 'issue', problem: '정책을 한 번에 전면 적용하면 부서 업무에 차질이 생길 위험이 있었음', resolution: 'Simulation 모드로 영향도를 사전 검증한 뒤 부서별로 단계적으로 정책을 적용' },
+    { type: 'heading', text: '주요 의사결정' },
+    { type: 'decisionSimple', title: '리스크 최소화', desc: '기밀 문서 외부 유출 경로를 사전에 차단' },
+    { type: 'decisionSimple', title: '업무 연속성', desc: '과도한 차단으로 인한 업무 방해를 최소화하도록 단계적 적용' },
+  ]),
+  mkDoc(8, '06', [
+    { type: 'heading', text: '결과' },
+    { type: 'text', content: 'Simulation 모드로 사전 검증을 거쳐 부서별로 단계적으로 정책을 적용하는 방식으로 프로젝트를 완료했습니다.' },
+    { type: 'tags', items: ['Purview', 'DLP', 'Data Classification'] },
+  ]),
+];
+
+/* ── #10 · 데이터 관리 및 거버넌스 체계 설계 (3개 문서) ── */
+projectDocuments[10] = [
+  mkDoc(10, '01', [
+    { type: 'metaTable', rows: [
+      ['문서명', '데이터 관리 및 거버넌스 체계 설계 — 관리문서'],
+      ['프로젝트명', '데이터 관리 및 거버넌스 체계 설계'],
+      ['문서번호', 'DATA-GOV-010'],
+      ['작성자', '이준석'],
+      ['프로젝트 상태', 'In Progress'],
+      ['프로젝트 기간', '2026.03 ~'],
+      ['관련 기술', 'Microsoft Purview · Data Catalog · Azure SQL'],
+    ]},
+    { type: 'text', content: '전사 데이터 자산을 분류하고 거버넌스 체계를 수립하는 설계 프로젝트입니다.' },
+    { type: 'heading', text: '추진 배경' },
+    { type: 'text', content: '전사 데이터 자산이 어디에 있고 어떻게 흐르는지 명확히 파악되지 않았고, 데이터별 책임 소유자도 지정되어 있지 않아 품질·보안 관리에 공백이 있었습니다.' },
+  ]),
+  mkDoc(10, '02', [
+    { type: 'table', headers: ['요구사항', '관련 영역'], rows: [
+      ['전사 데이터 자산을 도메인별로 분류할 수 있는 카탈로그 필요', 'Data Catalog'],
+      ['민감도 기반 데이터 분류 및 라벨링 규칙 필요', '분류 체계'],
+      ['데이터별 소유자·관리자 역할과 책임 정의 필요', '책임성'],
+      ['Azure SQL 데이터베이스의 흐름을 추적할 수 있는 체계 필요', 'Lineage'],
+    ]},
+    { type: 'heading', text: '목표 및 범위' },
+    { type: 'text', content: '흩어져 있던 데이터 자산의 소재와 흐름을 명확히 파악하고, 데이터별 소유자를 지정해 품질·보안 관리 책임을 명확히 하는 것을 목표로 합니다.' },
+  ]),
+  mkDoc(10, '03', [
+    { type: 'heading', text: '시스템 아키텍처' },
+    { type: 'architecture', image: '../etc/Images/Data Governance.png' },
+    { type: 'heading', text: '설계 의도' },
+    { type: 'why', items: [
+      { title: '가시성', desc: '흩어져 있던 데이터 자산의 소재와 흐름을 명확히 파악' },
+      { title: '책임성', desc: '데이터별 소유자를 지정해 품질·보안 관리 책임을 명확화' },
+    ]},
+    { type: 'heading', text: '설계 항목' },
+    { type: 'list', items: [
+      '전사 데이터 자산을 도메인별로 분류하는 데이터 카탈로그 설계',
+      '민감도 기반 데이터 분류 체계 및 라벨링 규칙 수립',
+      '데이터 소유자(Owner)·관리자(Steward) 역할 및 책임 정의',
+      'Azure SQL 데이터베이스의 계보(Lineage) 추적 체계 설계',
+    ]},
+    { type: 'text', content: '현재 설계 단계로, 실제 구축·적용은 이후 단계에서 진행될 예정입니다.' },
+  ]),
+];
+
+/* ── #11 · 기업 업무환경 및 클라우드 서비스 구축 (6개 문서) ── */
+projectDocuments[11] = [
+  mkDoc(11, '01', [
+    { type: 'metaTable', rows: [
+      ['문서명', '기업 업무환경 및 클라우드 서비스 구축 — 관리문서'],
+      ['프로젝트명', '기업 업무환경 및 클라우드 서비스 구축'],
+      ['문서번호', 'WP-M365-011'],
+      ['작성자', '이준석'],
+      ['프로젝트 상태', 'Completed'],
+      ['프로젝트 기간', '2024.12'],
+      ['관련 기술', 'SharePoint · Teams · M365'],
+    ]},
+    { type: 'text', content: 'SharePoint Online 기반 전사 인트라넷을 중심으로 Teams 연동 등 M365 협업 환경을 구축한 프로젝트입니다.' },
+    { type: 'heading', text: '추진 배경' },
+    { type: 'text', content: '공지사항, 문서함, 조직도 같은 사내 정보가 여러 채널에 흩어져 있어, 필요한 정보를 찾는 데 시간이 걸렸습니다. 또한 각 팀이 보유한 자료를 사내 업무지원 AI 플랫폼에서 활용하려면 라이선스에 포함된 기능을 팀별로 사용할 수 있도록 안내가 필요했습니다.' },
+    { type: 'heading', text: '현황 및 문제점' },
+    { type: 'flow', steps: ['사내 정보가 여러 채널에 분산 (AS-IS)', '필요 정보 탐색에 시간 소요 (문제)', '팀별 M365 기능 활용도 편차 (영향)'] },
+  ]),
+  mkDoc(11, '02', [
+    { type: 'table', headers: ['요구사항', '관련 영역'], rows: [
+      ['부서별 정보 구조와 권한 체계를 반영한 사이트 필요', '정보 구조(IA)'],
+      ['공지사항·문서함·조직도를 한 곳에서 볼 수 있는 허브 필요', '통합 허브'],
+      ['Teams와 연동한 협업 워크스페이스 접근성 확보', 'Teams 연동'],
+      ['필요한 문서를 빠르게 찾을 수 있는 검색 구조 필요', '검색 최적화'],
+    ]},
+    { type: 'heading', text: '목표 및 범위' },
+    { type: 'text', content: '분산돼 있던 사내 정보를 단일 진입점으로 통합하고, Teams 연동으로 문서 작업과 커뮤니케이션을 자연스럽게 연결하는 것을 목표로 합니다.' },
+  ]),
+  mkDoc(11, '03', [
+    { type: 'heading', text: '시스템 아키텍처' },
+    { type: 'architecture', image: '../etc/Images/SharePoint.png' },
+    { type: 'heading', text: '설계 의도' },
+    { type: 'why', items: [
+      { title: '접근성', desc: '분산돼 있던 사내 정보를 단일 진입점으로 통합' },
+      { title: '협업 강화', desc: 'Teams 연동으로 문서 작업과 커뮤니케이션을 자연스럽게 연결' },
+    ]},
+    { type: 'heading', text: '상세 설계' },
+    { type: 'list', items: [
+      '부서별 정보 구조(IA)와 권한 체계를 반영한 사이트 설계',
+      '공지사항·문서함·조직도를 통합한 허브 사이트 구성',
+      '검색 최적화를 위한 메타데이터 및 콘텐츠 유형 설계',
+    ]},
+  ]),
+  mkDoc(11, '04', [
+    { type: 'text', content: '허브 사이트 구성과 함께 Teams 연동을 통해 협업 워크스페이스 접근성을 확보했습니다. 이후 각 팀이 보유한 자료를 사내 업무지원 AI 플랫폼에서 실제로 활용할 수 있도록, 라이선스에 포함된 기능을 팀별로 안내하는 작업을 함께 진행했습니다.' },
+    { type: 'list', items: [
+      '허브 사이트에 부서별 정보 구조(IA)·권한 체계 적용',
+      'Teams와 연동해 협업 워크스페이스 접근성 확보',
+      '팀별 세션을 통해 SharePoint·M365 기능 활용법 안내',
+    ]},
+  ]),
+  mkDoc(11, '05', [
+    { type: 'heading', text: '주요 이슈 및 해결' },
+    { type: 'issue', problem: '팀마다 SharePoint 및 관련 기능 활용 수준 차이가 커서, 동일한 설명으로는 팀별 이해도 차이가 컸음', resolution: '각 팀을 대상으로 기능을 소개하고 사용법을 안내하는 세션을 진행해 라이선스에 포함된 기능을 실제로 활용할 수 있도록 지원' },
+  ]),
+  mkDoc(11, '06', [
+    { type: 'heading', text: '결과 및 성과' },
+    { type: 'metric', items: [
+      { value: '팀별 안내 진행', label: '부서 자료를 AI 플랫폼에서 활용 가능하도록 지원' },
+      { value: '기존 라이선스 활용', label: '추가 비용 없이 보유 기능 확산' },
+    ]},
+    { type: 'tags', items: ['SharePoint Online', 'Intranet', 'M365'] },
+  ]),
+];
+
+/* ── #12 · Logpresso → Sonar Lite V4.0 SIEM 마이그레이션 (6개 문서) ── */
+projectDocuments[12] = [
+  mkDoc(12, '01', [
+    { type: 'metaTable', rows: [
+      ['문서명', '보안 이벤트 통합 모니터링 및 대응 체계 고도화 — 관리문서'],
+      ['프로젝트명', 'Logpresso STD → Sonar Lite V4.0 마이그레이션'],
+      ['문서번호', 'INF-SIEM-012'],
+      ['작성자', '이준석'],
+      ['프로젝트 상태', 'Completed'],
+      ['프로젝트 기간', '2025.11 ~ 2025.12'],
+      ['관련 기술', 'Logpresso Sonar Lite V4.0 · Logpresso STD · Rocky Linux 9.6 · PowerShell'],
+    ]},
+    { type: 'text', content: 'Logpresso STD 환경을 차세대 플랫폼인 Sonar Lite V4.0으로 전환하고, 기존 대시보드 쿼리를 신규 버전에 맞게 재작성해 SIEM 기능을 고도화한 프로젝트입니다.' },
+    { type: 'heading', text: '추진 배경' },
+    { type: 'text', content: '기존 Logpresso STD 환경이 구버전이라 최신 SIEM 기능을 활용하기 어려웠고, 차세대 플랫폼인 Sonar Lite로 전환하려면 서버 OS 재설치부터 전 서버 센트리 재설치, 기존 대시보드·쿼리 이관까지 서비스 영향을 최소화하며 진행해야 하는 규모 있는 마이그레이션이었습니다.' },
+    { type: 'heading', text: '현황 및 문제점' },
+    { type: 'flow', steps: ['Logpresso STD 구버전 운영 (AS-IS)', '최신 SIEM 기능 활용 제약 (문제)', '전 서버 센트리·대시보드 이관 필요 (영향)'] },
+  ]),
+  mkDoc(12, '02', [
+    { type: 'table', headers: ['요구사항', '관련 영역'], rows: [
+      ['서버 OS를 Rocky Linux 8.7 → 9.6으로 재설치하는 전환 계획 필요', '마이그레이션 계획'],
+      ['전 서버(89 Windows + 2 Linux) 센트리 제거·재설치 자동화 필요', '센트리 전환'],
+      ['전환 기간 서비스 공백이 없어야 함', '무중단 운영'],
+      ['기존 대시보드·쿼리를 신규 버전 문법에 맞게 재구성 필요', '대시보드 이관'],
+    ]},
+    { type: 'heading', text: '목표 및 범위' },
+    { type: 'text', content: '기존 STD 환경의 설정값·쿼리·프로필을 신규 Sonar Lite V4.0 환경으로 이관하되, 서비스 공백 없이 전환하는 것을 목표로 합니다.' },
+    { type: 'heading', text: 'Scope In' },
+    { type: 'list', items: ['서버 OS 재설치 및 Sonar Lite V4.0 설치', '전 서버 센트리 제거·재설치', '기존 STD 설정값·쿼리·프로필 이관', '대시보드 재구성'] },
+  ]),
+  mkDoc(12, '03', [
+    { type: 'heading', text: '전환 전략' },
+    { type: 'flow', steps: ['점프 서버 3대 사전 테스트', '서버 OS 재설치 (Rocky Linux 9.6)', 'Sonar Lite V4.0 설치', 'STD 병행 운영 유지', '전 서버 센트리 재설치', '대시보드 재작성'] },
+    { type: 'text', content: '본 작업 전 점프 서버 3대에서 배치 스크립트를 먼저 테스트해 센트리 제거·재설치, 감사 정책 점검 기능을 검증한 뒤 전체 서버로 확대 적용하는 순서로 설계했습니다. 기존 STD 환경은 별도 포트로 병행 운영 대상으로 유지해, 신규 로그는 Sonar로 즉시 적재하면서 기존 로그는 STD에서 계속 조회할 수 있도록 했습니다.' },
+    { type: 'heading', text: '설계 의도' },
+    { type: 'why', items: [
+      { title: '서비스 영향 최소화', desc: '기존 STD와 신규 Sonar를 병행 운영하고, 센트리 재설치도 재부팅 없이 자동화 스크립트로 진행해 서비스 공백을 최소화' },
+      { title: '안전한 전환', desc: '본 작업 전 점프 서버에서 배치 스크립트를 사전 테스트해 리스크를 낮춘 뒤 전체 서버에 적용' },
+      { title: '데이터 무결성', desc: '대용량 기존 로그를 무리하게 마이그레이션하지 않고 병행 조회 가능한 구조로 유지해 데이터 손실 위험 회피' },
+    ]},
+  ]),
+  mkDoc(12, '04', [
+    { type: 'text', content: '점프 서버 3대에서 배치 스크립트로 센트리 제거·재설치와 감사 정책 점검을 먼저 검증한 뒤, 전 서버(89대 Windows + 2대 Linux)를 대상으로 기존 센트리를 제거하고 Sonar용 센트리를 재설치하는 자동화 배치를 실행했습니다.' },
+    { type: 'list', items: [
+      '서버 OS Rocky Linux 8.7 → 9.6 재설치',
+      '기존 STD 환경의 설정값·쿼리·프로필을 신규 환경으로 수동 이관',
+      '전 서버(91대) 대상 기존 센트리 제거 및 Sonar용 센트리 재설치 자동화 배치 실행',
+      '전환 후 기존 대시보드를 신규 버전 스키마·쿼리 문법에 맞게 직접 재작성',
+    ]},
+    { type: 'heading', text: '검증' },
+    { type: 'text', content: '센트리가 로컬에 로그를 저장하는 구조임을 사전에 확인해, 재설치 중에도 로그가 보존되고 재연결 후 중단 기간의 로그가 일괄 수집되는지를 검증했습니다. SNMP 기반으로 로그를 전송하는 시스템은 별도로 확인해 재설치 대상에서 제외하고 정상 수집 여부를 점검했습니다.' },
+  ]),
+  mkDoc(12, '05', [
+    { type: 'heading', text: '주요 이슈 및 해결' },
+    { type: 'issue', problem: '기존 STD에 적재된 로그는 데이터 용량이 매우 커서, 그대로 마이그레이션하면 서비스 운영에 영향을 줄 정도로 부하가 클 것으로 판단됨', resolution: '기존 로그 데이터는 마이그레이션하지 않고, STD 환경을 별도 포트로 병행 유지해 필요 시 기존 SIEM에서 조회 가능하도록 결정' },
+    { type: 'issue', problem: '전 서버(91대) 센트리를 제거·재설치하는 과정에서 로그 유실이나 알림 공백이 발생할 가능성이 있었음', resolution: '센트리가 로컬에 로그를 저장하는 구조임을 확인해 재설치 중에도 로그가 보존되고, 재연결 후 중단 기간의 로그가 일괄 수집되도록 설계. 재설치 기간의 일시적 Alert 중단은 외부 보안관제업체가 방화벽·엔드포인트 이벤트를 실시간 관제 중이므로 중요 이벤트 누락 가능성이 낮다고 판단하고 진행' },
+    { type: 'issue', problem: '센트리 설치 없이 SNMP로 로그를 전송하는 시스템들도 있어, 일괄 재설치 계획에서 누락될 수 있다는 점을 팀 리더가 별도로 짚어줌', resolution: 'SNMP 기반으로 로그를 전송하는 시스템 목록을 별도로 확인해 재설치 대상에서 제외하고 정상 수집 여부를 점검' },
+    { type: 'issue', problem: '전환 이후 기존에 구성해뒀던 대시보드들이 신규 버전의 쿼리 문법·스키마와 맞지 않아 그대로 쓸 수 없었음', resolution: '기존 대시보드의 쿼리를 신규 버전 문법에 맞게 직접 재작성하고, 관련 옵션도 신규 환경에 맞게 재구성' },
+    { type: 'heading', text: '주요 의사결정' },
+    { type: 'decisionSimple', title: '서비스 영향 최소화', desc: '기존 STD와 신규 Sonar를 병행 운영하고, 센트리 재설치도 재부팅 없이 자동화 스크립트로 진행' },
+    { type: 'decisionSimple', title: '데이터 무결성', desc: '대용량 기존 로그를 무리하게 마이그레이션하지 않고 병행 조회 가능한 구조로 유지' },
+  ]),
+  mkDoc(12, '06', [
+    { type: 'heading', text: '운영' },
+    { type: 'text', content: '전환 이후 신규 로그는 Sonar Lite V4.0으로 즉시 적재되고, 기존 로그는 병행 유지 중인 STD 환경에서 계속 조회할 수 있는 구조로 운영하고 있습니다.' },
+    { type: 'heading', text: '결과 및 성과' },
+    { type: 'metric', items: [
+      { value: 'STD → Sonar Lite V4.0', label: '서비스 공백 없이 병행 운영 방식으로 전환 완료' },
+      { value: '91대', label: '전 서버 센트리 재설치 (89 Windows + 2 Linux)' },
+      { value: '로그 유실 없음', label: '센트리 로컬 저장 구조로 재설치 기간에도 로그 보존' },
+      { value: '대시보드 재구성', label: '기존 대시보드 쿼리를 신규 버전에 맞게 직접 재작성' },
+    ]},
+    { type: 'heading', text: '회고' },
+    { type: 'text', content: '전 서버 센트리 재설치처럼 실패 시 영향 범위가 큰 작업일수록, 점프 서버에서의 사전 테스트가 실제로 리스크를 줄여준다는 것을 확인한 프로젝트였습니다. 대용량 로그를 무리하게 옮기기보다 병행 운영 구조로 남겨두는 선택이 데이터 손실 위험과 서비스 영향을 동시에 낮추는 현실적인 방법이었습니다.' },
+  ]),
+];
+
+/* ── #13 · Database 운영·성능·보안 개선 (4개 문서) ── */
+projectDocuments[13] = [
+  mkDoc(13, '01', [
+    { type: 'metaTable', rows: [
+      ['문서명', 'Database 운영·성능·보안 개선 — 관리문서'],
+      ['프로젝트명', 'Database 운영·성능·보안 개선'],
+      ['문서번호', 'DB-OPS-013'],
+      ['작성자', '이준석'],
+      ['프로젝트 상태', 'Completed'],
+      ['프로젝트 기간', '2025.06'],
+      ['관련 기술', 'MSSQL · SSMS · Linked Server'],
+    ]},
+    { type: 'text', content: 'MSSQL 서버 성능 튜닝과 보안 강화를 수행한 인프라 프로젝트입니다. Database 자체의 운영·성능·보안을 다루며, DB 접근제어·감사 체계는 별도 프로젝트인 "DB 접근제어 및 감사로그 관리체계 구축"에서 다룹니다.' },
+    { type: 'heading', text: '추진 배경' },
+    { type: 'text', content: '일부 쿼리에서 응답 지연이 발생하고 있었고, Linked Server 연결 계정에 필요 이상의 권한이 부여되어 있는 등 성능과 보안 두 측면에서 개선이 필요한 상태였습니다.' },
+  ]),
+  mkDoc(13, '02', [
+    { type: 'table', headers: ['요구사항', '관련 영역'], rows: [
+      ['지연이 발생하는 쿼리의 실행 계획을 분석하고 인덱스를 최적화해야 함', '성능'],
+      ['Linked Server 연결 구조를 점검하고 불필요한 연결을 정리해야 함', '보안'],
+      ['접근 계정 권한을 최소 권한 원칙에 따라 재정비해야 함', '보안'],
+      ['백업·유지보수 작업을 정기 스케줄로 자동화해야 함', '운영'],
+    ]},
+  ]),
+  mkDoc(13, '03', [
+    { type: 'heading', text: '설계 의도' },
+    { type: 'why', items: [
+      { title: '성능 개선', desc: '병목 쿼리를 개선해 응답 속도 단축' },
+      { title: '보안 강화', desc: '과도한 권한을 가진 연결 계정을 정리해 위험 최소화' },
+    ]},
+  ]),
+  mkDoc(13, '04', [
+    { type: 'heading', text: '구현 내용' },
+    { type: 'text', content: '실행 계획을 기준으로 지연이 발생하는 쿼리를 먼저 식별해 인덱스를 재구성하고, Linked Server 연결 구조를 점검해 실제로 쓰이지 않는 연결과 과도한 권한을 정리했습니다.' },
+    { type: 'list', items: [
+      '쿼리 실행 계획 분석을 통한 인덱스 최적화',
+      'Linked Server 연결 구조 점검 및 불필요 연결 정리',
+      '접근 계정 권한을 최소 권한 원칙에 따라 재정비',
+      '정기 백업·유지보수 작업(인덱스 재구성) 스케줄 자동화',
+    ]},
+  ]),
+  mkDoc(13, '06', [
+    { type: 'heading', text: '결과' },
+    { type: 'text', content: '병목 쿼리에 인덱스를 재구성해 응답 속도를 개선하고, Linked Server 연결 계정의 과도한 권한을 정리해 보안 리스크를 낮췄습니다. 이후 인덱스 재구성 등 유지보수 작업은 정기 스케줄로 자동화해 별도 수작업 없이 운영되도록 했습니다.' },
+    { type: 'tags', items: ['MSSQL', 'Performance Tuning', 'Database Security'] },
+  ]),
+];
+
 /* ══ 데이터가 얕은 프로젝트용 6챕터 문서 자동 생성 ══
    기존 tags/desc/detail 필드만 사용하고, 없는 정보는 만들어내지 않습니다.
    풍부한 프로젝트와 동일한 6챕터 체계를 공유 — 내용이 짧을 뿐 구조는 같습니다. */
@@ -2612,7 +3009,7 @@ function docnbSelectProject(id) {
   openDocModal(id);
 }
 
-/* ══ 프로젝트 갤러리 — 22개 프로젝트를 REPORT 표지 카드로 나열 ══
+/* ══ 프로젝트 갤러리 — 14개 프로젝트를 REPORT 표지 카드로 나열 ══
    각 카드를 클릭하면 그 프로젝트의 전체 관리문서가 보고서처럼 이어지는 문서 모달로 넘어간다. */
 function renderProjectGallery() {
   const list = docnbFilteredProjects();
