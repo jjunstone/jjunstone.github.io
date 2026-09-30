@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI DevOps Control Center | 이준석</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/static/pretendard.css">
+<style>
+  @font-face{
+    font-family:"KyoboHand";
+    src:url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307@1.1/KyoboHandwriting2023wsa.woff2") format("woff2");
+    font-weight:400; font-style:normal; font-display:swap;
+  }
+  :root{
+    --paper:#ead8aa; --paper-light:#f8e9c4; --paper-warm:#ddc48f;
+    --line:rgba(38,68,88,.18); --ink:#17130f; --ink-soft:#33291f;
+    --navy:#173c78; --navy-soft:#315b92; --maroon:#7c261f; --maroon-soft:#9a3a32;
+    --olive:#4e5533; --gold:#9a7729; --teal:#0f6656; --teal-soft:#e6f2ef;
+    --paper-shadow:rgba(44,28,9,.24);
+    --font-hand:"Pretendard","Noto Sans KR","Malgun Gothic",sans-serif;
+    --font-script:"Kalam","KyoboHand","Segoe Print",cursive;
+  }
+  *{box-sizing:border-box;letter-spacing:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;color:var(--ink);font-family:var(--font-hand);
+    background:radial-gradient(circle at 12% 10%,rgba(255,255,255,.34),transparent 30%),
+               linear-gradient(135deg,#c9a66b,#ead6a2 46%,#bd955b);
+    min-height:100vh;
+  }
+  a{color:inherit;text-decoration:none;}
+  ul{margin:0;padding:0;list-style:none;}
+  svg{display:block;}
+  ::selection{background:var(--gold);color:#fff;}
+  .icon{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+  .notebook{
+    position:relative;width:min(100%,1080px);margin:0 auto;
+    padding:64px 52px 56px 84px;overflow:hidden;
+    background:
+      radial-gradient(circle at 23% 18%,rgba(118,76,29,.13) 0 1px,transparent 1.6px) 0 0/38px 38px,
+      radial-gradient(circle at 78% 62%,rgba(70,46,22,.10) 0 1px,transparent 1.4px) 12px 4px/46px 46px,
+      repeating-linear-gradient(to bottom,transparent 0 35px,var(--line) 36px 37px),
+      linear-gradient(90deg,transparent 0 50px,rgba(112,82,39,.18) 51px 52px,transparent 53px),
+      linear-gradient(180deg,var(--paper-light),var(--paper) 45%,var(--paper-warm));
+    box-shadow:0 18px 42px var(--paper-shadow);
+  }
+  .notebook::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:
+      linear-gradient(90deg,rgba(83,53,22,.12),transparent 16%,transparent 84%,rgba(83,53,22,.08)),
+      radial-gradient(circle at 35% 9%,rgba(67,41,14,.12),transparent 2px),
+      radial-gradient(circle at 67% 71%,rgba(67,41,14,.11),transparent 2px);
+    mix-blend-mode:multiply;
+  }
+  .spiral{
+    position:absolute;left:0;top:0;bottom:0;width:42px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='42' height='40'%3E%3Cellipse cx='9' cy='20' rx='12' ry='9' fill='none' stroke='%23201510' stroke-width='4'/%3E%3Cellipse cx='9' cy='20' rx='7' ry='5' fill='none' stroke='%2382652f' stroke-width='2' opacity='.45'/%3E%3C/svg%3E");
+    background-repeat:repeat-y;background-size:42px 40px;
+    opacity:.9;filter:drop-shadow(1px 1px 1px rgba(0,0,0,.22));
+  }
+  main{position:relative;z-index:1;}
+
+  .header{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:36px;}
+  .home-link{
+    display:inline-block;font-family:var(--font-script);font-weight:700;font-size:.95rem;color:#fff;
+    background:var(--navy);padding:8px 16px;border-radius:20px;cursor:pointer;
+    box-shadow:0 3px 8px rgba(23,60,120,.3);transition:transform .2s,box-shadow .2s;
+  }
+  .home-link:hover{transform:translateY(-1px);box-shadow:0 5px 12px rgba(23,60,120,.4);}
+  .title-block{flex:1;}
+  .eyebrow{font-family:var(--font-script);font-weight:700;font-size:1.05rem;margin:0 0 8px;color:var(--teal);}
+  .main-title{font-family:var(--font-hand);font-size:2.6rem;line-height:1.05;margin:0;color:var(--ink);}
+  .subtitle{font-size:1.02rem;line-height:1.6;margin:14px 0 0;color:var(--ink-soft);max-width:640px;}
+  .badges{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
+  .badge{display:inline-block;padding:6px 12px;background:rgba(23,60,120,.08);border:1px solid var(--navy);border-radius:20px;font-size:.85rem;color:var(--navy);}
+  .badge.status-progress{background:rgba(15,102,86,.1);border-color:var(--teal);color:var(--teal);font-weight:700;}
+
+  section{margin-bottom:46px;}
+  .section-label{
+    font-family:var(--font-script);font-weight:700;font-size:1.15rem;margin:0 0 18px;color:var(--navy);
+    position:relative;display:inline-block;
+  }
+  .section-label::after{
+    content:"";position:absolute;left:-8px;right:-12px;bottom:-8px;height:6px;
+    background:linear-gradient(currentColor,currentColor) 0 2px/100% 2px no-repeat,
+               linear-gradient(currentColor,currentColor) 6px 6px/86% 2px no-repeat;
+    opacity:.9;transform:rotate(-1.3deg);
+  }
+  .lead-text{font-size:.98rem;line-height:1.75;color:var(--ink);margin:0 0 6px;}
+  .lead-text + .lead-text{margin-top:10px;}
+
+  /* 동기/문제 카드 */
+  .why-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:16px;}
+  .why-card{
+    border:1.6px solid var(--line);border-left:4px solid var(--maroon);border-radius:4px;
+    background:rgba(255,255,255,.5);padding:14px 16px;
+  }
+  .why-card b{display:block;color:var(--maroon);font-size:.92rem;margin-bottom:4px;}
+  .why-card span{font-size:.9rem;line-height:1.55;color:var(--ink-soft);}
+
+  /* 철학 - Observe...Audit 파이프라인 */
+  .pipeline{
+    display:flex;flex-wrap:wrap;gap:0;align-items:center;justify-content:center;
+    margin:18px 0 6px;
+  }
+  .pipeline-step{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    width:104px;height:74px;border:1.8px solid var(--navy);border-radius:6px;
+    background:rgba(23,60,120,.06);color:var(--navy);font-weight:700;font-size:.82rem;text-align:center;
+    padding:4px;
+  }
+  .pipeline-step.human{border-color:var(--maroon);color:var(--maroon);background:rgba(124,38,31,.06);}
+  .pipeline-arrow{color:var(--ink-soft);font-size:1.2rem;padding:0 6px;}
+
+  /* Deterministic / Judgment / Human 3열 */
+  .zone-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px;}
+  .zone-card{border:2px solid var(--ink);border-radius:4px;background:rgba(255,248,224,.15);padding:14px 16px;}
+  .zone-card.zone-det{border-color:var(--navy);}
+  .zone-card.zone-judge{border-color:var(--gold);}
+  .zone-card.zone-human{border-color:var(--maroon);}
+  .zone-title{font-family:var(--font-script);font-weight:700;font-size:1.02rem;margin:0 0 8px;}
+  .zone-det .zone-title{color:var(--navy);}
+  .zone-judge .zone-title{color:var(--gold);}
+  .zone-human .zone-title{color:var(--maroon);}
+  .zone-list{font-size:.86rem;line-height:1.55;color:var(--ink-soft);}
+  .zone-list li{margin-bottom:3px;padding-left:12px;position:relative;}
+  .zone-list li::before{content:"–";position:absolute;left:0;}
+
+  /* 아키텍처 흐름 */
+  .arch-flow{
+    display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;margin:18px 0 10px;
+  }
+  .arch-box{
+    padding:10px 14px;border:1.8px solid var(--ink);border-radius:6px;background:rgba(255,255,255,.55);
+    font-size:.88rem;font-weight:600;color:var(--ink);text-align:center;
+  }
+  .arch-arrow{color:var(--ink-soft);font-size:1.1rem;}
+
+  /* Agent 카드 */
+  .agent-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px;}
+  .agent-card{
+    border:1.6px solid var(--line);border-radius:6px;background:rgba(255,255,255,.5);
+    padding:14px 12px;text-align:center;
+  }
+  .agent-emoji{font-size:1.6rem;margin-bottom:6px;}
+  .agent-name{font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:4px;}
+  .agent-role{font-size:.78rem;color:var(--ink-soft);line-height:1.4;}
+
+  /* 로드맵 Phase */
+  .roadmap-list{display:flex;flex-direction:column;gap:10px;margin-top:16px;}
+  .phase-row{
+    display:grid;grid-template-columns:96px 1fr 110px;gap:14px;align-items:center;
+    border:1.6px solid var(--line);border-radius:6px;padding:12px 16px;background:rgba(255,255,255,.45);
+  }
+  .phase-row.done{border-left:5px solid var(--teal);}
+  .phase-row.active{border-left:5px solid var(--gold);background:rgba(154,119,41,.09);}
+  .phase-row.todo{border-left:5px solid var(--line);opacity:.72;}
+  .phase-num{font-family:var(--font-script);font-weight:700;font-size:.95rem;color:var(--ink-soft);}
+  .phase-body b{display:block;font-size:.92rem;color:var(--ink);margin-bottom:2px;}
+  .phase-body span{font-size:.82rem;color:var(--ink-soft);line-height:1.5;}
+  .phase-status{
+    text-align:center;font-size:.76rem;font-weight:700;padding:5px 10px;border-radius:20px;
+  }
+  .phase-status.st-done{background:rgba(15,102,86,.12);color:var(--teal);}
+  .phase-status.st-active{background:rgba(154,119,41,.15);color:var(--gold);}
+  .phase-status.st-todo{background:rgba(0,0,0,.05);color:var(--ink-soft);}
+
+  /* 기술 스택 */
+  .stack-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+  .stack-chip{
+    font-size:.85rem;padding:6px 14px;border-radius:20px;border:1.4px solid var(--navy);
+    color:var(--navy);background:rgba(23,60,120,.06);
+  }
+
+  /* 원칙 리스트 */
+  .principle-list{display:flex;flex-direction:column;gap:8px;margin-top:14px;}
+  .principle-item{
+    display:flex;gap:10px;align-items:flex-start;font-size:.92rem;line-height:1.6;color:var(--ink);
+  }
+  .principle-num{
+    flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--gold);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;margin-top:2px;
+  }
+
+  footer.quote{text-align:center;padding:0;margin:30px 0 0;}
+  footer.quote p{font-family:var(--font-script);font-size:1.3rem;line-height:1.3;margin:0;color:var(--ink-soft);}
+  footer.quote .underline{color:var(--teal);}
+
+  @media(max-width:900px){
+    .why-grid{grid-template-columns:1fr;}
+    .zone-grid{grid-template-columns:1fr;}
+    .agent-grid{grid-template-columns:repeat(2,1fr);}
+    .phase-row{grid-template-columns:1fr;text-align:left;}
+    .phase-status{justify-self:start;width:fit-content;}
+  }
+  @media(max-width:640px){
+    .notebook{padding:44px 22px 40px 56px;}
+    .main-title{font-size:1.9rem;}
+    .header{flex-direction:column;}
+    .pipeline-step{width:84px;height:64px;font-size:.72rem;}
+  }
+</style>
+</head>
+<body>
+<div class="notebook">
+  <div class="spiral" aria-hidden="true"></div>
+  <main>
+
+    <div class="header">
+      <div class="title-block">
+        <p class="eyebrow">Kubernetes 학습 프로젝트 · Devops Lab</p>
+        <h1 class="main-title">AI DevOps Control Center</h1>
+        <p class="subtitle">Kubernetes 기반 CI/CD 운영 환경을 AI Agent가 관찰·분석하고, 정책 검증과 사람의 승인을 거쳐 제한된 운영 작업을 수행하도록 설계하는 학습형 프로젝트입니다. 인프라·보안 운영 경험을 Cloud Platform Engineering / DevOps 역량으로 확장하기 위해 직접 구축하며 학습하고 있습니다.</p>
+        <div class="badges">
+          <span class="badge status-progress">● In Progress</span>
+          <span class="badge">Kubernetes</span>
+          <span class="badge">CI/CD</span>
+          <span class="badge">AI Agent</span>
+          <span class="badge">Harness Engineering</span>
+        </div>
+      </div>
+      <a class="home-link" href="../index.html">← 홈</a>
+    </div>
+
+    <section aria-label="motivation">
+      <h2 class="section-label">왜 이 프로젝트인가</h2>
+      <p class="lead-text">지금까지의 경력은 Windows Server·Active Directory·방화벽·보안 운영 등 엔터프라이즈 인프라 운영을 중심으로 쌓아왔습니다. Azure/M365 기반 자동화와 사내 AI·RAG 플랫폼 구축까지 경험했지만, Kubernetes·CI/CD·Container 같은 클라우드 네이티브 운영 경험은 상대적으로 부족했습니다.</p>
+      <p class="lead-text">동시에 AI를 다루는 방식에도 고민이 있었습니다. LLM을 단순히 호출해 요약하거나 코드를 작성하는 수준(Prompt Usage)과 사내 RAG를 구성하는 수준(Context Engineering)을 넘어, 실제 운영 프로세스 안에서 AI가 판단하고 도구를 호출하는 Agent / Harness Engineering까지 이해하고 싶었습니다.</p>
+      <div class="why-grid">
+        <div class="why-card"><b>기술 갭 해소</b><span>Kubernetes / Docker / CI/CD / Observability를 직접 구축하며 클라우드 네이티브 운영 구조를 체득</span></div>
+        <div class="why-card"><b>AI 역량의 증명</b><span>"AI를 붙였다"는 인상이 아니라 운영 시스템에 AI가 들어갈 올바른 위치를 설계했다는 근거를 남김</span></div>
+        <div class="why-card"><b>커리어 방향 전환</b><span>보안 운영 중심 경력을 Cloud Platform / DevOps / Automation 역량으로 확장하는 다리 역할</span></div>
+        <div class="why-card"><b>안전한 자동화 설계</b><span>반복 작업은 자동화하고, 판단이 필요한 부분에 AI를, 위험한 변경에는 사람 승인을 두는 구조를 실제로 구현</span></div>
+      </div>
+    </section>
+
+    <section aria-label="philosophy">
+      <h2 class="section-label">핵심 설계 철학</h2>
+      <p class="lead-text">AI에게 모든 것을 맡기지 않습니다. <b>AI는 해석하고, 시스템은 실행하며, 정책은 통제하고, 사람은 중요한 결정을 승인</b>하는 구조를 목표로 합니다.</p>
+      <div class="pipeline">
+        <div class="pipeline-step">Observe</div><span class="pipeline-arrow">→</span>
+        <div class="pipeline-step">Understand</div><span class="pipeline-arrow">→</span>
+        <div class="pipeline-step">Recommend</div><span class="pipeline-arrow">→</span>
+        <div class="pipeline-step">Policy<br>Check</div><span class="pipeline-arrow">→</span>
+        <div class="pipeline-step human">Human<br>Approval</div><span class="pipeline-arrow">→</span>
+        <div class="pipeline-step">Execute</div><span class="pipeline-arrow">→</span>
+        <div class="pipeline-step">Verify</div><span class="pipeline-arrow">→</span>
+        <div class="pipeline-step">Audit</div>
+      </div>
+      <div class="zone-grid">
+        <div class="zone-card zone-det">
+          <div class="zone-title">Deterministic</div>
+          <ul class="zone-list">
+            <li>Docker Build / Unit Test / Lint</li>
+            <li>Kubernetes API 호출 / Rollback</li>
+            <li>Log · Metrics Collection</li>
+            <li>Health Check</li>
+          </ul>
+        </div>
+        <div class="zone-card zone-judge">
+          <div class="zone-title">Judgment (Agent)</div>
+          <ul class="zone-list">
+            <li>장애 원인 분석 · 로그 패턴 해석</li>
+            <li>위험도·영향도 판단</li>
+            <li>조치안 추천 · 우선순위 제안</li>
+            <li>여러 정보의 종합</li>
+          </ul>
+        </div>
+        <div class="zone-card zone-human">
+          <div class="zone-title">Human</div>
+          <ul class="zone-list">
+            <li>Production 변경 / Rollback</li>
+            <li>Replica 수 증가</li>
+            <li>Configuration / 권한 변경</li>
+            <li>보안 정책 변경</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section aria-label="architecture">
+      <h2 class="section-label">시스템 흐름</h2>
+      <div class="arch-flow">
+        <span class="arch-box">Git Push</span><span class="arch-arrow">→</span>
+        <span class="arch-box">CI/CD<br>(Build·Test·Scan)</span><span class="arch-arrow">→</span>
+        <span class="arch-box">Docker Image<br>Registry</span><span class="arch-arrow">→</span>
+        <span class="arch-box">Kubernetes<br>Deploy·Scale</span><span class="arch-arrow">→</span>
+        <span class="arch-box">Monitoring<br>(Prometheus/Grafana)</span><span class="arch-arrow">→</span>
+        <span class="arch-box">AI Agent Layer</span><span class="arch-arrow">→</span>
+        <span class="arch-box">Harness<br>(Policy·Approval)</span>
+      </div>
+      <p class="lead-text" style="text-align:center;margin-top:14px;">Kubernetes는 단순 Dashboard가 아니라 Desired State를 스스로 유지하는 실행 플랫폼이며, Harness는 Agent가 무엇을 보고 실행할 수 있는지, 어떤 검증을 거쳐야 하는지를 설계하는 통제 계층입니다.</p>
+    </section>
+
+    <section aria-label="agents">
+      <h2 class="section-label">Multi-Agent 구성</h2>
+      <div class="agent-grid">
+        <div class="agent-card"><div class="agent-emoji">🛰️</div><div class="agent-name">K8s Ops Agent</div><div class="agent-role">Pod·Deployment 상태 관찰 및 이상 감지</div></div>
+        <div class="agent-card"><div class="agent-emoji">🛡️</div><div class="agent-name">Security Agent</div><div class="agent-role">이미지 스캔 및 취약점 분석</div></div>
+        <div class="agent-card"><div class="agent-emoji">🚀</div><div class="agent-name">Deployment Agent</div><div class="agent-role">배포 기록 비교 및 Release 분석</div></div>
+        <div class="agent-card"><div class="agent-emoji">📋</div><div class="agent-name">Reviewer Agent</div><div class="agent-role">여러 Agent 결과를 종합해 조치안 정리</div></div>
+      </div>
+    </section>
+
+    <section aria-label="roadmap">
+      <h2 class="section-label">개발 로드맵</h2>
+      <div class="roadmap-list">
+        <div class="phase-row done">
+          <span class="phase-num">Phase 1</span>
+          <div class="phase-body"><b>Kubernetes 기초</b><span>Docker 웹앱 → Local Kubernetes → Deployment/Service 작성 → replicas 조정 → Pod 강제 종료 후 자동 복구 확인</span></div>
+          <span class="phase-status st-done">완료</span>
+        </div>
+        <div class="phase-row active">
+          <span class="phase-num">Phase 2</span>
+          <div class="phase-body"><b>CI/CD 파이프라인</b><span>GitHub Actions로 Test → Docker Build → Image Push → Kubernetes Deploy까지 자동으로 이어지는 구조 구축</span></div>
+          <span class="phase-status st-active">진행 중</span>
+        </div>
+        <div class="phase-row todo">
+          <span class="phase-num">Phase 3</span>
+          <div class="phase-body"><b>Monitoring</b><span>Prometheus/Grafana 연동, CrashLoopBackOff·readiness failure 등 장애를 의도적으로 발생시켜 관측</span></div>
+          <span class="phase-status st-todo">예정</span>
+        </div>
+        <div class="phase-row todo">
+          <span class="phase-num">Phase 4</span>
+          <div class="phase-body"><b>Agent (Read Only)</b><span>K8s Ops Agent가 get_pods / get_logs / get_events를 호출해 상태를 해석하고 원인을 답하는 단계</span></div>
+          <span class="phase-status st-todo">예정</span>
+        </div>
+        <div class="phase-row todo">
+          <span class="phase-num">Phase 5</span>
+          <div class="phase-body"><b>Multi-Agent</b><span>Deployment / Security / Reviewer Agent를 추가해 여러 관점의 분석을 종합</span></div>
+          <span class="phase-status st-todo">예정</span>
+        </div>
+        <div class="phase-row todo">
+          <span class="phase-num">Phase 6</span>
+          <div class="phase-body"><b>Harness</b><span>Tool별 권한 설계(Read 허용 / Restart는 dev only / Scale 상한 / Rollback은 승인 필요)</span></div>
+          <span class="phase-status st-todo">예정</span>
+        </div>
+        <div class="phase-row todo">
+          <span class="phase-num">Phase 7</span>
+          <div class="phase-body"><b>실제 실행 &amp; Audit</b><span>Policy Check → Human Approval → Tool Execution → Verification → Audit Log까지 연결한 Agentic Operations 완성</span></div>
+          <span class="phase-status st-todo">예정</span>
+        </div>
+      </div>
+    </section>
+
+    <section aria-label="stack">
+      <h2 class="section-label">기술 스택</h2>
+      <div class="stack-grid">
+        <span class="stack-chip">Docker</span>
+        <span class="stack-chip">Kubernetes</span>
+        <span class="stack-chip">kubectl / Helm</span>
+        <span class="stack-chip">GitHub Actions</span>
+        <span class="stack-chip">Prometheus</span>
+        <span class="stack-chip">Grafana</span>
+        <span class="stack-chip">FastAPI</span>
+        <span class="stack-chip">LLM Tool Calling</span>
+        <span class="stack-chip">Policy / Approval</span>
+        <span class="stack-chip">Audit Logging</span>
+      </div>
+    </section>
+
+    <section aria-label="principles">
+      <h2 class="section-label">설계 원칙</h2>
+      <div class="principle-list">
+        <div class="principle-item"><span class="principle-num">1</span>AI에게 모든 것을 맡기지 않는다.</div>
+        <div class="principle-item"><span class="principle-num">2</span>결정론적인 작업은 일반 자동화로 처리한다.</div>
+        <div class="principle-item"><span class="principle-num">3</span>판단·해석이 필요한 부분에만 Agent를 사용한다.</div>
+        <div class="principle-item"><span class="principle-num">4</span>Agent의 Tool과 권한을 명시적으로 설계한다.</div>
+        <div class="principle-item"><span class="principle-num">5</span>위험한 변경에는 Policy와 Human Approval을 둔다.</div>
+        <div class="principle-item"><span class="principle-num">6</span>실행 결과를 반드시 다시 검증한다.</div>
+        <div class="principle-item"><span class="principle-num">7</span>모든 행동은 Audit Log로 남긴다.</div>
+      </div>
+    </section>
+
+    <footer class="quote">
+      <p>&ldquo;인프라 운영의 구조를 이해하고, 반복 가능한 작업은 자동화하며,<br>판단이 필요한 곳에는 <span class="underline">AI를 올바른 위치</span>에 둔다.&rdquo;</p>
+    </footer>
+
+  </main>
+</div>
+</body>
+</html>
