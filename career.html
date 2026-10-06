@@ -172,6 +172,16 @@
     color:var(--ink-faint);
   }
 
+  .timeline-note{
+    margin:10px 0 0;
+    padding:10px 12px;
+    background:#f7f7f5;
+    border-left:2.5px solid var(--line);
+    font-size:.88rem;
+    line-height:1.6;
+    color:var(--ink-soft);
+  }
+
   footer{
     max-width:760px;
     margin:0 auto;
@@ -206,7 +216,7 @@
   <main>
     <p class="page-eyebrow">Career</p>
     <h1 class="page-title">어떻게 살아왔는가</h1>
-    <p class="page-lead">인프라와 보안 현장에서 맡아온 역할과, 그 경험이 Cloud Platform과 DevOps로 이어지는 과정입니다.</p>
+    <p class="page-lead">2024년 4월부터 율촌에서 인프라와 보안을 맡고 있습니다. 그 전엔 쇼핑몰을 운영했고, 인턴도 두 번 했습니다.</p>
 
     <p class="section-label">Career</p>
     <div class="timeline">
@@ -214,16 +224,19 @@
         <div class="timeline-period">2024.04 –<br>현재</div>
         <div>
           <h2 class="timeline-role">Infrastructure Security Engineer</h2>
-          <p class="timeline-org">법무법인(유) 율촌</p>
+          <p class="timeline-org">법무법인(유) 율촌 · 전산보안실 인프라보안팀</p>
           <ul class="timeline-list">
             <li>AD·Entra ID 하이브리드 환경 운영 — Entra Connect, PHS, Conditional Access, PIM</li>
-            <li>AD 그룹 기반 통합 권한관리 체계 설계, 방화벽 정책 예외 신청 시스템 구축</li>
-            <li>DLP USB 예외 처리 시스템 운영, 회의실 PC용 AD 포리스트 신규 구축</li>
-            <li>ISO 27001 인증 갱신 내부 실무 담당 (3년) — 증적 수집, 취약점 진단 조율, 점검 항목 자동화</li>
-            <li>Windows Server, WSUS, VMware/vSphere, MSSQL 등 인프라 운영</li>
-            <li>Palo Alto, NAC, DB 접근제어, SIEM(Logpresso) 등 보안 솔루션 운영</li>
-            <li>Power Automate 기반 업무 자동화, 사내 AI 업무지원 플랫폼(Copilot Studio, Azure OpenAI, RAG) 구축·운영</li>
+            <li>AD 그룹 기반 권한관리 체계 설계. 방화벽 정책 예외 신청은 요청 이력·정책 정보·정책 사용자 3개 테이블로 DB를 짜고 Classic ASP로 신청·승인 페이지를 만들었습니다</li>
+            <li>회의실 PC용 AD 포리스트를 DMZ 존에 새로 세웠습니다. WiFi에서 DMZ로 가는 방화벽 포트가 막혀 있어서 방화벽 담당 차장님과 같이 포트를 열었고, 작업 결과는 dsacls·gpresult 출력으로 남겼습니다</li>
+            <li>DLP USB 예외 처리 시스템을 Classic ASP·PowerShell로 운영. VBScript 쪽에 변수를 초기화 안 해서 500 에러가 나던 걸 잡았고, PowerShell 스크립트 끝에 쉼표 하나가 남아서 조용히 파싱이 깨지던 버그도 고쳤습니다</li>
+            <li>ISO 27001 인증 갱신을 3년째 내부 담당으로 맡고 있습니다. 외부 컨설팅사와 증적 수집, 취약점 진단 조율, 악성메일 모의훈련을 같이 하고, 점검 항목 84개 정도를 PowerShell로 자동화했습니다</li>
+            <li>WSUS는 Upstream/Downstream 구조로 운영 중인데, 0x80244007 오류가 나서 IIS·WSUS 설정을 하나씩 바꿔보며 원인을 찾았습니다</li>
+            <li>SIEM을 Logpresso STD에서 Sonar Lite V4.0으로 옮기면서, 기존 대시보드 쿼리를 새 버전 문법에 맞게 다시 짰습니다</li>
+            <li>Power Automate로 인턴 정책 해제, 인사 업데이트 알림 흐름을 만들었습니다. HR 알림 플로우는 "기타" 키워드 앞에서 문자열이 깨지는 걸 전처리로 막고, Teams 게시 위치를 For each 밖으로 옮겨서 고쳤습니다</li>
+            <li>Copilot Studio·Azure OpenAI·SharePoint·Entra SSO로 사내 AI 업무지원 플랫폼을 운영 중입니다. 답변 정확도는 58%에서 82%로 올랐고, IT 문의 메일은 월 30% 정도 줄었습니다. 월 운영비는 4만 2천 원 선입니다</li>
           </ul>
+          <p class="timeline-note">Windows Server, DNS, DHCP, GPO, VMware/vSphere, IIS, MSSQL도 같이 운영하고 있고, Palo Alto·NAC·DB 접근제어(ChakraMax)도 다룹니다.</p>
         </div>
       </div>
 
@@ -233,10 +246,8 @@
           <h2 class="timeline-role">온라인 스토어 운영</h2>
           <p class="timeline-org">개인사업 · 약 1년</p>
           <ul class="timeline-list">
-            <li>온라인 스토어 직접 구축·운영, 판매 관리 및 고객 응대 등 운영 전반 경험</li>
-            <li>매출·비용 관리 등 기본 회계 업무 병행</li>
-            <li>Python, OpenAI API, FAISS로 상품·배송·교환 문의에 응답하는 RAG 챗봇 직접 구축</li>
-            <li>데이터 기반 운영 개선으로 주도적 문제 해결 역량 배양</li>
+            <li>온라인 스토어를 직접 만들고 운영했습니다. 판매, 고객 응대, 매출·비용 관리까지 혼자 했습니다</li>
+            <li>상품·배송·교환 문의에 답하는 RAG 챗봇을 Python, OpenAI API, FAISS로 직접 붙였습니다</li>
           </ul>
         </div>
       </div>
@@ -247,9 +258,8 @@
           <h2 class="timeline-role">IT Infrastructure Intern</h2>
           <p class="timeline-org">㈜딥노이드 (AI연구교육팀) · 5개월</p>
           <ul class="timeline-list">
-            <li>영상처리·음성처리·이미지 분류 등 사내 AI 플랫폼 사용자 운영 관리</li>
-            <li>데이터바우처사업 관련 데이터 분석 업무 수행</li>
-            <li>이미지 데이터 수집·분류, 모델 튜닝, Java/Android 프로토타입 개발</li>
+            <li>이미지 데이터 수집·분류, 모델 튜닝</li>
+            <li>Java/Android 프로토타입 개발</li>
           </ul>
         </div>
       </div>
@@ -260,8 +270,7 @@
           <h2 class="timeline-role">IT Support Intern</h2>
           <p class="timeline-org">㈜효성ITX (행정안전부 23팀 파견) · 3개월</p>
           <ul class="timeline-list">
-            <li>공공기관 빅데이터 포털 운영 지원</li>
-            <li>공공데이터 API 연동 상태 점검 및 데이터 적합성 평가</li>
+            <li>공공기관 빅데이터 포털 운영 지원, 공공데이터 API 연동 상태 점검</li>
           </ul>
         </div>
       </div>
@@ -272,8 +281,7 @@
           <h2 class="timeline-role">주택임대사업자 운영</h2>
           <p class="timeline-org">개인사업 (오피스텔) · 약 3년</p>
           <ul class="timeline-list">
-            <li>오피스텔 임대차 계약 관리</li>
-            <li>임대사업 비용 처리 및 세무 신고 등 전반적인 관리 업무 수행</li>
+            <li>오피스텔 임대차 계약, 비용 처리, 세무 신고를 직접 합니다</li>
           </ul>
         </div>
       </div>
