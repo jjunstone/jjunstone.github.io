@@ -1,0 +1,633 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>₩10,000,000의 여정 — 금융거래 생명주기</title>
+<style>
+:root{
+  --bg:#f1f2f4; --panel:#ffffff; --ink:#000000; --mut:#6e6e73; --rule:rgba(60,60,67,.29);
+  --soft:#eef0f2;
+  --teal:#0f9b8e; --rose:#ff2d55; --ind:#5856d6; --warn:#ff9500;
+  --sysblue:#007aff; --sysred:#ff3b30;
+  --radius-sm:8px; --radius-md:14px; --radius-lg:20px; --radius-sheet:24px;
+  --font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Noto Sans KR', system-ui, sans-serif;
+}
+:root[data-theme="dark"]{
+  --bg:#000000; --panel:#1c1c1e; --ink:#f5f5f7; --mut:#98989d; --rule:rgba(84,84,88,.6);
+  --soft:#2c2c2e;
+  --teal:#3ddbc8; --rose:#ff6482; --ind:#9b99ff; --warn:#ffb340;
+  --sysblue:#0a84ff; --sysred:#ff453a;
+}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#000000; --panel:#1c1c1e; --ink:#f5f5f7; --mut:#98989d; --rule:rgba(84,84,88,.6);
+    --soft:#2c2c2e;
+    --teal:#3ddbc8; --rose:#ff6482; --ind:#9b99ff; --warn:#ffb340;
+    --sysblue:#0a84ff; --sysred:#ff453a;
+  }
+}
+*,*:before,*:after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.55 var(--font);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 56px}
+h1{font-size:clamp(26px,4vw,36px);line-height:1.2;margin:0 0 6px;font-weight:700;letter-spacing:-.02em}
+.sub{color:var(--mut);margin:0 0 10px;max-width:62ch;font-size:15px}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px;align-items:center}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:12px;border:1px solid var(--rule);border-radius:999px;padding:4px 11px;color:var(--mut);background:var(--panel)}
+.topbtn{margin-left:auto;border:1px solid var(--rule);background:var(--panel);color:var(--ink);border-radius:999px;padding:5px 13px;font:600 12px var(--font);cursor:pointer}
+.topbtn:hover{border-color:var(--teal)}
+
+/* 컨트롤 바 */
+.ctl{margin:18px 0 16px;background:var(--panel);border:1px solid var(--rule);border-radius:var(--radius-md);padding:12px 16px}
+.row{display:flex;gap:10px;align-items:center}
+.row button{font:600 14px var(--font);border:1px solid var(--rule);background:var(--soft);color:var(--ink);border-radius:999px;padding:7px 16px;cursor:pointer}
+.row button:hover{border-color:var(--teal)}
+input[type=range]{flex:1;accent-color:var(--teal);min-width:0}
+.chips{display:flex;gap:6px;margin-top:10px;overflow-x:auto;padding:2px 2px 4px}
+.chips button{flex:0 0 auto;font:600 13px var(--font);border:1px solid var(--rule);background:transparent;color:var(--mut);border-radius:999px;padding:4px 13px;cursor:pointer;white-space:nowrap}
+.chips button[aria-current=true]{background:var(--teal);border-color:var(--teal);color:#fff}
+button:focus-visible,input:focus-visible{outline:3px solid var(--ind);outline-offset:2px}
+.whatif{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.whatif button{font:600 12px var(--font);border:1px solid var(--warn);background:transparent;color:var(--warn);border-radius:999px;padding:5px 13px;cursor:pointer}
+.whatif button:hover{background:var(--warn);color:#fff}
+.whatif button[aria-pressed=true]{background:var(--warn);color:#fff}
+
+/* 메인 3단 구조: 폰 | 시스템뷰 */
+.stage{display:grid;grid-template-columns:300px minmax(0,1fr);gap:18px;align-items:start}
+@media(max-width:900px){.stage{grid-template-columns:1fr}}
+.phone-col{display:flex;flex-direction:column;align-items:center;position:sticky;top:12px}
+@media(max-width:900px){.phone-col{position:static}}
+.colTitle{font-size:12px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+
+/* iPhone 프레임 */
+.phone{background:#111;border-radius:46px;padding:9px;width:280px;box-shadow:0 18px 40px rgba(0,0,0,.25)}
+:root[data-theme="dark"] .phone,  body:not([data-theme="light"]) .phone{box-shadow:0 18px 40px rgba(0,0,0,.5)}
+.screen{background:var(--panel);border-radius:38px;min-height:560px;position:relative;overflow:hidden;display:flex;flex-direction:column}
+.notch{position:absolute;top:7px;left:50%;transform:translateX(-50%);width:84px;height:21px;background:#111;border-radius:12px;z-index:5}
+.statusbar{display:flex;justify-content:space-between;padding:14px 22px 2px;font-size:13px;font-weight:600;color:var(--ink)}
+.statusbar .right{display:flex;gap:4px;align-items:center;font-size:11px}
+.appbody{flex:1;padding:16px 18px;position:relative;overflow:hidden}
+.home-indicator{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:112px;height:5px;background:rgba(60,60,67,.4);border-radius:3px;z-index:6}
+
+/* 앱 화면 공통 요소 */
+.app-label{font-size:12px;color:var(--mut);margin:0 0 2px}
+.app-value{font-size:26px;font-weight:700;letter-spacing:-.02em;margin:0 0 12px}
+.app-card{background:var(--soft);border-radius:16px;padding:13px 15px;margin-top:8px}
+.app-card .r{display:flex;justify-content:space-between;font-size:13px;padding:3px 0}
+.app-card .r span:first-child{color:var(--mut)}
+.app-card .r span:last-child{font-weight:600}
+.app-banner{display:flex;align-items:center;gap:10px;background:var(--soft);border-radius:14px;padding:12px 14px;margin-top:10px}
+.app-banner .ic{width:30px;height:30px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;flex:0 0 auto}
+.app-banner.warn .ic{background:var(--warn)}
+.app-banner .tx b{display:block;font-size:13.5px}
+.app-banner .tx span{font-size:12px;color:var(--mut)}
+.toast{position:absolute;left:16px;right:16px;top:52px;background:var(--ink);color:var(--bg);border-radius:12px;padding:10px 14px;font-size:13px;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.2)}
+
+/* iOS 바텀시트 (인증 모달) */
+.sheet-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(2px);display:flex;align-items:flex-end;z-index:10}
+.sheet{width:100%;background:var(--panel);opacity:.98;border-radius:24px 24px 0 0;padding:8px 20px 26px;box-shadow:0 -8px 30px rgba(0,0,0,.18)}
+.grabber{width:36px;height:5px;background:var(--rule);border-radius:3px;margin:6px auto 14px}
+.sheet-eyebrow{text-align:center;font-size:11px;font-weight:700;color:var(--ind);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.sheet-title{text-align:center;font-size:17px;font-weight:700;margin:0 0 2px;letter-spacing:-.01em}
+.sheet-sub{text-align:center;font-size:12.5px;color:var(--mut);margin:0 0 16px}
+.sheet-amt{text-align:center;font-size:27px;font-weight:700;letter-spacing:-.02em;margin:2px 0 16px}
+.faceid{width:58px;height:58px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center}
+.faceid svg{width:46px;height:46px;stroke:var(--ind)}
+.faceid-label{text-align:center;font-size:12.5px;color:var(--mut);margin:0 0 16px}
+.divider-ios{height:1px;background:var(--rule);margin:0 -20px}
+.sheet-btns{display:flex;margin:0 -20px}
+.sheet-btns button{flex:1;background:transparent;border:0;padding:14px 0;font-size:16px;font-family:var(--font);color:var(--sysblue);cursor:pointer}
+.sheet-btns button:first-child{color:var(--sysred);border-right:1px solid var(--rule)}
+.sheet-btns button:last-child{font-weight:600}
+.sheet-note{margin:12px 0 0;background:var(--soft);border-radius:12px;padding:9px 13px;font-size:11.5px;color:var(--ink);line-height:1.5}
+.sheet-note b{color:var(--ind);display:block;font-size:10.5px;margin-bottom:2px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+
+/* 시스템 뷰 (오른쪽): 돈 흐름도 + 인증체인 + 원장분개 */
+.sys-col{display:flex;flex-direction:column;gap:16px}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:var(--radius-md);padding:16px}
+.card h3{font-size:13px;margin:0 0 12px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+.scroll{overflow-x:auto}
+svg.flow{display:block;min-width:620px;width:100%;height:auto}
+.node rect.b{fill:var(--panel);stroke:var(--rule);stroke-width:1.5}
+.node text{fill:var(--ink)}
+.node .l{font-size:12px;fill:var(--mut)}
+.node .v{font-size:17px;font-weight:700}
+.node .bar{transition:width .5s}
+.edge{fill:none;stroke:var(--rule);stroke-width:2;opacity:.6}
+.edge.on{stroke:var(--teal);opacity:1;stroke-dasharray:9 6;animation:flow 1s linear infinite}
+.edge.third.on{stroke:var(--rose)}
+.elab{font-size:12px;font-weight:700;fill:var(--ink);paint-order:stroke;stroke:var(--panel);stroke-width:5px}
+@keyframes flow{to{stroke-dashoffset:-30}}
+@media(prefers-reduced-motion:reduce){.edge.on{animation:none}.node .bar{transition:none}}
+
+/* 인증체인 */
+.authchain{display:flex;align-items:center;gap:0;flex-wrap:wrap;font-size:12px}
+.achip{display:flex;align-items:center;gap:6px;border:1px solid var(--rule);border-radius:999px;padding:5px 12px;color:var(--mut);background:var(--soft)}
+.achip.on{border-color:var(--ind);color:var(--ind);background:transparent;font-weight:700}
+.achip .dot{width:7px;height:7px;border-radius:50%;background:var(--rule)}
+.achip.on .dot{background:var(--ind)}
+.aarrow{color:var(--rule);margin:0 4px;font-size:13px}
+.authempty{color:var(--mut);font-size:13px;margin:0}
+
+/* 원장 분개 */
+table.jr{width:100%;border-collapse:collapse;font-size:13.5px}
+table.jr td{padding:5px 0;border-bottom:1px dashed var(--rule)}
+table.jr td:last-child{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+.neg{color:var(--rose)}
+.pos{color:var(--teal)}
+.jrok{color:var(--teal);font-weight:700;font-size:12.5px;margin:8px 0 0}
+.jrempty{color:var(--mut);font-size:13px;margin:0}
+
+/* 숫자 카드 (주문가능/출금가능 대비) */
+.kv{display:grid;grid-template-columns:1fr auto;gap:3px 10px;margin:0}
+.kv dt{color:var(--mut);font-size:13px}
+.kv dd{margin:0;text-align:right;font-weight:700;font-size:13px}
+.contrast{margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cbox{border-radius:12px;padding:10px 12px;background:var(--soft)}
+.cbox.diff{outline:2px solid var(--warn)}
+.cbox small{display:block;color:var(--mut);font-size:11px;margin-bottom:2px}
+.cbox b{font-size:16px}
+.pl{margin-top:12px;padding-top:10px;border-top:1px solid var(--rule)}
+
+/* 실무 메모 (설명 패널 하단) */
+.lens{margin-top:12px;border-left:4px solid var(--ind);padding:9px 13px;background:var(--soft);border-radius:0 10px 10px 0}
+.lens b{display:block;color:var(--ind);font-size:12px;margin-bottom:2px}
+.lens p{margin:0;font-size:13.5px}
+.cap h2{font-size:19px;margin:0 0 4px}
+.cap p.desc{margin:0;color:var(--mut);font-size:13.5px}
+.cklist{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.cklist span{font-size:12px;border:1px solid var(--teal);color:var(--teal);border-radius:6px;padding:1px 8px}
+.st{display:inline-block;font-size:12px;margin-left:8px;padding:1px 9px;border-radius:6px;background:var(--soft);color:var(--ind);font-weight:700;vertical-align:middle}
+
+/* 하단 타임라인 (택배 조회 스타일) */
+.timeline-wrap{margin-top:22px}
+.timeline-track{position:relative;padding:28px 10px 10px}
+.tl-line{position:absolute;left:24px;right:24px;top:34px;height:3px;background:var(--rule);border-radius:2px}
+.tl-fill{position:absolute;left:24px;top:34px;height:3px;background:var(--teal);border-radius:2px;transition:width .3s}
+.tl-dots{position:relative;display:flex;justify-content:space-between}
+.tl-dot{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;flex:1;min-width:0;background:none;border:0;font-family:var(--font);padding:0}
+.tl-dot .pt{width:13px;height:13px;border-radius:50%;background:var(--panel);border:3px solid var(--rule);z-index:2}
+.tl-dot.done .pt{border-color:var(--teal);background:var(--teal)}
+.tl-dot.cur .pt{border-color:var(--ind);background:var(--ind);box-shadow:0 0 0 4px rgba(88,86,214,.2)}
+.tl-dot .tl-label{font-size:10.5px;color:var(--mut);text-align:center;white-space:nowrap;max-width:60px;overflow:hidden;text-overflow:ellipsis}
+.tl-dot.cur .tl-label{color:var(--ind);font-weight:700}
+@media(max-width:900px){.tl-dot .tl-label{display:none}}
+
+.foot{color:var(--mut);font-size:12.5px;margin-top:24px;max-width:70ch}
+.visually-hidden{position:absolute;left:-9999px}
+.kbdhint{font-size:12px;color:var(--mut);margin-top:6px}
+kbd{border:1px solid var(--rule);border-radius:4px;padding:0 5px;font-family:var(--font);font-size:11px}
+
+/* ===== 사이트 공통 톱바 (lab.html 패턴과 통일) ===== */
+.site-topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;border-bottom:1px solid var(--rule);background:var(--panel);position:relative;z-index:20;flex-wrap:wrap;gap:10px}
+.site-topbar-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.site-topbar-brand .logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#0f9b8e,#5856d6);display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;flex-shrink:0}
+.site-topbar-brand .bn{font-size:13.5px;font-weight:700;line-height:1.3}
+.site-topbar-brand .br{font-size:11px;color:var(--mut);line-height:1.3}
+.site-topbar-nav{display:flex;gap:8px;flex-wrap:wrap}
+.site-topbar-nav a{font-size:12.5px;font-weight:600;color:var(--mut);text-decoration:none;padding:6px 12px;border-radius:999px;border:1px solid var(--rule)}
+.site-topbar-nav a:hover{border-color:var(--teal);color:var(--teal)}
+.site-topbar-nav a.active{border-color:var(--ind);color:var(--ind);background:var(--soft)}
+.demo-chip{font-size:11px;font-weight:700;color:var(--warn);border:1px solid var(--warn);border-radius:999px;padding:3px 10px}
+
+</style>
+</head>
+<body>
+
+<header class="site-topbar">
+  <a class="site-topbar-brand" href="../index.html" title="홈으로">
+    <span class="logo">JS</span>
+    <span><span class="bn" style="display:block">이준석</span><span class="br">Infrastructure &amp; Security Engineer</span></span>
+  </a>
+  <nav class="site-topbar-nav">
+    <a href="projects.html">📁 Projects</a>
+    <a href="lab.html" class="active">🧪 Lab</a>
+  </nav>
+  <span class="demo-chip">가상 데이터 · 이론 모델</span>
+</header>
+
+<div class="wrap">
+<div class="topbar" style="display:flex;align-items:center;gap:8px">
+  <h1 style="margin-right:auto">₩10,000,000의 여정</h1>
+  <button class="topbtn" id="themeBtn" aria-label="다크/라이트 전환">🌓 테마</button>
+</div>
+<p class="sub">은행에서 증권계좌로 넘어간 돈이 로그인·인증·매수·결제·매도·출금을 거치는 동안 앱과 시스템 안에서 각각 어떤 일이 벌어지는지 보여줍니다.</p>
+<div class="badges">
+  <span class="badge">🧪 일반화한 이론 모델</span>
+  <span class="badge">💰 수수료·세율은 예시 정책 EX-A</span>
+  <span class="badge">🚫 특정 금융사 실제 구조 아님</span>
+</div>
+
+<div class="ctl">
+  <div class="row">
+    <button id="prev" aria-label="이전 단계">← 이전</button>
+    <button id="play">재생</button>
+    <button id="next" aria-label="다음 단계">다음 →</button>
+    <input id="rg" type="range" min="0" max="13" value="0" aria-label="단계 선택">
+  </div>
+  <div class="chips" id="chips"></div>
+  <div class="whatif" id="whatif">
+    <button data-wi="otp">⚠ OTP 틀림</button>
+    <button data-wi="funds">⚠ 자금 부족</button>
+    <button data-wi="device">⚠ 새 기기 고액 출금</button>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="phone-col">
+    <div class="colTitle">📱 내가 보는 앱</div>
+    <div class="phone"><div class="screen">
+      <div class="notch"></div>
+      <div class="statusbar"><span>9:41</span><span class="right">●●● 5G 🔋</span></div>
+      <div class="appbody" id="appbody"></div>
+      <div class="home-indicator"></div>
+    </div></div>
+  </div>
+
+  <div class="sys-col">
+    <div class="colTitle">⚙️ 그때 시스템 안에서</div>
+    <div class="card scroll"><svg class="flow" id="svg" viewBox="0 0 860 350" role="img" aria-label="돈의 흐름도"></svg></div>
+    <div class="card" id="authcard">
+      <h3>인증 체인</h3>
+      <div id="authchain"></div>
+    </div>
+    <div class="card cap" id="cap"></div>
+    <div class="card" id="nums"></div>
+    <div class="card" id="jr"></div>
+  </div>
+</div>
+
+<div class="timeline-wrap">
+  <div class="colTitle">🚚 진행 상태</div>
+  <div class="card">
+    <div class="timeline-track">
+      <div class="tl-line"></div>
+      <div class="tl-fill" id="tlFill"></div>
+      <div class="tl-dots" id="tlDots"></div>
+    </div>
+  </div>
+  <p class="kbdhint">키보드 <kbd>←</kbd> <kbd>→</kbd> 로 단계 이동</p>
+</div>
+
+<p class="foot">이 페이지는 이론 모델의 시각화이며 특정 금융회사의 실제 구조가 아닙니다. 화면의 모든 숫자는 아래 이벤트 목록을 앞에서부터 접어서(reduce) 계산하며, 직접 바꾸지 않습니다. 시나리오: 은행 12,000,000원 중 10,000,000원 이체 → 매수 100주 → 결제 → 매도 → 결제 → 출금.</p>
+</div>
+<script>
+
+const W = n => n.toLocaleString('ko-KR');
+const $ = id => document.getElementById(id);
+
+/* ===== 14단계 이벤트 배열 =====
+   j: 원장 분개 [계정, 부호있는금액] 쌍 배열 (복식부기, 합=0)
+   f: 흐름도 간선에 흘릴 금액 [edgeId, amount]
+   p: 증권 수량 변화 [미결제매수, 보유, 매도묶임, 미결제매도] 각 델타
+   auth: 인증 체인에서 켜질 상태 ('session'|'challenge'|'verified'|'stepup')
+   st: 주문 상태 라벨
+   ck: 검증 체크리스트
+   screen: 폰 화면에 그릴 템플릿 종류
+*/
+const E = [
+{t:'시작', screen:'home', d:'은행 A에 12,000,000원이 있습니다. 증권계좌는 비어 있습니다.',
+  n:'여기서부터 모든 숫자는 이벤트에서 계산됩니다. 화면에서 숫자를 직접 바꾸지 않는 것이 원칙입니다.'},
+{t:'로그인', screen:'login', d:'지문으로 로그인합니다. 등록된 기기인지 확인하고 세션을 발급합니다.',
+  auth:'session', n:'로그인 성공은 모든 거래를 허용한다는 뜻이 아닙니다. 인증(누구인지)과 인가(뭘 할 수 있는지)는 별개입니다.'},
+{t:'이체', screen:'transfer', d:'은행에서 증권계좌로 10,000,000원을 보냅니다.',
+  j:[['EXT_BANK',-1e7],['AVAIL',1e7]], f:[['dep',1e7]],
+  n:'입금 통지는 중복되거나 유실될 수 있습니다. 은행 거래번호로 중복을 막고, 일 마감에 은행 내역과 대사합니다.'},
+{t:'주문 입력', screen:'orderentry', d:'ABC 100주를 99,000원 지정가로 매수 주문합니다. 필요금액 9,901,485원.',
+  ck:['계좌 상태','종목·세션','호가단위','자금','위험','적합성'],
+  n:'서버가 최종 판정하고, 앱에서 보이는 검사는 사용자 편의를 위한 사전 확인일 뿐입니다.'},
+{t:'거래 인증', screen:'authsheet', d:'"이 주문을 승인할까요?" 지문/OTP 팝업에 주문 내용이 표시됩니다.',
+  auth:'challenge', n:'인증은 "이 주문"에 묶입니다(주문 내용 해시 + 만료 + 1회용). 다른 금액에는 쓸 수 없습니다.'},
+{t:'예약·전송', screen:'submitted', d:'"주문 접수" — 예약금 9,901,485원이 원자적으로 묶이고 거래소로 전송됩니다.',
+  j:[['AVAIL',-9901485],['RESERVED',9901485]], f:[['rsv',9901485]], st:'WORKING', auth:'verified',
+  n:'인증하는 몇 초 사이에 같은 돈으로 다른 주문이 들어올 수 있습니다. 검증 직후 한 번에 원자적으로 예약합니다.'},
+{t:'체결 ①', screen:'fill1', d:'40주가 99,000원에 체결됐다는 알림이 왔습니다.',
+  j:[['RESERVED',-3960594],['PAYABLE',3960594]], f:[['fill',3960594]], p:[40,0,0,0], st:'PARTIALLY_FILLED',
+  n:'체결통보는 중복·역전·유실될 수 있습니다. 체결번호를 유일키로 두고 한 번만 원장에 반영합니다.'},
+{t:'체결 ②·반환', screen:'fill2', d:'"100주 체결 완료" — 나머지 60주는 98,900원에 체결(가격개선)되어 예약금 6,001원이 남습니다.',
+  j:[['RESERVED',-5934890],['PAYABLE',5934890],['RESERVED',-6001],['AVAIL',6001]], f:[['fill',5934890],['rel',6001]], p:[60,0,0,0], st:'FILLED',
+  n:'반환 분개가 없으면 그 돈이 묶인 채로 남습니다. 지정가보다 유리하게 체결되면 꼭 돌려줘야 합니다.'},
+{t:'T+2 매수 결제', screen:'settlebuy', d:'체결 2영업일 뒤, 대금 9,894,000원과 수수료 1,484원이 빠져나가고 주식 100주가 보유로 들어옵니다.',
+  j:[['PAYABLE',-9895484],['EXT_CLEARING',9894000],['FEE',1484]], f:[['bset',9894000],['bfee',1484]], p:[-100,100,0,0], st:'FILLED',
+  n:'체결 ≠ 결제. 영업일 기준으로 계산하므로 휴장일 캘린더가 필요합니다.'},
+{t:'매도 주문(+인증)', screen:'sellorder', d:'100주를 101,000원에 매도 주문합니다. 보유 100주 중 100주가 주문에 묶입니다.',
+  ck:['계좌 상태','매도가능수량','호가단위','위험','적합성'], p:[0,0,100,0], st:'WORKING', auth:'challenge',
+  n:'보유수량 100주와 매도가능수량 0주는 다른 숫자입니다. 미체결 매도주문이 수량을 점유합니다.'},
+{t:'매도 체결', screen:'sellfilled', d:'100주가 101,000원에 체결됐습니다. 대금 10,100,000원에서 수수료·세금을 뺀 10,078,285원이 들어올 예정입니다.',
+  p:[0,0,-100,100], u:10078285, st:'FILLED', auth:'verified',
+  n:'주문가능금액은 10,182,801원인데 출금가능금액은 104,516원입니다. 같은 돈이지만 상태가 다릅니다. 현금 분개는 결제일에 생깁니다.'},
+{t:'T+2 매도 결제', screen:'settlesell', d:'결제일이 되어 순수령액 10,078,285원이 가용 현금이 됩니다. 수수료와 세금은 각자 귀속처로 갑니다.',
+  j:[['AVAIL',10078285],['EXT_CLEARING',-10100000],['FEE',1515],['TAX',20200]], f:[['proc',10078285],['sfee',1515],['stax',20200]], p:[0,-100,0,-100], u:0, st:'FILLED',
+  n:'돈은 한 줄이 아니라 갈라졌다 합쳐집니다. 한 건의 매도대금이 수수료·세금·순수령 3갈래로 나뉩니다.'},
+{t:'출금 + 추가 인증', screen:'withdrawstepup', d:'10,000,000원 출금을 요청합니다. 새 기기·고액 패턴이라 추가 인증이 필요합니다.',
+  auth:'stepup', n:'인증이 맞아도 위험은 별개입니다. 보이스피싱처럼 "진짜 본인이 맞지만 속아서 누른" 경우를 걸러내야 합니다.'},
+{t:'출금 완료', screen:'withdrawdone', d:'10,000,000원이 은행 A로 돌아갑니다. 증권계좌에는 182,801원이 남습니다.',
+  j:[['AVAIL',-1e7],['EXT_BANK',1e7]], f:[['wd',1e7]],
+  n:'응답이 없다고 바로 재전송하면 이중 출금이 됩니다. 요청→전송→확정 3단계로 나눕니다. 이 182,801원이 매매차익에서 수수료·세금을 뺀 손익입니다.'}
+];
+const STEP_MAX = E.length - 1;
+
+/* 흐름도 노드 (x,y,width,label) */
+const N = {
+  bank:[30,150,150,'은행 A'], avail:[300,30,170,'가용 현금'], res:[300,145,170,'예약'], pay:[300,260,170,'결제 예정'],
+  clr:[640,30,170,'청산·결제 순액'], fee:[640,145,170,'수수료 수익'], tax:[640,260,170,'세금 예수']
+};
+/* 흐름도 간선 경로 (SVG path) */
+const P = {
+  dep:'M180,175C240,175 240,65 300,65', wd:'M310,100C240,140 230,195 180,200',
+  rsv:'M385,100V145', rel:'M340,145V100', fill:'M385,215V260',
+  bset:'M470,300C570,300 570,65 640,65', bfee:'M470,285C570,285 570,180 640,180',
+  proc:'M640,45C560,5 520,5 470,40', sfee:'M715,100V145', stax:'M810,65C850,65 850,290 810,290'
+};
+const T = {bfee:1, sfee:1, stax:1}; // 제3자 귀속 간선(분홍)
+const LP = {dep:[235,118], wd:[245,176], rsv:[385,128], rel:[340,128], fill:[385,243], bset:[572,190], bfee:[572,240], proc:[515,20], sfee:[715,128], stax:[838,180]};
+const LAB = {AVAIL:'가용 현금', RESERVED:'예약', PAYABLE:'결제 예정', EXT_BANK:'은행 A', EXT_CLEARING:'청산·결제', FEE:'수수료 수익', TAX:'세금 예수'};
+
+/* ===== state = reduce(E[0..k]) ===== */
+function calc(k){
+  const s = {L:{}, p:[0,0,0,0], u:0, auth:null};
+  for(let i=1;i<=k;i++){
+    const e = E[i];
+    (e.j||[]).forEach(([a,v]) => s.L[a] = (s.L[a]||0) + v);
+    (e.p||[]).forEach((v,x) => s.p[x] += v);
+    if (e.u !== undefined) s.u = e.u;
+    if (e.auth) s.auth = e.auth;
+  }
+  return s;
+}
+function authChainState(k){
+  // 현재 단계와 그 이전 단계들을 보고 인증 체인에서 어떤 상태까지 왔는지 판단
+  const e = E[k];
+  if (e.auth === 'session') return ['session'];
+  if (e.auth === 'challenge') return ['challenge'];
+  if (e.auth === 'verified') return ['challenge','verified'];
+  if (e.auth === 'stepup') return ['verified','stepup'];
+  // 인증 이벤트가 없는 단계는 가장 최근 인증 상태 유지(단순화를 위해 비표시)
+  return null;
+}
+
+const FACEID_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.4"><path d="M4 8V6a2 2 0 0 1 2-2h2"/><path d="M20 8V6a2 2 0 0 1-2-2h-2"/><path d="M4 16v2a2 2 0 0 0 2 2h2"/><path d="M20 16v2a2 2 0 0 0-2 2h-2"/><circle cx="9" cy="10" r=".6" fill="currentColor"/><circle cx="15" cy="10" r=".6" fill="currentColor"/><path d="M9 15c.8.6 1.9.9 3 .9s2.2-.3 3-.9" stroke-linecap="round"/><line x1="12" y1="9" x2="12" y2="13"/></svg>';
+
+function phoneScreen(k, s, val, ord, wd){
+  const e = E[k];
+  switch(e.screen){
+    case 'home':
+      return '<div class="app-label">은행 A</div><div class="app-value">' + W(12000000) + '원</div>' +
+             '<div class="app-label" style="margin-top:14px">증권 계좌</div><div class="app-value">' + W(0) + '원</div>';
+    case 'login':
+      return '<div style="text-align:center;padding-top:60px">' +
+             '<div class="faceid" style="color:var(--ind)">' + FACEID_SVG + '</div>' +
+             '<div style="font-size:15px;font-weight:700">지문으로 로그인</div>' +
+             '<div style="font-size:12.5px;color:var(--mut);margin-top:4px">등록된 기기 확인 중…</div></div>';
+    case 'transfer':
+      return '<div class="toast">10,000,000원 입금 완료</div>' +
+             '<div class="app-label" style="margin-top:70px">증권 가용 현금</div><div class="app-value">' + W(val.avail) + '원</div>';
+    case 'orderentry':
+      return '<div class="app-label">매수 주문</div>' +
+             '<div class="app-card"><div class="r"><span>종목</span><span>ABC 보통주</span></div>' +
+             '<div class="r"><span>수량</span><span>100주</span></div>' +
+             '<div class="r"><span>가격</span><span>지정가 99,000원</span></div>' +
+             '<div class="r"><span>필요금액</span><span>9,901,485원</span></div></div>';
+    case 'authsheet':
+      return sheetHtml('거래 인증', 'ABC 100주 · 지정가 99,000원', '9,901,485원', 'OTP로 인증');
+    case 'submitted':
+      return '<div class="app-banner"><div class="ic">✓</div><div class="tx"><b>주문 접수</b><span>WORKING</span></div></div>' +
+             '<div class="app-card" style="margin-top:14px"><div class="r"><span>예약금</span><span>' + W(9901485) + '원</span></div></div>';
+    case 'fill1':
+      return '<div class="toast">40주 체결</div>' +
+             '<div class="app-card" style="margin-top:70px"><div class="r"><span>체결 수량</span><span>40 / 100주</span></div>' +
+             '<div class="r"><span>상태</span><span>PARTIALLY_FILLED</span></div></div>';
+    case 'fill2':
+      return '<div class="toast">100주 체결 완료 (가격개선)</div>' +
+             '<div class="app-card" style="margin-top:70px"><div class="r"><span>체결 수량</span><span>100 / 100주</span></div>' +
+             '<div class="r"><span>평균 체결가</span><span>98,940원</span></div></div>';
+    case 'settlebuy':
+      return '<div class="app-label">보유 종목</div>' +
+             '<div class="app-card"><div class="r"><span>ABC 보통주</span><span>100주</span></div>' +
+             '<div class="r"><span>매입 단가</span><span>98,940원</span></div></div>';
+    case 'sellorder':
+      return '<div class="app-label">매도 주문</div>' +
+             '<div class="app-card"><div class="r"><span>종목</span><span>ABC 보통주</span></div>' +
+             '<div class="r"><span>수량</span><span>100주</span></div>' +
+             '<div class="r"><span>가격</span><span>지정가 101,000원</span></div></div>' +
+             '<div class="app-label" style="margin-top:12px">매도가능수량</div><div class="app-value" style="color:var(--warn)">0주</div>';
+    case 'sellfilled':
+      return '<div class="toast">100주 체결 완료</div>' +
+             '<div class="contrast" style="margin-top:70px">' +
+             '<div class="cbox diff"><small>주문가능</small><b>' + W(10182801) + '원</b></div>' +
+             '<div class="cbox diff"><small>출금가능</small><b>' + W(104516) + '원</b></div></div>';
+    case 'settlesell':
+      return '<div class="app-banner"><div class="ic">₩</div><div class="tx"><b>순수령 입금</b><span>10,078,285원</span></div></div>' +
+             '<div class="app-label" style="margin-top:14px">출금가능금액</div><div class="app-value">' + W(10182801) + '원</div>';
+    case 'withdrawstepup':
+      return sheetHtml('추가 인증 필요', '새 기기 · 고액 출금 10,000,000원', null, '추가 인증 진행', true);
+    case 'withdrawdone':
+      return '<div class="app-banner"><div class="ic">✓</div><div class="tx"><b>출금 완료</b><span>은행 A로 10,000,000원 송금</span></div></div>' +
+             '<div class="app-label" style="margin-top:14px">증권 계좌 잔액</div><div class="app-value">' + W(182801) + '원</div>';
+    default: return '';
+  }
+}
+function sheetHtml(title, sub, amt, primaryLabel, warn){
+  return '<div class="sheet-backdrop"><div class="sheet">' +
+    '<div class="grabber"></div>' +
+    '<div class="sheet-eyebrow">' + (warn ? '⚠ 위험 판정' : '인증 요청') + '</div>' +
+    '<div class="sheet-title">' + title + '</div>' +
+    '<div class="sheet-sub">' + sub + '</div>' +
+    (amt ? '<div class="sheet-amt">' + amt + '</div>' : '') +
+    '<div class="faceid" style="color:' + (warn ? 'var(--warn)' : 'var(--ind)') + '">' + FACEID_SVG + '</div>' +
+    '<div class="faceid-label">' + (warn ? 'Face ID + 추가 인증' : 'Face ID로 승인') + '</div>' +
+    '<div class="divider-ios"></div>' +
+    '<div class="sheet-btns"><button>취소</button><button>' + primaryLabel + '</button></div>' +
+    '</div></div>';
+}
+
+let k = 0, timer = null, whatifMode = null; // whatifMode: null | 'otp' | 'funds' | 'device'
+
+$('chips').innerHTML = E.map((e,i) => '<button data-i="' + i + '">' + e.t + '</button>').join('');
+$('tlDots').innerHTML = E.map((e,i) => '<button class="tl-dot" data-i="' + i + '"><span class="pt"></span><span class="tl-label">' + e.t + '</span></button>').join('');
+
+function render(){
+  const s = calc(k), e = E[k];
+  const v = a => s.L[a] || 0;
+  const bank = 12e6 + v('EXT_BANK'), av = v('AVAIL'), rs = v('RESERVED'), py = v('PAYABLE'), led = av+rs+py;
+  const ord = av + s.u, wd = av;
+  const val = {bank, avail:av, res:rs, pay:py, clr:v('EXT_CLEARING'), fee:v('FEE'), tax:v('TAX')};
+
+  /* 폰 화면 */
+  $('appbody').innerHTML = phoneScreen(k, s, val, ord, wd);
+
+  /* 흐름도 */
+  const seen = {};
+  for(let i=1;i<=k;i++) (E[i].f||[]).forEach(([id,a]) => seen[id] = (seen[id]||0) + a);
+  let h = '';
+  for(const id in P){
+    const on = (e.f||[]).find(f => f[0]===id);
+    if(!seen[id]) continue;
+    h += '<path class="edge' + (T[id]?' third':'') + (on?' on':'') + '" d="' + P[id] + '" style="stroke-width:' + Math.min(10,2+seen[id]/1.2e6) + '"/>';
+  }
+  for(const id in P){
+    const on = (e.f||[]).find(f => f[0]===id);
+    if(!on) continue;
+    const q = {x:LP[id][0], y:LP[id][1]};
+    h += '<text class="elab" x="' + q.x + '" y="' + q.y + '" text-anchor="middle">' + W(on[1]) + '</text>';
+  }
+  for(const id in N){
+    const [x,y,w,l] = N[id], a = val[id];
+    h += '<g class="node"><rect class="b" x="' + x + '" y="' + y + '" width="' + w + '" height="70" rx="10"/>' +
+         '<text class="l" x="' + (x+12) + '" y="' + (y+23) + '">' + l + '</text>' +
+         '<text class="v" x="' + (x+12) + '" y="' + (y+48) + '">' + W(a) + '</text>' +
+         '<rect class="bar" x="' + (x+12) + '" y="' + (y+58) + '" width="' + (Math.min(1,Math.abs(a)/12e6)*(w-24)) + '" height="4" rx="2" fill="' + (a<0?'var(--rose)':'var(--teal)') + '"/></g>';
+  }
+  $('svg').innerHTML = h;
+
+  /* 인증 체인 */
+  const chainOrder = ['session','challenge','verified','stepup'];
+  const chainLabel = {session:'세션 발급', challenge:'챌린지 발급', verified:'검증 성공', stepup:'추가 인증(step-up)'};
+  let maxAuth = -1;
+  for(let i=1;i<=k;i++) if (E[i].auth) maxAuth = Math.max(maxAuth, chainOrder.indexOf(E[i].auth) === 3 ? 3 : chainOrder.indexOf(E[i].auth));
+  // stepup은 별도 트랙이라 단순 비교 대신: 현 단계까지 등장한 모든 auth 종류를 누적
+  const seenAuth = new Set();
+  for(let i=1;i<=k;i++) if (E[i].auth) seenAuth.add(E[i].auth);
+  if (seenAuth.size === 0) {
+    $('authchain').innerHTML = '<p class="authempty">아직 인증 이벤트가 없습니다.</p>';
+  } else {
+    const curAuth = e.auth;
+    $('authchain').innerHTML = '<div class="authchain">' + chainOrder.filter(a=>seenAuth.has(a)).map((a,idx,arr) =>
+      '<span class="achip' + (a===curAuth?' on':'') + '"><span class="dot"></span>' + chainLabel[a] + '</span>' + (idx<arr.length-1?'<span class="aarrow">→</span>':'')
+    ).join('') + '</div>';
+  }
+
+  /* 설명 패널 */
+  $('cap').innerHTML = '<h2>' + k + '. ' + e.t + (e.st ? '<span class="st">주문 상태 ' + e.st + '</span>' : '') + '</h2>' +
+    '<p class="desc">' + e.d + '</p>' +
+    (e.ck ? '<div class="cklist">' + e.ck.map(c => '<span>✓ ' + c + '</span>').join('') + '</div>' : '') +
+    '<div class="lens"><b>실무 메모</b><p>' + e.n + '</p></div>';
+
+  /* 숫자 카드 */
+  const hold = s.p[1];
+  const sellable = Math.max(0, hold - s.p[2]);
+  const net = bank + led - 12e6;
+  const showContrast = (k===10); // 매도 체결: 주문가능 ≠ 출금가능 강조
+  $('nums').innerHTML = '<h3>이 시점의 숫자</h3><dl class="kv">' +
+    '<dt>은행 A 잔액</dt><dd>' + W(bank) + '원</dd>' +
+    '<dt>증권 현금 합계</dt><dd>' + W(led) + '원</dd>' +
+    '<dt>보유 주식</dt><dd>' + hold + '주' + (s.p[0]?(' (+' + s.p[0] + ' 미결제)'):'') + (s.p[3]?(' (매도 ' + s.p[3] + ' 미결제)'):'') + '</dd>' +
+    '<dt>매도가능수량</dt><dd>' + sellable + '주</dd>' +
+    '</dl>' +
+    (showContrast ? '<div class="contrast"><div class="cbox diff"><small>주문가능</small><b>' + W(ord) + '원</b></div><div class="cbox diff"><small>출금가능</small><b>' + W(wd) + '원</b></div></div>' : '') +
+    (k>=11 ? '<div class="pl"><dl class="kv"><dt>매매차익</dt><dd class="pos">+' + W(-val.clr) + '원</dd><dt>수수료·세금 (제3자 귀속)</dt><dd class="neg">−' + W(val.fee+val.tax) + '원</dd><dt>순손익</dt><dd>' + W(net) + '원</dd></dl></div>' : '');
+
+  /* 분개표 */
+  const j = e.j;
+  $('jr').innerHTML = '<h3>원장 분개 (복식부기)</h3>' + (j ?
+    '<table class="jr">' + j.map(([a,m]) => '<tr><td>' + LAB[a] + '</td><td class="' + (m<0?'neg':'pos') + '">' + (m>0?'+':'') + W(m) + '</td></tr>').join('') + '</table>' +
+    '<p class="jrok">✓ 합계 ' + W(j.reduce((x,y)=>x+y[1],0)) + ' — 분개는 항상 균형이 맞아야 커밋됩니다</p>'
+    : '<p class="jrempty">이 단계는 현금 분개가 없습니다. 상태(주문·수량·인증)만 바뀝니다.</p>');
+
+  /* 컨트롤/타임라인 동기화 */
+  $('rg').value = k;
+  document.querySelectorAll('#chips button').forEach(b => b.setAttribute('aria-current', +b.dataset.i===k));
+  const curChip = document.querySelector('#chips [aria-current=true]');
+  curChip && curChip.scrollIntoView({block:'nearest', inline:'center'});
+
+  document.querySelectorAll('.tl-dot').forEach(b => {
+    const i = +b.dataset.i;
+    b.classList.toggle('done', i < k);
+    b.classList.toggle('cur', i === k);
+  });
+  $('tlFill').style.width = (k/STEP_MAX*100) + '%';
+}
+
+const WHATIF = {
+  otp: {
+    atStep: 5, // "예약·전송" 직전 단계인 4(거래인증)에서 실패 시나리오를 보여줌
+    title: 'OTP 틀림 → 주문 미전송',
+    render: function(){
+      return sheetHtml('인증 실패', 'OTP 번호가 올바르지 않습니다 (2/5회 시도)', null, '다시 시도', true);
+    },
+    cap: {
+      t:'OTP 틀림', d:'인증에 실패해 주문이 거래소로 전송되지 않습니다. 이미 묶어둔 예약금은 가용으로 되돌립니다.',
+      n:'인증 실패는 주문 자체를 막습니다. 예약 → 반환이 한 묶음(원자적)으로 처리되어야, 돈이 중간에 떠 있는 상태로 남지 않습니다.'
+    }
+  },
+  funds: {
+    atStep: 3,
+    title: '자금 부족 → 거절',
+    render: function(){
+      return '<div class="app-label">매수 주문</div>' +
+        '<div class="app-card"><div class="r"><span>종목</span><span>ABC 보통주</span></div>' +
+        '<div class="r"><span>수량</span><span>100주</span></div>' +
+        '<div class="r"><span>필요금액</span><span>9,901,485원</span></div></div>' +
+        '<div class="app-banner warn" style="margin-top:14px"><div class="ic">⚠</div><div class="tx"><b>주문 거절</b><span>자금 부족</span></div></div>';
+    },
+    cap: {
+      t:'자금 부족', d:'가용 현금이 98,515원뿐이라 필요금액 9,901,485원에 못 미칩니다. 서버는 거절 이유를 검증 항목 전체로 한꺼번에 보여줍니다.',
+      n:'자금 부족이면 다른 5개 검사(계좌·종목·호가단위·위험·적합성)는 통과했어도 주문은 나가지 않습니다. 실무에서는 "어느 검사에서 걸렸는지"를 전부 보여줘야 사용자가 이해합니다.',
+      ck:['계좌 상태 ✓','종목·세션 ✓','호가단위 ✓','자금 ✗ 부족','위험 ✓','적합성 ✓']
+    }
+  },
+  device: {
+    atStep: 12,
+    title: '새 기기 고액 출금 → 추가 인증',
+    render: function(){
+      return sheetHtml('추가 인증 필요', '등록되지 않은 새 기기에서 10,000,000원 출금 시도', null, '추가 인증 진행', true);
+    },
+    cap: {
+      t:'새 기기 · 고액 출금', d:'평소와 다른 기기, 평소보다 큰 금액이 같이 감지되면 위험 점수가 올라가고 추가 인증(step-up)을 요구합니다.',
+      n:'인증이 정확히 맞아도(진짜 비밀번호, 진짜 OTP) 위험은 별개로 판단합니다. 보이스피싱처럼 "본인이 직접, 하지만 속아서" 누르는 경우를 걸러내는 장치입니다.'
+    }
+  }
+};
+
+function applyWhatif(id){
+  if (whatifMode === id) { whatifMode = null; } else { whatifMode = id; }
+  document.querySelectorAll('#whatif button').forEach(b => b.setAttribute('aria-pressed', b.dataset.wi === whatifMode));
+  if (whatifMode) {
+    stop();
+    const w = WHATIF[whatifMode];
+    k = w.atStep;
+    render();
+    $('appbody').innerHTML = w.render();
+    $('cap').innerHTML = '<h2>' + w.cap.t + ' <span class="st" style="background:transparent;border:1px solid var(--warn);color:var(--warn)">What-if</span></h2>' +
+      '<p class="desc">' + w.cap.d + '</p>' +
+      (w.cap.ck ? '<div class="cklist">' + w.cap.ck.map(c => '<span style="border-color:' + (c.includes('✗')?'var(--warn)':'var(--teal)') + ';color:' + (c.includes('✗')?'var(--warn)':'var(--teal)') + '">' + c + '</span>').join('') + '</div>' : '') +
+      '<div class="lens" style="border-color:var(--warn)"><b style="color:var(--warn)">실무 메모</b><p>' + w.cap.n + '</p></div>';
+  } else {
+    render();
+  }
+}
+
+function go(n){ whatifMode = null; document.querySelectorAll('#whatif button').forEach(b => b.setAttribute('aria-pressed','false')); k = Math.max(0, Math.min(STEP_MAX, n)); render(); }
+function stop(){ clearInterval(timer); timer = null; $('play').textContent = '재생'; }
+
+$('prev').onclick = () => { stop(); go(k-1); };
+$('next').onclick = () => { stop(); go(k+1); };
+$('rg').oninput = e => { stop(); go(+e.target.value); };
+$('chips').onclick = e => { const b = e.target.closest('button'); if (b) { stop(); go(+b.dataset.i); } };
+$('tlDots').onclick = e => { const b = e.target.closest('.tl-dot'); if (b) { stop(); go(+b.dataset.i); } };
+$('whatif').onclick = e => { const b = e.target.closest('button'); if (b) applyWhatif(b.dataset.wi); };
+$('play').onclick = () => {
+  if (timer) return stop();
+  whatifMode = null;
+  if (k >= STEP_MAX) go(0);
+  $('play').textContent = '정지';
+  timer = setInterval(() => { if (k >= STEP_MAX) return stop(); go(k+1); }, 3200);
+};
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  if (e.key === 'ArrowRight') { stop(); go(k+1); }
+  if (e.key === 'ArrowLeft') { stop(); go(k-1); }
+});
+
+/* 테마 토글 (라이트/다크/시스템 3단 순환) */
+$('themeBtn').onclick = () => {
+  const root = document.documentElement;
+  const cur = root.getAttribute('data-theme');
+  const next = cur === 'dark' ? 'light' : (cur === 'light' ? null : 'dark');
+  if (next) root.setAttribute('data-theme', next); else root.removeAttribute('data-theme');
+};
+
+render();
+</script>
+</body>
+</html>
