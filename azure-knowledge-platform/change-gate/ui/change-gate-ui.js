@@ -162,7 +162,7 @@
 
   function badge(status) {
     var l = LABEL[status] || { t: status, c: 'wait' };
-    return '<span class="badge ' + l.c + '">' + esc(l.t) + '</span>';
+    return '<span class="badge just-set ' + l.c + '">' + esc(l.t) + '</span>';
   }
 
   function head(s) {
@@ -469,7 +469,7 @@
     var b = s.blockReason;
     var risk = s.policy.risk;
 
-    return '<div class="stop-box">' +
+    return '<div class="stop-box just-set">' +
       '<div class="stop-title">이 요청은 일반 승인으로 처리할 수 없습니다</div>' +
       '<p class="stop-say">' + name(b.requested.join(', ')) + ' 요청은 ' +
       esc(s.context.effectiveRole) + ' 역할의 허용 범위를 벗어납니다.</p>' +
@@ -487,7 +487,7 @@
   }
 
   function needInfo(s) {
-    return '<div class="stop-box warn">' +
+    return '<div class="stop-box warn just-set">' +
       '<div class="stop-title">요청에 빠진 내용이 있습니다</div>' +
       '<p class="stop-say">아래를 알 수 없어서 임의로 채우지 않고 요청자에게 되묻습니다.</p>' +
       '<ul class="stop-list">' +
@@ -504,7 +504,7 @@
 
   function noChange(s) {
     var keys = s.blockReason.entries.map(function (e) { return name(e.key); }).join(', ');
-    return '<div class="stop-box calm">' +
+    return '<div class="stop-box calm just-set">' +
       '<div class="stop-title">바꿀 것이 없습니다</div>' +
       '<p class="stop-say">' + keys + '' + D.particle(keys, '은', '는') + ' 이미 부여되어 있습니다. ' +
       '같은 권한을 다시 넣지 않고 기록만 남겼습니다.</p>' +
@@ -513,7 +513,7 @@
   }
 
   function closedLine(text) {
-    return '<div class="stop-box calm"><p class="stop-say">' + esc(text) + '</p></div>';
+    return '<div class="stop-box calm just-set"><p class="stop-say">' + esc(text) + '</p></div>';
   }
 
   /* ── 적용 결과 ── */
@@ -710,20 +710,35 @@
   }
 
   function act(what) {
-    if (what === 'approve') { service.approveAndExecute(); return; }
-    if (what === 'reject') { service.reject(); return; }
-    if (what === 'exception') { service.requestExceptionReview(); return; }
-    if (what === 'return') { service.returnToRequester(); return; }
-    if (what === 'fill') {
-      holding = true;
-      service.provideInformation(snap.scenario.completionText);
-      if (snap.status !== S.NEEDS_INFO) service.confirmContext();
-      if (snap.status === S.PLANNED) service.openReview();
-      holding = false;
-      draw();
-      return;
+    var btn = app.querySelector('[data-do="' + what + '"]');
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function run() {
+      if (what === 'approve') { service.approveAndExecute(); return; }
+      if (what === 'reject') { service.reject(); return; }
+      if (what === 'exception') { service.requestExceptionReview(); return; }
+      if (what === 'return') { service.returnToRequester(); return; }
+      if (what === 'fill') {
+        holding = true;
+        service.provideInformation(snap.scenario.completionText);
+        if (snap.status !== S.NEEDS_INFO) service.confirmContext();
+        if (snap.status === S.PLANNED) service.openReview();
+        holding = false;
+        draw();
+        return;
+      }
     }
+
+    if (reduced || !btn) { run(); return; }
+
+    // 누른 버튼을 아주 짧게 비활성·반투명 처리해 클릭이 실제로 반응했다는 것만
+    // 보여주고 결과로 넘어간다. 라벨은 그대로 두어 무엇을 눌렀는지 계속 읽힌다.
+    btn.disabled = true;
+    btn.setAttribute('aria-busy', 'true');
+    btn.style.opacity = '.55';
+    window.setTimeout(run, 160);
   }
 
   drawIntro();
 })();
+

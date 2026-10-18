@@ -184,11 +184,6 @@
     margin:0;
   }
 
-  .role-block .metric{
-    color:var(--accent);
-    font-weight:700;
-  }
-
   .stack-note{
     margin:18px 0 0;
     padding:12px 14px;
@@ -243,6 +238,17 @@
   }
   footer a:hover{ color:var(--ink); }
 
+
+  .timeline-item{ opacity:0; }
+
+  .no-js .timeline-item,
+  html:not(.motion-ready) .timeline-item{
+    opacity:1;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .timeline-item{ opacity:1 !important; transform:none !important; }
+  }
   @media (max-width:560px){
     .topbar{ padding:16px 20px; flex-wrap:wrap; gap:10px; }
     .timeline-item{ grid-template-columns:1fr; gap:6px; }
@@ -296,7 +302,7 @@
 
           <div class="role-block">
             <p class="role-block-title">Cloud &amp; AI Workplace</p>
-            <p>Copilot Studio·Azure OpenAI·SharePoint·Entra SSO 기반 사내 AI 업무지원 플랫폼을 운영·개선했습니다. 답변 정확도를 <span class="metric">58%에서 82%로</span> 높이고, IT 문의 메일을 <span class="metric">월 약 30% 줄였습니다</span>. 월 운영비는 약 4.2만 원입니다(부가세 별도).</p>
+            <p>Copilot Studio·Azure OpenAI·SharePoint·Entra SSO 기반 사내 AI 업무지원 플랫폼을 운영·개선하며, RAG 구조와 사내 지식 검색을 실무 환경에 적용하는 과정을 경험했습니다.</p>
           </div>
 
           <p class="stack-note"><strong>주요 기술</strong> &nbsp;Windows Server · AD DS · Entra ID · VMware/vSphere · PowerShell · Classic ASP · VBScript · MSSQL · Power Automate · Palo Alto · NAC · ChakraMax · Azure OpenAI</p>
@@ -340,10 +346,10 @@
       <div class="timeline-item">
         <div class="timeline-period">2023 –<br>현재</div>
         <div>
-          <h2 class="timeline-role">주택임대사업 운영</h2>
-          <p class="timeline-org">개인사업 · 오피스텔</p>
+          <h2 class="timeline-role">주택임대사업자 운영</h2>
+          <p class="timeline-org">개인사업</p>
           <ul class="timeline-list">
-            <li>임대차 계약 및 관련 운영 업무를 직접 관리하고 있습니다</li>
+            <li>임대차 계약 관리를 위한 프로그램을 직접 만들어 개인적으로 운영하고 있습니다</li>
           </ul>
         </div>
       </div>
@@ -371,5 +377,40 @@
   <footer>
     <span>happyday7190@gmail.com · 010-5672-9747 · 서울</span>
   </footer>
+  <script type="module">
+    try {
+      const { animate, inView, stagger } = await import('https://cdn.jsdelivr.net/npm/motion@11/+esm');
+      document.documentElement.classList.add('motion-ready');
+
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!reduced) {
+        document.querySelectorAll('.timeline-item').forEach((el, i) => {
+          inView(el, () => {
+            animate(
+              el,
+              { opacity: [0, 1], y: [16, 0] },
+              { duration: 0.45, easing: [0.22, 1, 0.36, 1] }
+            );
+          }, { margin: '0px 0px -80px 0px' });
+        });
+
+        document.querySelectorAll('.role-block').forEach((el) => {
+          el.addEventListener('mouseenter', () => {
+            animate(el, { x: 4 }, { type: 'spring', stiffness: 300, damping: 24 });
+          });
+          el.addEventListener('mouseleave', () => {
+            animate(el, { x: 0 }, { type: 'spring', stiffness: 300, damping: 26 });
+          });
+        });
+      } else {
+        animate('.timeline-item', { opacity: 1 }, { duration: 0 });
+      }
+    } catch (e) {
+      document.documentElement.classList.add('motion-ready');
+    }
+  </script>
 </body>
 </html>
+
+

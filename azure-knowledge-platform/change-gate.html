@@ -577,7 +577,86 @@
       .more-go { display: none; }
     }
 
-    @media (prefers-reduced-motion: reduce) {
+    /* ══════════════════════════════════════════════════════════
+       모션 레이어 — 화면 전환과 상태 변화를 실제 UI 상태에 연결한다.
+       Aceternity/Magic UI 류의 패턴(진입 시 살짝 떠오르며 페이드,
+       리스트는 순서대로 나타남, 상태 배지는 바뀔 때 짧게 강조)을
+       프레임워크 없이 CSS로 구현했다. reduced-motion에서는 전부 무효화.
+       ══════════════════════════════════════════════════════════ */
+
+    @keyframes gateFadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes gatePulse {
+      0% { transform: scale(1); }
+      35% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+    @keyframes gateShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-4px); }
+      40% { transform: translateX(4px); }
+      60% { transform: translateX(-3px); }
+      80% { transform: translateX(3px); }
+    }
+    @keyframes gateSpin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* 화면 전체 진입: intro ↔ case 전환 시 */
+    .intro, .case.on {
+      animation: gateFadeUp .32s cubic-bezier(.2,.7,.3,1) both;
+    }
+
+    /* 목록·근거 줄이 순서대로 떠오름 — 한 번에 와르르 뜨지 않게 */
+    .pick-card, .row, .pr, .pass, .stage {
+      animation: gateFadeUp .34s cubic-bezier(.2,.7,.3,1) both;
+    }
+    .pick > .pick-card:nth-child(1) { animation-delay: .02s; }
+    .pick > .pick-card:nth-child(2) { animation-delay: .06s; }
+    .pick > .pick-card:nth-child(3) { animation-delay: .10s; }
+    .pick > .pick-card:nth-child(n+4) { animation-delay: .14s; }
+    .rows .row:nth-child(1), .basis-grid .pr:nth-child(1) { animation-delay: .03s; }
+    .rows .row:nth-child(2), .basis-grid .pr:nth-child(2) { animation-delay: .07s; }
+    .rows .row:nth-child(3), .basis-grid .pr:nth-child(3) { animation-delay: .11s; }
+    .rows .row:nth-child(4), .basis-grid .pr:nth-child(4) { animation-delay: .15s; }
+    .rows .row:nth-child(5) { animation-delay: .19s; }
+    .rows .row:nth-child(n+6) { animation-delay: .22s; }
+    .why-body .pass:nth-child(1) { animation-delay: .02s; }
+    .why-body .pass:nth-child(2) { animation-delay: .05s; }
+    .why-body .pass:nth-child(3) { animation-delay: .08s; }
+    .why-body .pass:nth-child(n+4) { animation-delay: .11s; }
+    .stages .stage:nth-child(1) { animation-delay: 0s; }
+    .stages .stage:nth-child(2) { animation-delay: .03s; }
+    .stages .stage:nth-child(3) { animation-delay: .06s; }
+    .stages .stage:nth-child(4) { animation-delay: .09s; }
+    .stages .stage:nth-child(5) { animation-delay: .12s; }
+    .stages .stage:nth-child(6) { animation-delay: .15s; }
+
+    /* 상태 배지가 바뀔 때 — 결과가 바뀌었다는 걸 짧게 강조 */
+    .badge.just-set { animation: gatePulse .4s cubic-bezier(.3,1.6,.4,1) both; }
+
+    /* 막힌 요청 박스 — 등장할 때 살짝 흔들려 '여기 멈췄다'는 신호를 줌 */
+    .stop-box.just-set { animation: gateFadeUp .32s cubic-bezier(.2,.7,.3,1) both, gateShake .4s ease .32s both; }
+
+    /* 처리 중 표시 — act() 호출 중 짧게 보여주는 로딩 스피너 */
+    .gate-loading {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 13px; color: var(--text-muted); padding: 10px 0;
+    }
+    .gate-loading::before {
+      content: ''; width: 14px; height: 14px; border-radius: 50%;
+      border: 2px solid var(--border-strong); border-top-color: var(--accent);
+      animation: gateSpin .6s linear infinite;
+    }
+
+    /* 버튼 누름 피드백 — 승인/반려/제출/기간 조정 버튼 */
+    button.cut, .pick-card, [data-do] {
+      transition: border-color .15s, box-shadow .15s, transform .15s, background-color .15s, opacity .15s;
+    }
+    [data-do]:active, button.cut:active { transform: scale(.97); }
+@media (prefers-reduced-motion: reduce) {
       * { transition: none !important; }
     }
 
@@ -630,5 +709,6 @@
 </script>
 </body>
 </html>
+
 
 

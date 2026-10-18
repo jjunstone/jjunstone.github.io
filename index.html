@@ -50,6 +50,7 @@
     text-transform:uppercase;
     color:var(--ink-soft);
     margin:0 0 18px;
+    opacity:0;
   }
 
   .name{
@@ -57,6 +58,7 @@
     font-weight:700;
     letter-spacing:-.02em;
     margin:0 0 16px;
+    opacity:0;
   }
 
   .desc{
@@ -64,6 +66,7 @@
     line-height:1.7;
     color:var(--ink-soft);
     margin:0 0 44px;
+    opacity:0;
   }
 
   .actions{
@@ -83,7 +86,7 @@
     border-radius:14px;
     text-decoration:none;
     color:var(--ink);
-    transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease;
+    opacity:0;
   }
 
   .action-title{
@@ -99,12 +102,27 @@
 
   .action:hover{
     border-color:var(--accent);
-    transform:translateY(-2px);
-    box-shadow:0 10px 24px rgba(23,60,120,.1);
   }
 
   .action:hover .action-title{
     color:var(--accent);
+  }
+
+  /* Motion 로드 전/비활성 환경(스크립트 차단, prefers-reduced-motion)에서도
+     콘텐츠가 보이도록 하는 안전장치 — JS가 opacity를 올리지 못하면 CSS가 대신 보여준다 */
+  .no-js .eyebrow,
+  .no-js .name,
+  .no-js .desc,
+  .no-js .action,
+  html:not(.motion-ready) .eyebrow,
+  html:not(.motion-ready) .name,
+  html:not(.motion-ready) .desc,
+  html:not(.motion-ready) .action{
+    opacity:1;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .eyebrow, .name, .desc, .action{ opacity:1 !important; transform:none !important; }
   }
 
   @media (max-width:520px){
@@ -130,5 +148,45 @@
       </a>
     </div>
   </div>
+
+  <script type="module">
+    // Motion(바닐라, framer-motion의 non-React 버전)을 CDN에서 불러와
+    // 진입 애니메이션과 버튼 호버의 스프링감을 구현한다.
+    // 스크립트 로드가 실패해도(오프라인, 광고차단 등) 위 CSS 안전장치가
+    // 콘텐츠를 그대로 보여주므로 접근성이 깨지지 않는다.
+    try {
+      const { animate, stagger } = await import('https://cdn.jsdelivr.net/npm/motion@11/+esm');
+      document.documentElement.classList.add('motion-ready');
+
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!reduced) {
+        animate(
+          '.eyebrow, .name, .desc',
+          { opacity: [0, 1], y: [10, 0] },
+          { duration: 0.5, delay: stagger(0.08), easing: [0.22, 1, 0.36, 1] }
+        );
+        animate(
+          '.action',
+          { opacity: [0, 1], y: [14, 0] },
+          { duration: 0.5, delay: stagger(0.08, { startDelay: 0.2 }), easing: [0.22, 1, 0.36, 1] }
+        );
+
+        document.querySelectorAll('.action').forEach((el) => {
+          el.addEventListener('mouseenter', () => {
+            animate(el, { y: -4, scale: 1.015 }, { type: 'spring', stiffness: 320, damping: 20 });
+          });
+          el.addEventListener('mouseleave', () => {
+            animate(el, { y: 0, scale: 1 }, { type: 'spring', stiffness: 320, damping: 22 });
+          });
+        });
+      } else {
+        animate('.eyebrow, .name, .desc, .action', { opacity: 1 }, { duration: 0 });
+      }
+    } catch (e) {
+      // Motion 로드 실패 시 콘텐츠는 이미 CSS 안전장치로 보이는 상태이므로 조용히 넘어간다.
+      document.documentElement.classList.add('motion-ready');
+    }
+  </script>
 </body>
 </html>
