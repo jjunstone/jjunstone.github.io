@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IT Team Simulator | 이준석</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/static/pretendard.css">
+<style>
+  :root{
+    --ink:#141414;
+    --ink-soft:#5b5b5b;
+    --ink-faint:#8a8a8a;
+    --line:#e6e6e6;
+    --accent:#173c78;
+    --bg:#f8fafc;
+    --font-main:"Pretendard","Gowun Dodum","Malgun Gothic",sans-serif;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; height:100%; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-main);
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+  }
+
+  #app{ display:flex; flex-direction:column; flex:1; min-height:0; }
+
+  /* ── 상단 ── */
+  .sim-top{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 24px; background:#ffffff; border-bottom:1px solid var(--line);
+    flex-shrink:0;
+  }
+  .sim-top-left{ display:flex; align-items:center; gap:10px; min-width:0; }
+  .sim-brand{ font-size:.9rem; font-weight:700; letter-spacing:-.01em; flex-shrink:0; }
+  .sim-sep{ color:var(--ink-faint); }
+  .sim-current{ font-size:.9rem; color:var(--ink-soft); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .sim-top-right{ display:flex; align-items:center; gap:12px; flex-shrink:0; }
+  .sim-clock{ font-size:.82rem; color:var(--ink-faint); font-variant-numeric:tabular-nums; }
+  .sim-btn-ghost{
+    font-size:.82rem; color:var(--ink-soft); text-decoration:none; background:none;
+    border:1px solid var(--line); border-radius:999px; padding:6px 14px; cursor:pointer; font-family:inherit;
+  }
+  .sim-btn-ghost:hover{ border-color:var(--accent); color:var(--accent); }
+
+  /* ── 본문 3단 레이아웃 ── */
+  .sim-body{
+    display:grid;
+    grid-template-columns:260px 1fr 340px;
+    gap:1px;
+    background:var(--line);
+    flex:1;
+    min-height:0;
+    overflow:hidden;
+  }
+
+  .sim-right-col{
+    display:flex; flex-direction:column; min-height:0; background:var(--line); gap:1px;
+  }
+
+  /* ── 좌측: 사건 목록 ── */
+  .sim-cases{ background:#ffffff; overflow-y:auto; padding:16px; }
+  .sim-cases-title{ font-size:.72rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:12px; }
+  .case-card{
+    display:block; width:100%; text-align:left; background:none; border:1px solid var(--line);
+    border-radius:10px; padding:12px; margin-bottom:10px; cursor:pointer; font-family:inherit;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .case-card:hover{ border-color:var(--accent); }
+  .case-card-open{ border-color:var(--accent); background:#f7f8fb; }
+  .case-card-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+  .case-cat{ font-size:.68rem; color:var(--ink-faint); }
+  .case-diff{ font-size:.68rem; font-weight:700; padding:2px 7px; border-radius:999px; }
+  .case-diff-하{ background:#ecfdf3; color:#067647; }
+  .case-diff-중{ background:#fffaeb; color:#b54708; }
+  .case-diff-상{ background:#fef3f2; color:#b42318; }
+  .case-title{ font-size:.92rem; font-weight:700; margin-bottom:4px; }
+  .case-meta{ font-size:.74rem; color:var(--ink-faint); margin-bottom:6px; }
+  .case-challenge{ font-size:.78rem; color:var(--ink-soft); line-height:1.5; }
+  .case-assumption{ font-size:.68rem; color:#b54708; margin-top:6px; }
+
+  /* ── 중앙: 사무실 평면도 ── */
+  .sim-org{ background:#ffffff; overflow:hidden; padding:16px 16px 0; display:flex; flex-direction:column; position:relative; }
+  .sim-org-title{ font-size:.72rem; font-weight:700; letter-spacing:.04em; color:var(--ink-faint); margin-bottom:10px; flex-shrink:0; }
+
+  .org-floor{
+    position:relative;
+    flex:1;
+    min-height:420px;
+    background:
+      repeating-linear-gradient(0deg, rgba(0,0,0,.05) 0 2px, transparent 2px 32px),
+      repeating-linear-gradient(90deg, rgba(0,0,0,.05) 0 2px, transparent 2px 32px),
+      #cfd6c2;
+    border:3px solid #2b2b2b;
+    border-radius:0;
+    image-rendering:pixelated;
+    overflow:hidden;
+  }
+
+  .floor-zone{
+    position:absolute;
+    font-size:.64rem;
+    font-weight:700;
+    letter-spacing:.04em;
+    color:#4a5240;
+    text-transform:uppercase;
+    pointer-events:none;
+    font-family:inherit;
+  }
+
+  .war-room-ring{
+    position:absolute;
+    left:50%; top:46%;
+    width:0; height:0;
+    border-radius:50%;
+    border:2px dashed #8a957a;
+    transform:translate(-50%,-50%);
+    transition:width .5s ease, height .5s ease, border-color .3s ease;
+    pointer-events:none;
+  }
+  .war-room-active{ width:46%; height:50%; border-color:#4a5240; border-radius:8px; }
+  .war-room-label{
+    position:absolute; left:50%; top:16%; transform:translateX(-50%);
+    font-size:.64rem; font-weight:700; letter-spacing:.08em; color:#4a5240; text-transform:uppercase;
+    pointer-events:none;
+  }
+
+  .org-connectors{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+  .connector-line{ stroke:#2b2b2b; stroke-width:.5; stroke-dasharray:1.2 1.4; opacity:.8; }
+  .connector-pulse{ fill:#b42318; opacity:.9; }
+
+  .org-node{
+    position:absolute;
+    transform:translate(-50%,-50%);
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+    width:76px;
+    padding:4px 2px;
+    border-radius:4px;
+    cursor:pointer;
+    transition:left .6s cubic-bezier(.22,1,.36,1), top .6s cubic-bezier(.22,1,.36,1), box-shadow .2s ease, background .2s ease;
+    outline:none;
+  }
+  .org-node:hover{ background:rgba(0,0,0,.06); }
+  .org-node:focus-visible{ box-shadow:0 0 0 2px var(--accent); }
+  .org-node.mode-idle{ opacity:.4; }
+  .org-node.mode-idle .pixel-avatar-svg{ filter:grayscale(.5); }
+
+  .org-node.mode-speaking .org-avatar,
+  .org-node.mode-speaking-player .org-avatar{ filter:drop-shadow(0 0 0 2px rgba(23,60,120,.3)); }
+  .org-node.mode-listening .org-avatar{ filter:drop-shadow(0 0 0 2px rgba(180,35,24,.3)); }
+
+  .org-avatar{
+    position:relative;
+    width:48px; height:68px; display:flex; align-items:flex-end; justify-content:center;
+    image-rendering:pixelated;
+  }
+  .org-avatar::after{
+    content:"";
+    position:absolute; bottom:1px; left:50%; width:30px; height:7px;
+    background:rgba(0,0,0,.18); border-radius:50%; transform:translateX(-50%); z-index:-1;
+  }
+  .pixel-avatar-svg{ width:48px; height:68px; display:block; }
+  .org-pulse-ring{
+    position:absolute; left:50%; bottom:2px; width:34px; height:10px;
+    border:1.5px solid var(--role-color); border-radius:50%;
+    opacity:.5; transform:translateX(-50%);
+    animation:org-pulse 1.4s ease-out infinite;
+  }
+  @keyframes org-pulse{
+    0%{ transform:translateX(-50%) scale(.8); opacity:.55; }
+    70%{ transform:translateX(-50%) scale(1.6); opacity:0; }
+    100%{ transform:translateX(-50%) scale(1.6); opacity:0; }
+  }
+
+  .org-name{ font-size:.66rem; font-weight:700; text-align:center; line-height:1.2; color:#2b2b2b; }
+  .org-status{ font-size:.58rem; font-weight:700; color:var(--role-color); }
+  .org-status-idle{ color:#7c876c; font-weight:400; }
+
+  /* ── 보고 스마니 (이전 말밝선 자리를 대신함) ── */
+  .sim-thread{
+    background:#ffffff; overflow-y:auto; padding:16px 18px; border-top:1px solid var(--line);
+    flex:1; min-height:140px; max-height:46%;
+  }
+  .sim-thread-empty{ flex:0; min-height:0; max-height:0; padding:0; border-top:none; }
+  .sim-thread-title{
+    font-size:.68rem; font-weight:700; letter-spacing:.04em; color:var(--ink-faint);
+    margin-bottom:12px; text-transform:uppercase;
+  }
+  .thread-list{ display:flex; flex-direction:column; gap:10px; }
+  .thread-msg{ display:flex; gap:10px; align-items:flex-start; }
+  .thread-msg-avatar{
+    width:22px; height:31px; flex-shrink:0; display:flex; align-items:flex-end; justify-content:center;
+    image-rendering:pixelated; margin-top:2px;
+  }
+  .thread-msg-avatar .pixel-avatar-svg{ width:22px; height:31px; display:block; }
+  .thread-msg-body{
+    flex:1; min-width:0; background:#f7f8fb; border:1px solid var(--line); border-radius:8px;
+    padding:9px 12px;
+  }
+  .thread-msg-action .thread-msg-body{ background:#eef3fb; border-color:#c6d4ec; }
+  .thread-msg-terminal .thread-msg-body{ background:#eefbf4; border-color:#a9e0c4; }
+  .thread-msg-head{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; margin-bottom:4px; }
+  .thread-msg-route{ font-size:.72rem; font-weight:700; color:var(--accent); }
+  .thread-msg-time{ font-size:.68rem; color:var(--ink-faint); font-variant-numeric:tabular-nums; flex-shrink:0; }
+  .thread-msg-text{ font-size:.78rem; line-height:1.55; color:var(--ink-soft); margin:0; }
+  /* ── 담당자 상세 패널 (팝오버) ── */
+  .person-popover{
+    position:absolute; right:14px; bottom:14px; width:220px;
+    background:#ffffff; border:1px solid var(--line); border-radius:14px;
+    padding:16px; box-shadow:0 12px 30px rgba(20,20,20,.12); z-index:10;
+  }
+  .person-popover-close{
+    position:absolute; top:10px; right:10px; width:22px; height:22px; border-radius:50%;
+    border:none; background:#f1f1f1; color:var(--ink-soft); font-size:.9rem; line-height:1; cursor:pointer;
+  }
+  .person-popover-head{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .person-popover-avatar{
+    width:36px; height:51px; display:flex; align-items:flex-end; justify-content:center; flex-shrink:0;
+    image-rendering:pixelated;
+  }
+  .person-popover-avatar .pixel-avatar-svg{ width:36px; height:51px; display:block; }
+  .person-popover-name{ font-size:.86rem; font-weight:700; }
+  .person-popover-dept{ font-size:.7rem; color:var(--ink-faint); }
+  .person-popover-authority{ font-size:.72rem; color:var(--ink-soft); margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid var(--line); }
+  .person-popover-label{ font-size:.64rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:6px; }
+  .person-popover-list{ list-style:none; margin:0 0 10px; padding:0; display:flex; flex-direction:column; gap:4px; }
+  .person-popover-list li{ font-size:.74rem; color:var(--ink-soft); padding-left:12px; position:relative; line-height:1.4; }
+  .person-popover-list li::before{ content:"·"; position:absolute; left:1px; color:var(--ink-faint); }
+  .person-popover-tag{ display:inline-block; font-size:.64rem; font-weight:700; padding:3px 8px; border-radius:999px; background:#ecfdf3; color:#067647; }
+  .person-popover-tag-idle{ background:#f1f1f1; color:var(--ink-faint); }
+
+  /* ── 우측: 상황 및 의사결정 패널 ── */
+  .sim-panel{ background:#ffffff; overflow-y:auto; padding:20px; flex:1; min-height:0; }
+  .sim-panel-empty{ display:flex; align-items:center; justify-content:center; color:var(--ink-faint); font-size:.85rem; text-align:center; }
+  .sim-panel-eyebrow{ font-size:.68rem; font-weight:700; letter-spacing:.04em; color:var(--accent); }
+  .sim-panel-title{ font-size:1.15rem; font-weight:700; margin:6px 0 10px; }
+  .sim-panel-brief{ font-size:.82rem; color:var(--ink-soft); line-height:1.6; margin:0 0 18px; padding-bottom:16px; border-bottom:1px solid var(--line); }
+  .sim-narration{ font-size:.88rem; line-height:1.65; margin-bottom:14px; }
+  .sim-facts{ list-style:none; margin:0 0 18px; padding:0; display:flex; flex-direction:column; gap:6px; }
+  .sim-facts li{ font-size:.78rem; color:var(--ink-soft); padding-left:14px; position:relative; }
+  .sim-facts li::before{ content:"·"; position:absolute; left:2px; color:var(--ink-faint); }
+  .sim-choices{ display:flex; flex-direction:column; gap:8px; }
+  .sim-choice-card{
+    display:flex; justify-content:space-between; align-items:center; width:100%; text-align:left;
+    background:none; border:1px solid var(--line); border-radius:10px; padding:12px 14px; cursor:pointer; font-family:inherit;
+  }
+  .sim-choice-card:hover{ border-color:var(--accent); background:#f7f8fb; }
+  .sim-choice-label{ font-size:.84rem; font-weight:600; }
+  .sim-choice-arrow{ font-size:.74rem; color:var(--ink-faint); flex-shrink:0; }
+  .sim-result{ padding-top:4px; }
+  .sim-result-badge{ display:inline-block; font-size:.72rem; font-weight:700; padding:4px 10px; border-radius:999px; margin-bottom:10px; }
+  .result-resolved .sim-result-badge{ background:#ecfdf3; color:#067647; }
+  .result-partial .sim-result-badge{ background:#fffaeb; color:#b54708; }
+  .sim-result-summary{ font-size:.86rem; line-height:1.65; margin:0 0 16px; }
+  .sim-lessons-title{ font-size:.72rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:8px; }
+  .sim-lessons{ list-style:none; margin:0 0 20px; padding:0; display:flex; flex-direction:column; gap:6px; }
+  .sim-lessons li{ font-size:.8rem; color:var(--ink-soft); line-height:1.5; padding-left:14px; position:relative; }
+  .sim-lessons li::before{ content:"✓"; position:absolute; left:0; color:var(--accent); font-size:.7rem; }
+  .sim-btn-primary{
+    background:var(--ink); color:#fff; border:none; border-radius:10px; padding:10px 18px;
+    font-size:.84rem; font-weight:600; cursor:pointer; font-family:inherit;
+  }
+  .sim-btn-primary:hover{ background:var(--accent); }
+
+  /* ── 하단: 타임라인 ── */
+  .sim-timeline{ background:#ffffff; border-top:1px solid var(--line); padding:12px 20px; max-height:120px; overflow-y:auto; flex-shrink:0; }
+  .sim-timeline-empty{ padding:0; max-height:0; }
+  .tl-title{ font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:8px; }
+  .tl-list{ display:flex; flex-direction:column; gap:6px; }
+  .tl-item{ display:flex; gap:10px; align-items:baseline; font-size:.78rem; }
+  .tl-time{ font-variant-numeric:tabular-nums; color:var(--ink-faint); flex-shrink:0; width:52px; }
+  .tl-label{ font-weight:600; flex-shrink:0; }
+  .tl-detail{ color:var(--ink-soft); }
+
+  @media (max-width:980px){
+    .sim-body{ grid-template-columns:1fr; grid-template-rows:auto 480px auto; overflow-y:auto; }
+    .org-floor{ min-height:420px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .org-node{ transition:none; }
+    .org-pulse-ring{ animation:none; }
+  }
+</style>
+</head>
+<body>
+  <main id="app"></main>
+
+  <script src="./it-team-sim/data/sim-data.js"></script>
+  <script src="./it-team-sim/domain/sim-domain.js"></script>
+  <script type="module" src="./it-team-sim/ui/sim-ui.js"></script>
+</body>
+</html>
