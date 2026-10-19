@@ -27,6 +27,7 @@ window.ITSimData = (function () {
     "color": "#173c78",
     "shortLabel": "DBA팀장",
     "hair": "short-side",
+    "avatarImage": "./it-team-sim/avatars/dba_lead.png",
     "seat": {
       "x": 10,
       "y": 16
@@ -46,6 +47,7 @@ window.ITSimData = (function () {
     "color": "#173c78",
     "shortLabel": "DB사원",
     "hair": "short-round",
+    "avatarImage": "./it-team-sim/avatars/db_employee.png",
     "seat": {
       "x": 10,
       "y": 30
@@ -65,6 +67,7 @@ window.ITSimData = (function () {
     "color": "#b42318",
     "shortLabel": "보안팀장",
     "hair": "long-straight",
+    "avatarImage": "./it-team-sim/avatars/security_lead.png",
     "seat": {
       "x": 90,
       "y": 14
@@ -84,6 +87,7 @@ window.ITSimData = (function () {
     "color": "#b42318",
     "shortLabel": "보안사원",
     "hair": "bun",
+    "avatarImage": "./it-team-sim/avatars/security_employee.png",
     "seat": {
       "x": 90,
       "y": 28
@@ -103,6 +107,7 @@ window.ITSimData = (function () {
     "color": "#b42318",
     "shortLabel": "보안지원",
     "hair": "bald-glasses",
+    "avatarImage": "./it-team-sim/avatars/security_support.png",
     "seat": {
       "x": 90,
       "y": 42
@@ -122,6 +127,7 @@ window.ITSimData = (function () {
     "color": "#b54708",
     "shortLabel": "네트과장",
     "hair": "curly",
+    "avatarImage": "./it-team-sim/avatars/network_manager.png",
     "seat": {
       "x": 10,
       "y": 62
@@ -141,6 +147,7 @@ window.ITSimData = (function () {
     "color": "#b54708",
     "shortLabel": "네트사원",
     "hair": "ponytail",
+    "avatarImage": "./it-team-sim/avatars/network_employee.png",
     "seat": {
       "x": 10,
       "y": 76
@@ -160,6 +167,7 @@ window.ITSimData = (function () {
     "color": "#0f6656",
     "shortLabel": "서버과장",
     "hair": "buzz",
+    "avatarImage": "./it-team-sim/avatars/server_manager.png",
     "seat": {
       "x": 50,
       "y": 90
@@ -179,6 +187,7 @@ window.ITSimData = (function () {
     "color": "#6b4fbb",
     "shortLabel": "DevOps과장",
     "hair": "long-wave",
+    "avatarImage": "./it-team-sim/avatars/infra_devops_manager.png",
     "seat": {
       "x": 90,
       "y": 62
@@ -198,6 +207,7 @@ window.ITSimData = (function () {
     "color": "#6b4fbb",
     "shortLabel": "인프사원1",
     "hair": "short-spiky",
+    "avatarImage": "./it-team-sim/avatars/infra_employee_1.png",
     "seat": {
       "x": 90,
       "y": 90
@@ -217,6 +227,7 @@ window.ITSimData = (function () {
     "color": "#6b4fbb",
     "shortLabel": "인프사원2",
     "hair": "bob",
+    "avatarImage": "./it-team-sim/avatars/infra_employee_2.png",
     "seat": {
       "x": 74,
       "y": 90
@@ -236,6 +247,7 @@ window.ITSimData = (function () {
     "color": "#6b4fbb",
     "shortLabel": "DevOps사원",
     "hair": "long-tied",
+    "avatarImage": "./it-team-sim/avatars/devops_employee.png",
     "seat": {
       "x": 90,
       "y": 76

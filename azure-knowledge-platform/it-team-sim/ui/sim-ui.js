@@ -121,6 +121,19 @@
     return '<svg class="pixel-avatar-svg" viewBox="0 0 ' + w + ' ' + h + '" shape-rendering="crispEdges" aria-hidden="true">' + rects + '</svg>';
   }
 
+  /**
+   * 캐릭터 아바타를 렌더링한다. person.avatarImage가 지정되어 있으면 실제 이미지를,
+   * 없으면 픽셀 SVG를 그린다. 나중에 ./it-team-sim/avatars/ 폴더에 {person.id}.png
+   * 같은 이미지를 넣고 sim-data.js의 roster 항목에 avatarImage 경로를 추가하면
+   * 코드를 더 고치지 않고도 이미지로 교체된다.
+   */
+  function renderAvatar(person, walkFrame) {
+    if (person && person.avatarImage) {
+      return '<img class="photo-avatar-img" src="' + esc(person.avatarImage) + '" alt="" aria-hidden="true">';
+    }
+    return pixelAvatarSvg(person, walkFrame);
+  }
+
   /* ───────────── 상황실(war room) 좌표 배치 ─────────────
    * 참여자 수에 맞춰 상황실 내부 좌표를 배정한다. */
   var WAR_ROOM_SLOTS = {
@@ -253,7 +266,7 @@
       return '<div class="org-node' + modeClass + '" data-person="' + esc(r.id) + '" ' +
           'style="left:' + pos.x + '%;top:' + pos.y + '%;--role-color:' + esc(r.color) + '" ' +
           'role="button" tabindex="0" aria-label="' + esc(r.name) + ' 상세 정보">' +
-        '<div class="org-avatar">' + pixelAvatarSvg(r, isParticipant ? walkFrame : 0) + '</div>' +
+        '<div class="org-avatar">' + renderAvatar(r, isParticipant ? walkFrame : 0) + '</div>' +
         '<div class="org-name">' + esc(r.name) + '</div>' +
         '<div class="org-status' + (isParticipant ? '' : ' org-status-idle') + '">' + esc(statusText) + '</div>' +
       '</div>';
@@ -279,7 +292,7 @@
     return '<div class="person-popover" data-person-popover>' +
       '<button class="person-popover-close" type="button" data-close-person aria-label="닫기">×</button>' +
       '<div class="person-popover-head" style="--role-color:' + esc(p.color) + '">' +
-        '<div class="person-popover-avatar">' + pixelAvatarSvg(p, 0) + '</div>' +
+        '<div class="person-popover-avatar">' + renderAvatar(p, 0) + '</div>' +
         '<div>' +
           '<div class="person-popover-name">' + esc(p.name) + '</div>' +
           '<div class="person-popover-dept">' + esc(p.dept) + '</div>' +
@@ -361,7 +374,7 @@
         : (toP ? (esc(fromP ? fromP.name : '') + ' → ' + esc(toP.name)) : (esc(fromP ? fromP.name : '') + ' → 전체 공유'));
       return '<div class="thread-msg' + kindClass + '">' +
         '<div class="thread-msg-avatar" style="--role-color:' + esc(fromP ? fromP.color : '#8a8a8a') + '">' +
-          (fromP ? pixelAvatarSvg(fromP, 0) : '') +
+          (fromP ? renderAvatar(fromP, 0) : '') +
         '</div>' +
         '<div class="thread-msg-body">' +
           '<div class="thread-msg-head">' +
@@ -505,7 +518,7 @@
       if (!node) return;
       var person = byId(pid);
       if (!person) return;
-      node.innerHTML = pixelAvatarSvg(person, walkFrame);
+      node.innerHTML = renderAvatar(person, walkFrame);
     });
   }, 420);
   draw();
