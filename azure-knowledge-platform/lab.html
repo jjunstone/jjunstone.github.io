@@ -28,15 +28,18 @@
   .topbar{
     display:flex;
     align-items:center;
-    justify-content:space-between;
+    justify-content:center;
     padding:20px 32px;
     border-bottom:1px solid var(--line);
+    position:relative;
   }
   .topbar-brand{
     font-weight:700;
     text-decoration:none;
     color:var(--ink);
     font-size:.95rem;
+    position:absolute;
+    left:32px;
   }
   .topbar-links{ display:flex; gap:18px; }
   .topbar-links a{
@@ -102,21 +105,44 @@
     position:relative;
     width:100%;
     aspect-ratio:16/10;
-    background-size:cover;
-    background-position:top center;
-    background-repeat:no-repeat;
-    border-bottom:1px solid var(--line);
     overflow:hidden;
+    border-bottom:1px solid var(--line);
+    background:#f8fafc;
+    padding:14px;
   }
-  .lab-card-thumb img{
-    width:100%; height:100%; object-fit:cover; object-position:top center; display:block;
-  }
-  .lab-card-thumb-fallback{
-    width:100%; height:100%;
-    display:flex; align-items:center; justify-content:center;
-    font-size:.72rem; font-weight:700; letter-spacing:.06em; color:rgba(255,255,255,.85);
-    text-transform:uppercase;
-  }
+
+  /* ── 미니 프리뷰: IT Team Simulator (조직도 미니어처) ── */
+  .mini-sim{ position:relative; width:100%; height:100%; background:#ffffff; border:1px solid #e2e5e0; border-radius:6px; overflow:hidden; }
+  .mini-sim-zone{ position:absolute; border:1.5px dashed #9aa58c; border-radius:4px; background:rgba(207,214,194,.35); }
+  .mini-sim-dot{ position:absolute; width:7px; height:7px; border-radius:2px; transform:translate(-50%,-50%); }
+  .mini-sim-topbar{ position:absolute; top:0; left:0; right:0; height:14%; background:#ffffff; border-bottom:1px solid #eceeea; display:flex; align-items:center; padding:0 8px; gap:4px; }
+  .mini-sim-topbar span{ width:22px; height:4px; background:#d8dbd4; border-radius:2px; }
+
+  /* ── 미니 프리뷰: 데이터 아키텍처 (6단계 플로우) ── */
+  .mini-flow{ position:relative; width:100%; height:100%; background:#1f2430; border-radius:6px; display:flex; align-items:center; justify-content:center; gap:6px; padding:0 10px; }
+  .mini-flow-step{ flex:1; height:62%; border-radius:4px; background:rgba(255,255,255,.12); display:flex; align-items:flex-end; }
+  .mini-flow-step i{ display:block; width:100%; border-radius:0 0 4px 4px; background:linear-gradient(180deg,#5ee6c7,#2fb89c); }
+  .mini-flow-arrow{ color:rgba(255,255,255,.3); font-size:11px; }
+
+  /* ── 미니 프리뷰: 금융거래 생명주기 (타임라인) ── */
+  .mini-journey{ position:relative; width:100%; height:100%; background:#fffaf2; border-radius:6px; padding:14px 12px; }
+  .mini-journey-track{ position:relative; height:3px; background:#f0dcb8; border-radius:2px; margin-top:16px; }
+  .mini-journey-fill{ position:absolute; left:0; top:0; height:100%; width:55%; background:#d97706; border-radius:2px; }
+  .mini-journey-dot{ position:absolute; top:-5px; width:13px; height:13px; border-radius:50%; background:#fff; border:3px solid #d97706; transform:translateX(-50%); }
+  .mini-journey-card{ margin-top:22px; background:#ffffff; border:1px solid #f0dcb8; border-radius:6px; padding:8px 10px; }
+  .mini-journey-card b{ display:block; width:60%; height:7px; background:#b45309; border-radius:3px; margin-bottom:5px; }
+  .mini-journey-card span{ display:block; width:90%; height:5px; background:#f0dcb8; border-radius:3px; }
+
+  /* ── 미니 프리뷰: Change Gate (승인 카드) ── */
+  .mini-gate{ position:relative; width:100%; height:100%; background:#0b1430; border-radius:6px; padding:12px; display:flex; flex-direction:column; gap:7px; }
+  .mini-gate-row{ display:flex; align-items:center; gap:8px; }
+  .mini-gate-badge{ width:16px; height:16px; border-radius:50%; background:#3b82f6; flex-shrink:0; }
+  .mini-gate-bar{ flex:1; height:6px; background:rgba(255,255,255,.14); border-radius:3px; }
+  .mini-gate-btn{ margin-top:auto; align-self:flex-end; width:46%; height:16px; border-radius:5px; background:#3b82f6; }
+
+  /* ── 미니 프리뷰: Technology Map (카테고리 그리드) ── */
+  .mini-techmap{ position:relative; width:100%; height:100%; background:#eafbf3; border-radius:6px; padding:12px; display:grid; grid-template-columns:repeat(4,1fr); grid-template-rows:repeat(2,1fr); gap:6px; }
+  .mini-techmap i{ background:#ffffff; border:1px solid #bfe9d6; border-radius:5px; }
 
   .lab-card-body{ flex:1; min-width:0; padding:18px 20px 20px; display:flex; flex-direction:column; }
 
@@ -205,8 +231,24 @@
 
     <div class="lab-grid">
       <a class="lab-card" href="./it-team-sim.html">
-        <span class="lab-card-thumb" style="background:linear-gradient(135deg,#173c78,#0f6656);">
-          <span class="lab-card-thumb-fallback">IT Team Simulator</span>
+        <span class="lab-card-thumb">
+          <span class="mini-sim">
+            <span class="mini-sim-topbar"><span></span><span style="width:14px"></span></span>
+            <span class="mini-sim-zone" style="left:4%;top:20%;width:38%;height:30%;"></span>
+            <span class="mini-sim-zone" style="left:58%;top:20%;width:38%;height:30%;"></span>
+            <span class="mini-sim-zone" style="left:4%;top:54%;width:38%;height:30%;"></span>
+            <span class="mini-sim-zone" style="left:58%;top:54%;width:38%;height:30%;"></span>
+            <span class="mini-sim-zone" style="left:32%;top:84%;width:36%;height:14%;"></span>
+            <span class="mini-sim-dot" style="left:14%;top:30%;background:#173c78;"></span>
+            <span class="mini-sim-dot" style="left:24%;top:30%;background:#173c78;"></span>
+            <span class="mini-sim-dot" style="left:68%;top:30%;background:#b42318;"></span>
+            <span class="mini-sim-dot" style="left:78%;top:30%;background:#b42318;"></span>
+            <span class="mini-sim-dot" style="left:14%;top:64%;background:#b54708;"></span>
+            <span class="mini-sim-dot" style="left:24%;top:64%;background:#b54708;"></span>
+            <span class="mini-sim-dot" style="left:68%;top:64%;background:#6b4fbb;"></span>
+            <span class="mini-sim-dot" style="left:78%;top:64%;background:#6b4fbb;"></span>
+            <span class="mini-sim-dot" style="left:50%;top:90%;background:#0f6656;"></span>
+          </span>
         </span>
         <span class="lab-card-body">
           <span class="lab-card-title">IT Team Simulator<span class="lab-status">IN PROGRESS</span></span>
@@ -216,8 +258,20 @@
       </a>
 
       <a class="lab-card" href="../architecture-platform/data-architecture-platform.html">
-        <span class="lab-card-thumb" style="background:linear-gradient(135deg,#1f2937,#374151);">
-          <span class="lab-card-thumb-fallback">데이터 아키텍처</span>
+        <span class="lab-card-thumb">
+          <span class="mini-flow">
+            <span class="mini-flow-step"><i style="height:40%;"></i></span>
+            <span class="mini-flow-arrow">›</span>
+            <span class="mini-flow-step"><i style="height:65%;"></i></span>
+            <span class="mini-flow-arrow">›</span>
+            <span class="mini-flow-step"><i style="height:85%;"></i></span>
+            <span class="mini-flow-arrow">›</span>
+            <span class="mini-flow-step"><i style="height:55%;"></i></span>
+            <span class="mini-flow-arrow">›</span>
+            <span class="mini-flow-step"><i style="height:95%;"></i></span>
+            <span class="mini-flow-arrow">›</span>
+            <span class="mini-flow-step"><i style="height:70%;"></i></span>
+          </span>
         </span>
         <span class="lab-card-body">
           <span class="lab-card-title">데이터 아키텍처 설계 스터디</span>
@@ -228,8 +282,19 @@
       </a>
 
       <a class="lab-card" href="./journey.html">
-        <span class="lab-card-thumb" style="background:linear-gradient(135deg,#b45309,#d97706);">
-          <span class="lab-card-thumb-fallback">금융거래 생명주기</span>
+        <span class="lab-card-thumb">
+          <span class="mini-journey">
+            <span class="mini-journey-track">
+              <span class="mini-journey-fill"></span>
+              <span class="mini-journey-dot" style="left:0%;"></span>
+              <span class="mini-journey-dot" style="left:55%;"></span>
+              <span class="mini-journey-dot" style="left:100%;"></span>
+            </span>
+            <span class="mini-journey-card">
+              <b></b>
+              <span></span>
+            </span>
+          </span>
         </span>
         <span class="lab-card-body">
           <span class="lab-card-title">금융거래 생명주기 시각화<span class="lab-status demo">DEMO</span></span>
@@ -239,8 +304,13 @@
       </a>
 
       <a class="lab-card" href="./change-gate.html">
-        <span class="lab-card-thumb" style="background:linear-gradient(135deg,#1e3a8a,#3b82f6);">
-          <span class="lab-card-thumb-fallback">Change Gate</span>
+        <span class="lab-card-thumb">
+          <span class="mini-gate">
+            <span class="mini-gate-row"><span class="mini-gate-badge"></span><span class="mini-gate-bar" style="width:70%;"></span></span>
+            <span class="mini-gate-row"><span class="mini-gate-badge" style="background:rgba(255,255,255,.2);"></span><span class="mini-gate-bar" style="width:90%;"></span></span>
+            <span class="mini-gate-row"><span class="mini-gate-badge" style="background:rgba(255,255,255,.2);"></span><span class="mini-gate-bar" style="width:55%;"></span></span>
+            <span class="mini-gate-btn"></span>
+          </span>
         </span>
         <span class="lab-card-body">
           <span class="lab-card-title">Change Gate<span class="lab-status demo">DEMO</span></span>
@@ -250,8 +320,10 @@
       </a>
 
       <a class="lab-card" href="./technology-map.html">
-        <span class="lab-card-thumb" style="background:linear-gradient(135deg,#0f6656,#10b981);">
-          <span class="lab-card-thumb-fallback">Technology Map</span>
+        <span class="lab-card-thumb">
+          <span class="mini-techmap">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </span>
         </span>
         <span class="lab-card-body">
           <span class="lab-card-title">Technology Map</span>
