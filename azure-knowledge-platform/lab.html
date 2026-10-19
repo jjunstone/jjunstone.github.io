@@ -47,7 +47,7 @@
   .topbar-links a:hover{ color:var(--accent); }
 
   main{
-    max-width:820px;
+    max-width:1080px;
     margin:0 auto;
     padding:64px 24px 96px;
   }
@@ -75,46 +75,66 @@
     margin:0 0 48px;
   }
 
-  .lab-list{
-    display:flex;
-    flex-direction:column;
-    gap:16px;
+  .lab-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:20px;
   }
 
   .lab-card{
     display:flex;
-    align-items:flex-start;
-    gap:18px;
-    padding:24px 26px;
+    flex-direction:column;
     border:1.4px solid var(--line);
     border-radius:14px;
     text-decoration:none;
     color:var(--ink);
+    overflow:hidden;
     transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease;
   }
 
   .lab-card:hover{
     border-color:var(--accent);
-    transform:translateY(-2px);
-    box-shadow:0 10px 24px rgba(15,102,86,.1);
+    transform:translateY(-3px);
+    box-shadow:0 14px 28px rgba(15,102,86,.12);
   }
 
-  .lab-card-body{ flex:1; min-width:0; }
+  .lab-card-thumb{
+    position:relative;
+    width:100%;
+    aspect-ratio:16/10;
+    background-size:cover;
+    background-position:top center;
+    background-repeat:no-repeat;
+    border-bottom:1px solid var(--line);
+    overflow:hidden;
+  }
+  .lab-card-thumb img{
+    width:100%; height:100%; object-fit:cover; object-position:top center; display:block;
+  }
+  .lab-card-thumb-fallback{
+    width:100%; height:100%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:.72rem; font-weight:700; letter-spacing:.06em; color:rgba(255,255,255,.85);
+    text-transform:uppercase;
+  }
+
+  .lab-card-body{ flex:1; min-width:0; padding:18px 20px 20px; display:flex; flex-direction:column; }
 
   .lab-card-title{
     display:flex;
     align-items:center;
-    gap:10px;
-    font-size:1.1rem;
+    gap:8px;
+    font-size:1.02rem;
     font-weight:700;
-    margin:0 0 6px;
+    margin:0 0 8px;
+    flex-wrap:wrap;
   }
 
   .lab-status{
-    font-size:.7rem;
+    font-size:.64rem;
     font-weight:700;
     letter-spacing:.04em;
-    padding:2px 8px;
+    padding:2px 7px;
     border-radius:999px;
     background:rgba(15,102,86,.12);
     color:var(--accent);
@@ -126,27 +146,28 @@
   }
 
   .lab-card-desc{
-    font-size:.92rem;
-    line-height:1.6;
+    font-size:.84rem;
+    line-height:1.55;
     color:var(--ink-soft);
     margin:0;
+    flex:1;
   }
 
   .lab-card-meta{
-    font-size:.82rem;
+    font-size:.76rem;
     color:var(--ink-faint);
     margin:8px 0 0;
   }
 
   .lab-card-arrow{
-    font-size:1.2rem;
+    align-self:flex-end;
+    font-size:1rem;
     color:var(--ink-faint);
-    flex-shrink:0;
-    padding-top:2px;
+    margin-top:10px;
   }
 
   footer{
-    max-width:820px;
+    max-width:1080px;
     margin:0 auto;
     padding:0 24px 64px;
     display:flex;
@@ -159,6 +180,13 @@
     text-decoration:none;
   }
   footer a:hover{ color:var(--ink); }
+
+  @media (max-width:900px){
+    .lab-grid{ grid-template-columns:repeat(2, 1fr); }
+  }
+  @media (max-width:600px){
+    .lab-grid{ grid-template-columns:1fr; }
+  }
 </style>
 </head>
 <body>
@@ -175,48 +203,62 @@
     <h1 class="page-title">직접 만들고 검증하는 것들</h1>
     <p class="page-lead">회사 업무로는 아직 안 해본 것들을 여기서 혼자 만들어보고 있습니다.</p>
 
-    <div class="lab-list">
+    <div class="lab-grid">
       <a class="lab-card" href="./it-team-sim.html">
+        <span class="lab-card-thumb" style="background:linear-gradient(135deg,#173c78,#0f6656);">
+          <span class="lab-card-thumb-fallback">IT Team Simulator</span>
+        </span>
         <span class="lab-card-body">
           <span class="lab-card-title">IT Team Simulator<span class="lab-status">IN PROGRESS</span></span>
           <p class="lab-card-desc">12명 전산보안실 조직이 사건에 대응하는 과정을 체험하는 인터랙티브 시뮬레이터. VPN 장애, 퇴사자 계정 회수, DB 접근권한 요청 등 5개 시나리오.</p>
+          <span class="lab-card-arrow">→</span>
         </span>
-        <span class="lab-card-arrow">→</span>
       </a>
 
       <a class="lab-card" href="../architecture-platform/data-architecture-platform.html">
+        <span class="lab-card-thumb" style="background:linear-gradient(135deg,#1f2937,#374151);">
+          <span class="lab-card-thumb-fallback">데이터 아키텍처</span>
+        </span>
         <span class="lab-card-body">
           <span class="lab-card-title">데이터 아키텍처 설계 스터디</span>
           <p class="lab-card-desc">투자증권 도메인을 가정하고 요구사항부터 메타모델링, 논리·물리 설계, 거버넌스까지 6단계로 직접 설계해본 자료입니다.</p>
           <p class="lab-card-meta">6개 문서, SVG 다이어그램 포함</p>
+          <span class="lab-card-arrow">→</span>
         </span>
-        <span class="lab-card-arrow">→</span>
       </a>
 
       <a class="lab-card" href="./journey.html">
+        <span class="lab-card-thumb" style="background:linear-gradient(135deg,#b45309,#d97706);">
+          <span class="lab-card-thumb-fallback">금융거래 생명주기</span>
+        </span>
         <span class="lab-card-body">
           <span class="lab-card-title">금융거래 생명주기 시각화<span class="lab-status demo">DEMO</span></span>
           <p class="lab-card-desc">증권 앱에서 누르는 버튼 뒤로 돈·인증·장부가 어떻게 움직이는지 보여주는 시각화입니다. 숫자는 전부 가상 시나리오입니다.</p>
+          <span class="lab-card-arrow">→</span>
         </span>
-        <span class="lab-card-arrow">→</span>
       </a>
 
       <a class="lab-card" href="./change-gate.html">
+        <span class="lab-card-thumb" style="background:linear-gradient(135deg,#1e3a8a,#3b82f6);">
+          <span class="lab-card-thumb-fallback">Change Gate</span>
+        </span>
         <span class="lab-card-body">
           <span class="lab-card-title">Change Gate<span class="lab-status demo">DEMO</span></span>
           <p class="lab-card-desc">권한 변경 요청을 승인하는 화면입니다. 데이터는 가상입니다.</p>
+          <span class="lab-card-arrow">→</span>
         </span>
-        <span class="lab-card-arrow">→</span>
       </a>
 
       <a class="lab-card" href="./technology-map.html">
+        <span class="lab-card-thumb" style="background:linear-gradient(135deg,#0f6656,#10b981);">
+          <span class="lab-card-thumb-fallback">Technology Map</span>
+        </span>
         <span class="lab-card-body">
           <span class="lab-card-title">Technology Map</span>
           <p class="lab-card-desc">업무와 개인 프로젝트에서 실제로 써본 서비스들을 정리한 지도입니다.</p>
+          <span class="lab-card-arrow">→</span>
         </span>
-        <span class="lab-card-arrow">→</span>
       </a>
-    </div>
     </div>
   </main>
 
@@ -226,4 +268,3 @@
   </footer>
 </body>
 </html>
-

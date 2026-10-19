@@ -28,10 +28,7 @@ window.ITSimData = (function () {
     "shortLabel": "DBA팀장",
     "hair": "short-side",
     "avatarImage": "./it-team-sim/avatars/dba_lead.png",
-    "seat": {
-      "x": 10,
-      "y": 16
-    },
+    "seat": { "x": 16.3, "y": 21 },
     "responsibilities": [
       "DB 운영 정책 최종 승인",
       "DB 접근권한 요청 심의",
@@ -48,10 +45,7 @@ window.ITSimData = (function () {
     "shortLabel": "DB사원",
     "hair": "short-round",
     "avatarImage": "./it-team-sim/avatars/db_employee.png",
-    "seat": {
-      "x": 10,
-      "y": 30
-    },
+    "seat": { "x": 29.7, "y": 21 },
     "responsibilities": [
       "DB 일상 운영 및 모니터링",
       "쿼리/스키마 점검 지원",
@@ -68,10 +62,7 @@ window.ITSimData = (function () {
     "shortLabel": "보안팀장",
     "hair": "long-straight",
     "avatarImage": "./it-team-sim/avatars/security_lead.png",
-    "seat": {
-      "x": 90,
-      "y": 14
-    },
+    "seat": { "x": 67, "y": 21 },
     "responsibilities": [
       "IAM/보안 정책 최종 승인",
       "보안 사고 심각도 판단 및 에스컬레이션 수신",
@@ -88,10 +79,7 @@ window.ITSimData = (function () {
     "shortLabel": "보안사원",
     "hair": "bun",
     "avatarImage": "./it-team-sim/avatars/security_employee.png",
-    "seat": {
-      "x": 90,
-      "y": 28
-    },
+    "seat": { "x": 77, "y": 21 },
     "responsibilities": [
       "보안 경보 1차 분류",
       "접근권한 감사",
@@ -108,10 +96,7 @@ window.ITSimData = (function () {
     "shortLabel": "보안지원",
     "hair": "bald-glasses",
     "avatarImage": "./it-team-sim/avatars/security_support.png",
-    "seat": {
-      "x": 90,
-      "y": 42
-    },
+    "seat": { "x": 87, "y": 21 },
     "responsibilities": [
       "보안 솔루션(SIEM/DLP 등) 기술 운영",
       "로그 상세 분석",
@@ -128,10 +113,7 @@ window.ITSimData = (function () {
     "shortLabel": "네트과장",
     "hair": "curly",
     "avatarImage": "./it-team-sim/avatars/network_manager.png",
-    "seat": {
-      "x": 10,
-      "y": 62
-    },
+    "seat": { "x": 16.3, "y": 53 },
     "responsibilities": [
       "방화벽/VPN/DNS 정책 최종 승인",
       "네트워크 장애 초동 대응 지휘",
@@ -148,10 +130,7 @@ window.ITSimData = (function () {
     "shortLabel": "네트사원",
     "hair": "ponytail",
     "avatarImage": "./it-team-sim/avatars/network_employee.png",
-    "seat": {
-      "x": 10,
-      "y": 76
-    },
+    "seat": { "x": 29.7, "y": 53 },
     "responsibilities": [
       "네트워크 장비/회선 모니터링",
       "1차 알람 확인 및 보고",
@@ -168,10 +147,7 @@ window.ITSimData = (function () {
     "shortLabel": "서버과장",
     "hair": "buzz",
     "avatarImage": "./it-team-sim/avatars/server_manager.png",
-    "seat": {
-      "x": 50,
-      "y": 90
-    },
+    "seat": { "x": 50, "y": 84 },
     "responsibilities": [
       "서버/클라우드 자산 최종 승인",
       "퇴사자 자산 회수 확인",
@@ -188,10 +164,7 @@ window.ITSimData = (function () {
     "shortLabel": "DevOps과장",
     "hair": "long-wave",
     "avatarImage": "./it-team-sim/avatars/infra_devops_manager.png",
-    "seat": {
-      "x": 90,
-      "y": 62
-    },
+    "seat": { "x": 65, "y": 53 },
     "responsibilities": [
       "K8s/CI-CD 배포 최종 승인",
       "배포 장애 대응 지휘",
@@ -208,10 +181,7 @@ window.ITSimData = (function () {
     "shortLabel": "인프사원1",
     "hair": "short-spiky",
     "avatarImage": "./it-team-sim/avatars/infra_employee_1.png",
-    "seat": {
-      "x": 90,
-      "y": 90
-    },
+    "seat": { "x": 81, "y": 53 },
     "responsibilities": [
       "클라우드 자원 운영",
       "백업 작업 관리",
@@ -228,10 +198,7 @@ window.ITSimData = (function () {
     "shortLabel": "인프사원2",
     "hair": "bob",
     "avatarImage": "./it-team-sim/avatars/infra_employee_2.png",
-    "seat": {
-      "x": 74,
-      "y": 90
-    },
+    "seat": { "x": 89, "y": 53 },
     "responsibilities": [
       "클라우드 자원 운영",
       "백업 작업 관리",
@@ -248,10 +215,7 @@ window.ITSimData = (function () {
     "shortLabel": "DevOps사원",
     "hair": "long-tied",
     "avatarImage": "./it-team-sim/avatars/devops_employee.png",
-    "seat": {
-      "x": 90,
-      "y": 76
-    },
+    "seat": { "x": 73, "y": 53 },
     "responsibilities": [
       "CI/CD 파이프라인 운영",
       "배포 후 헬스체크 모니터링",

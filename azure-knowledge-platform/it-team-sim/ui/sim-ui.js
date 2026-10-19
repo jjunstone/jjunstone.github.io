@@ -233,11 +233,11 @@
     var positions = computePositions();
     var stage = session ? session.currentStage() : null;
 
-    var zoneLabels = '<div class="floor-zone floor-zone-dba" style="left:2%;top:4%;width:22%;">DBA팀</div>' +
-      '<div class="floor-zone floor-zone-network" style="left:2%;top:50%;width:22%;">네트워크팀</div>' +
-      '<div class="floor-zone floor-zone-server" style="left:38%;top:78%;width:24%;">서버팀</div>' +
-      '<div class="floor-zone floor-zone-security" style="left:76%;top:4%;width:22%;">보안팀</div>' +
-      '<div class="floor-zone floor-zone-infra" style="left:76%;top:50%;width:22%;">인프라/DevOps팀</div>' +
+    var zoneLabels = '<div class="floor-zone-box" style="left:3%;top:4%;width:40%;height:28%;"><span class="floor-zone-label">DBA팀</span></div>' +
+      '<div class="floor-zone-box" style="left:57%;top:4%;width:40%;height:28%;"><span class="floor-zone-label">보안팀</span></div>' +
+      '<div class="floor-zone-box" style="left:3%;top:36%;width:40%;height:28%;"><span class="floor-zone-label">네트워크팀</span></div>' +
+      '<div class="floor-zone-box" style="left:57%;top:36%;width:40%;height:28%;"><span class="floor-zone-label">인프라/DevOps팀</span></div>' +
+      '<div class="floor-zone-box" style="left:30%;top:68%;width:40%;height:26%;"><span class="floor-zone-label">서버팀</span></div>' +
       '<div class="war-room-ring' + (session ? ' war-room-active' : '') + '"></div>' +
       (session ? '<div class="war-room-label">상황실</div>' : '');
 
