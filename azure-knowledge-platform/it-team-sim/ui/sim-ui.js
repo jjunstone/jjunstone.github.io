@@ -186,9 +186,8 @@
     return '<header class="sim-top">' +
       '<div class="sim-top-left">' +
         '<span class="sim-brand">IT TEAM SIMULATOR</span>' +
-        '<span class="sim-sep">·</span>' +
-        '<span class="sim-current">' + esc(scenarioTitle) + '</span>' +
       '</div>' +
+      '<span class="sim-current">' + esc(scenarioTitle) + '</span>' +
       '<div class="sim-top-right">' +
         '<span class="sim-clock">가상시간 ' + elapsed + '</span>' +
         (session ? '<button class="sim-btn-ghost" type="button" data-exit>사건 목록으로</button>' : '') +
