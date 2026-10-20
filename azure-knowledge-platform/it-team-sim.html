@@ -53,6 +53,7 @@
   .sim-body{
     display:grid;
     grid-template-columns:260px 1fr 340px;
+    grid-template-rows:1fr;
     gap:1px;
     background:var(--line);
     flex:1;
@@ -86,7 +87,7 @@
   .case-assumption{ font-size:.68rem; color:#b54708; margin-top:6px; }
 
   /* ── 중앙: 사무실 평면도 ── */
-  .sim-org{ background:#ffffff; overflow:hidden; padding:16px 16px 0; display:flex; flex-direction:column; position:relative; }
+  .sim-org{ background:#ffffff; overflow:hidden; padding:16px 16px 0; display:flex; flex-direction:column; position:relative; min-height:0; }
   .sim-org-title{ font-size:.72rem; font-weight:700; letter-spacing:.04em; color:var(--ink-faint); margin-bottom:10px; flex-shrink:0; }
 
   .org-floor{
