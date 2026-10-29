@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>하이브리드 클라우드 &amp; 제로 트러스트 아키텍처 스터디 | 이준석</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/static/pretendard.css">
+<style>
+  :root{
+    --ink:#141414;
+    --ink-soft:#5b5b5b;
+    --ink-faint:#8a8a8a;
+    --line:#e6e6e6;
+    --accent:#0f6656;
+    --navy:#173c78;
+    --bg-soft:#f8fafc;
+    --font-main:"Pretendard","Gowun Dodum","Malgun Gothic",sans-serif;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background:#ffffff;
+    color:var(--ink);
+    font-family:var(--font-main);
+    line-height:1.65;
+  }
+
+  .topbar{
+    display:flex; align-items:center; justify-content:center;
+    padding:20px 32px; border-bottom:1px solid var(--line); position:relative;
+  }
+  .topbar-brand{
+    font-weight:700; text-decoration:none; color:var(--ink);
+    font-size:.95rem; position:absolute; left:32px;
+  }
+  .topbar-links{ display:flex; gap:18px; }
+  .topbar-links a{ color:var(--ink-soft); text-decoration:none; font-size:.88rem; }
+  .topbar-links a:hover{ color:var(--accent); }
+
+  main{ max-width:880px; margin:0 auto; padding:56px 24px 96px; }
+
+  .page-eyebrow{
+    font-size:.8rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--ink-soft); margin:0 0 12px;
+  }
+  .page-title{ font-size:1.9rem; font-weight:700; letter-spacing:-.02em; margin:0 0 14px; }
+  .page-lead{ font-size:1rem; line-height:1.75; color:var(--ink-soft); margin:0 0 20px; }
+
+  .study-note{
+    background:var(--bg-soft); border:1px solid var(--line); border-radius:10px;
+    padding:16px 18px; font-size:.86rem; color:var(--ink-soft); margin:0 0 48px;
+  }
+  .study-note b{ color:var(--ink); }
+
+  section{ margin-bottom:52px; }
+  h2{
+    font-size:1.2rem; font-weight:700; margin:0 0 6px; letter-spacing:-.01em;
+    display:flex; align-items:center; gap:8px;
+  }
+  h2 .num{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:22px; height:22px; border-radius:50%; background:var(--navy); color:#fff;
+    font-size:.72rem; font-weight:700; flex-shrink:0;
+  }
+  h3{ font-size:.98rem; font-weight:700; margin:24px 0 8px; }
+  p{ font-size:.92rem; color:var(--ink-soft); margin:0 0 14px; }
+  ul{ margin:0 0 14px; padding-left:20px; }
+  li{ font-size:.92rem; color:var(--ink-soft); margin-bottom:6px; }
+
+  table{ width:100%; border-collapse:collapse; margin:16px 0 20px; font-size:.84rem; }
+  th, td{ text-align:left; padding:9px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th{ color:var(--ink-faint); font-weight:600; font-size:.74rem; letter-spacing:.03em; text-transform:uppercase; }
+  td{ color:var(--ink-soft); }
+  td b{ color:var(--ink); }
+
+  .diagram{
+    background:var(--bg-soft); border:1px solid var(--line); border-radius:10px;
+    padding:18px 20px; font-size:.82rem; color:var(--ink-soft);
+    overflow-x:auto; white-space:pre; font-family:"SF Mono","Consolas",monospace;
+    line-height:1.55; margin:14px 0 18px;
+  }
+
+  .code-block{
+    background:#161b22; color:#e6edf3; border-radius:10px; padding:16px 18px;
+    font-family:"SF Mono","Consolas",monospace; font-size:.78rem; line-height:1.6;
+    overflow-x:auto; margin:14px 0 18px; white-space:pre;
+  }
+  .code-caption{ font-size:.76rem; color:var(--ink-faint); margin:-8px 0 18px; }
+
+  .analogy{
+    border-left:3px solid var(--accent); padding:10px 16px; margin:14px 0 18px;
+    background:var(--bg-soft); border-radius:0 8px 8px 0;
+  }
+  .analogy b{ color:var(--ink); }
+  .analogy p{ margin:4px 0 0; }
+
+  .scope-tag{
+    display:inline-block; font-size:.68rem; font-weight:700; letter-spacing:.03em;
+    padding:2px 8px; border-radius:999px; margin-right:6px;
+  }
+  .scope-tag.study{ background:rgba(15,102,86,.12); color:var(--accent); }
+  .scope-tag.ops{ background:rgba(23,60,120,.12); color:var(--navy); }
+
+  .boundary-box{
+    border:1px dashed var(--ink-faint); border-radius:10px; padding:14px 18px;
+    font-size:.84rem; color:var(--ink-soft); margin:24px 0 0;
+  }
+  .boundary-box b{ color:var(--ink); }
+
+  footer{
+    max-width:880px; margin:0 auto; padding:0 24px 64px;
+    display:flex; justify-content:center; gap:16px; font-size:.86rem;
+  }
+  footer a{ color:var(--ink-soft); text-decoration:none; }
+  footer a:hover{ color:var(--ink); }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <a class="topbar-brand" href="../index.html" title="홈으로 돌아가기">이준석</a>
+    <div class="topbar-links">
+      <a href="./projects.html">Projects</a>
+      <a href="./lab.html">Lab</a>
+    </div>
+  </div>
+
+  <main>
+    <p class="page-eyebrow">Lab · Study</p>
+    <h1 class="page-title">하이브리드 클라우드 &amp; 제로 트러스트 아키텍처 스터디</h1>
+    <p class="page-lead">온프레미스 AD·보안 운영 경험을 기반으로, Azure 클라우드 네이티브 인프라(Entra ID 하이브리드, Kubernetes, Terraform, CI/CD)가 어떻게 연결되는지 개념적으로 정리한 학습 노트입니다.</p>
+
+    <div class="study-note">
+      <b>이 페이지의 범위</b> — 이 문서는 실제로 구축·운영한 프로젝트가 아니라, 개인적으로 공부하며 정리한 아키텍처 개념 자료입니다. <span class="scope-tag ops">실무 운영</span>은 온프레미스 AD, Entra ID 하이브리드 연동, PowerShell 자동화, SIEM/KQL 로그 분석처럼 실제로 담당·검증한 영역이고, <span class="scope-tag study">학습 정리</span>는 Kubernetes·Docker·Terraform·CI/CD처럼 아직 실제 환경에서 구축해보지 않고 구조와 원리를 공부한 영역입니다. 코드 예시는 실제 운영 코드가 아니라 개념 이해를 위한 샘플입니다.
+    </div>
+
+    <section>
+      <h2><span class="num">1</span>하이브리드 클라우드 4단계 구조</h2>
+      <p>보안 규제가 엄격한 조직(로펌, 회계법인, 금융권 등)은 모든 시스템을 한 번에 클라우드로 옮기지 않고, 물리적으로 분리된 거점과 하이브리드 연결을 통해 보안성(온프레미스)과 확장성(클라우드)을 함께 가져가는 구조를 씁니다.</p>
+      <div class="diagram">[1구역: On-Premises]
+ 사내 도메인 PC · Windows Server · AD · ERP/그룹웨어 · 물리 방화벽 · L4 스위치
+ → 외부 반출 금지 민감 데이터, 내부망 Kerberos 인증, 하드웨어 HA
+       │ (거점 간 물리/논리 연결)
+       ▼
+[2구역: Hybrid Connection]
+ 전용선(ExpressRoute) / Site-to-Site VPN Gateway로 사내망과 클라우드 VNet 연결
+ Entra Connect Sync로 온프레미스 AD 계정을 클라우드 Entra ID로 주기 동기화
+       │ (클라우드 영역 진입)
+       ▼
+[3구역: Cloud Infrastructure Platform]
+ Identity/보안: Entra ID(조건부 액세스, MFA), RBAC, NSG, Private Endpoint
+ 컴퓨팅/컨테이너: Cloud VM, AKS(오토스케일링)
+ 자동화/모니터링: PowerShell, Terraform(IaC), Log Analytics(KQL)
+       │ (비즈니스 워크로드 서비스)
+       ▼
+[4구역: Target Enterprise Services]
+ 대규모 업무 플랫폼, 사내 AI 플랫폼(Azure OpenAI + RAG), M365 협업 환경</div>
+      <p>이 4단계 구조에서 1·2구역(온프레미스 AD, 하이브리드 연결, Entra Connect)은 실제 업무에서 운영하며 익힌 영역이고, 3구역의 AKS·Terraform 부분은 아직 실무로 다뤄보지 않은 학습 영역입니다.</p>
+    </section>
+
+    <section>
+      <h2><span class="num">2</span>인증(AuthN)과 인가(AuthZ) 구분</h2>
+      <p>로그인(인증)과 권한 부여(인가)는 서로 다른 질문에 답하는 개념입니다. 인증에 성공했다고 모든 리소스에 접근할 권한이 자동으로 생기지는 않습니다.</p>
+      <table>
+        <thead><tr><th>구분</th><th>Kerberos</th><th>OIDC</th><th>OAuth 2.0</th></tr></thead>
+        <tbody>
+          <tr><td><b>핵심 목적</b></td><td>내부망 인증</td><td>웹/클라우드 인증</td><td>데이터 접근 권한 위임</td></tr>
+          <tr><td><b>핵심 질문</b></td><td>사내 도메인에 등록된 PC/유저인가?</td><td>너는 누구(Who)인가?</td><td>너는 무엇(What)을 할 권한이 있는가?</td></tr>
+          <tr><td><b>주 무대</b></td><td>온프레미스 AD(LAN)</td><td>클라우드(Entra ID, 웹/모바일)</td><td>API 연동, AI 에이전트 호출(Graph API)</td></tr>
+          <tr><td><b>발급 결과물</b></td><td>TGT/서비스 티켓</td><td>ID 토큰(JWT)</td><td>Access 토큰(권한 범위 포함)</td></tr>
+        </tbody>
+      </table>
+      <div class="analogy">
+        <b>SSO는 프로토콜이 아니라 목표다.</b>
+        <p>SSO(Single Sign-On)는 "한 번 로그인하면 연결된 여러 시스템을 다시 로그인하지 않고 쓴다"는 사용자 경험의 목표이고, 이를 구현하는 실제 기술은 온프레미스에서는 Kerberos, 클라우드에서는 OIDC/SAML입니다.</p>
+      </div>
+      <p>Kerberos는 "사내 LAN은 안전하다"는 전제로 설계돼서, 인터넷을 거쳐야 하는 클라우드·API 환경에서는 그대로 쓸 수 없어 OIDC·OAuth로 대체됩니다. 실무에서는 온프레미스 AD 운영(Kerberos 기반)을 직접 담당했고, Entra ID의 조건부 액세스·MFA 정책도 실제로 운영했지만, OIDC/OAuth의 토큰 발급 흐름 자체는 이 문서에서 개념으로 정리한 수준입니다.</p>
+    </section>
+
+    <section>
+      <h2><span class="num">3</span>AI 플랫폼 인증 설계 — 왜 위임된 권한이 중요한가</h2>
+      <p>사내 AI 챗봇이 사용자의 개인 메일이나 일정 같은 민감 데이터를 조회할 때, 설계 방식에 따라 보안 수준이 크게 달라집니다. 아래는 두 가지 설계를 비교한 개념 정리입니다.</p>
+      <h3>잘못된 설계 — Application Permission(마스터키 방식)</h3>
+      <div class="diagram">[일반 직원] ──"대표님 메일 찾아줘(프롬프트 해킹)"──▶ [AI 챗봇(마스터키 보유)] ──▶ [전체 메일 서버]
+                                                                              ������ 대표이사 메일까지 열람(위험)</div>
+      <p>AI 챗봇 자체 계정에 회사 전체 메일을 읽을 수 있는 광범위한 권한을 주면, 프롬프트 인젝션 같은 우회 공격으로 AI가 마스터키를 이용해 권한 밖의 데이터까지 긁어올 위험이 있습니다.</p>
+      <h3>대안 설계 — OAuth 위임(Identity Passthrough / On-Behalf-Of)</h3>
+      <div class="diagram">[일반 직원] ──"내 메일 요약해줘"──▶ [AI 챗봇(자체 권한 없음)]
+       │                                    │
+       └─ (승인 클릭: 본인 OAuth 토큰 전달) ─┘
+                                             ▼
+                                     [M365 Graph API]
+                                       ������ 본인 메일함 (허용)
+                                       ������ 타인/대표 메일함 (403 차단)</div>
+      <p>AI 에이전트에게 자체 데이터 접근 권한을 주지 않고, 사용자가 '승인'을 누르는 순간 그 사용자 본인의 권한만 담긴 임시 토큰을 위임받아 API를 대신 호출하는 방식입니다. AI가 프롬프트 해킹을 당해도 들고 있는 토큰이 일반 직원의 토큰이라 권한 밖 데이터는 서버 단에서 차단됩니다.</p>
+      <p>사내 AI 업무지원 플랫폼을 실제로 구축할 때 개인화 조회 기능을 사용자 권한 범위로 제한한 것이 바로 이 설계 방향이었고, 이 문서는 그 판단의 배경이 되는 보안 원리를 더 깊게 정리한 것입니다.</p>
+    </section>
+
+    <section>
+      <h2><span class="num">4</span>Terraform · Docker · Kubernetes · CI/CD — 역할 구분</h2>
+      <p>네 가지 기술이 자주 한 세트로 언급되지만 역할은 명확히 다릅니다. 건설 비유로 정리하면 이해가 쉽습니다.</p>
+      <table>
+        <thead><tr><th>기술</th><th>분류</th><th>건설 비유</th><th>역할</th></tr></thead>
+        <tbody>
+          <tr><td><b>Terraform</b></td><td>IaC</td><td>토목 공사 · 골조 건설</td><td>클라우드 위에 네트워크·서버(워커 노드) 자체를 코드로 생성</td></tr>
+          <tr><td><b>Docker</b></td><td>컨테이너 패키징</td><td>규격화된 이사 컨테이너 박스</td><td>앱과 실행 환경을 이미지로 묶어 어디서든 동일하게 실행</td></tr>
+          <tr><td><b>Kubernetes</b></td><td>오케스트레이션</td><td>빌딩 내부 공간 관리</td><td>워커 노드 위에서 컨테이너를 몇 개 띄울지, 죽으면 어떻게 복구할지 관리</td></tr>
+          <tr><td><b>CI/CD</b></td><td>배포 자동화</td><td>자동화된 운반 컨베이어</td><td>코드 변경 시 이미지 빌드(CI) → 클러스터 배포(CD)를 자동화</td></tr>
+        </tbody>
+      </table>
+      <p><b>핵심은 순서다.</b> Terraform으로 먼저 서버(집)를 짓고, 그 집 안에서 Kubernetes가 Docker 컨테이너(세입자)를 관리합니다. Terraform은 Kubernetes 안에서 쓰는 언어가 아닙니다.</p>
+      <h3>개념 정리용 코드 예시</h3>
+      <div class="code-block"># Terraform: Azure 네트워크와 AKS 클러스터 뼈대 생성 (개념 예시)
+resource "azurerm_virtual_network" "enterprise_vnet" {
+  name                = "prod-enterprise-vnet"
+  address_space       = ["10.0.0.0/16"]
+  location            = "Korea Central"
+  resource_group_name = "rg-core-infra"
+}
+
+resource "azurerm_kubernetes_cluster" "enterprise_aks" {
+  name                = "aks-prod-cluster"
+  location            = "Korea Central"
+  resource_group_name = "rg-core-infra"
+  dns_prefix          = "entaks"
+
+  default_node_pool {
+    name           = "defaultpool"
+    node_count     = 3
+    vm_size        = "Standard_D4s_v3"
+    vnet_subnet_id = azurerm_subnet.aks_subnet.id
+  }
+
+  identity { type = "SystemAssigned" }
+}</div>
+      <p class="code-caption">HCL 선언적 문법과 Provider/Resource 구조를 익히기 위해 정리한 예시 코드입니다. 실제 클러스터에 적용해본 코드는 아닙니다.</p>
+      <div class="code-block"># Kubernetes: 위 AKS 위에 컨테이너 3개를 복제해 띄우는 명세서 (개념 예시)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: enterprise-ai-backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels: { app: ai-backend }
+  template:
+    metadata:
+      labels: { app: ai-backend }
+    spec:
+      containers:
+      - name: api-container
+        image: enterpriseacr.azurecr.io/ai-backend:v1.2.0
+        ports: [{ containerPort: 8080 }]</div>
+      <p class="code-caption">replicas 값만큼 Pod를 유지하고, 하나가 죽으면 자동으로 복구(Self-healing)하는 구조를 이해하기 위한 예시입니다.</p>
+    </section>
+
+    <section>
+      <h2><span class="num">5</span>워크로드별 인프라 선택 기준 — 무조건 K8s가 정답은 아니다</h2>
+      <p>클라우드 엔지니어의 역할은 최신 기술을 쓰는 게 아니라, 워크로드 특성과 비용을 따져 적합한 인프라를 고르는 것이라고 이해하고 있습니다. 실제로 지금 다루는 환경에 K8s를 도입하지 않은 이유도 이 기준에서 나왔습니다.</p>
+      <table>
+        <thead><tr><th>인프라 형태</th><th>적합한 워크로드</th><th>과금 기준</th></tr></thead>
+        <tbody>
+          <tr><td><b>온프레미스 VM</b></td><td>외부 벤더 상용 패키지, 민감 원본 DB (고정 IP 라이선스, 배포 연 1~2회)</td><td>초기 매입비(CAPEX) + 연간 유지보수비</td></tr>
+          <tr><td><b>클라우드 컨테이너(AKS)</b></td><td>대규모 동시 접속 자체 개발 서비스, 마이크로서비스, 잦은 배포</td><td>워커 노드(VM) 대수 × 가동 시간</td></tr>
+          <tr><td><b>클라우드 PaaS</b></td><td>간헐적 트래픽의 AI 챗봇, 검색 엔진 (24시간 상시 접속이 아님)</td><td>완전 종량제 (호출 토큰/쿼리 수)</td></tr>
+        </tbody>
+      </table>
+      <p>실제로 사내 AI 업무지원 플랫폼을 구축할 때, 24시간 워커 노드 비용이 드는 AKS 대신 호출량만큼 과금되는 Azure PaaS(Azure OpenAI, AI Search)를 선택한 것도 이 기준에 따른 판단이었습니다. 반면 외부 벤더의 Windows 설치형 상용 솔루션은 고정 IP 라이선스 구조라 컨테이너로 복제할 수 없어, 억지로 K8s에 올리면 관리 복잡도만 늘어나는 오버엔지니어링이 됩니다.</p>
+    </section>
+
+    <section>
+      <h2><span class="num">6</span>포털에서 확인 가능한 것과 단정하지 않을 것</h2>
+      <p>클라우드 환경을 읽기 권한으로 확인할 때는, 보이는 것과 보이지 않는 것을 구분해서 판단해야 한다고 정리했습니다. 포털에 안 보인다는 사실이 "리소스가 없다"는 증거는 아닙니다. 권한 범위, 구독/테넌트 선택, 필터에 따라 보이는 범위가 달라질 수 있습니다.</p>
+      <ul>
+        <li><b>Entra Connect</b> — 동기화 목적과 구조(PHS 등)는 개념으로 이해하고 있지만, 실제 동기화 방식·간격은 환경마다 다르므로 직접 구성한 게 아니면 단정하지 않습니다.</li>
+        <li><b>조건부 액세스</b> — 정책 목록과 대상 앱, 조건은 확인 가능한 범위에서 봅니다. 정책을 직접 설계·배포했는지와 확인만 했는지는 구분합니다.</li>
+        <li><b>리소스 그룹/IAM</b> — 본인에게 부여된 역할과 범위(RBAC)를 확인하고, 전역 관리자 권한과 Azure 리소스 RBAC는 별개로 봅니다.</li>
+        <li><b>VNet/Log Analytics</b> — 주소 공간, 서브넷, 워크스페이스 존재 여부는 확인하되, 보이지 않는다고 "없다"로 단정하지 않습니다.</li>
+      </ul>
+    </section>
+
+    <div class="boundary-box">
+      <b>이 문서의 경계</b> — 온프레미스 AD 운영, Entra ID 하이브리드 연동, PowerShell 자동화(ISO 27001 84개 항목), SIEM/KQL 기반 로그 분석은 실제로 담당하고 검증한 실무 영역입니다. Kubernetes·Docker·Terraform·CI/CD 파이프라인은 아직 프로덕션에서 구축·운영해본 적이 없고, 이 문서는 그 구조와 설계 원리를 공부하며 정리한 개념 자료입니다. 두 영역을 섞어서 설명하지 않도록 이 페이지 안에서도 구분해서 표기했습니다.
+    </div>
+  </main>
+
+  <footer>
+    <a href="mailto:happyday7190@gmail.com">Email</a>
+    <a href="../etc/files/resume.html" target="_blank" rel="noopener">Resume 다운로드</a>
+  </footer>
+</body>
+</html>

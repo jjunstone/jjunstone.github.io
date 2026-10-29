@@ -1,4 +1,4 @@
-/**
+﻿/**
  * IT TEAM SIMULATOR — UI 레이어
  *
  * 레이아웃: 상단(제목·진행중 시나리오·가상시간) / 좌측(사건 목록) /
@@ -427,7 +427,10 @@
     nodes.forEach(function (el) {
       var isParticipant = el.className.indexOf('mode-idle') === -1;
       if (isParticipant) {
-        animate(el, { scale: [0.86, 1], opacity: [0, 1] }, { duration: 0.45, easing: [0.22, 1, 0.36, 1] });
+        var avatarEl = el.querySelector('.org-avatar');
+        if (avatarEl) {
+          animate(avatarEl, { scale: [0.86, 1], opacity: [0, 1] }, { duration: 0.45, easing: [0.22, 1, 0.36, 1] });
+        }
       }
     });
 

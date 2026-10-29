@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -144,6 +144,11 @@
   .mini-techmap{ position:relative; width:100%; height:100%; background:#0f2e26; border-radius:6px; padding:12px; display:grid; grid-template-columns:repeat(4,1fr); grid-template-rows:repeat(2,1fr); gap:6px; }
   .mini-techmap i{ background:rgba(94,230,199,.16); border:1px solid rgba(94,230,199,.4); border-radius:5px; }
 
+  /* ── 미니 프리뷰: 하이브리드 클라우드 스터디 (4단계 계층) ── */
+  .mini-layers{ position:relative; width:100%; height:100%; background:#101826; border-radius:6px; display:flex; flex-direction:column; justify-content:center; gap:5px; padding:12px 14px; }
+  .mini-layers-row{ height:16%; border-radius:4px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); display:flex; align-items:center; padding:0 8px; }
+  .mini-layers-row i{ display:block; height:5px; border-radius:3px; background:rgba(94,163,230,.55); }
+
   .lab-card-body{ flex:1; min-width:0; padding:18px 20px 20px; display:flex; flex-direction:column; }
 
   .lab-card-title{
@@ -277,6 +282,23 @@
           <span class="lab-card-title">데이터 아키텍처 설계 스터디</span>
           <p class="lab-card-desc">투자증권 도메인을 가정하고 요구사항부터 메타모델링, 논리·물리 설계, 거버넌스까지 6단계로 직접 설계해본 자료입니다.</p>
           <p class="lab-card-meta">6개 문서, SVG 다이어그램 포함</p>
+          <span class="lab-card-arrow">→</span>
+        </span>
+      </a>
+
+      <a class="lab-card" href="./cloud-architecture-study.html">
+        <span class="lab-card-thumb">
+          <span class="mini-layers">
+            <span class="mini-layers-row"><i style="width:35%;"></i></span>
+            <span class="mini-layers-row"><i style="width:55%;"></i></span>
+            <span class="mini-layers-row"><i style="width:75%;"></i></span>
+            <span class="mini-layers-row"><i style="width:45%;"></i></span>
+          </span>
+        </span>
+        <span class="lab-card-body">
+          <span class="lab-card-title">하이브리드 클라우드 &amp; 제로 트러스트 아키텍처 스터디</span>
+          <p class="lab-card-desc">Entra ID 하이브리드 인증, Kubernetes/Docker/Terraform/CI-CD가 어떻게 연결되는지 정리한 개념 학습 노트입니다.</p>
+          <p class="lab-card-meta">개념 정리 · 아직 직접 구축해본 것은 아님</p>
           <span class="lab-card-arrow">→</span>
         </span>
       </a>
