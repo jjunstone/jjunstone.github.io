@@ -149,11 +149,17 @@
   .mini-layers-row{ height:16%; border-radius:4px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); display:flex; align-items:center; padding:0 8px; }
   .mini-layers-row i{ display:block; height:5px; border-radius:3px; background:rgba(94,163,230,.55); }
 
-  /* 미니 프리뷰: 병렬 오케스트레이션 회고 (분기 트랙) */
-  .mini-branch{ position:relative; width:100%; height:100%; background:#171b26; border-radius:6px; padding:14px 16px; }
-  .mini-branch-node{ position:absolute; left:10px; top:50%; width:10px; height:10px; border-radius:50%; background:#e8a33d; transform:translateY(-50%); }
-  .mini-branch-line{ position:absolute; left:20px; width:38%; height:1px; background:rgba(255,255,255,.22); }
-  .mini-branch-track{ position:absolute; left:58%; width:34%; height:7px; border-radius:4px; background:rgba(94,163,230,.5); }
+
+  /* ── 미니 프리뷰: AI 에이전트 과제 회고 (메신저 → 판정) ── */
+  .mini-agentlog{ position:relative; width:100%; height:100%; background:#14181f; border-radius:6px; padding:12px 14px; display:flex; align-items:center; gap:8px; }
+  .mini-agentlog-chats{ display:flex; flex-direction:column; gap:5px; flex:1; }
+  .mini-agentlog-bubble{ height:9px; border-radius:5px; background:rgba(255,255,255,.14); }
+  .mini-agentlog-bubble.kakao{ background:#f5d65a; }
+  .mini-agentlog-arrow{ color:rgba(255,255,255,.35); font-size:13px; flex-shrink:0; }
+  .mini-agentlog-result{ display:flex; flex-direction:column; gap:6px; flex-shrink:0; }
+  .mini-agentlog-tag{ display:flex; align-items:center; gap:5px; }
+  .mini-agentlog-dot{ width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+  .mini-agentlog-bar{ height:6px; width:30px; border-radius:3px; }
 
   .lab-card-body{ flex:1; min-width:0; padding:18px 20px 20px; display:flex; flex-direction:column; }
 
@@ -275,14 +281,19 @@
 
       <a class="lab-card" href="./agent-task-retrospective.html">
         <span class="lab-card-thumb">
-          <span class="mini-branch">
-            <span class="mini-branch-node"></span>
-            <span class="mini-branch-line" style="top:28%;"></span>
-            <span class="mini-branch-line" style="top:50%;"></span>
-            <span class="mini-branch-line" style="top:72%;"></span>
-            <span class="mini-branch-track" style="top:24%;"></span>
-            <span class="mini-branch-track" style="top:46%;width:44%;"></span>
-            <span class="mini-branch-track" style="top:68%;width:28%;"></span>
+          <span class="mini-agentlog">
+            <span class="mini-agentlog-chats">
+              <span class="mini-agentlog-bubble kakao" style="width:72%;"></span>
+              <span class="mini-agentlog-bubble" style="width:48%;"></span>
+              <span class="mini-agentlog-bubble kakao" style="width:60%;"></span>
+              <span class="mini-agentlog-bubble" style="width:40%;"></span>
+            </span>
+            <span class="mini-agentlog-arrow">→</span>
+            <span class="mini-agentlog-result">
+              <span class="mini-agentlog-tag"><span class="mini-agentlog-dot" style="background:#34d399;"></span><span class="mini-agentlog-bar" style="background:rgba(52,211,153,.35);"></span></span>
+              <span class="mini-agentlog-tag"><span class="mini-agentlog-dot" style="background:#eab308;"></span><span class="mini-agentlog-bar" style="background:rgba(234,179,8,.35);"></span></span>
+              <span class="mini-agentlog-tag"><span class="mini-agentlog-dot" style="background:#60a5fa;"></span><span class="mini-agentlog-bar" style="background:rgba(96,165,250,.35);"></span></span>
+            </span>
           </span>
         </span>
         <span class="lab-card-body">
@@ -393,4 +404,5 @@
   </footer>
 </body>
 </html>
+
 
