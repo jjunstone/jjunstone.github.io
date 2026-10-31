@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -149,6 +149,12 @@
   .mini-layers-row{ height:16%; border-radius:4px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); display:flex; align-items:center; padding:0 8px; }
   .mini-layers-row i{ display:block; height:5px; border-radius:3px; background:rgba(94,163,230,.55); }
 
+  /* 미니 프리뷰: 병렬 오케스트레이션 회고 (분기 트랙) */
+  .mini-branch{ position:relative; width:100%; height:100%; background:#171b26; border-radius:6px; padding:14px 16px; }
+  .mini-branch-node{ position:absolute; left:10px; top:50%; width:10px; height:10px; border-radius:50%; background:#e8a33d; transform:translateY(-50%); }
+  .mini-branch-line{ position:absolute; left:20px; width:38%; height:1px; background:rgba(255,255,255,.22); }
+  .mini-branch-track{ position:absolute; left:58%; width:34%; height:7px; border-radius:4px; background:rgba(94,163,230,.5); }
+
   .lab-card-body{ flex:1; min-width:0; padding:18px 20px 20px; display:flex; flex-direction:column; }
 
   .lab-card-title{
@@ -174,6 +180,11 @@
   .lab-status.demo{
     background:rgba(138,138,138,.14);
     color:var(--ink-faint);
+  }
+
+  .lab-status.done{
+    background:rgba(23,60,120,.12);
+    color:var(--navy);
   }
 
   .lab-card-desc{
@@ -258,6 +269,26 @@
         <span class="lab-card-body">
           <span class="lab-card-title">IT Team Simulator<span class="lab-status">IN PROGRESS</span></span>
           <p class="lab-card-desc">12명 전산보안실 조직이 사건에 대응하는 과정을 체험하는 인터랙티브 시뮬레이터. VPN 장애, 퇴사자 계정 회수, DB 접근권한 요청 등 5개 시나리오.</p>
+          <span class="lab-card-arrow">→</span>
+        </span>
+      </a>
+
+      <a class="lab-card" href="./agent-task-retrospective.html">
+        <span class="lab-card-thumb">
+          <span class="mini-branch">
+            <span class="mini-branch-node"></span>
+            <span class="mini-branch-line" style="top:28%;"></span>
+            <span class="mini-branch-line" style="top:50%;"></span>
+            <span class="mini-branch-line" style="top:72%;"></span>
+            <span class="mini-branch-track" style="top:24%;"></span>
+            <span class="mini-branch-track" style="top:46%;width:44%;"></span>
+            <span class="mini-branch-track" style="top:68%;width:28%;"></span>
+          </span>
+        </span>
+        <span class="lab-card-body">
+          <span class="lab-card-title">AI 에이전트 지식수집 과제 회고<span class="lab-status done">DONE</span></span>
+          <p class="lab-card-desc">카카오톡 인터뷰로 흩어진 지식을 모아 CS 에이전트를 만든 대회 과제를 마치고, 순차 처리 병목을 분석해 병렬 오케스트레이션 구조로 다시 설계해본 회고입니다.</p>
+          <p class="lab-card-meta">AI_TOP_100 온라인 예선 제출 완료 · 재설계는 가정 단계</p>
           <span class="lab-card-arrow">→</span>
         </span>
       </a>
@@ -362,3 +393,4 @@
   </footer>
 </body>
 </html>
+
