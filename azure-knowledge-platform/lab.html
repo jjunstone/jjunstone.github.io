@@ -10,11 +10,13 @@
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/static/pretendard.css">
 <style>
   :root{
-    --ink:#141414;
-    --ink-soft:#5b5b5b;
-    --ink-faint:#8a8a8a;
-    --line:#e6e6e6;
-    --accent:#0f6656;
+    --ink:#0f172a;
+    --ink-soft:#475569;
+    --ink-faint:#94a3b8;
+    --line:#e2e8f0;
+    --navy:#173c78;
+    --blue:#2563eb;
+    --blue-soft:#eff4fd;
     --font-main:"Pretendard","Gowun Dodum","Malgun Gothic",sans-serif;
   }
   *{ box-sizing:border-box; }
@@ -47,12 +49,12 @@
     text-decoration:none;
     font-size:.88rem;
   }
-  .topbar-links a:hover{ color:var(--accent); }
+  .topbar-links a:hover{ color:var(--navy); }
 
   main{
-    max-width:1080px;
+    max-width:1480px;
     margin:0 auto;
-    padding:64px 24px 96px;
+    padding:48px 24px 72px;
   }
 
   .page-eyebrow{
@@ -68,154 +70,239 @@
     font-size:2.1rem;
     font-weight:700;
     letter-spacing:-.02em;
-    margin:0 0 20px;
+    margin:0 0 16px;
   }
 
   .page-lead{
-    font-size:1.05rem;
-    line-height:1.75;
+    font-size:1rem;
+    line-height:1.7;
     color:var(--ink-soft);
-    margin:0 0 48px;
+    margin:0 0 14px;
+    max-width:860px;
   }
 
+  .page-note{
+    font-size:.8rem;
+    line-height:1.65;
+    color:var(--ink-faint);
+    margin:0 0 32px;
+    padding:12px 16px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:#f8fafc;
+    max-width:860px;
+  }
+
+  /* ── 6개 카드 한 줄 그리드: 화면 폭에 맞춰 축소, 줄바꿈 없음 ── */
   .lab-grid{
     display:grid;
-    grid-template-columns:repeat(3, 1fr);
-    gap:20px;
+    grid-template-columns:repeat(6, 1fr);
+    gap:14px;
   }
 
   .lab-card{
+    position:relative;
     display:flex;
     flex-direction:column;
+    min-width:0;
+    aspect-ratio:3/4;
     border:1.4px solid var(--line);
     border-radius:14px;
     text-decoration:none;
     color:var(--ink);
     overflow:hidden;
-    transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease;
+    isolation:isolate;
+    transition:border-color .2s ease, box-shadow .2s ease;
   }
 
-  .lab-card:hover{
-    border-color:var(--accent);
-    transform:translateY(-3px);
-    box-shadow:0 14px 28px rgba(15,102,86,.12);
+  .lab-card:hover,
+  .lab-card:focus-visible{
+    border-color:var(--navy);
+    box-shadow:0 16px 30px rgba(23,60,120,.18);
   }
 
+  /* ── 배경 썸네일: 카드 전체를 채움 ── */
   .lab-card-thumb{
-    position:relative;
-    width:100%;
-    aspect-ratio:16/10;
-    overflow:hidden;
-    border-bottom:1px solid var(--line);
-    background:#f8fafc;
-    padding:14px;
+    display:block;
+    position:absolute;
+    inset:0;
+    z-index:0;
   }
 
-  /* ── 미니 프리뷰: IT Team Simulator (조직도 미니어처) ── */
-  .mini-sim{ position:relative; width:100%; height:100%; background:#1c2420; border-radius:6px; overflow:hidden; }
-  .mini-sim-zone{ position:absolute; border:1.5px dashed rgba(255,255,255,.35); border-radius:4px; background:rgba(255,255,255,.06); }
-  .mini-sim-dot{ position:absolute; width:9px; height:9px; border-radius:3px; transform:translate(-50%,-50%); box-shadow:0 0 0 2px rgba(255,255,255,.25); }
-  .mini-sim-topbar{ position:absolute; top:0; left:0; right:0; height:14%; background:rgba(255,255,255,.08); border-bottom:1px solid rgba(255,255,255,.1); display:flex; align-items:center; padding:0 8px; gap:4px; }
-  .mini-sim-topbar span{ width:22px; height:4px; background:rgba(255,255,255,.35); border-radius:2px; }
+  .lab-illus{ display:block; position:absolute; inset:0; }
 
-  /* ── 미니 프리뷰: 데이터 아키텍처 (6단계 플로우) ── */
-  .mini-flow{ position:relative; width:100%; height:100%; background:#1f2430; border-radius:6px; display:flex; align-items:center; justify-content:center; gap:6px; padding:0 10px; }
-  .mini-flow-step{ flex:1; height:62%; border-radius:4px; background:rgba(255,255,255,.12); display:flex; align-items:flex-end; }
-  .mini-flow-step i{ display:block; width:100%; border-radius:0 0 4px 4px; background:linear-gradient(180deg,#5ee6c7,#2fb89c); }
-  .mini-flow-arrow{ color:rgba(255,255,255,.3); font-size:11px; }
+  .lab-card-num{
+    position:absolute;
+    top:12px;
+    left:12px;
+    z-index:2;
+    font-size:.72rem;
+    font-weight:800;
+    color:rgba(255,255,255,.9);
+    letter-spacing:.03em;
+    background:rgba(15,23,42,.35);
+    padding:2px 7px;
+    border-radius:999px;
+  }
 
-  /* ── 미니 프리뷰: 금융거래 생명주기 (타임라인) ── */
-  .mini-journey{ position:relative; width:100%; height:100%; background:#fffaf2; border-radius:6px; padding:14px 12px; }
-  .mini-journey-track{ position:relative; height:3px; background:#f0dcb8; border-radius:2px; margin-top:16px; }
-  .mini-journey-fill{ position:absolute; left:0; top:0; height:100%; width:55%; background:#d97706; border-radius:2px; }
-  .mini-journey-dot{ position:absolute; top:-5px; width:13px; height:13px; border-radius:50%; background:#fff; border:3px solid #d97706; transform:translateX(-50%); }
-  .mini-journey-card{ margin-top:22px; background:#ffffff; border:1px solid #f0dcb8; border-radius:6px; padding:8px 10px; }
-  .mini-journey-card b{ display:block; width:60%; height:7px; background:#b45309; border-radius:3px; margin-bottom:5px; }
-  .mini-journey-card span{ display:block; width:90%; height:5px; background:#f0dcb8; border-radius:3px; }
-
-  /* ── 미니 프리뷰: Change Gate (승인 카드) ── */
-  .mini-gate{ position:relative; width:100%; height:100%; background:#0b1430; border-radius:6px; padding:12px; display:flex; flex-direction:column; gap:7px; }
-  .mini-gate-row{ display:flex; align-items:center; gap:8px; }
-  .mini-gate-badge{ width:16px; height:16px; border-radius:50%; background:#3b82f6; flex-shrink:0; }
-  .mini-gate-bar{ flex:1; height:6px; background:rgba(255,255,255,.14); border-radius:3px; }
-  .mini-gate-btn{ margin-top:auto; align-self:flex-end; width:46%; height:16px; border-radius:5px; background:#3b82f6; }
-
-  /* ── 미니 프리뷰: Technology Map (카테고리 그리드) ── */
-  .mini-techmap{ position:relative; width:100%; height:100%; background:#0f2e26; border-radius:6px; padding:12px; display:grid; grid-template-columns:repeat(4,1fr); grid-template-rows:repeat(2,1fr); gap:6px; }
-  .mini-techmap i{ background:rgba(94,230,199,.16); border:1px solid rgba(94,230,199,.4); border-radius:5px; }
-
-  /* ── 미니 프리뷰: 하이브리드 클라우드 스터디 (4단계 계층) ── */
-  .mini-layers{ position:relative; width:100%; height:100%; background:#101826; border-radius:6px; display:flex; flex-direction:column; justify-content:center; gap:5px; padding:12px 14px; }
-  .mini-layers-row{ height:16%; border-radius:4px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); display:flex; align-items:center; padding:0 8px; }
-  .mini-layers-row i{ display:block; height:5px; border-radius:3px; background:rgba(94,163,230,.55); }
-
-
-  /* ── 미니 프리뷰: AI 에이전트 과제 회고 (메신저 → 판정) ── */
-  .mini-agentlog{ position:relative; width:100%; height:100%; background:#14181f; border-radius:6px; padding:12px 14px; display:flex; align-items:center; gap:8px; }
-  .mini-agentlog-chats{ display:flex; flex-direction:column; gap:5px; flex:1; }
-  .mini-agentlog-bubble{ height:9px; border-radius:5px; background:rgba(255,255,255,.14); }
-  .mini-agentlog-bubble.kakao{ background:#f5d65a; }
-  .mini-agentlog-arrow{ color:rgba(255,255,255,.35); font-size:13px; flex-shrink:0; }
-  .mini-agentlog-result{ display:flex; flex-direction:column; gap:6px; flex-shrink:0; }
-  .mini-agentlog-tag{ display:flex; align-items:center; gap:5px; }
-  .mini-agentlog-dot{ width:7px; height:7px; border-radius:50%; flex-shrink:0; }
-  .mini-agentlog-bar{ height:6px; width:30px; border-radius:3px; }
-
-  .lab-card-body{ flex:1; min-width:0; padding:18px 20px 20px; display:flex; flex-direction:column; }
-
-  .lab-card-title{
+  .lab-icon-wrap{
+    position:absolute;
+    inset:0;
     display:flex;
     align-items:center;
-    gap:8px;
-    font-size:1.02rem;
-    font-weight:700;
-    margin:0 0 8px;
-    flex-wrap:wrap;
+    justify-content:center;
+    transition:opacity .25s ease, transform .25s ease;
   }
+  .lab-icon-wrap svg{ width:42%; height:42%; }
 
-  .lab-status{
+  .lab-card-domain-tag{
+    position:absolute;
+    bottom:68px;
+    left:12px;
+    right:12px;
+    z-index:2;
     font-size:.64rem;
     font-weight:700;
     letter-spacing:.04em;
-    padding:2px 7px;
-    border-radius:999px;
-    background:rgba(15,102,86,.12);
-    color:var(--accent);
+    text-transform:uppercase;
+    color:rgba(255,255,255,.75);
+    transition:opacity .2s ease;
   }
 
-  .lab-status.demo{
-    background:rgba(138,138,138,.14);
-    color:var(--ink-faint);
+  /* ── 항상 보이는 제목 바(하단 고정) ── */
+  .lab-card-titlebar{
+    position:absolute;
+    left:0; right:0; bottom:0;
+    z-index:3;
+    padding:14px 14px 14px;
+    background:linear-gradient(0deg, rgba(5,12,28,.92) 10%, rgba(5,12,28,0) 100%);
+    transition:padding-top .25s ease;
   }
 
-  .lab-status.done{
-    background:rgba(23,60,120,.12);
-    color:var(--navy);
+  .lab-card-title{
+    font-size:1rem;
+    font-weight:700;
+    line-height:1.4;
+    color:#ffffff;
+    margin:0;
+  }
+
+  /* ── 호버 시에만 올라오는 설명 오버레이 ── */
+  .lab-card-overlay{
+    position:absolute;
+    inset:0;
+    z-index:4;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    padding:16px 14px 16px;
+    background:linear-gradient(0deg, rgba(5,12,28,.95) 42%, rgba(5,12,28,.55) 72%, rgba(5,12,28,0) 100%);
+    opacity:0;
+    transform:translateY(6px);
+    transition:opacity .22s ease, transform .22s ease;
+    pointer-events:none;
+  }
+
+  .lab-card:hover .lab-card-overlay,
+  .lab-card:focus-visible .lab-card-overlay{
+    opacity:1;
+    transform:translateY(0);
+  }
+  .lab-card:hover .lab-icon-wrap,
+  .lab-card:focus-visible .lab-icon-wrap{
+    opacity:0;
+    transform:scale(.92);
+  }
+  .lab-card:hover .lab-card-domain-tag,
+  .lab-card:focus-visible .lab-card-domain-tag{
+    opacity:0;
+  }
+  .lab-card:hover .lab-card-titlebar,
+  .lab-card:focus-visible .lab-card-titlebar{
+    opacity:0;
+  }
+
+  .lab-card-overlay-domain{
+    font-size:.62rem;
+    font-weight:700;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:#93c5fd;
+    margin:0 0 6px;
+  }
+
+  .lab-card-overlay-title{
+    font-size:.98rem;
+    font-weight:700;
+    line-height:1.4;
+    color:#ffffff;
+    margin:0 0 8px;
   }
 
   .lab-card-desc{
-    font-size:.84rem;
+    font-size:.76rem;
     line-height:1.55;
-    color:var(--ink-soft);
-    margin:0;
-    flex:1;
+    color:rgba(255,255,255,.82);
+    margin:0 0 10px;
   }
 
-  .lab-card-meta{
-    font-size:.76rem;
-    color:var(--ink-faint);
-    margin:8px 0 0;
+  .lab-card-tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:5px;
+    margin:0 0 12px;
+  }
+
+  .lab-tag{
+    font-size:.62rem;
+    font-weight:600;
+    color:#dbeafe;
+    background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.22);
+    padding:2px 7px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+
+  .lab-card-footer{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:6px;
+  }
+
+  .lab-card-type{
+    font-size:.66rem;
+    font-weight:600;
+    color:rgba(255,255,255,.65);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
   }
 
   .lab-card-arrow{
-    align-self:flex-end;
-    font-size:1rem;
-    color:var(--ink-faint);
-    margin-top:10px;
+    width:24px;
+    height:24px;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,.4);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:.8rem;
+    color:#ffffff;
+    flex-shrink:0;
   }
 
+  /* ── 썸네일 배경: 기술 분야별 색상 ── */
+  .illus-infra{ background:linear-gradient(145deg,#0b2a5c,#173c78); }
+  .illus-agent{ background:linear-gradient(145deg,#10204a,#2a3f8f); }
+  .illus-data{ background:linear-gradient(145deg,#0f1f3d,#1e3a6b); }
+  .illus-cloud{ background:linear-gradient(145deg,#081b36,#123a63); }
+  .illus-auth{ background:linear-gradient(145deg,#0c2347,#1b4583); }
+  .illus-gov{ background:linear-gradient(145deg,#111f3e,#28467e); }
+
   footer{
-    max-width:1080px;
+    max-width:1480px;
     margin:0 auto;
     padding:0 24px 64px;
     display:flex;
@@ -229,11 +316,24 @@
   }
   footer a:hover{ color:var(--ink); }
 
-  @media (max-width:900px){
-    .lab-grid{ grid-template-columns:repeat(2, 1fr); }
+  @media (max-width:1100px){
+    .lab-grid{ gap:10px; }
+    .lab-card-title,
+    .lab-card-overlay-title{ font-size:.86rem; }
+    .lab-card-desc{ font-size:.7rem; }
+    .lab-tag{ font-size:.58rem; padding:2px 6px; }
+    .lab-card-type{ font-size:.6rem; }
   }
-  @media (max-width:600px){
-    .lab-grid{ grid-template-columns:1fr; }
+
+  @media (max-width:760px){
+    .lab-grid{ grid-template-columns:repeat(6, minmax(0,1fr)); gap:6px; }
+    .lab-card{ aspect-ratio:3/5; }
+    .lab-card-title{ font-size:.64rem; }
+    .lab-card-titlebar{ padding:8px 6px; }
+    .lab-card-num{ font-size:.6rem; padding:1px 5px; top:6px; left:6px; }
+    .lab-card-domain-tag{ display:none; }
+    /* 모바일은 호버가 없으므로 오버레이 숨기고 제목만 */
+    .lab-card-overlay{ display:none; }
   }
 </style>
 </head>
@@ -249,150 +349,218 @@
   <main>
     <p class="page-eyebrow">Lab</p>
     <h1 class="page-title">직접 만들고 검증하는 것들</h1>
-    <p class="page-lead">회사 업무로는 아직 안 해본 것들을 여기서 혼자 만들어보고 있습니다.</p>
+    <p class="page-lead">회사 업무로는 아직 안 해본 것들을 여기서 혼자 만들어보고 있습니다. IT 운영, AI 에이전트, 데이터 아키텍처, 클라우드 보안, 인증/거래, 변경 승인까지 분야별로 정리했습니다. 카드에 마우스를 올리면 상세 설명이 보입니다.</p>
+    <p class="page-note">스터디(개념 학습) · 아키텍처 검토(설계·분석) · 직접 구현(인터랙티브 프로토타입)은 각 카드의 설명과 태그로 구분되어 있으며, 실제 구현 수준을 과장하지 않습니다.</p>
 
     <div class="lab-grid">
       <a class="lab-card" href="./it-team-sim.html">
-        <span class="lab-card-thumb">
-          <span class="mini-sim">
-            <span class="mini-sim-topbar"><span></span><span style="width:14px"></span></span>
-            <span class="mini-sim-zone" style="left:4%;top:20%;width:38%;height:30%;"></span>
-            <span class="mini-sim-zone" style="left:58%;top:20%;width:38%;height:30%;"></span>
-            <span class="mini-sim-zone" style="left:4%;top:54%;width:38%;height:30%;"></span>
-            <span class="mini-sim-zone" style="left:58%;top:54%;width:38%;height:30%;"></span>
-            <span class="mini-sim-zone" style="left:32%;top:84%;width:36%;height:14%;"></span>
-            <span class="mini-sim-dot" style="left:14%;top:30%;background:#173c78;"></span>
-            <span class="mini-sim-dot" style="left:24%;top:30%;background:#173c78;"></span>
-            <span class="mini-sim-dot" style="left:68%;top:30%;background:#b42318;"></span>
-            <span class="mini-sim-dot" style="left:78%;top:30%;background:#b42318;"></span>
-            <span class="mini-sim-dot" style="left:14%;top:64%;background:#b54708;"></span>
-            <span class="mini-sim-dot" style="left:24%;top:64%;background:#b54708;"></span>
-            <span class="mini-sim-dot" style="left:68%;top:64%;background:#6b4fbb;"></span>
-            <span class="mini-sim-dot" style="left:78%;top:64%;background:#6b4fbb;"></span>
-            <span class="mini-sim-dot" style="left:50%;top:90%;background:#0f6656;"></span>
+        <span class="lab-card-thumb illus-infra lab-illus">
+          <span class="lab-card-num">01</span>
+          <span class="lab-icon-wrap">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="24" cy="24" r="4.5" fill="#60a5fa"/>
+              <g stroke="rgba(147,197,253,.55)" stroke-width="1.3">
+                <line x1="24" y1="24" x2="9" y2="10"/>
+                <line x1="24" y1="24" x2="39" y2="10"/>
+                <line x1="24" y1="24" x2="39" y2="38"/>
+                <line x1="24" y1="24" x2="9" y2="38"/>
+              </g>
+              <rect x="4" y="5" width="11" height="9" rx="2" fill="#0f2a56" stroke="#7fb0ff" stroke-width="1.2"/>
+              <rect x="33" y="5" width="11" height="9" rx="2" fill="#0f2a56" stroke="#7fb0ff" stroke-width="1.2"/>
+              <rect x="33" y="33" width="11" height="9" rx="2" fill="#0f2a56" stroke="#7fb0ff" stroke-width="1.2"/>
+              <rect x="4" y="33" width="11" height="9" rx="2" fill="#0f2a56" stroke="#7fb0ff" stroke-width="1.2"/>
+            </svg>
           </span>
+          <span class="lab-card-domain-tag">IT Infrastructure</span>
         </span>
-        <span class="lab-card-body">
-          <span class="lab-card-title">IT Team Simulator<span class="lab-status">IN PROGRESS</span></span>
-          <p class="lab-card-desc">12명 전산보안실 조직이 사건에 대응하는 과정을 체험하는 인터랙티브 시뮬레이터. VPN 장애, 퇴사자 계정 회수, DB 접근권한 요청 등 5개 시나리오.</p>
-          <span class="lab-card-arrow">→</span>
+        <span class="lab-card-titlebar">
+          <span class="lab-card-title">사내 IT 운영 시뮬레이터</span>
+        </span>
+        <span class="lab-card-overlay">
+          <span class="lab-card-overlay-domain">IT Infrastructure</span>
+          <span class="lab-card-overlay-title">사내 IT 운영 시뮬레이터</span>
+          <p class="lab-card-desc">사내 IT 인프라 구성 요소와 운영 프로세스를 시뮬레이션합니다.</p>
+          <span class="lab-card-tags">
+            <span class="lab-tag">AD</span>
+            <span class="lab-tag">DNS</span>
+            <span class="lab-tag">DHCP</span>
+            <span class="lab-tag">GPO</span>
+          </span>
+          <span class="lab-card-footer">
+            <span class="lab-card-type">직접 구현 · 프로토타입</span>
+            <span class="lab-card-arrow">→</span>
+          </span>
         </span>
       </a>
 
       <a class="lab-card" href="./agent-task-retrospective.html">
-        <span class="lab-card-thumb">
-          <span class="mini-agentlog">
-            <span class="mini-agentlog-chats">
-              <span class="mini-agentlog-bubble kakao" style="width:72%;"></span>
-              <span class="mini-agentlog-bubble" style="width:48%;"></span>
-              <span class="mini-agentlog-bubble kakao" style="width:60%;"></span>
-              <span class="mini-agentlog-bubble" style="width:40%;"></span>
-            </span>
-            <span class="mini-agentlog-arrow">→</span>
-            <span class="mini-agentlog-result">
-              <span class="mini-agentlog-tag"><span class="mini-agentlog-dot" style="background:#34d399;"></span><span class="mini-agentlog-bar" style="background:rgba(52,211,153,.35);"></span></span>
-              <span class="mini-agentlog-tag"><span class="mini-agentlog-dot" style="background:#eab308;"></span><span class="mini-agentlog-bar" style="background:rgba(234,179,8,.35);"></span></span>
-              <span class="mini-agentlog-tag"><span class="mini-agentlog-dot" style="background:#60a5fa;"></span><span class="mini-agentlog-bar" style="background:rgba(96,165,250,.35);"></span></span>
-            </span>
+        <span class="lab-card-thumb illus-agent lab-illus">
+          <span class="lab-card-num">02</span>
+          <span class="lab-icon-wrap">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="8" width="16" height="10" rx="3" fill="rgba(255,255,255,.12)" stroke="rgba(147,197,253,.6)" stroke-width="1.2"/>
+              <rect x="4" y="22" width="16" height="10" rx="3" fill="rgba(255,255,255,.12)" stroke="rgba(147,197,253,.6)" stroke-width="1.2"/>
+              <path d="M20 13H30" stroke="rgba(147,197,253,.6)" stroke-width="1.3"/>
+              <path d="M20 27H30" stroke="rgba(147,197,253,.6)" stroke-width="1.3"/>
+              <circle cx="33" cy="20" r="8" fill="#2563eb"/>
+              <path d="M30 20L32.3 22.3L36.5 17.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <rect x="38" y="8" width="8" height="7" rx="2" fill="rgba(255,255,255,.12)" stroke="rgba(147,197,253,.6)" stroke-width="1.1"/>
+              <rect x="38" y="27" width="8" height="7" rx="2" fill="rgba(255,255,255,.12)" stroke="rgba(147,197,253,.6)" stroke-width="1.1"/>
+            </svg>
           </span>
+          <span class="lab-card-domain-tag">AI Engineering</span>
         </span>
-        <span class="lab-card-body">
-          <span class="lab-card-title">AI 에이전트 지식수집 과제 회고<span class="lab-status done">DONE</span></span>
-          <p class="lab-card-desc">카카오톡 인터뷰로 흩어진 지식을 모아 CS 에이전트를 만든 대회 과제를 마치고, 순차 처리 병목을 분석해 병렬 오케스트레이션 구조로 다시 설계해본 회고입니다.</p>
-          <p class="lab-card-meta">AI_TOP_100 온라인 예선 제출 완료 · 재설계는 가정 단계</p>
-          <span class="lab-card-arrow">→</span>
+        <span class="lab-card-titlebar">
+          <span class="lab-card-title">AI 에이전트 지식수집 워크플로우</span>
+        </span>
+        <span class="lab-card-overlay">
+          <span class="lab-card-overlay-domain">AI Engineering</span>
+          <span class="lab-card-overlay-title">AI 에이전트 지식수집 워크플로우</span>
+          <p class="lab-card-desc">AI 에이전트의 지식 수집, 정보 구조화 및 업무 활용 워크플로우를 실험합니다.</p>
+          <span class="lab-card-tags">
+            <span class="lab-tag">AI Agent</span>
+            <span class="lab-tag">Knowledge</span>
+            <span class="lab-tag">Workflow</span>
+          </span>
+          <span class="lab-card-footer">
+            <span class="lab-card-type">대회 과제 · 회고/재설계</span>
+            <span class="lab-card-arrow">→</span>
+          </span>
         </span>
       </a>
 
       <a class="lab-card" href="../architecture-platform/data-architecture-platform.html">
-        <span class="lab-card-thumb">
-          <span class="mini-flow">
-            <span class="mini-flow-step"><i style="height:40%;"></i></span>
-            <span class="mini-flow-arrow">›</span>
-            <span class="mini-flow-step"><i style="height:65%;"></i></span>
-            <span class="mini-flow-arrow">›</span>
-            <span class="mini-flow-step"><i style="height:85%;"></i></span>
-            <span class="mini-flow-arrow">›</span>
-            <span class="mini-flow-step"><i style="height:55%;"></i></span>
-            <span class="mini-flow-arrow">›</span>
-            <span class="mini-flow-step"><i style="height:95%;"></i></span>
-            <span class="mini-flow-arrow">›</span>
-            <span class="mini-flow-step"><i style="height:70%;"></i></span>
+        <span class="lab-card-thumb illus-data lab-illus">
+          <span class="lab-card-num">03</span>
+          <span class="lab-icon-wrap">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="6" width="19" height="15" rx="2" fill="rgba(255,255,255,.1)" stroke="rgba(147,197,253,.6)" stroke-width="1.2"/>
+              <line x1="4" y1="11.5" x2="23" y2="11.5" stroke="rgba(147,197,253,.5)" stroke-width="1"/>
+              <line x1="4" y1="16" x2="23" y2="16" stroke="rgba(147,197,253,.3)" stroke-width="1"/>
+              <rect x="27" y="4" width="17" height="13" rx="2" fill="rgba(255,255,255,.1)" stroke="rgba(147,197,253,.6)" stroke-width="1.1"/>
+              <line x1="27" y1="9" x2="44" y2="9" stroke="rgba(147,197,253,.5)" stroke-width="1"/>
+              <rect x="27" y="29" width="17" height="13" rx="2" fill="rgba(255,255,255,.1)" stroke="rgba(147,197,253,.6)" stroke-width="1.1"/>
+              <line x1="27" y1="34" x2="44" y2="34" stroke="rgba(147,197,253,.5)" stroke-width="1"/>
+              <path d="M23 12H27" stroke="rgba(147,197,253,.5)" stroke-width="1.2"/>
+              <path d="M23 15L27 10.5" stroke="rgba(147,197,253,.5)" stroke-width="1.2"/>
+              <path d="M23 16L27 35" stroke="rgba(147,197,253,.5)" stroke-width="1.2"/>
+            </svg>
           </span>
+          <span class="lab-card-domain-tag">Data Architecture</span>
         </span>
-        <span class="lab-card-body">
-          <span class="lab-card-title">데이터 아키텍처 설계 스터디</span>
-          <p class="lab-card-desc">투자증권 도메인을 가정하고 요구사항부터 메타모델링, 논리·물리 설계, 거버넌스까지 6단계로 직접 설계해본 자료입니다.</p>
-          <p class="lab-card-meta">6개 문서, SVG 다이어그램 포함</p>
-          <span class="lab-card-arrow">→</span>
+        <span class="lab-card-titlebar">
+          <span class="lab-card-title">데이터 모델링 설계 노트</span>
+        </span>
+        <span class="lab-card-overlay">
+          <span class="lab-card-overlay-domain">Data Architecture</span>
+          <span class="lab-card-overlay-title">데이터 모델링 설계 노트</span>
+          <p class="lab-card-desc">데이터 모델링부터 논리·물리 설계까지 데이터 구조와 관계를 탐구합니다.</p>
+          <span class="lab-card-tags">
+            <span class="lab-tag">Data Modeling</span>
+            <span class="lab-tag">ERD</span>
+            <span class="lab-tag">Database</span>
+          </span>
+          <span class="lab-card-footer">
+            <span class="lab-card-type">아키텍처 검토 · 설계 자료</span>
+            <span class="lab-card-arrow">→</span>
+          </span>
         </span>
       </a>
 
       <a class="lab-card" href="./cloud-architecture-study.html">
-        <span class="lab-card-thumb">
-          <span class="mini-layers">
-            <span class="mini-layers-row"><i style="width:35%;"></i></span>
-            <span class="mini-layers-row"><i style="width:55%;"></i></span>
-            <span class="mini-layers-row"><i style="width:75%;"></i></span>
-            <span class="mini-layers-row"><i style="width:45%;"></i></span>
+        <span class="lab-card-thumb illus-cloud lab-illus">
+          <span class="lab-card-num">04</span>
+          <span class="lab-icon-wrap">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M24 3L41 10V23C41 34 33.5 41.5 24 45C14.5 41.5 7 34 7 23V10L24 3Z" fill="rgba(96,165,250,.16)" stroke="#60a5fa" stroke-width="1.6"/>
+              <path d="M16 23.5L21.5 29L32 15" stroke="#93c5fd" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </span>
+          <span class="lab-card-domain-tag">Cloud Security</span>
         </span>
-        <span class="lab-card-body">
-          <span class="lab-card-title">하이브리드 클라우드 &amp; 제로 트러스트 아키텍처 스터디</span>
-          <p class="lab-card-desc">Entra ID 하이브리드 인증, Kubernetes/Docker/Terraform/CI-CD가 어떻게 연결되는지 정리한 개념 학습 노트입니다.</p>
-          <p class="lab-card-meta">개념 정리 · 아직 직접 구축해본 것은 아님</p>
-          <span class="lab-card-arrow">→</span>
+        <span class="lab-card-titlebar">
+          <span class="lab-card-title">하이브리드 클라우드 보안 스터디</span>
+        </span>
+        <span class="lab-card-overlay">
+          <span class="lab-card-overlay-domain">Cloud Security</span>
+          <span class="lab-card-overlay-title">하이브리드 클라우드 보안 스터디</span>
+          <p class="lab-card-desc">Entra ID, Kubernetes, Terraform 기반의 클라우드 구성 요소와 보안 아키텍처를 분석합니다.</p>
+          <span class="lab-card-tags">
+            <span class="lab-tag">Entra ID</span>
+            <span class="lab-tag">Kubernetes</span>
+            <span class="lab-tag">Terraform</span>
+          </span>
+          <span class="lab-card-footer">
+            <span class="lab-card-type">스터디 · 개념 학습</span>
+            <span class="lab-card-arrow">→</span>
+          </span>
         </span>
       </a>
 
       <a class="lab-card" href="./journey.html">
-        <span class="lab-card-thumb">
-          <span class="mini-journey">
-            <span class="mini-journey-track">
-              <span class="mini-journey-fill"></span>
-              <span class="mini-journey-dot" style="left:0%;"></span>
-              <span class="mini-journey-dot" style="left:55%;"></span>
-              <span class="mini-journey-dot" style="left:100%;"></span>
-            </span>
-            <span class="mini-journey-card">
-              <b></b>
-              <span></span>
-            </span>
+        <span class="lab-card-thumb illus-auth lab-illus">
+          <span class="lab-card-num">05</span>
+          <span class="lab-icon-wrap">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="14" y="19" width="20" height="16" rx="3" fill="rgba(255,255,255,.1)" stroke="#60a5fa" stroke-width="1.6"/>
+              <path d="M18 19V14C18 10.7 20.7 8 24 8C27.3 8 30 10.7 30 14V19" stroke="#60a5fa" stroke-width="1.6" stroke-linecap="round"/>
+              <circle cx="24" cy="26" r="2.6" fill="#93c5fd"/>
+              <line x1="24" y1="28.6" x2="24" y2="31" stroke="#93c5fd" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
           </span>
+          <span class="lab-card-domain-tag">Authentication</span>
         </span>
-        <span class="lab-card-body">
-          <span class="lab-card-title">금융거래 생명주기 시각화<span class="lab-status demo">DEMO</span></span>
-          <p class="lab-card-desc">증권 앱에서 누르는 버튼 뒤로 돈·인증·장부가 어떻게 움직이는지 보여주는 시각화입니다. 숫자는 전부 가상 시나리오입니다.</p>
-          <span class="lab-card-arrow">→</span>
+        <span class="lab-card-titlebar">
+          <span class="lab-card-title">인증·거래 흐름 시각화</span>
+        </span>
+        <span class="lab-card-overlay">
+          <span class="lab-card-overlay-domain">Authentication</span>
+          <span class="lab-card-overlay-title">인증·거래 흐름 시각화</span>
+          <p class="lab-card-desc">사용자 인증부터 접근 검증, 금융 거래 처리까지 이어지는 프로세스를 시각화합니다.</p>
+          <span class="lab-card-tags">
+            <span class="lab-tag">Authentication</span>
+            <span class="lab-tag">Identity</span>
+            <span class="lab-tag">Transaction</span>
+          </span>
+          <span class="lab-card-footer">
+            <span class="lab-card-type">직접 구현 · 데모(가상 시나리오)</span>
+            <span class="lab-card-arrow">→</span>
+          </span>
         </span>
       </a>
 
       <a class="lab-card" href="./change-gate.html">
-        <span class="lab-card-thumb">
-          <span class="mini-gate">
-            <span class="mini-gate-row"><span class="mini-gate-badge"></span><span class="mini-gate-bar" style="width:70%;"></span></span>
-            <span class="mini-gate-row"><span class="mini-gate-badge" style="background:rgba(255,255,255,.2);"></span><span class="mini-gate-bar" style="width:90%;"></span></span>
-            <span class="mini-gate-row"><span class="mini-gate-badge" style="background:rgba(255,255,255,.2);"></span><span class="mini-gate-bar" style="width:55%;"></span></span>
-            <span class="mini-gate-btn"></span>
+        <span class="lab-card-thumb illus-gov lab-illus">
+          <span class="lab-card-num">06</span>
+          <span class="lab-icon-wrap">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="5" y="7" width="26" height="34" rx="3" fill="rgba(255,255,255,.1)" stroke="rgba(147,197,253,.55)" stroke-width="1.3"/>
+              <line x1="10" y1="14" x2="26" y2="14" stroke="rgba(147,197,253,.5)" stroke-width="1.3"/>
+              <line x1="10" y1="21" x2="22" y2="21" stroke="rgba(147,197,253,.35)" stroke-width="1.3"/>
+              <line x1="10" y1="28" x2="24" y2="28" stroke="rgba(147,197,253,.35)" stroke-width="1.3"/>
+              <line x1="10" y1="35" x2="18" y2="35" stroke="rgba(147,197,253,.35)" stroke-width="1.3"/>
+              <circle cx="35" cy="32" r="10" fill="#16a34a"/>
+              <path d="M30.5 32L34 35.5L40 27.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </span>
+          <span class="lab-card-domain-tag">IT Governance</span>
         </span>
-        <span class="lab-card-body">
-          <span class="lab-card-title">Change Gate<span class="lab-status demo">DEMO</span></span>
-          <p class="lab-card-desc">권한 변경 요청을 승인하는 화면입니다. 데이터는 가상입니다.</p>
-          <span class="lab-card-arrow">→</span>
+        <span class="lab-card-titlebar">
+          <span class="lab-card-title">IT 변경 승인 워크플로우</span>
         </span>
-      </a>
-
-      <a class="lab-card" href="./technology-map.html">
-        <span class="lab-card-thumb">
-          <span class="mini-techmap">
-            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        <span class="lab-card-overlay">
+          <span class="lab-card-overlay-domain">IT Governance</span>
+          <span class="lab-card-overlay-title">IT 변경 승인 워크플로우</span>
+          <p class="lab-card-desc">IT 변경 요청, 승인, 권한 반영 및 감사 이력을 관리하는 워크플로우를 표현합니다.</p>
+          <span class="lab-card-tags">
+            <span class="lab-tag">Approval</span>
+            <span class="lab-tag">RBAC</span>
+            <span class="lab-tag">Audit Log</span>
           </span>
-        </span>
-        <span class="lab-card-body">
-          <span class="lab-card-title">Technology Map</span>
-          <p class="lab-card-desc">업무와 개인 프로젝트에서 실제로 써본 서비스들을 정리한 지도입니다.</p>
-          <span class="lab-card-arrow">→</span>
+          <span class="lab-card-footer">
+            <span class="lab-card-type">직접 구현 · 데모(가상 데이터)</span>
+            <span class="lab-card-arrow">→</span>
+          </span>
         </span>
       </a>
     </div>
@@ -404,5 +572,4 @@
   </footer>
 </body>
 </html>
-
 
