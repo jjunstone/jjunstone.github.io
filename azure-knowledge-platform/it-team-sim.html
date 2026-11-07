@@ -253,7 +253,17 @@
 
   /* ── 우측: 상황 및 의사결정 패널 ── */
   .sim-panel{ background:#ffffff; overflow-y:auto; padding:20px; flex:1; min-height:0; }
-  .sim-panel-empty{ display:flex; align-items:center; justify-content:center; color:var(--ink-faint); font-size:.85rem; text-align:center; }
+  .sim-panel-empty{ display:flex; flex-direction:column; justify-content:flex-start; color:var(--ink-soft); font-size:.85rem; text-align:left; }
+  .sim-intro-eyebrow{ font-size:.68rem; font-weight:700; letter-spacing:.04em; color:var(--accent); margin-bottom:6px; }
+  .sim-intro-title{ font-size:1.05rem; font-weight:700; color:var(--ink); margin:0 0 12px; line-height:1.4; }
+  .sim-intro-lead{ font-size:.86rem; line-height:1.7; color:var(--ink-soft); margin:0 0 16px; }
+  .sim-intro-block{ margin:0 0 16px; padding:14px 16px; background:#f7f8fb; border:1px solid var(--line); border-radius:10px; }
+  .sim-intro-block-title{ font-size:.72rem; font-weight:700; letter-spacing:.03em; color:var(--ink); margin:0 0 8px; text-transform:uppercase; }
+  .sim-intro-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
+  .sim-intro-list li{ font-size:.78rem; color:var(--ink-soft); line-height:1.55; padding-left:14px; position:relative; }
+  .sim-intro-list li::before{ content:"·"; position:absolute; left:2px; color:var(--ink-faint); }
+  .sim-intro-note{ font-size:.74rem; color:var(--ink-faint); line-height:1.6; margin:4px 0 0; padding-top:12px; border-top:1px solid var(--line); }
+  .sim-intro-cta{ font-size:.82rem; color:var(--accent); font-weight:600; margin:14px 0 0; }
   .sim-panel-eyebrow{ font-size:.68rem; font-weight:700; letter-spacing:.04em; color:var(--accent); }
   .sim-panel-title{ font-size:1.15rem; font-weight:700; margin:6px 0 10px; }
   .sim-panel-brief{ font-size:.82rem; color:var(--ink-soft); line-height:1.6; margin:0 0 18px; padding-bottom:16px; border-bottom:1px solid var(--line); }

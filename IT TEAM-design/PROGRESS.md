@@ -1,29 +1,36 @@
 Datacenter Design Project - Phase 4 Progress
 
-## Current Status: Phase 4 In Progress
+## Current Status: Phase 4 - 시뮬레이터 구현 완료, 문서 정합성 정리 중
+
+### 중요 정정 (2026-11-07)
+이 문서는 한동안 "11명" 조직 기준으로 멈춰 있었으나, DECISIONS.md D-010과 실제 시뮬레이터 구현(it-team-sim/data/sim-data.js roster)은 모두
+**12명**(인프라/DevOps과장 산하에 인프라관리사원 2명 + DevOps사원 1명 신규 반영)으로 확정되어 있었습니다.
+아래 내용을 12명 기준으로 정정합니다. ops-calendar.md의 업무량 계산도 11명 기준으로 작성되어 있어 재검증이 필요합니다(review/gap-analysis.md 참고).
 
 ### Completed (Phase 1-3)
-- Organization: 11명 (1 DBA Lead + 3 Team Leads + 6 Staff + 1 Security Support)
+- Organization: 12명 (DBA팀장 1 + 팀장급 4 + 사원급 6 + 지원인력 1) - D-010 확정
 - Basic Services: 9개 confirmed
 - Basic Flows: 13개 confirmed
 - Operating Philosophy: RACI model defined
 - Decisions: D-010 through D-015 finalized
 
 ### In Progress (Phase 4)
-- Services: 9 → 20 (11개 신규 추가) ? COMPLETED
-- Flows: 13 → 23 (10개 추가) - NEXT
-- ops-calendar.md (업무량 검증) - NEXT
+- Services: 9 → 20 (11개 신규 추가) 완료
+- Flows: 13 → 24 (11개 추가, 24_monthly_operations_report.md 포함) 완료
+- ops-calendar.md (업무량 검증) - 11명 기준으로 작성됨, 12명 기준 재검증 필요
 - Org Chart & Diagrams - PENDING
+- 시뮬레이터 구현 (it-team-sim.html): 12명 조직 전원 반영, 24개 흐름 중 5개를 플레이 가능한 장애/요청 시나리오로 구현 완료
+  (VPN 장애, 퇴사자 계정 미회수, DB 접근권한 요청, 코드 배포 실패, 외부 SOC 보안 경보)
 
-### Final Organization (11명 + Outsourcing)
+### Final Organization (12명 + Outsourcing)
 
-Internal Team (11명):
-- DBA Team Lead (1) - Ultimate Authority
-- DB Staff (1)
-- Security Team (3): Lead + Staff + Support Personnel
-- Network Team (2): Manager + Staff
-- Server Team (2): Manager + Staff
-- Infrastructure Staff (2)
+Internal Team (12명):
+- DBA팀장 (1) - 전산실 최고 권한
+- DB사원 (1)
+- 보안팀 (3): 보안팀장 + 보안사원 + 보안팀 지원인력
+- 네트워크팀 (2): 네트워크과장 + 네트워크사원
+- 서버팀 (1): 서버과장
+- 인프라/DevOps팀 (4): 인프라/DevOps과장 + 인프라관리사원 2명 + DevOps사원
 
 Outsourcing:
 - Solution Vendors: EDR, PAM, SIEM Technical Support
@@ -59,13 +66,13 @@ New 11 (Phase 4):
 ### Next Immediate Tasks
 
 1. Add Flows F14-F23 (10개 흐름)
-2. Create ops-calendar.md (verify 11명 workload)
+2. Create ops-calendar.md (verify 12명 workload) - 재검증 필요 (현재 11명 기준)
 3. Redefine mapping/raci.md
 4. Create organizational diagrams
 
 ### Decisions Made
 
-D-010: Organization → 11명 (confirmed)
+D-010: Organization → 12명 (confirmed)
 D-011: SOC Model → Monitoring-only Outsourcing (confirmed)
 D-012: Scope → Full Services (confirmed)
 D-013: Service Range → All 20 Services (confirmed)
@@ -89,4 +96,6 @@ Week 3-4: Diagrams Creation + Final Review
 
 Last Update: 2026-10-19
 Next Update: Phase 4 Flows Expansion Complete
+
+
 

@@ -309,7 +309,26 @@
   function decisionPanel() {
     if (!session) {
       return '<section class="sim-panel sim-panel-empty">' +
-        '<p>좌측에서 사건을 선택하면 조직도의 캐릭터가 움직이고, 여기 상황 설명과 의사결정 카드가 표시됩니다.</p>' +
+        '<div class="sim-intro-eyebrow">이 LAB을 만든 이유</div>' +
+        '<h2 class="sim-intro-title">헬프데스크가 아니라, 전산실 전체를 운영하는 관점</h2>' +
+        '<p class="sim-intro-lead">' +
+          'IT 부서는 "장애를 고치는 곳"으로만 보이기 쉽지만, 실제로는 12개 역할이 각자의 승인 권한과 책임 범위를 가지고 ' +
+          '서로의 업무를 넘겨받는 조직입니다. 이 LAB은 금융권 전산실을 가정해 20개 서비스와 24개 업무 흐름을 설계하고, ' +
+          '그중 역할 경계가 가장 날카롭게 드러나는 5개 상황을 플레이 가능한 시나리오로 옮긴 것입니다.' +
+        '</p>' +
+        '<div class="sim-intro-block">' +
+          '<div class="sim-intro-block-title">여기서 직접 확인할 수 있는 것</div>' +
+          '<ul class="sim-intro-list">' +
+            '<li>왼쪽 조직도의 12개 역할이 각각 어떤 서비스에 책임(Accountable)을 지는지</li>' +
+            '<li>장애·요청이 발생했을 때 누가 1차 대응하고, 언제 상위 역할에 에스컬레이션해야 하는지</li>' +
+            '<li>"내 담당이 아니다"와 "내가 더 빨리 알아챌 수 있었다"가 동시에 성립하는 책임 경계의 모호함</li>' +
+            '<li>기술 선택(예: VPN 게이트웨이, PAM, SIEM)이 실제 운영 업무량과 역할 분담에 미치는 영향</li>' +
+          '</ul>' +
+        '</div>' +
+        '<p class="sim-intro-cta">왼쪽 사건 목록에서 하나를 선택하면 조직도의 담당자들이 상황실로 이동하고, 선택에 따라 결과가 갈립니다.</p>' +
+        '<p class="sim-intro-note">조직·서비스·업무 흐름의 전체 설계 근거는 저장소의 IT TEAM-design/ 문서에 있으며, ' +
+          '이 중 5개 시나리오는 설계 문서의 정상 절차를 장애/예외 상황으로 재구성한 가정입니다.' +
+        '</p>' +
       '</section>';
     }
     var state = session.getState();

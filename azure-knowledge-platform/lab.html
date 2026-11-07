@@ -96,7 +96,7 @@
   /* ── 6개 카드 한 줄 그리드: 화면 폭에 맞춰 축소, 줄바꿈 없음 ── */
   .lab-grid{
     display:grid;
-    grid-template-columns:repeat(6, 1fr);
+    grid-template-columns:repeat(7, 1fr);
     gap:14px;
   }
 
@@ -300,6 +300,7 @@
   .illus-cloud{ background:linear-gradient(145deg,#081b36,#123a63); }
   .illus-auth{ background:linear-gradient(145deg,#0c2347,#1b4583); }
   .illus-gov{ background:linear-gradient(145deg,#111f3e,#28467e); }
+  .illus-notes{ background:linear-gradient(145deg,#1e293b,#334155); }
 
   footer{
     max-width:1480px;
@@ -326,7 +327,7 @@
   }
 
   @media (max-width:760px){
-    .lab-grid{ grid-template-columns:repeat(6, minmax(0,1fr)); gap:6px; }
+    .lab-grid{ grid-template-columns:repeat(7, minmax(0,1fr)); gap:6px; }
     .lab-card{ aspect-ratio:3/5; }
     .lab-card-title{ font-size:.64rem; }
     .lab-card-titlebar{ padding:8px 6px; }
@@ -379,12 +380,12 @@
         <span class="lab-card-overlay">
           <span class="lab-card-overlay-domain">IT Infrastructure</span>
           <span class="lab-card-overlay-title">사내 IT 운영 시뮬레이터</span>
-          <p class="lab-card-desc">사내 IT 인프라 구성 요소와 운영 프로세스를 시뮬레이션합니다.</p>
+          <p class="lab-card-desc">12명 전산실 조직의 역할·승인 권한을 설계하고, 5개 장애·요청 시나리오에서 "누가 먼저 움직이고 누구에게 넘겨야 하는가"를 직접 판단합니다.</p>
           <span class="lab-card-tags">
-            <span class="lab-tag">AD</span>
-            <span class="lab-tag">DNS</span>
-            <span class="lab-tag">DHCP</span>
-            <span class="lab-tag">GPO</span>
+            <span class="lab-tag">조직 설계</span>
+            <span class="lab-tag">RACI</span>
+            <span class="lab-tag">에스컬레이션</span>
+            <span class="lab-tag">IAM/SOC</span>
           </span>
           <span class="lab-card-footer">
             <span class="lab-card-type">직접 구현 · 프로토타입</span>
@@ -416,11 +417,11 @@
         <span class="lab-card-overlay">
           <span class="lab-card-overlay-domain">AI Engineering</span>
           <span class="lab-card-overlay-title">AI 에이전트 지식수집 워크플로우</span>
-          <p class="lab-card-desc">AI 에이전트의 지식 수집, 정보 구조화 및 업무 활용 워크플로우를 실험합니다.</p>
+          <p class="lab-card-desc">메신저 인터뷰로 흩어진 지식을 모아 판정 로직을 가진 에이전트를 완성 제출하고, 담당자별 발굴 기여도를 데이터로 분석해 병렬 오케스트레이션 구조로 재설계해본 회고입니다.</p>
           <span class="lab-card-tags">
-            <span class="lab-tag">AI Agent</span>
-            <span class="lab-tag">Knowledge</span>
-            <span class="lab-tag">Workflow</span>
+            <span class="lab-tag">판정 로직</span>
+            <span class="lab-tag">병렬 오케스트레이션</span>
+            <span class="lab-tag">지식 발굴</span>
           </span>
           <span class="lab-card-footer">
             <span class="lab-card-type">대회 과제 · 회고/재설계</span>
@@ -559,6 +560,39 @@
           </span>
           <span class="lab-card-footer">
             <span class="lab-card-type">직접 구현 · 데모(가상 데이터)</span>
+            <span class="lab-card-arrow">→</span>
+          </span>
+        </span>
+      </a>
+
+      <a class="lab-card" href="./notes.html">
+        <span class="lab-card-thumb illus-notes lab-illus">
+          <span class="lab-card-num">07</span>
+          <span class="lab-icon-wrap">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="6" y="9" width="15" height="15" rx="2" fill="#fde68a" stroke="rgba(15,23,42,.18)" stroke-width="1" transform="rotate(-6 13.5 16.5)"/>
+              <rect x="18" y="20" width="15" height="15" rx="2" fill="#bfdbfe" stroke="rgba(15,23,42,.18)" stroke-width="1" transform="rotate(5 25.5 27.5)"/>
+              <rect x="27" y="7" width="15" height="15" rx="2" fill="#bbf7d0" stroke="rgba(15,23,42,.18)" stroke-width="1" transform="rotate(8 34.5 14.5)"/>
+              <line x1="10" y1="14" x2="18" y2="14" stroke="rgba(15,23,42,.35)" stroke-width="1.2" transform="rotate(-6 13.5 16.5)"/>
+              <line x1="22" y1="25" x2="30" y2="25" stroke="rgba(15,23,42,.35)" stroke-width="1.2" transform="rotate(5 25.5 27.5)"/>
+              <line x1="31" y1="12" x2="39" y2="12" stroke="rgba(15,23,42,.35)" stroke-width="1.2" transform="rotate(8 34.5 14.5)"/>
+            </svg>
+          </span>
+          <span class="lab-card-domain-tag">Knowledge Archive</span>
+        </span>
+        <span class="lab-card-titlebar">
+          <span class="lab-card-title">지식 메모 아카이브</span>
+        </span>
+        <span class="lab-card-overlay">
+          <span class="lab-card-overlay-domain">Knowledge Archive</span>
+          <span class="lab-card-overlay-title">지식 메모 아카이브</span>
+          <p class="lab-card-desc">공부하다 막히면 GitHub Issue로 남긴 메모를 모아, 질문과 답, 제 말로 다시 정리한 한 줄을 포스트잇 형태로 보여줍니다.</p>
+          <span class="lab-card-tags">
+            <span class="lab-tag">GitHub Issues</span>
+            <span class="lab-tag">Knowledge Log</span>
+          </span>
+          <span class="lab-card-footer">
+            <span class="lab-card-type">직접 구현 · 메모 아카이브</span>
             <span class="lab-card-arrow">→</span>
           </span>
         </span>
