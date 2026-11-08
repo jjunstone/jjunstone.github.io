@@ -254,6 +254,32 @@
     .dc-val-rate{ fill:var(--navy); font-weight:600; }
     .dc-legend{ font-size:11px; fill:var(--ink-soft); font-family:"Pretendard",sans-serif; }
     .dc-figure figcaption{ text-align:left; font-size:.78rem; color:var(--ink-faint); margin-top:10px; line-height:1.6; }
+
+    /* ── 챗봇 시스템 아키텍처 다이어그램 ── */
+    .arch-figure{
+      margin:20px 0 0; background:var(--bg-soft); border:1px solid var(--line); border-radius:10px;
+      padding:24px 22px 16px;
+    }
+    .arch-svg{ width:100%; height:auto; display:block; }
+    .arch-group-label{ font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; fill:var(--ink-faint); font-family:"Pretendard",sans-serif; }
+    .arch-node{ fill:#fff; stroke:var(--line); stroke-width:1.3; }
+    .arch-node-primary{ stroke:var(--navy); fill:var(--bg-soft); }
+    .arch-node-gate{ stroke:#dc2626; fill:#fef2f2; }
+    .arch-node-ext{ stroke:var(--ink-faint); stroke-dasharray:3 3; fill:#fff; }
+    .arch-node-result-pass{ stroke:#16a34a; fill:#f0fdf4; }
+    .arch-node-result-escalate{ stroke:var(--navy); fill:var(--bg-soft); }
+    .arch-node-result-fail{ stroke:#dc2626; fill:#fef2f2; }
+    .arch-node-group{ fill:none; stroke:var(--line); stroke-dasharray:2 3; }
+    .arch-group-title{ font-size:11px; font-weight:700; fill:var(--ink-faint); font-family:"Pretendard",sans-serif; text-anchor:middle; letter-spacing:.03em; }
+    .arch-node-title{ font-size:12.5px; font-weight:700; fill:var(--ink); font-family:"Pretendard",sans-serif; text-anchor:middle; }
+    .arch-node-title-sm{ font-size:11px; }
+    .arch-node-sub{ font-size:9.5px; fill:var(--ink-faint); font-family:"Pretendard",sans-serif; text-anchor:middle; }
+    .arch-edge{ stroke:var(--ink-faint); stroke-width:1.3; fill:none; }
+    .arch-edge-v{ stroke:var(--ink-faint); stroke-width:1.3; fill:none; }
+    .arch-edge-dash{ stroke:var(--ink-faint); stroke-width:1; stroke-dasharray:3 3; fill:none; }
+    .arch-edge-fail{ stroke:#dc2626; stroke-width:1.2; stroke-dasharray:3 2; fill:none; }
+    .arch-arrowhead{ fill:var(--ink-faint); }
+    .arch-figure figcaption{ text-align:left; font-size:.78rem; color:var(--ink-faint); margin-top:12px; line-height:1.6; }
   
     /* ── 과제 요약 메트릭 ── */
     .metric-grid{
@@ -320,7 +346,7 @@
   <main>
     <p class="page-eyebrow">Lab · Retrospective</p>
     <h1 class="page-title">AI 에이전트 지식수집 과제 회고 — 왜 순차 구조로는 한계가 있었나</h1>
-    <p class="page-lead">카카오톡 1:1 인터뷰로 흩어진 지식을 모아 고객응대 AI 에이전트를 만드는 온라인 예선 과제를 마치고, 진행 과정에서 반복된 병목을 분석해 더 나은 구조로 다시 설계해본 회고입니다.</p>
+<p class="page-lead">카카오톡 1:1 인터뷰로 흩어진 지식을 모아 고객응대 AI 에이전트를 만드는 온라인 예선 과제를 마치고, 진행 과정에서 반복된 병목을 분석해 더 나은 구조로 다시 설계해본 회고입니다.</p>
 
     <div class="study-note">
       <b>이 페이지의 범위</b> — <span class="scope-tag ops">과제 수행</span>은 실제로 끝까지 제출을 완료한 작업이고, <span class="scope-tag study">구조 재설계</span>는 과제를 마친 뒤 "다시 한다면 이렇게 했을 것"이라는 가정 아래 직접 다시 그려본 개념 설계입니다. 과제의 결과물·제출 자료·대회 측 제공 자료(토큰, API 응답, 심사 기준 등)는 외부 공개 대상이 아니라 이 글에 담지 않았습니다.
@@ -345,7 +371,7 @@
         <div class="metric-card">
           <div class="metric-value">완료</div>
           <div class="metric-label">제출 상태</div>
-          <div class="metric-note">카카오 i 오픈빌더 봇 배포</div>
+<div class="metric-note">카카오 i 오픈빌더 봇 배포</div>
         </div>
     </div>
 
@@ -353,6 +379,7 @@
       <h2><span class="num">1</span>과제 — 흩어진 지식을 모아 판단 경계를 가진 에이전트 만들기</h2>
       <p>농수산물 직판몰을 가정한 온라인 예선 과제였습니다. 운영 인력 3명, 위탁 생산·배송 담당자 여러 명이 각자 다른 조각의 정보를 들고 있는 상황에서, 카카오톡 1:1 대화로 담당자를 한 명씩 인터뷰해 정보를 모으고, 그 정보로 고객 문의에 응답하는 에이전트를 설계해 카카오 i 오픈빌더로 구현·제출하는 과제였습니다.</p>
       <p>문제의 핵심은 지식이 없는 게 아니라, 공식 규정·현장 관행·추측성 답변이 구분 없이 섞여 있다는 점이었습니다. 그래서 설계 원칙을 "모르는 것을 아는 것처럼 답하지 않는다"로 세우고, 담당자 인터뷰 중 확보한 에스컬레이션 절차서(담당자 이관 체계)를 에이전트의 판단 로직으로 그대로 가져와, 애매한 경우 사람에게 넘기는 구조로 구현해 제출을 완료했습니다.</p>
+      <p>최종 결과물은 카카오톡 채널에 카카오 i 오픈빌더로 실제로 연동한 봇입니다. 고객이 카카오톡 채팅창에 문의를 입력하면, 설계한 판정 로직이 공식 규정·현장 관행·에스컬레이션 기준을 순서대로 검사해 자동으로 응답하거나 담당자에게 이관합니다. 사람이 한 건씩 응대하던 1차 문의 처리를, 메신저에서 바로 쓸 수 있는 챗봇으로 대신하게 만든 고객 응대 업무 자동화였습니다.</p>
     </section>
 
     <section>
@@ -460,6 +487,99 @@
         <div class="demo-questions" id="demoQuestions"></div>
         <p class="demo-note">실제 봇에 쓴 시스템 프롬프트의 판정 규칙을 그대로 옮긴 것이며, 외부 AI API를 호출하지 않는 순수 규칙 기반 시뮬레이션입니다. 대회 시나리오의 구체적인 상호명·인명·수치는 포함하지 않았습니다.</p>
       </div>
+      <figure class="arch-figure">
+<svg viewBox="0 0 1080 520" xmlns="http://www.w3.org/2000/svg" class="arch-svg">
+  <defs>
+    <marker id="archArrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" class="arch-arrowhead"/>
+    </marker>
+    <marker id="archArrowFail" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#dc2626"/>
+    </marker>
+  </defs>
+
+  <text x="110" y="28" class="arch-group-label">입력 채널</text>
+  <text x="510" y="28" class="arch-group-label">판정 엔진</text>
+  <text x="750" y="28" class="arch-group-label">지식 · 외부 연동</text>
+  <text x="960" y="28" class="arch-group-label">결과</text>
+
+  <!-- 열1: 사용자 -->
+  <rect x="40" y="228" width="140" height="64" rx="8" class="arch-node arch-node-primary"/>
+  <text x="110" y="254" class="arch-node-title">사용자</text>
+  <text x="110" y="272" class="arch-node-sub">카카오톡 1:1 채팅</text>
+
+  <path d="M180 260 L220 260" class="arch-edge" marker-end="url(#archArrow)"/>
+
+  <!-- 열2: 챗봇 빌더 플랫폼 -->
+  <rect x="220" y="220" width="150" height="80" rx="8" class="arch-node arch-node-primary"/>
+  <text x="295" y="246" class="arch-node-title">챗봇 빌더 플랫폼</text>
+  <text x="295" y="264" class="arch-node-sub">채널 · 세션 관리</text>
+  <text x="295" y="280" class="arch-node-sub">발화 수신 · 액션 호출</text>
+
+  <path d="M370 260 L408 260" class="arch-edge" marker-end="url(#archArrow)"/>
+
+  <!-- 열3: 판정 엔진 그룹 -->
+  <rect x="408" y="52" width="210" height="416" rx="10" class="arch-node-group"/>
+  <text x="513" y="78" class="arch-group-title">판정 엔진 · 4단계 순차 검사</text>
+
+  <rect x="426" y="96" width="176" height="56" rx="6" class="arch-node arch-node-gate"/>
+  <text x="514" y="118" class="arch-node-title arch-node-title-sm">절대원칙 검사</text>
+  <text x="514" y="134" class="arch-node-sub">선약속 · 추측응답 · 범위 밖</text>
+
+  <path d="M514 152 L514 184" class="arch-edge-v" marker-end="url(#archArrow)"/>
+  <path d="M602 112 L660 70" class="arch-edge-fail" marker-end="url(#archArrowFail)"/>
+
+  <rect x="426" y="184" width="176" height="52" rx="6" class="arch-node"/>
+  <text x="514" y="206" class="arch-node-title arch-node-title-sm">1단계 · 손해배상</text>
+  <text x="514" y="221" class="arch-node-sub">분쟁 여부 판단</text>
+
+  <path d="M514 236 L514 266" class="arch-edge-v" marker-end="url(#archArrow)"/>
+
+  <rect x="426" y="266" width="176" height="52" rx="6" class="arch-node"/>
+  <text x="514" y="288" class="arch-node-title arch-node-title-sm">2단계 · 대외공개</text>
+  <text x="514" y="303" class="arch-node-sub">안전 · 법률 판단</text>
+
+  <path d="M514 318 L514 348" class="arch-edge-v" marker-end="url(#archArrow)"/>
+
+  <rect x="426" y="348" width="176" height="52" rx="6" class="arch-node"/>
+  <text x="514" y="370" class="arch-node-title arch-node-title-sm">3단계 · 권한 판단</text>
+  <text x="514" y="385" class="arch-node-sub">처리 한도 이내 여부</text>
+
+  <!-- 판정 엔진 -> 지식/API (양방향 조회, 점선) -->
+  <path d="M602 124 L660 140" class="arch-edge-dash" marker-end="url(#archArrow)"/>
+  <path d="M602 374 L660 390" class="arch-edge-dash" marker-end="url(#archArrow)"/>
+
+  <!-- 열4: 외부 연동 -->
+  <rect x="660" y="96" width="180" height="88" rx="8" class="arch-node arch-node-ext"/>
+  <text x="750" y="122" class="arch-node-title">지식베이스</text>
+  <text x="750" y="140" class="arch-node-sub">인터뷰로 확보한</text>
+  <text x="750" y="156" class="arch-node-sub">규정 · 현장 관행</text>
+
+  <rect x="660" y="340" width="180" height="88" rx="8" class="arch-node arch-node-ext"/>
+  <text x="750" y="366" class="arch-node-title">조회 · 쓰기 API</text>
+  <text x="750" y="384" class="arch-node-sub">주문 · 상담이력 조회</text>
+  <text x="750" y="400" class="arch-node-sub">환불 · 접수 기록</text>
+
+  <!-- 판정 엔진 -> 결과 (직접 연결, 지식/API 열을 피해 위아래로) -->
+  <path d="M602 200 L880 140" class="arch-edge" marker-end="url(#archArrow)"/>
+  <path d="M602 362 L880 390" class="arch-edge" marker-end="url(#archArrow)"/>
+  <path d="M660 70 L880 70" class="arch-edge-fail" marker-end="url(#archArrowFail)"/>
+
+  <!-- 열5: 결과 -->
+  <rect x="880" y="44" width="160" height="52" rx="6" class="arch-node arch-node-result-fail"/>
+  <text x="960" y="66" class="arch-node-title arch-node-title-sm" fill="#dc2626">즉시 차단</text>
+  <text x="960" y="81" class="arch-node-sub">원칙 위반 응답</text>
+
+  <rect x="880" y="114" width="160" height="52" rx="6" class="arch-node arch-node-result-pass"/>
+  <text x="960" y="136" class="arch-node-title arch-node-title-sm">레인1 · 직접 처리</text>
+  <text x="960" y="151" class="arch-node-sub">한도 내 즉시 응답</text>
+
+  <rect x="880" y="364" width="160" height="52" rx="6" class="arch-node arch-node-result-escalate"/>
+  <text x="960" y="386" class="arch-node-title arch-node-title-sm">레인2 · 담당자 이관</text>
+  <text x="960" y="401" class="arch-node-sub">접수번호 발급</text>
+</svg>
+        <figcaption>사용자가 보낸 메시지는 챗봇 빌더 플랫폼을 거쳐 판정 엔진의 4단계를 순서대로 통과합니다. 절대원칙을 위반하면 즉시 차단하고, 통과하면 지식베이스·조회 API를 참고해 한도 내 직접 처리(레인1) 또는 담당자 이관(레인2)으로 갈립니다.</figcaption>
+      </figure>
     </section>
 
     <section>

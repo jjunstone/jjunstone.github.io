@@ -96,7 +96,7 @@
   /* ── 6개 카드 한 줄 그리드: 화면 폭에 맞춰 축소, 줄바꿈 없음 ── */
   .lab-grid{
     display:grid;
-    grid-template-columns:repeat(7, 1fr);
+    grid-template-columns:repeat(8, 1fr);
     gap:14px;
   }
 
@@ -294,13 +294,14 @@
   }
 
   /* ── 썸네일 배경: 기술 분야별 색상 ── */
-  .illus-infra{ background:linear-gradient(145deg,#0b2a5c,#173c78); }
-  .illus-agent{ background:linear-gradient(145deg,#10204a,#2a3f8f); }
-  .illus-data{ background:linear-gradient(145deg,#0f1f3d,#1e3a6b); }
-  .illus-cloud{ background:linear-gradient(145deg,#081b36,#123a63); }
-  .illus-auth{ background:linear-gradient(145deg,#0c2347,#1b4583); }
-  .illus-gov{ background:linear-gradient(145deg,#111f3e,#28467e); }
+  .illus-infra{ background:linear-gradient(145deg,#0b2a5c,#1e4ba8); }
+  .illus-agent{ background:linear-gradient(145deg,#3a1d6e,#6d28d9); }
+  .illus-data{ background:linear-gradient(145deg,#083344,#0e7490); }
+  .illus-cloud{ background:linear-gradient(145deg,#064e3b,#059669); }
+  .illus-auth{ background:linear-gradient(145deg,#431407,#9a3412); }
+  .illus-gov{ background:linear-gradient(145deg,#14532d,#15803d); }
   .illus-notes{ background:linear-gradient(145deg,#1e293b,#334155); }
+  .illus-techmap{ background:linear-gradient(145deg,#4a0e4e,#86198f); }
 
   footer{
     max-width:1480px;
@@ -327,7 +328,7 @@
   }
 
   @media (max-width:760px){
-    .lab-grid{ grid-template-columns:repeat(7, minmax(0,1fr)); gap:6px; }
+    .lab-grid{ grid-template-columns:repeat(8, minmax(0,1fr)); gap:6px; }
     .lab-card{ aspect-ratio:3/5; }
     .lab-card-title{ font-size:.64rem; }
     .lab-card-titlebar{ padding:8px 6px; }
@@ -455,11 +456,11 @@
         <span class="lab-card-overlay">
           <span class="lab-card-overlay-domain">Data Architecture</span>
           <span class="lab-card-overlay-title">데이터 모델링 설계 노트</span>
-          <p class="lab-card-desc">데이터 모델링부터 논리·물리 설계까지 데이터 구조와 관계를 탐구합니다.</p>
+          <p class="lab-card-desc">Zachman Framework의 6×6 매트릭스로 아키텍처 뼈대를 세우고, 증권사 도메인을 가정해 전략 메타모델부터 거버넌스까지 6단계로 직접 설계해본 과정입니다.</p>
           <span class="lab-card-tags">
-            <span class="lab-tag">Data Modeling</span>
-            <span class="lab-tag">ERD</span>
-            <span class="lab-tag">Database</span>
+            <span class="lab-tag">Zachman Framework</span>
+            <span class="lab-tag">주제 영역 분할</span>
+            <span class="lab-tag">거버넌스</span>
           </span>
           <span class="lab-card-footer">
             <span class="lab-card-type">아키텍처 검토 · 설계 자료</span>
@@ -485,11 +486,11 @@
         <span class="lab-card-overlay">
           <span class="lab-card-overlay-domain">Cloud Security</span>
           <span class="lab-card-overlay-title">하이브리드 클라우드 보안 스터디</span>
-          <p class="lab-card-desc">Entra ID, Kubernetes, Terraform 기반의 클라우드 구성 요소와 보안 아키텍처를 분석합니다.</p>
+          <p class="lab-card-desc">AI 챗봇에 마스터키 권한을 주는 설계의 위험을 짚고, OAuth 위임(On-Behalf-Of)으로 사용자 권한만 통과시키는 대안을 정리한 스터디입니다.</p>
           <span class="lab-card-tags">
-            <span class="lab-tag">Entra ID</span>
-            <span class="lab-tag">Kubernetes</span>
-            <span class="lab-tag">Terraform</span>
+            <span class="lab-tag">OAuth 위임</span>
+            <span class="lab-tag">Zero Trust</span>
+            <span class="lab-tag">권한 설계</span>
           </span>
           <span class="lab-card-footer">
             <span class="lab-card-type">스터디 · 개념 학습</span>
@@ -517,11 +518,11 @@
         <span class="lab-card-overlay">
           <span class="lab-card-overlay-domain">Authentication</span>
           <span class="lab-card-overlay-title">인증·거래 흐름 시각화</span>
-          <p class="lab-card-desc">사용자 인증부터 접근 검증, 금융 거래 처리까지 이어지는 프로세스를 시각화합니다.</p>
+          <p class="lab-card-desc">증권 주문이 체결되고 T+2에 결제되기까지의 흐름과, OTP 실패·자금 부족·고액 출금 같은 예외 상황을 단계별로 시각화한 데모입니다.</p>
           <span class="lab-card-tags">
-            <span class="lab-tag">Authentication</span>
-            <span class="lab-tag">Identity</span>
-            <span class="lab-tag">Transaction</span>
+            <span class="lab-tag">주문 생명주기</span>
+            <span class="lab-tag">T+2 결제</span>
+            <span class="lab-tag">예외 시나리오</span>
           </span>
           <span class="lab-card-footer">
             <span class="lab-card-type">직접 구현 · 데모(가상 시나리오)</span>
@@ -552,11 +553,11 @@
         <span class="lab-card-overlay">
           <span class="lab-card-overlay-domain">IT Governance</span>
           <span class="lab-card-overlay-title">IT 변경 승인 워크플로우</span>
-          <p class="lab-card-desc">IT 변경 요청, 승인, 권한 반영 및 감사 이력을 관리하는 워크플로우를 표현합니다.</p>
+          <p class="lab-card-desc">역할별 허용 권한과 임시 권한 부여 정책을 가진 3단계(관리자·보안관리자·서비스오너) 승인 체계를 직접 구현한 데모입니다.</p>
           <span class="lab-card-tags">
-            <span class="lab-tag">Approval</span>
-            <span class="lab-tag">RBAC</span>
-            <span class="lab-tag">Audit Log</span>
+            <span class="lab-tag">역할 기반 정책</span>
+            <span class="lab-tag">3단계 승인</span>
+            <span class="lab-tag">임시 권한</span>
           </span>
           <span class="lab-card-footer">
             <span class="lab-card-type">직접 구현 · 데모(가상 데이터)</span>
@@ -593,6 +594,52 @@
           </span>
           <span class="lab-card-footer">
             <span class="lab-card-type">직접 구현 · 메모 아카이브</span>
+            <span class="lab-card-arrow">→</span>
+          </span>
+        </span>
+      </a>
+      <a class="lab-card" href="./technology-map.html">
+        <span class="lab-card-thumb illus-techmap lab-illus">
+          <span class="lab-card-num">08</span>
+          <span class="lab-icon-wrap">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="24" cy="24" r="6" fill="#fff" fill-opacity=".9"/>
+              <circle cx="24" cy="6" r="3.4" fill="#fff" fill-opacity=".6"/>
+              <circle cx="38.6" cy="12.4" r="3.4" fill="#fff" fill-opacity=".6"/>
+              <circle cx="42" cy="24" r="3.4" fill="#fff" fill-opacity=".6"/>
+              <circle cx="38.6" cy="35.6" r="3.4" fill="#fff" fill-opacity=".6"/>
+              <circle cx="24" cy="42" r="3.4" fill="#fff" fill-opacity=".6"/>
+              <circle cx="9.4" cy="35.6" r="3.4" fill="#fff" fill-opacity=".6"/>
+              <circle cx="6" cy="24" r="3.4" fill="#fff" fill-opacity=".6"/>
+              <circle cx="9.4" cy="12.4" r="3.4" fill="#fff" fill-opacity=".6"/>
+              <g stroke="rgba(255,255,255,.4)" stroke-width="1.2">
+                <line x1="24" y1="18" x2="24" y2="9.4"/>
+                <line x1="29.5" y1="20.5" x2="36.1" y2="14.9"/>
+                <line x1="30" y1="24" x2="38.6" y2="24"/>
+                <line x1="29.5" y1="27.5" x2="36.1" y2="33.1"/>
+                <line x1="24" y1="30" x2="24" y2="38.6"/>
+                <line x1="18.5" y1="27.5" x2="11.9" y2="33.1"/>
+                <line x1="18" y1="24" x2="9.4" y2="24"/>
+                <line x1="18.5" y1="20.5" x2="11.9" y2="14.9"/>
+              </g>
+            </svg>
+          </span>
+          <span class="lab-card-domain-tag">Azure Architecture</span>
+        </span>
+        <span class="lab-card-titlebar">
+          <span class="lab-card-title">Azure 기술 지도</span>
+        </span>
+        <span class="lab-card-overlay">
+          <span class="lab-card-overlay-domain">Azure Architecture</span>
+          <span class="lab-card-overlay-title">Azure 기술 지도</span>
+          <p class="lab-card-desc">Identity·Network·Security·Hybrid Infra·DevOps·Data·Operations·Workplace 8개 영역으로 Azure 생태계를 구조화하고, 서비스별 설계 원칙과 적용 시점을 정리한 지식 지도입니다.</p>
+          <span class="lab-card-tags">
+            <span class="lab-tag">Zero Trust</span>
+            <span class="lab-tag">아키텍처 체계화</span>
+            <span class="lab-tag">서비스 맵핑</span>
+          </span>
+          <span class="lab-card-footer">
+            <span class="lab-card-type">지식 정리 · 참고 자료</span>
             <span class="lab-card-arrow">→</span>
           </span>
         </span>
