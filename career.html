@@ -26,24 +26,41 @@
   }
 
   .topbar{
+    position:sticky; top:0; z-index:50;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:20px 32px;
-    border-bottom:1px solid var(--line);
+    padding:18px 32px;
+    background:rgba(255,255,255,.82);
+    backdrop-filter:blur(14px) saturate(140%);
+    -webkit-backdrop-filter:blur(14px) saturate(140%);
+    border-bottom:1px solid rgba(23,60,120,.1);
+    box-shadow:0 1px 0 rgba(23,60,120,.04), 0 12px 24px -20px rgba(15,23,42,.15);
   }
   .topbar-brand{
-    font-weight:700;
+    font-weight:800;
     text-decoration:none;
-    color:var(--ink);
-    font-size:.95rem;
+    font-size:.98rem;
+    letter-spacing:.02em;
+    background:linear-gradient(135deg,#173c78,#2563eb 65%,#173c78);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
   }
-  .topbar-links{ display:flex; align-items:center; gap:12px; }
+  .topbar-links{ display:flex; align-items:center; gap:14px; }
   .topbar-links a{
+    position:relative;
     color:var(--ink-soft);
     text-decoration:none;
     font-size:.88rem;
+    font-weight:600;
   }
+  .topbar-links a:not(.topbar-btn)::after{
+    content:"";
+    position:absolute; left:0; right:100%; bottom:-3px;
+    height:1.5px;
+    background:var(--accent);
+    transition:right .22s cubic-bezier(.4,0,.2,1);
+  }
+  .topbar-links a:not(.topbar-btn):hover::after{ right:0; }
   .topbar-links a:hover{ color:var(--accent); }
 
   .topbar-btn{
@@ -57,21 +74,24 @@
     font-weight:600;
     color:var(--ink);
     text-decoration:none;
-    transition:border-color .18s ease, color .18s ease;
+    transition:border-color .18s ease, color .18s ease, box-shadow .18s ease, transform .18s ease;
   }
   .topbar-btn:hover{
     border-color:var(--accent);
     color:var(--accent);
+    box-shadow:0 4px 12px -4px rgba(23,60,120,.25);
+    transform:translateY(-1px);
   }
   .topbar-btn.primary{
-    background:var(--ink);
+    background:linear-gradient(135deg,#173c78,#2a5bb0);
     border-color:var(--ink);
     color:#fff;
   }
   .topbar-btn.primary:hover{
-    background:var(--accent);
+    background:linear-gradient(135deg,#1a4488,#2563eb);
     border-color:var(--accent);
     color:#fff;
+    box-shadow:0 6px 16px -4px rgba(23,60,120,.4);
   }
 
   main{
