@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Change Gate — 이준석</title>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -69,8 +70,7 @@
     }
 .topbar-brand {
   font-weight: 800; text-decoration: none; font-size: 15px; position: absolute; left: 32px; letter-spacing: .02em;
-  background: linear-gradient(135deg,#173c78,#2563eb 65%,#173c78);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
+  color: var(--accent);
 }
 .topbar-links { display: flex; align-items: center; gap: 22px; min-width: 0; }
     .topbar-links a { position: relative; color: var(--text-muted); text-decoration: none; font-size: 14px; font-weight: 600; padding-bottom: 2px; }
@@ -149,6 +149,7 @@
       transform: translateY(-1px);
     }
     .pick-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .pick-card:active { transform: translateY(0) scale(.985); }
     .pick-name { font-size: 16px; font-weight: 700; margin-bottom: 5px; }
     .pick-req { font-size: 13.5px; color: var(--text-muted); line-height: 1.5; }
     .pick-go { font-size: 13px; font-weight: 600; color: var(--accent); white-space: nowrap; }
@@ -515,6 +516,9 @@
       background: var(--paper); font-family: inherit; color: inherit; cursor: pointer;
     }
     .more-row:hover { border-color: var(--accent); }
+    .more-row { transition: border-color .15s, transform .15s, box-shadow .15s; }
+    .more-row:hover { transform: translateY(-1px); box-shadow: 0 2px 10px rgba(23,32,51,.06); }
+    .more-row:active { transform: translateY(0) scale(.99); }
     .more-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
     .more-name { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
     .more-note { font-size: 12.5px; color: var(--text-muted); }
@@ -643,6 +647,41 @@
     }
 
 
+    /* ── 등장 애니메이션 (Motion, 바닐라 framer-motion) ──
+       motion-ready가 붙기 전/스크립트 로드 실패 시에도 콘텐츠가
+       그대로 보이도록 기본값은 opacity:1. Motion이 로드되면
+       JS가 각 구간을 잠깐 투명하게 만들었다가 순서대로 올린다. */
+    html.motion-ready .intro > *,
+    html.motion-ready .case.on > * {
+      opacity: 0;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html.motion-ready .intro > *,
+      html.motion-ready .case.on > * { opacity: 1 !important; }
+    }
+
+    /* 승인/반려 뒤 바뀌는 상태 배지가 뜨는 순간 */
+    .badge { animation: badge-in .32s cubic-bezier(.22,1,.36,1); }
+    @keyframes badge-in {
+      from { opacity: 0; transform: scale(.85); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* 근거 펼침 — 펼쳐질 때 내용이 아래에서 떠오르듯 */
+    .why-body { animation: why-in .22s cubic-bezier(.22,1,.36,1); }
+    @keyframes why-in {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 변경 내용 한 줄에 마우스를 올리면 그 줄만 살짝 떠오른다 */
+    .row { transition: transform .15s cubic-bezier(.22,1,.36,1), box-shadow .15s; }
+    .row:hover { transform: translateX(2px); box-shadow: 0 1px 6px rgba(23,32,51,.07); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .badge, .why-body { animation: none; }
+      .row:hover { transform: none; }
+    }
   </style>
 </head>
 <body>

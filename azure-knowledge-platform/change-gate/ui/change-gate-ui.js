@@ -26,6 +26,39 @@
       .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
+  /* ───────────── 등장 애니메이션 ─────────────
+   * Motion(바닐라)이 로드됐을 때만 동작. 로드 실패/차단 시에는
+   * CSS가 opacity:1을 기본값으로 두므로 콘텐츠는 항상 바로 보인다.
+   * 화면을 통째로 다시 그릴 때마다(drawIntro, draw) 호출해
+   * 섹션이 순서대로 떠오르게 한다. */
+  var motionLib = null;
+  var motionReady = false;
+  (async function loadMotion() {
+    try {
+      motionLib = await import('https://cdn.jsdelivr.net/npm/motion@11/+esm');
+      motionReady = true;
+      document.documentElement.classList.add('motion-ready');
+      reveal();
+    } catch (e) {
+      document.documentElement.classList.add('motion-ready');
+    }
+  })();
+
+  function reveal() {
+    if (!motionReady || !motionLib) return;
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) return;
+    var animate = motionLib.animate;
+    var stagger = motionLib.stagger;
+    var root = app.querySelector('.intro') || app.querySelector('.case.on');
+    if (!root) return;
+    animate(
+      Array.prototype.slice.call(root.children),
+      { opacity: [0, 1], y: [10, 0] },
+      { duration: 0.42, delay: stagger(0.055), easing: [0.22, 1, 0.36, 1] }
+    );
+  }
+
   /** VPN-DEV, DEV-DB:READ 같은 키를 읽기 쉬운 형태로. */
   function name(key) { return esc(String(key).replace(':', ' / ')); }
 
@@ -81,7 +114,10 @@
     app.querySelectorAll('[data-open]').forEach(function (b) {
       b.addEventListener('click', function () { open(b.getAttribute('data-open')); });
     });
+    reveal();
   }
+
+
 
 
   /**
@@ -144,6 +180,7 @@
     var s = snap;
     app.innerHTML = '<section class="case on">' + head(s) + bodyFor(s) + tail(s) + '</section>';
     wire();
+    reveal();
   }
 
   var LABEL = {};

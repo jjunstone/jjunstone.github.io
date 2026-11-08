@@ -19,6 +19,8 @@ window.ChangeGateData = (function () {
       { id: 'U-2287', name: '김민수', department: '개발팀',   role: '백엔드 개발자',     status: 'ACTIVE' },
       { id: 'U-3310', name: '박서연', department: '보안팀',   role: '보안 담당자',       status: 'ACTIVE' },
       { id: 'U-3902', name: '정우진', department: '운영팀',   role: '서비스 오너',       status: 'ACTIVE' }
+      ,{ id: 'U-4118', name: '한지우', department: '운영팀',   role: '운영 엔지니어',     status: 'ACTIVE' },
+      { id: 'U-4455', name: '오세훈', department: '개발팀',   role: '백엔드 개발자',     status: 'INACTIVE' }
     ],
     operators: {
       administrator: 'U-1042',
@@ -29,6 +31,12 @@ window.ChangeGateData = (function () {
       'U-2287': {
         adGroups: ['VPN-USER'],
         resourceAccess: ['DEV-TOOLS:READ'],
+        expirations: {}
+      }
+      ,
+      'U-4118': {
+        adGroups: ['VPN-USER', 'VPN-OPS', 'OPS-TOOLS'],
+        resourceAccess: ['OPS-TOOLS:READ', 'OPS-DB:READ'],
         expirations: {}
       }
     }
@@ -71,6 +79,14 @@ window.ChangeGateData = (function () {
         revokeResourceAccess: ['DEV-TOOLS:READ'],
         reviewGroups: ['VPN-DEV'],
         reviewResourceAccess: ['DEV-DB:READ']
+      }
+      ,
+      '운영 엔지니어>백엔드 개발자': {
+        grantGroups: ['VPN-DEV', 'DEV-TOOLS'],
+        revokeGroups: ['OPS-TOOLS'],
+        revokeResourceAccess: ['OPS-DB:READ'],
+        reviewGroups: ['VPN-OPS'],
+        reviewResourceAccess: []
       }
     },
     restrictions: [
@@ -169,6 +185,22 @@ window.ChangeGateData = (function () {
       reference: ['DIRECTORY', 'ACCESS STATE', 'ROLE POLICY'],
       expectedResult: 'POLICY_BLOCKED'
     }
+    ,
+    {
+      id: 'RT-04',
+      caseId: 'CHG-2533',
+      name: 'ROLE CHANGE — RETURN',
+      title: '개발팀으로 복귀',
+      summary: '운영팀에서 개발팀으로 돌아오며 권한이 맞바뀌는 경우',
+      requestType: 'ROLE CHANGE',
+      requesterId: 'U-3902',
+      targetUserId: 'U-4118',
+      requestText: '한지우의 부서가 운영팀에서 개발팀으로 변경됐습니다. 직무 변경에 따라 접근권한을 검토해주세요.',
+      reference: ['DIRECTORY', 'ACCESS STATE', 'ROLE POLICY'],
+      newRole: '백엔드 개발자',
+      newDepartment: '개발팀',
+      expectedResult: 'COMPLETED'
+    }
   ];
 
   /* ── Scenario library (edge cases) ─────────────────────── */
@@ -224,6 +256,54 @@ window.ChangeGateData = (function () {
       adapterFaults: { database: { dropOnRead: ['DEV-DB:READ'] } },
       editableDurationOptions: [30, 14, 7],
       expectedResult: 'VERIFICATION_FAILED'
+    }
+    ,
+    {
+      id: 'LIB-04',
+      caseId: 'CHG-2541',
+      name: 'INACTIVE ACCOUNT',
+      title: '퇴사자 계정에 들어온 요청',
+      summary: '대상 계정이 이미 비활성화된 경우',
+      note: '사람이 없으면 권한도 의미가 없어, 가장 먼저 걸러냅니다.',
+      requestType: 'ACCESS REQUEST',
+      requesterId: 'U-1042',
+      targetUserId: 'U-4455',
+      requestText: '오세훈에게 개발환경 접근을 위해 VPN-DEV와 DEV-DB / READ 권한을 30일간 추가해주세요.',
+      reference: ['DIRECTORY', 'ACCESS STATE', 'ROLE POLICY'],
+      editableDurationOptions: [30, 14, 7],
+      expectedResult: 'POLICY_BLOCKED'
+    }
+    ,
+    {
+      id: 'LIB-05',
+      caseId: 'CHG-2548',
+      name: 'PERMANENT REQUEST',
+      title: '기간 없이 상시로 요청',
+      summary: '만료일을 둘 수 없는 영구 권한 요청',
+      note: '막지는 않지만, 자동 회수가 안 된다는 것을 알리고 넘어갑니다.',
+      requestType: 'ACCESS REQUEST',
+      requesterId: 'U-1042',
+      targetUserId: 'U-2287',
+      requestText: '김민수님에게 개발환경 접근을 위해 DEV-DB / READ 권한을 영구로 추가해주세요.',
+      reference: ['DIRECTORY', 'ACCESS STATE', 'ROLE POLICY'],
+      expectedResult: 'COMPLETED'
+    }
+    ,
+    {
+      id: 'LIB-06',
+      caseId: 'CHG-2555',
+      name: 'MISSING DURATION',
+      title: '이유는 있는데 기간이 빠진 요청',
+      summary: '다른 내용은 다 있고 기간만 비어 있는 경우',
+      note: '전부 다시 받지 않고, 비어 있는 항목만 짚어 묻습니다.',
+      requestType: 'ACCESS REQUEST',
+      requesterId: 'U-1042',
+      targetUserId: 'U-2287',
+      requestText: '신규 백엔드 기능 점검을 위해 김민수님에게 DEV-DB / READ 권한을 추가해주세요.',
+      reference: ['DIRECTORY', 'ACCESS STATE', 'ROLE POLICY'],
+      completionText: '신규 백엔드 기능 점검을 위해 김민수님에게 DEV-DB / READ 권한을 14일간 추가해주세요.',
+      editableDurationOptions: [14, 7, 3],
+      expectedResult: 'NEEDS_INFO'
     }
   ];
 

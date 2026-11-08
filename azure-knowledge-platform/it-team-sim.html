@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>IT Team Simulator | 이준석</title>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
@@ -51,22 +52,25 @@
 
   /* ── 본문 3단 레이아웃 ── */
   .sim-body{
-    display:grid;
-    grid-template-columns:260px 1fr 340px;
-    grid-template-rows:1fr;
+    display:flex;
+    flex-direction:row;
     gap:1px;
     background:var(--line);
     flex:1;
     min-height:0;
+    min-width:0;
     overflow:hidden;
   }
+  .sim-cases{ flex:0 0 260px; }
+  .sim-org{ flex:1 1 auto; }
+  .sim-right-col{ flex:0 0 340px; }
 
   .sim-right-col{
-    display:flex; flex-direction:column; min-height:0; background:var(--line); gap:1px;
+    display:flex; flex-direction:column; min-height:0; min-width:0; background:var(--line); gap:1px;
   }
 
   /* ── 좌측: 사건 목록 ── */
-  .sim-cases{ background:#ffffff; overflow-y:auto; padding:16px; }
+  .sim-cases{ background:#ffffff; overflow-y:auto; padding:16px; min-width:0; }
   .sim-cases-title{ font-size:.72rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:12px; }
   .case-card{
     display:block; width:100%; text-align:left; background:none; border:1px solid var(--line);
@@ -87,7 +91,7 @@
   .case-assumption{ font-size:.68rem; color:#b54708; margin-top:6px; }
 
   /* ── 중앙: 사무실 평면도 ── */
-  .sim-org{ background:#ffffff; overflow:hidden; padding:16px 16px 0; display:flex; flex-direction:column; position:relative; min-height:0; }
+  .sim-org{ background:#ffffff; overflow:hidden; padding:16px 16px 0; display:flex; flex-direction:column; position:relative; min-height:0; min-width:0; }
   .sim-org-title{ font-size:.72rem; font-weight:700; letter-spacing:.04em; color:var(--ink-faint); margin-bottom:10px; flex-shrink:0; }
 
   .org-floor{
@@ -305,7 +309,10 @@
   .tl-detail{ color:var(--ink-soft); }
 
   @media (max-width:980px){
-    .sim-body{ grid-template-columns:1fr; grid-template-rows:auto 480px auto; overflow-y:auto; }
+    .sim-body{ flex-direction:column; overflow-y:auto; }
+    .sim-cases{ flex:0 0 auto; max-height:280px; }
+    .sim-org{ flex:0 0 480px; }
+    .sim-right-col{ flex:0 0 auto; }
     .org-floor{ min-height:420px; }
   }
 
