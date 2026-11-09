@@ -94,111 +94,138 @@
   .sim-org{ background:#ffffff; overflow:hidden; padding:16px 16px 0; display:flex; flex-direction:column; position:relative; min-height:0; min-width:0; }
   .sim-org-title{ font-size:.72rem; font-weight:700; letter-spacing:.04em; color:var(--ink-faint); margin-bottom:10px; flex-shrink:0; }
 
+  .svc-board{ flex-shrink:0; margin-bottom:10px; }
+  .svc-board-label{ font-size:.64rem; color:var(--ink-faint); margin-bottom:6px; }
+  .svc-board-chips{ display:flex; flex-wrap:wrap; gap:6px; }
+  .svc-chip{
+    display:inline-flex; align-items:center; gap:5px;
+    font-size:.64rem; color:var(--ink-soft);
+    background:#f3f4f1; border:1px solid var(--line); border-radius:999px;
+    padding:3px 9px 3px 7px; white-space:nowrap;
+  }
+  .svc-dot{ width:6px; height:6px; border-radius:50%; background:#2e9e5b; flex-shrink:0; }
+  .svc-chip.svc-affected{ background:#fdecea; border-color:#f1b3ac; color:#8c2a1e; }
+  .svc-chip.svc-affected .svc-dot{ background:#d62d20; }
+
   .org-floor{
-    position:relative;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    grid-template-rows:auto auto auto auto auto;
+    grid-template-areas:
+      "ciso ciso"
+      "warroom warroom"
+      "dba sec"
+      "net infra"
+      "server server";
+    gap:10px;
+    width:100%;
     flex:1;
-    min-height:420px;
-    max-width:760px;
-    margin:0 auto;
+    min-height:460px;
     background:
-      repeating-linear-gradient(0deg, rgba(0,0,0,.05) 0 2px, transparent 2px 32px),
-      repeating-linear-gradient(90deg, rgba(0,0,0,.05) 0 2px, transparent 2px 32px),
-      #cfd6c2;
+      repeating-linear-gradient(0deg, rgba(0,0,0,.04) 0 1px, transparent 1px 28px),
+      repeating-linear-gradient(90deg, rgba(0,0,0,.04) 0 1px, transparent 1px 28px),
+      #eef0e8;
     border:3px solid #2b2b2b;
-    border-radius:0;
-    image-rendering:pixelated;
-    overflow:hidden;
+    border-radius:6px;
+    padding:12px;
+  }
+  .org-floor.no-session{
+    grid-template-rows:auto 1fr 1fr 1fr;
+    grid-template-areas:
+      "ciso ciso"
+      "dba sec"
+      "net infra"
+      "server server";
   }
 
-  .floor-zone-box{
-    position:absolute;
-    border:2px dashed #8a957a;
-    border-radius:6px;
-    background:rgba(255,255,255,.28);
-    pointer-events:none;
+  .org-zone{
+    border:2px dashed #95a186;
+    border-radius:8px;
+    background:rgba(255,255,255,.75);
+    padding:10px;
+    display:flex;
+    flex-direction:column;
+    min-height:0;
   }
-  .floor-zone-label{
-    position:absolute;
-    top:6px; left:8px;
-    font-size:.64rem;
+  .org-zone[data-zone="총괄"]{
+    grid-area:ciso;
+    background:rgba(240,240,240,.9);
+    border-color:#8a8a8a;
+    border-style:solid;
+  }
+  .org-zone[data-zone="DBA팀"]{ grid-area:dba; }
+  .org-zone[data-zone="보안팀"]{ grid-area:sec; }
+  .org-zone[data-zone="네트워크팀"]{ grid-area:net; }
+  .org-zone[data-zone="인프라/DevOps팀"]{ grid-area:infra; }
+  .org-zone[data-zone="서버팀"]{ grid-area:server; }
+  .org-zone-warroom{
+    grid-area:warroom;
+    background:rgba(255,247,236,.9);
+    border-color:#c99a4a;
+    border-style:solid;
+  }
+  .org-zone-label{
+    font-size:.68rem;
     font-weight:700;
     letter-spacing:.04em;
     color:#4a5240;
     text-transform:uppercase;
-    font-family:inherit;
-    background:rgba(207,214,194,.9);
-    padding:2px 6px;
-    border-radius:4px;
+    margin-bottom:8px;
+    flex-shrink:0;
   }
-
-  .war-room-ring{
-    position:absolute;
-    left:50%; top:46%;
-    width:0; height:0;
-    border-radius:50%;
-    border:2px dashed #8a957a;
-    transform:translate(-50%,-50%);
-    transition:width .5s ease, height .5s ease, border-color .3s ease;
-    pointer-events:none;
+  .org-zone-warroom .org-zone-label{ color:#9a5b12; }
+  .org-zone-people{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(84px, 1fr));
+    gap:10px;
+    flex:1;
+    align-content:center;
   }
-  .war-room-active{ width:46%; height:50%; border-color:#4a5240; border-radius:8px; }
-  .war-room-label{
-    position:absolute; left:50%; top:16%; transform:translateX(-50%);
-    font-size:.64rem; font-weight:700; letter-spacing:.08em; color:#4a5240; text-transform:uppercase;
-    pointer-events:none;
+  .org-zone-warroom .org-zone-people{
+    grid-template-columns:repeat(auto-fit, minmax(96px, 1fr));
+    align-content:center;
   }
-
-  .org-connectors{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
-  .connector-line{ stroke:#2b2b2b; stroke-width:.5; stroke-dasharray:1.2 1.4; opacity:.8; }
-  .connector-pulse{ fill:#b42318; opacity:.9; }
 
   .org-node{
-    position:absolute;
-    transform:translate(-50%,-50%);
-    display:flex; flex-direction:column; align-items:center; gap:2px;
-    width:76px;
-    padding:4px 2px;
-    border-radius:4px;
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+    padding:10px 6px 8px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#fafafa;
+    box-shadow:0 1px 0 rgba(0,0,0,.04), inset 0 2px 0 rgba(0,0,0,.03);
     cursor:pointer;
-    transition:left .6s cubic-bezier(.22,1,.36,1), top .6s cubic-bezier(.22,1,.36,1), box-shadow .2s ease, background .2s ease;
-    outline:none;
+    text-align:center;
   }
-  .org-node:hover{ background:rgba(0,0,0,.06); }
+  .org-node::before{
+    content:"";
+    display:block;
+    width:60%;
+    height:4px;
+    border-radius:2px;
+    background:var(--role-color);
+    opacity:.55;
+    margin-bottom:2px;
+  }
+  .org-node:hover{ border-color:var(--accent); background:#f1f4fb; }
   .org-node:focus-visible{ box-shadow:0 0 0 2px var(--accent); }
-  .org-node.mode-idle{ opacity:.4; }
-  .org-node.mode-idle .pixel-avatar-svg{ filter:grayscale(.5); }
+  .org-node.mode-idle{ opacity:.55; }
 
-  .org-node.mode-speaking .org-avatar,
-  .org-node.mode-speaking-player .org-avatar{ filter:drop-shadow(0 0 0 2px rgba(23,60,120,.3)); }
-  .org-node.mode-listening .org-avatar{ filter:drop-shadow(0 0 0 2px rgba(180,35,24,.3)); }
+  .org-node.mode-speaking, .org-node.mode-speaking-player{ border-color:#173c78; background:#eaf0fb; }
+  .org-node.mode-listening{ border-color:#b42318; background:#fdecea; }
+  .org-node.mode-player{ border-color:#0f6656; background:#e8f7f1; }
 
   .org-avatar{
-    position:relative;
-    width:48px; height:68px; display:flex; align-items:flex-end; justify-content:center;
-    image-rendering:pixelated;
-  }
-  .org-avatar::after{
-    content:"";
-    position:absolute; bottom:1px; left:50%; width:30px; height:7px;
-    background:rgba(0,0,0,.18); border-radius:50%; transform:translateX(-50%); z-index:-1;
-  }
-  .pixel-avatar-svg{ width:48px; height:68px; display:block; }
-  .photo-avatar-img{ width:48px; height:68px; display:block; object-fit:cover; border-radius:6px; }
-  .org-pulse-ring{
-    position:absolute; left:50%; bottom:2px; width:34px; height:10px;
-    border:1.5px solid var(--role-color); border-radius:50%;
-    opacity:.5; transform:translateX(-50%);
-    animation:org-pulse 1.4s ease-out infinite;
-  }
-  @keyframes org-pulse{
-    0%{ transform:translateX(-50%) scale(.8); opacity:.55; }
-    70%{ transform:translateX(-50%) scale(1.6); opacity:0; }
-    100%{ transform:translateX(-50%) scale(1.6); opacity:0; }
+    width:32px; height:32px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:.78rem; font-weight:700; color:#ffffff;
+    background:var(--role-color);
+    flex-shrink:0;
   }
 
-  .org-name{ font-size:.66rem; font-weight:700; text-align:center; line-height:1.2; color:#2b2b2b; }
-  .org-status{ font-size:.58rem; font-weight:700; color:var(--role-color); }
-  .org-status-idle{ color:#7c876c; font-weight:400; }
+  .org-node > div{ display:flex; flex-direction:column; align-items:center; }
+  .org-name{ font-size:.74rem; font-weight:700; color:#2b2b2b; white-space:nowrap; }
+  .org-status{ font-size:.62rem; font-weight:700; color:var(--role-color); white-space:nowrap; }
+  .org-status-idle{ color:#8a8a8a; font-weight:400; }
 
   /* ── 보고 스마니 (이전 말밝선 자리를 대신함) ── */
   .sim-thread{
@@ -213,11 +240,10 @@
   .thread-list{ display:flex; flex-direction:column; gap:10px; }
   .thread-msg{ display:flex; gap:10px; align-items:flex-start; }
   .thread-msg-avatar{
-    width:22px; height:31px; flex-shrink:0; display:flex; align-items:flex-end; justify-content:center;
-    image-rendering:pixelated; margin-top:2px;
+    width:24px; height:24px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    margin-top:2px;
   }
-  .thread-msg-avatar .pixel-avatar-svg{ width:22px; height:31px; display:block; }
-  .thread-msg-avatar .photo-avatar-img{ width:22px; height:31px; display:block; object-fit:cover; border-radius:4px; }
+  .thread-msg-avatar .org-avatar{ width:24px; height:24px; font-size:.64rem; }
   .thread-msg-body{
     flex:1; min-width:0; background:#f7f8fb; border:1px solid var(--line); border-radius:8px;
     padding:9px 12px;
@@ -240,11 +266,9 @@
   }
   .person-popover-head{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }
   .person-popover-avatar{
-    width:36px; height:51px; display:flex; align-items:flex-end; justify-content:center; flex-shrink:0;
-    image-rendering:pixelated;
+    width:36px; height:36px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
   }
-  .person-popover-avatar .pixel-avatar-svg{ width:36px; height:51px; display:block; }
-  .person-popover-avatar .photo-avatar-img{ width:36px; height:51px; display:block; object-fit:cover; border-radius:4px; }
+  .person-popover-avatar .org-avatar{ width:36px; height:36px; font-size:.84rem; }
   .person-popover-name{ font-size:.86rem; font-weight:700; }
   .person-popover-dept{ font-size:.7rem; color:var(--ink-faint); }
   .person-popover-authority{ font-size:.72rem; color:var(--ink-soft); margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid var(--line); }
@@ -311,14 +335,19 @@
   @media (max-width:980px){
     .sim-body{ flex-direction:column; overflow-y:auto; }
     .sim-cases{ flex:0 0 auto; max-height:280px; }
-    .sim-org{ flex:0 0 480px; }
+    .sim-org{ flex:0 0 auto; }
     .sim-right-col{ flex:0 0 auto; }
-    .org-floor{ min-height:420px; }
+    .org-floor{
+      grid-template-columns:1fr;
+      grid-template-areas:"ciso" "warroom" "dba" "sec" "net" "infra" "server";
+    }
+    .org-floor.no-session{
+      grid-template-areas:"ciso" "dba" "sec" "net" "infra" "server";
+    }
   }
 
   @media (prefers-reduced-motion: reduce){
     .org-node{ transition:none; }
-    .org-pulse-ring{ animation:none; }
   }
 </style>
 </head>

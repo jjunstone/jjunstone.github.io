@@ -20,7 +20,6 @@
   var selectedPersonId = null; // 사이드 패널에서 상세정보를 보고 있는 담당자
   var motionReady = false;
   var motionLib = null;
-  var walkFrame = 0; // 참여 중인 캐릭터의 걷기 프레임(0/1), 타이머로 교차
 
   (async function loadMotion() {
     try {
@@ -42,96 +41,14 @@
     return Data.roster.filter(function (r) { return r.id === id; })[0] || null;
   }
 
-  /* ───────────── 픽셀 아바타 생성기 ─────────────
-   * 12x17 그리드를 기반으로 캐릭터를 <rect> 타일로 그린다.
-   * 머리 모양(hair)으로 12명을 구분하고, 걷기 프레임(0/1)으로 다리 위치를 바꿔
-   * 참여 중인 캐릭터가 실제로 걷는 것처럼 보이게 한다. */
-  var PIXEL_COLS = 12;
-  var PIXEL_ROWS = 17; // 0행은 머리 위 장식(번/스파이크) 전용 여유 공간
-  var HEAD_OFFSET = 1;
-
-  var HAIR_MASKS = {
-    'short-side':    [[0,3,8],[1,2,3],[1,8,9]],
-    'short-round':   [[0,3,8],[1,2,9]],
-    'long-straight': [[0,3,8],[1,2,9],[2,2,3],[2,8,9],[3,2,3],[3,8,9],[4,2,3],[4,8,9]],
-    'bun':           [[-1,5,6],[0,3,8],[1,2,9]],
-    'bald-glasses':  [[1,2,3],[1,8,9]],
-    'curly':         [[-1,3,8],[0,2,9],[1,2,3],[1,8,9]],
-    'ponytail':      [[0,3,8],[1,2,9],[2,9,10],[3,9,10],[4,9,10]],
-    'buzz':          [[0,3,8]],
-    'long-wave':     [[0,3,8],[1,2,9],[2,2,4],[2,7,9],[3,2,4],[3,7,9]],
-    'short-spiky':   [[-1,3,4],[-1,5,6],[-1,7,8],[0,3,8],[1,2,9]],
-    'bob':           [[0,3,8],[1,2,9],[2,2,3],[2,8,9],[3,2,3],[3,8,9]],
-    'long-tied':     [[0,3,8],[1,2,9],[2,8,10],[3,8,10]],
-  };
-
-  function shadeColor(hex) {
-    var c = hex.replace('#', '');
-    var num = parseInt(c, 16);
-    var r = Math.max(0, Math.floor(((num >> 16) & 0xff) * 0.72));
-    var g = Math.max(0, Math.floor(((num >> 8) & 0xff) * 0.72));
-    var b = Math.max(0, Math.floor((num & 0xff) * 0.72));
-    function h(x) { var s = x.toString(16); return s.length < 2 ? '0' + s : s; }
-    return '#' + h(r) + h(g) + h(b);
-  }
-
-  function buildPixelGrid(hairStyle, walkFrame) {
-    var grid = [];
-    for (var i = 0; i < PIXEL_ROWS; i++) { grid.push(new Array(PIXEL_COLS).fill(0)); }
-    function fillRange(baseRow, c0, c1, val) {
-      var r = baseRow + HEAD_OFFSET;
-      if (r < 0 || r >= PIXEL_ROWS) return;
-      for (var c = c0; c <= c1 && c < PIXEL_COLS; c++) { if (c >= 0) grid[r][c] = val; }
-    }
-    for (var hr = 1; hr <= 6; hr++) fillRange(hr, 3, 8, 1);
-    fillRange(4, 4, 4, 5); fillRange(4, 7, 7, 5);
-    fillRange(7, 3, 8, 3);
-    for (var tr = 8; tr <= 11; tr++) fillRange(tr, 2, 9, 3);
-    fillRange(10, 2, 9, 4);
-    fillRange(12, 3, 8, 3);
-    fillRange(13, 3, 5, 6); fillRange(13, 6, 8, 6);
-    fillRange(14, 3, 5, 6); fillRange(14, 6, 8, 6);
-    fillRange(15, walkFrame === 0 ? 3 : 6, walkFrame === 0 ? 5 : 8, 6);
-    var mask = HAIR_MASKS[hairStyle] || HAIR_MASKS['short-side'];
-    mask.forEach(function (m) { fillRange(m[0], m[1], m[2], 2); });
-    return grid;
-  }
-
-  function pixelAvatarSvg(person, walkFrame) {
-    var grid = buildPixelGrid(person.hair, walkFrame || 0);
-    var cell = 4;
-    var palette = {
-      1: '#f4c7a0',
-      2: '#2b2b2b',
-      3: person.color,
-      4: shadeColor(person.color),
-      5: '#1c1c1c',
-      6: '#20242c',
-    };
-    var rects = '';
-    for (var r = 0; r < grid.length; r++) {
-      for (var c = 0; c < grid[r].length; c++) {
-        var val = grid[r][c];
-        if (!val) continue;
-        rects += '<rect x="' + (c * cell) + '" y="' + (r * cell) + '" width="' + cell + '" height="' + cell + '" fill="' + palette[val] + '"/>';
-      }
-    }
-    var w = PIXEL_COLS * cell;
-    var h = PIXEL_ROWS * cell;
-    return '<svg class="pixel-avatar-svg" viewBox="0 0 ' + w + ' ' + h + '" shape-rendering="crispEdges" aria-hidden="true">' + rects + '</svg>';
-  }
-
   /**
-   * 캐릭터 아바타를 렌더링한다. person.avatarImage가 지정되어 있으면 실제 이미지를,
-   * 없으면 픽셀 SVG를 그린다. 나중에 ./it-team-sim/avatars/ 폴더에 {person.id}.png
-   * 같은 이미지를 넣고 sim-data.js의 roster 항목에 avatarImage 경로를 추가하면
-   * 코드를 더 고치지 않고도 이미지로 교체된다.
+   * 캐릭터 아바타를 렌더링한다. 이미지 로딩에 의존하지 않고,
+   * 이름 첫 글자를 역할 색상 원형 배지로 보여준다.
    */
-  function renderAvatar(person, walkFrame) {
-    if (person && person.avatarImage) {
-      return '<img class="photo-avatar-img" src="' + esc(person.avatarImage) + '" alt="" aria-hidden="true">';
-    }
-    return pixelAvatarSvg(person, walkFrame);
+  function renderAvatar(person) {
+    if (!person) return '';
+    var initial = esc((person.shortLabel || person.name || '').slice(0, 1));
+    return '<span class="org-avatar" style="--role-color:' + esc(person.color) + '">' + initial + '</span>';
   }
 
   /* ───────────── 상황실(war room) 좌표 배치 ─────────────
@@ -228,52 +145,72 @@
 
   /* ───────────── 중앙: 사무실 평면도 + 조직 캐릭터 ───────────── */
 
-  function officeFloor() {
-    var positions = computePositions();
-    var stage = session ? session.currentStage() : null;
+  var ZONE_ORDER = ['총괄', 'DBA팀', '보안팀', '네트워크팀', '인프라/DevOps팀', '서버팀'];
 
-    var zoneLabels = '<div class="floor-zone-box" style="left:3%;top:4%;width:40%;height:28%;"><span class="floor-zone-label">DBA팀</span></div>' +
-      '<div class="floor-zone-box" style="left:57%;top:4%;width:40%;height:28%;"><span class="floor-zone-label">보안팀</span></div>' +
-      '<div class="floor-zone-box" style="left:3%;top:36%;width:40%;height:28%;"><span class="floor-zone-label">네트워크팀</span></div>' +
-      '<div class="floor-zone-box" style="left:57%;top:36%;width:40%;height:28%;"><span class="floor-zone-label">인프라/DevOps팀</span></div>' +
-      '<div class="floor-zone-box" style="left:30%;top:68%;width:40%;height:26%;"><span class="floor-zone-label">서버팀</span></div>' +
-      '<div class="war-room-ring' + (session ? ' war-room-active' : '') + '"></div>' +
-      (session ? '<div class="war-room-label">상황실</div>' : '');
-
-    // SVG connector layer (speaker -> listener)
-    var connectorSvg = '';
-    if (session && stage && stage.listener) {
-      var from = positions[stage.speaker];
-      var to = positions[stage.listener];
-      if (from && to) {
-        connectorSvg = '<svg class="org-connectors" viewBox="0 0 100 100" preserveAspectRatio="none">' +
-          '<line class="connector-line" x1="' + from.x + '" y1="' + from.y + '" x2="' + to.x + '" y2="' + to.y + '" />' +
-          '<circle class="connector-pulse" r="1.4"><animateMotion dur="1.4s" repeatCount="indefinite" path="M' + from.x + ',' + from.y + ' L' + to.x + ',' + to.y + '" /></circle>' +
-        '</svg>';
-      }
-    }
-
-    var nodes = Data.roster.map(function (r) {
-      var pos = positions[r.id];
-      var isParticipant = session && session.getState().scenario.participants.indexOf(r.id) !== -1;
-      var modeClass = isParticipant ? ' mode-' + pos.mode.replace(/ /g, '-') : ' mode-idle';
-      var statusText = !isParticipant ? '대기'
-        : pos.mode.indexOf('speaking') !== -1 ? '보고 중'
-        : pos.mode.indexOf('listening') !== -1 ? '확인 중'
-        : pos.mode.indexOf('player') !== -1 ? '담당 중'
-        : '투입됨';
-      return '<div class="org-node' + modeClass + '" data-person="' + esc(r.id) + '" ' +
-          'style="left:' + pos.x + '%;top:' + pos.y + '%;--role-color:' + esc(r.color) + '" ' +
-          'role="button" tabindex="0" aria-label="' + esc(r.name) + ' 상세 정보">' +
-        '<div class="org-avatar">' + renderAvatar(r, isParticipant ? walkFrame : 0) + '</div>' +
+  function renderPersonNode(r, pos, isParticipant) {
+    var modeClass = isParticipant ? ' mode-' + pos.mode.replace(/ /g, '-') : ' mode-idle';
+    var statusText = !isParticipant ? '대기'
+      : pos.mode.indexOf('speaking') !== -1 ? '보고 중'
+      : pos.mode.indexOf('listening') !== -1 ? '확인 중'
+      : pos.mode.indexOf('player') !== -1 ? '담당 중'
+      : '투입됨';
+    return '<div class="org-node' + modeClass + '" data-person="' + esc(r.id) + '" ' +
+        'style="--role-color:' + esc(r.color) + '" ' +
+        'role="button" tabindex="0" aria-label="' + esc(r.name) + ' 상세 정보">' +
+      renderAvatar(r) +
+      '<div>' +
         '<div class="org-name">' + esc(r.name) + '</div>' +
         '<div class="org-status' + (isParticipant ? '' : ' org-status-idle') + '">' + esc(statusText) + '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function serviceStatusBoard() {
+    var affectedDepts = session ? session.getState().scenario.departments : [];
+    var chips = Data.services.map(function (svc) {
+      var isAffected = affectedDepts.indexOf(svc.dept) !== -1;
+      var cls = isAffected ? ' svc-affected' : '';
+      var statusLabel = isAffected ? '대응 중' : '정상';
+      return '<span class="svc-chip' + cls + '" title="' + esc(svc.dept) + ' · ' + esc(statusLabel) + '">' +
+        '<span class="svc-dot"></span>' + esc(svc.name) +
+      '</span>';
+    }).join('');
+    return '<div class="svc-board"><div class="svc-board-label">전산실 운영 서비스 20종' + (session ? ' — 빨간 점은 현재 사건으로 대응 중인 서비스' : '') + '</div><div class="svc-board-chips">' + chips + '</div></div>';
+  }
+
+  function officeFloor() {
+    var positions = computePositions();
+    var participants = session ? session.getState().scenario.participants : [];
+
+    var zones = ZONE_ORDER.map(function (deptName) {
+      var members = Data.roster.filter(function (r) { return r.dept === deptName; });
+      var people = members.map(function (r) {
+        var isParticipant = participants.indexOf(r.id) !== -1;
+        return renderPersonNode(r, positions[r.id], isParticipant);
+      }).join('');
+      return '<div class="org-zone" data-zone="' + esc(deptName) + '">' +
+        '<div class="org-zone-label">' + esc(deptName) + '</div>' +
+        '<div class="org-zone-people">' + people + '</div>' +
       '</div>';
     }).join('');
 
+    var warRoomZone = '';
+    if (session) {
+      var warRoomPeople = participants.map(function (pid) {
+        var r = byId(pid);
+        if (!r) return '';
+        return renderPersonNode(r, positions[pid], true);
+      }).join('');
+      warRoomZone = '<div class="org-zone org-zone-warroom">' +
+        '<div class="org-zone-label">상황실 — 현재 투입된 담당자</div>' +
+        '<div class="org-zone-people">' + warRoomPeople + '</div>' +
+      '</div>';
+    }
+
     return '<section class="sim-org">' +
       '<div class="sim-org-title">전산보안실 조직도 — 캐릭터를 클릭하면 담당 업무를 볼 수 있습니다</div>' +
-      '<div class="org-floor">' + zoneLabels + connectorSvg + nodes + '</div>' +
+      serviceStatusBoard() +
+      '<div class="org-floor' + (session ? '' : ' no-session') + '">' + warRoomZone + zones + '</div>' +
       personDetailPanel() +
     '</section>';
   }
@@ -291,7 +228,7 @@
     return '<div class="person-popover" data-person-popover>' +
       '<button class="person-popover-close" type="button" data-close-person aria-label="닫기">×</button>' +
       '<div class="person-popover-head" style="--role-color:' + esc(p.color) + '">' +
-        '<div class="person-popover-avatar">' + renderAvatar(p, 0) + '</div>' +
+        '<div class="person-popover-avatar">' + renderAvatar(p) + '</div>' +
         '<div>' +
           '<div class="person-popover-name">' + esc(p.name) + '</div>' +
           '<div class="person-popover-dept">' + esc(p.dept) + '</div>' +
@@ -319,7 +256,7 @@
         '<div class="sim-intro-block">' +
           '<div class="sim-intro-block-title">여기서 직접 확인할 수 있는 것</div>' +
           '<ul class="sim-intro-list">' +
-            '<li>왼쪽 조직도의 12개 역할이 각각 어떤 서비스에 책임(Accountable)을 지는지</li>' +
+            '<li>가운데 조직도의 12개 역할이 각각 어떤 서비스에 책임(Accountable)을 지는지</li>' +
             '<li>장애·요청이 발생했을 때 누가 1차 대응하고, 언제 상위 역할에 에스컬레이션해야 하는지</li>' +
             '<li>"내 담당이 아니다"와 "내가 더 빨리 알아챌 수 있었다"가 동시에 성립하는 책임 경계의 모호함</li>' +
             '<li>기술 선택(예: VPN 게이트웨이, PAM, SIEM)이 실제 운영 업무량과 역할 분담에 미치는 영향</li>' +
@@ -392,7 +329,7 @@
         : (toP ? (esc(fromP ? fromP.name : '') + ' → ' + esc(toP.name)) : (esc(fromP ? fromP.name : '') + ' → 전체 공유'));
       return '<div class="thread-msg' + kindClass + '">' +
         '<div class="thread-msg-avatar" style="--role-color:' + esc(fromP ? fromP.color : '#8a8a8a') + '">' +
-          (fromP ? renderAvatar(fromP, 0) : '') +
+          (fromP ? renderAvatar(fromP) : '') +
         '</div>' +
         '<div class="thread-msg-body">' +
           '<div class="thread-msg-head">' +
@@ -441,15 +378,12 @@
     var animate = motionLib.animate;
     var stagger = motionLib.stagger;
 
-    // 캐릭터 노드: 위치가 바뀐 경우(사건 참여/이동) 부드럽게 slide-in
+    // 참여 중인 캐릭터 노드: 상황실 투입 시 부드럽게 fade-in
     var nodes = app.querySelectorAll('.org-node');
     nodes.forEach(function (el) {
       var isParticipant = el.className.indexOf('mode-idle') === -1;
       if (isParticipant) {
-        var avatarEl = el.querySelector('.org-avatar');
-        if (avatarEl) {
-          animate(avatarEl, { scale: [0.86, 1], opacity: [0, 1] }, { duration: 0.45, easing: [0.22, 1, 0.36, 1] });
-        }
+        animate(el, { opacity: [0, 1] }, { duration: 0.3, easing: [0.22, 1, 0.36, 1] });
       }
     });
 
@@ -526,21 +460,5 @@
     draw();
   }
 
-
-  /* 참여 중인 캐릭터만 걷기 프레임을 바꿔 다리를 교차시킨다.
-   * 전체 draw()를 다시 부르지 않고 아바타 SVG만 바꿔서 팝오버 등 다른 상태를 건드리지 않는다. */
-  setInterval(function () {
-    if (!session) return;
-    walkFrame = walkFrame === 0 ? 1 : 0;
-    var participants = session.getState().scenario.participants;
-    participants.forEach(function (pid) {
-      var selector = "[data-person=\"" + pid + "\"] .org-avatar";
-      var node = app.querySelector(selector);
-      if (!node) return;
-      var person = byId(pid);
-      if (!person) return;
-      node.innerHTML = renderAvatar(person, walkFrame);
-    });
-  }, 420);
   draw();
 })();
