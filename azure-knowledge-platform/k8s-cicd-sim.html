@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terraform · K8s · GitOps 배포 파이프라인</title>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<style>
+  :root{
+    --bg:#07111f; --panel:#0d1b2d; --panel2:#12243a; --line:#263b55;
+    --ink:#eef6ff; --mut:#94a9c1; --blue:#5ea0ff; --cyan:#42d3c5;
+    --green:#45d483; --amber:#f4b64f; --red:#ff6f78; --violet:#ad86ff;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;
+    --mono:"Cascadia Code","SFMono-Regular",Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:radial-gradient(circle at 50% -20%,#16345b 0,transparent 42%),var(--bg);color:var(--ink);font:400 15px/1.55 var(--font)}
+  button{font:inherit}
+  .site-topbar{display:flex;align-items:center;justify-content:center;min-height:54px;padding:12px 26px;border-bottom:1px solid var(--line);background:rgba(7,17,31,.9);backdrop-filter:blur(12px);position:sticky;top:0;z-index:20}
+  .brand{position:absolute;left:26px;color:var(--ink);text-decoration:none;font-weight:750}
+  .nav{display:flex;gap:18px;align-items:center}
+  .nav a{color:var(--mut);text-decoration:none;font-size:13px;font-weight:650}
+  .scope-chip{border:1px solid rgba(244,182,79,.55);color:var(--amber);border-radius:999px;padding:3px 9px;font-size:11px;font-weight:750}
+  .wrap{width:min(1280px,calc(100% - 36px));margin:0 auto;padding:44px 0 70px}
+  .eyebrow{margin:0 0 8px;color:var(--cyan);font:700 12px var(--mono);letter-spacing:.12em;text-transform:uppercase}
+  h1{font-size:clamp(30px,4.4vw,52px);line-height:1.08;letter-spacing:-.045em;margin:0;max-width:900px}
+  .lead{max-width:790px;color:var(--mut);font-size:16px;margin:16px 0 0}
+  .scope{margin:22px 0 28px;padding:13px 16px;border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:9px;background:rgba(13,27,45,.72);color:#c4d2e1;font-size:13px}
+  .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:14px;border:1px solid var(--line);border-radius:14px;background:rgba(13,27,45,.88)}
+  .scenario-group{display:flex;gap:7px;flex-wrap:wrap;margin-right:auto}
+  .scenario,.control{border:1px solid var(--line);background:var(--panel2);color:var(--mut);border-radius:999px;padding:7px 13px;cursor:pointer;font-weight:700;font-size:13px}
+  .scenario:hover,.control:hover{border-color:var(--blue);color:var(--ink)}
+  .scenario.active{background:var(--blue);border-color:var(--blue);color:#06101e}
+  .control.primary{background:var(--cyan);border-color:var(--cyan);color:#041512}
+  .pipeline{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:0;margin:22px 0;overflow-x:auto;padding:4px 1px 12px}
+  .pipe-step{min-width:126px;position:relative;padding-right:24px}
+  .pipe-step:not(:last-child)::after{content:"→";position:absolute;right:6px;top:25px;color:#4f6883;font:700 18px var(--mono)}
+  .pipe-node{width:100%;min-height:68px;border:1px solid var(--line);border-radius:11px;background:var(--panel);padding:10px;transition:.25s ease}
+  .pipe-node small{display:block;color:var(--mut);font:650 10px var(--mono);letter-spacing:.06em;text-transform:uppercase}
+  .pipe-node b{display:block;margin-top:5px;font-size:13px;line-height:1.3}
+  .pipe-step.done .pipe-node{border-color:rgba(69,212,131,.6);background:rgba(69,212,131,.08)}
+  .pipe-step.active .pipe-node{border-color:var(--blue);box-shadow:0 0 0 3px rgba(94,160,255,.14);transform:translateY(-2px)}
+  .pipe-step.blocked .pipe-node{border-color:var(--red);background:rgba(255,111,120,.1)}
+  .workspace{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(330px,.65fr);gap:16px}
+  .card{border:1px solid var(--line);border-radius:14px;background:rgba(13,27,45,.92);padding:18px}
+  .card-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 16px}
+  .card-title h2,.card-title h3{margin:0;font-size:14px;letter-spacing:.02em}
+  .status{border-radius:999px;padding:3px 9px;font:700 11px var(--mono);background:#172b43;color:var(--mut)}
+  .status.running{color:var(--blue)} .status.ok{color:var(--green)} .status.warn{color:var(--amber)} .status.bad{color:var(--red)}
+  .cluster{display:grid;grid-template-columns:190px 1fr;gap:14px;min-height:355px}
+  .traffic{display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px dashed #34506e;border-radius:12px;background:rgba(18,36,58,.55);text-align:center;padding:12px}
+  .traffic-icon{font-size:34px;margin-bottom:8px}.traffic b{font-size:13px}.traffic span{color:var(--mut);font-size:11px;margin-top:5px}
+  .traffic-arrow{color:var(--cyan);font:700 22px var(--mono);margin:12px 0}
+  .aks{border:1px solid #34506e;border-radius:12px;padding:14px;background:rgba(7,17,31,.48)}
+  .aks-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:13px}
+  .aks-head b{font-size:13px}.aks-head span{color:var(--mut);font:600 11px var(--mono)}
+  .nodepool{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .worker{border:1px solid var(--line);border-radius:10px;padding:10px;min-height:132px;background:var(--panel2)}
+  .worker-head{display:flex;justify-content:space-between;color:var(--mut);font:650 10px var(--mono);margin-bottom:9px}
+  .pods{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+  .pod{height:42px;border-radius:7px;border:1px solid #42617f;background:#18314e;display:flex;align-items:center;justify-content:center;text-align:center;color:#b8c9db;font:700 9px/1.15 var(--mono);transition:.25s ease}
+  .pod.old{border-color:#526b85}.pod.new{border-color:var(--cyan);color:var(--cyan);background:rgba(66,211,197,.08)}
+  .pod.ready{border-color:var(--green);color:var(--green);background:rgba(69,212,131,.09)}
+  .pod.failed{border-color:var(--red);color:var(--red);background:rgba(255,111,120,.1);animation:shake .35s ease}
+  .pod.scale{border-color:var(--violet);color:#c8b2ff;background:rgba(173,134,255,.1)}
+  .empty{opacity:.28;border-style:dashed;background:transparent}
+  @keyframes shake{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+  .detail-grid{display:grid;gap:12px}
+  .detail-block{border:1px solid var(--line);border-radius:10px;padding:12px;background:rgba(7,17,31,.45)}
+  .detail-block label{display:block;color:var(--mut);font:700 10px var(--mono);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+  #stepTitle{font-size:20px;line-height:1.28;margin:0 0 7px}#stepDesc{margin:0;color:#bac9d8;font-size:13px}
+  .command{font:12px/1.55 var(--mono);color:#9fd0ff;white-space:pre-wrap;word-break:break-word}
+  .checks{display:grid;gap:7px}.check{display:flex;gap:8px;color:#bdcad8;font-size:12px}.check::before{content:"○";color:var(--mut)}
+  .check.pass::before{content:"✓";color:var(--green)}.check.fail::before{content:"×";color:var(--red)}.check.warn::before{content:"!";color:var(--amber)}
+  .log{margin-top:16px;min-height:154px;max-height:230px;overflow:auto;border:1px solid var(--line);border-radius:10px;background:#030a13;padding:12px;font:11px/1.6 var(--mono);color:#98adc4}
+  .log-line{display:block}.log-line strong{color:var(--cyan);font-weight:600}.log-line.bad{color:#ff9aa1}.log-line.warn{color:#ffd080}
+  .principles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+  .principle{border:1px solid var(--line);border-radius:12px;padding:15px;background:rgba(13,27,45,.75)}
+  .principle b{display:block;font-size:13px;margin-bottom:5px}.principle p{margin:0;color:var(--mut);font-size:12px}
+  .principle i{display:block;color:var(--cyan);font:700 11px var(--mono);font-style:normal;margin-bottom:8px}
+  @media(max-width:900px){.workspace{grid-template-columns:1fr}.cluster{grid-template-columns:1fr}.traffic{min-height:110px}.nodepool{grid-template-columns:1fr 1fr}.principles{grid-template-columns:1fr 1fr}.brand{position:static;margin-right:auto}.site-topbar{justify-content:flex-end}}
+  @media(max-width:560px){.wrap{width:min(100% - 24px,1280px);padding-top:28px}.nodepool,.principles{grid-template-columns:1fr}.scope-chip{display:none}.scenario,.control{padding:7px 10px;font-size:12px}}
+</style>
+</head>
+<body>
+<header class="site-topbar">
+  <a class="brand" href="../index.html">이준석</a>
+  <nav class="nav"><a href="lab.html">Lab</a><a href="../index.html">Home</a><span class="scope-chip">개인 학습 · 인터랙티브 프로토타입</span></nav>
+</header>
+<main class="wrap">
+  <p class="eyebrow">K8s · CI/CD · IaC</p>
+  <h1>Terraform · K8s · GitOps<br>배포 파이프라인</h1>
+  <p class="lead">코드 변경부터 정책 검사, OIDC 인증, AKS 롤링 업데이트와 장애 복구까지 한 흐름으로 재생합니다. 시나리오를 바꾸면 배포 게이트와 클러스터 상태가 함께 달라집니다.</p>
+  <div class="scope"><b>구현 범위</b> — 공개 아키텍처와 개인 학습 내용을 바탕으로 만든 브라우저 시뮬레이터입니다. Terraform·Kubernetes·GitHub Actions를 프로덕션에서 구축·운영했다는 의미가 아니며, 배포 설계의 핵심 판단과 실패 처리를 검증하기 위한 가상 환경입니다.</div>
+
+  <section class="toolbar" aria-label="시뮬레이션 제어">
+    <div class="scenario-group" id="scenarios">
+      <button class="scenario active" data-scenario="normal">정상 배포</button>
+      <button class="scenario" data-scenario="probe">Probe 실패</button>
+      <button class="scenario" data-scenario="drift">Terraform Drift</button>
+      <button class="scenario" data-scenario="traffic">트래픽 급증</button>
+    </div>
+    <button class="control" id="prev">← 이전</button>
+    <button class="control primary" id="play">▶ 전체 재생</button>
+    <button class="control" id="next">다음 →</button>
+  </section>
+
+  <div class="pipeline" id="pipeline" aria-label="배포 파이프라인 단계"></div>
+
+  <section class="workspace">
+    <article class="card">
+      <div class="card-title"><h2>AKS 배포 상태</h2><span class="status" id="clusterStatus">대기</span></div>
+      <div class="cluster">
+        <div class="traffic">
+          <div class="traffic-icon">⇄</div><b>Application Gateway</b><span id="trafficLabel">요청 240 RPM</span>
+          <div class="traffic-arrow">↓</div><b>Service</b><span>ready endpoint에만 전달</span>
+        </div>
+        <div class="aks">
+          <div class="aks-head"><b>AKS · production</b><span id="replicaLabel">replicas 3 / ready 3</span></div>
+          <div class="nodepool">
+            <div class="worker"><div class="worker-head"><span>NODE-01</span><span id="node1State">Ready</span></div><div class="pods" id="node1Pods"></div></div>
+            <div class="worker"><div class="worker-head"><span>NODE-02</span><span id="node2State">Ready</span></div><div class="pods" id="node2Pods"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="log" id="log" aria-live="polite"></div>
+    </article>
+
+    <aside class="card">
+      <div class="card-title"><h3>현재 판정</h3><span class="status" id="gateStatus">대기</span></div>
+      <div class="detail-grid">
+        <div class="detail-block"><label>Stage</label><h2 id="stepTitle">시나리오를 선택하세요</h2><p id="stepDesc">다음 버튼이나 전체 재생으로 파이프라인을 시작합니다.</p></div>
+        <div class="detail-block"><label>Command / Signal</label><div class="command" id="command">workflow_dispatch</div></div>
+        <div class="detail-block"><label>Gate checks</label><div class="checks" id="checks"></div></div>
+      </div>
+    </aside>
+  </section>
+
+  <section class="principles">
+    <article class="principle"><i>01 · SECRETLESS</i><b>OIDC 단기 자격 증명</b><p>장기 Client Secret 없이 GitHub OIDC 토큰을 Entra Workload Identity와 교환합니다.</p></article>
+    <article class="principle"><i>02 · POLICY GATE</i><b>Plan과 정책을 먼저 검사</b><p>삭제와 외부 공개 규칙, 실제 상태와 코드의 차이를 배포 전에 차단합니다.</p></article>
+    <article class="principle"><i>03 · ZERO DOWNTIME</i><b>Ready 이후 트래픽 전환</b><p>신규 Pod가 Readiness Probe를 통과해야 기존 버전이 내려갑니다.</p></article>
+    <article class="principle"><i>04 · RECOVERY</i><b>실패해도 서비스 유지</b><p>Probe 실패 시 기존 Replica가 요청을 처리하고 신규 ReplicaSet을 롤백합니다.</p></article>
+  </section>
+</main>
+<script>
+  const pipelineLabels = [
+    ['SOURCE','Git Push'],['PLAN','Terraform Plan'],['POLICY','Policy Gate'],['AUTH','OIDC Login'],
+    ['BUILD','Image Build'],['DEPLOY','AKS Rollout'],['VERIFY','Observe · Recover']
+  ];
+
+  const commonStart = [
+    {title:'변경 감지',desc:'main 브랜치의 변경을 감지하고 실행 단위를 고정합니다.',cmd:'git push origin main\nworkflow: deploy-production.yml',checks:[['pass','커밋 SHA 고정'],['pass','변경 경로 필터 통과']],state:'running',pod:'old',log:'GitHub Actions가 커밋 8f31c2a를 가져왔습니다.'},
+    {title:'Terraform Plan',desc:'코드가 만들 변경을 적용 전에 계산합니다.',cmd:'terraform plan -out=tfplan\n+ aks workload identity\n~ node_pool autoscaling',checks:[['pass','추가 1 · 변경 1 · 삭제 0'],['pass','State lock 획득']],state:'running',pod:'old',log:'Plan 생성 완료: 1 to add, 1 to change, 0 to destroy.'}
+  ];
+  const commonMiddle = [
+    {title:'정책 검사 통과',desc:'고위험 네트워크 공개와 승인 없는 삭제가 없는지 확인합니다.',cmd:'conftest test tfplan.json\npolicy: production.rego',checks:[['pass','0.0.0.0/0 관리 포트 없음'],['pass','승인 없는 destroy 없음']],state:'ok',pod:'old',log:'Policy Gate 통과. 배포 권한을 요청합니다.'},
+    {title:'OIDC 권한 교환',desc:'저장된 비밀번호 대신 실행마다 만료되는 단기 토큰을 발급받습니다.',cmd:'azure/login@v2\nauth-type: OIDC\naudience: api://AzureADTokenExchange',checks:[['pass','Repository · Branch subject 일치'],['pass','15분 단기 토큰 발급']],state:'ok',pod:'old',log:'Entra Workload Identity가 단기 토큰을 발급했습니다.'},
+    {title:'이미지 빌드와 서명',desc:'동일 커밋으로 이미지를 만들고 취약점 기준과 서명을 검사합니다.',cmd:'docker build -t acr.example/app:8f31c2a .\ncosign sign acr.example/app:8f31c2a',checks:[['pass','Critical 취약점 0'],['pass','SBOM · 이미지 서명 생성']],state:'ok',pod:'old',log:'ACR에 app:8f31c2a 이미지와 SBOM을 등록했습니다.'}
+  ];
+
+  const scenarios = {
+    normal:[...commonStart,...commonMiddle,
+      {title:'롤링 업데이트',desc:'새 버전을 한 개씩 올리고 Ready가 된 만큼 기존 Pod를 내립니다.',cmd:'kubectl rollout status deploy/platform-api\nmaxUnavailable: 0\nmaxSurge: 1',checks:[['pass','신규 Pod 스케줄링'],['pass','기존 v1.2 트래픽 유지']],state:'running',pod:'rolling',log:'v1.3 Pod를 생성했습니다. Readiness Probe를 기다립니다.'},
+      {title:'배포 검증 완료',desc:'신규 Replica가 모두 Ready가 되어 Service endpoint를 교체했습니다.',cmd:'kubectl get endpoints platform-api\nkubectl rollout history deploy/platform-api',checks:[['pass','Ready 3/3'],['pass','오류율 0.2% · 기준 이하'],['pass','기존 ReplicaSet 보존']],state:'ok',pod:'new',log:'배포 완료. v1.3 Replica 3개가 트래픽을 처리합니다.'}],
+    probe:[...commonStart,...commonMiddle,
+      {title:'신규 Pod 기동',desc:'v1.3 컨테이너가 떴지만 Readiness Probe가 아직 통과하지 않았습니다.',cmd:'GET /health/ready\ninitialDelaySeconds: 5\nfailureThreshold: 3',checks:[['pass','기존 v1.2 Ready 3/3'],['warn','v1.3 Probe 검사 중']],state:'running',pod:'rolling',log:'v1.3 Pod가 준비 상태 검사를 시작했습니다.'},
+      {title:'Probe 실패 · 자동 롤백',desc:'신규 버전을 endpoint에 넣지 않고 기존 버전으로 서비스를 유지합니다.',cmd:'Readiness probe failed: HTTP 500\nkubectl rollout undo deploy/platform-api',checks:[['fail','v1.3 Ready 0/1'],['pass','v1.2 트래픽 유지'],['pass','롤백 완료']],state:'bad',pod:'failed',log:'Readiness Probe 실패. v1.3을 제거하고 v1.2를 유지합니다.',logClass:'bad'}],
+    drift:[...commonStart,
+      {title:'Drift 탐지',desc:'운영 포털에서 수동 변경된 NSG 규칙이 선언 코드와 다릅니다.',cmd:'~ nsg_rule.management\nsource: 10.20.0.0/16 -> 0.0.0.0/0\nport: 22',checks:[['fail','관리 포트가 인터넷에 공개됨'],['warn','코드 밖 수동 변경 발견']],state:'bad',pod:'old',log:'Configuration Drift 발견: management-ssh source가 변경되었습니다.',logClass:'bad'},
+      {title:'배포 차단',desc:'애플리케이션 배포로 넘어가지 않고 변경 원인과 소유자를 확인합니다.',cmd:'policy result: DENY\nowner review required',checks:[['fail','Policy Gate 거부'],['pass','AKS 변경 없음'],['pass','현재 서비스 정상']],state:'bad',pod:'old',log:'파이프라인을 중단했습니다. 승인된 코드로 상태를 복원해야 합니다.',logClass:'bad'}],
+    traffic:[...commonStart,...commonMiddle,
+      {title:'정상 배포 완료',desc:'v1.3이 Ready 상태로 전환되어 요청을 처리합니다.',cmd:'kubectl rollout status deploy/platform-api',checks:[['pass','Ready 3/3'],['pass','Service endpoint 교체']],state:'ok',pod:'new',log:'v1.3 배포가 완료되었습니다.'},
+      {title:'HPA 확장 판정',desc:'요청량과 CPU가 임계값을 넘어 Replica를 3개에서 6개로 늘립니다.',cmd:'requests_per_second: 240 -> 1,480\ncpu: 82% > target 60%\nHPA desiredReplicas: 6',checks:[['warn','트래픽 급증 감지'],['pass','Replica 3 → 6'],['pass','Node 여유 용량 확인']],state:'warn',pod:'scale',log:'HPA가 목표 Replica 수를 6으로 조정했습니다.',logClass:'warn'},
+      {title:'오토스케일 안정화',desc:'추가 Pod가 Ready가 된 뒤 요청을 분산하고 오류율을 정상 범위로 낮춥니다.',cmd:'readyReplicas: 6\nerror_rate: 3.8% -> 0.3%\np95_latency: 920ms -> 180ms',checks:[['pass','Ready 6/6'],['pass','p95 180ms'],['pass','오류율 0.3%']],state:'ok',pod:'scaled',log:'확장 완료. 6개 Pod가 트래픽을 분산합니다.'}]
+  };
+
+  let scenarioKey='normal', step=-1, timer=null;
+  const el=id=>document.getElementById(id);
+  const stateLabel={running:'실행 중',ok:'통과',warn:'확장 중',bad:'차단 · 복구'};
+
+  function renderPipeline(){
+    const total=scenarios[scenarioKey].length;
+    const stageMap=scenarioKey==='traffic'?[0,1,2,3,4,5,6,6]:(scenarioKey==='drift'?[0,1,2,2]:[0,1,2,3,4,5,6]);
+    const currentStage=step<0?-1:stageMap[Math.min(step,stageMap.length-1)];
+    el('pipeline').innerHTML=pipelineLabels.map((p,i)=>{
+      const cls=i<currentStage?'done':i===currentStage?'active':'';
+      const blocked=step>=0&&scenarios[scenarioKey][step].state==='bad'&&i===currentStage?' blocked':'';
+      return '<div class="pipe-step '+cls+blocked+'"><div class="pipe-node"><small>'+p[0]+'</small><b>'+p[1]+'</b></div></div>';
+    }).join('');
+  }
+
+  function pods(kind){
+    const pod=(label,cls)=>'<div class="pod '+cls+'">'+label+'</div>';
+    let all=[];
+    if(kind==='rolling') all=[pod('v1.2','old'),pod('v1.2','old'),pod('v1.3\nStarting','new'),pod('v1.2','old'),pod('empty','empty'),pod('empty','empty')];
+    else if(kind==='failed') all=[pod('v1.2','ready'),pod('v1.2','ready'),pod('v1.3\nProbe ×','failed'),pod('v1.2','ready'),pod('empty','empty'),pod('empty','empty')];
+    else if(kind==='new') all=[pod('v1.3','ready'),pod('v1.3','ready'),pod('empty','empty'),pod('v1.3','ready'),pod('empty','empty'),pod('empty','empty')];
+    else if(kind==='scale') all=[pod('v1.3','ready'),pod('v1.3','ready'),pod('v1.3\nScaling','scale'),pod('v1.3','ready'),pod('v1.3\nScaling','scale'),pod('v1.3\nScaling','scale')];
+    else if(kind==='scaled') all=[pod('v1.3','ready'),pod('v1.3','ready'),pod('v1.3','ready'),pod('v1.3','ready'),pod('v1.3','ready'),pod('v1.3','ready')];
+    else all=[pod('v1.2','ready'),pod('v1.2','ready'),pod('empty','empty'),pod('v1.2','ready'),pod('empty','empty'),pod('empty','empty')];
+    el('node1Pods').innerHTML=all.slice(0,3).join('');el('node2Pods').innerHTML=all.slice(3).join('');
+    const labels={rolling:'replicas 4 / ready 3',failed:'replicas 4 / ready 3',new:'replicas 3 / ready 3',scale:'replicas 6 / ready 3',scaled:'replicas 6 / ready 6',old:'replicas 3 / ready 3'};
+    el('replicaLabel').textContent=labels[kind]||labels.old;
+    el('trafficLabel').textContent=(kind==='scale'||kind==='scaled')?'요청 1,480 RPM':'요청 240 RPM';
+  }
+
+  function render(){
+    renderPipeline();
+    const data=scenarios[scenarioKey];
+    if(step<0){
+      el('stepTitle').textContent='시나리오를 선택하세요';el('stepDesc').textContent='다음 버튼이나 전체 재생으로 파이프라인을 시작합니다.';el('command').textContent='workflow_dispatch';el('checks').innerHTML='';el('gateStatus').textContent='대기';el('gateStatus').className='status';el('clusterStatus').textContent='대기';el('clusterStatus').className='status';el('log').innerHTML='<span class="log-line">$ 실행 대기 중…</span>';pods('old');return;
+    }
+    const s=data[step];
+    el('stepTitle').textContent=s.title;el('stepDesc').textContent=s.desc;el('command').textContent=s.cmd;
+    el('checks').innerHTML=s.checks.map(c=>'<div class="check '+c[0]+'">'+c[1]+'</div>').join('');
+    el('gateStatus').textContent=stateLabel[s.state];el('gateStatus').className='status '+s.state;
+    el('clusterStatus').textContent=s.state==='bad'?'기존 서비스 유지':(s.pod==='scale'||s.pod==='scaled'?'오토스케일':'서비스 정상');
+    el('clusterStatus').className='status '+(s.state==='bad'?'bad':s.state);
+    pods(s.pod);
+    el('log').innerHTML=data.slice(0,step+1).map((x,i)=>'<span class="log-line '+(x.logClass||'')+'"><strong>['+String(i+1).padStart(2,'0')+']</strong> '+x.log+'</span>').join('');
+    el('log').scrollTop=el('log').scrollHeight;
+  }
+  function stop(){if(timer){clearInterval(timer);timer=null}el('play').textContent='▶ 전체 재생'}
+  function setScenario(key){stop();scenarioKey=key;step=-1;document.querySelectorAll('.scenario').forEach(b=>b.classList.toggle('active',b.dataset.scenario===key));render()}
+  function next(){const data=scenarios[scenarioKey];if(step<data.length-1){step++;render()}else stop()}
+  function play(){if(timer){stop();return}if(step>=scenarios[scenarioKey].length-1)step=-1;el('play').textContent='■ 정지';next();timer=setInterval(next,1700)}
+  el('scenarios').addEventListener('click',e=>{const b=e.target.closest('.scenario');if(b)setScenario(b.dataset.scenario)});
+  el('prev').onclick=()=>{stop();step=Math.max(-1,step-1);render()};el('next').onclick=()=>{stop();next()};el('play').onclick=play;
+  render();
+</script>
+</body>
+</html>

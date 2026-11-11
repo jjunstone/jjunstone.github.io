@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>금융거래 생명주기 시각화</title>
+<title>금융 인증·거래 신뢰성 시뮬레이터</title>
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <style>
 :root{
@@ -179,6 +179,40 @@ table.jr td:last-child{text-align:right;font-weight:700;font-variant-numeric:tab
 .kbdhint{font-size:12px;color:var(--mut);margin-top:6px}
 kbd{border:1px solid var(--rule);border-radius:4px;padding:0 5px;font-family:var(--font);font-size:11px}
 
+/* 거래 흐름과 연결된 데이터·시스템 구조도 */
+.model-section{margin-top:34px;padding-top:30px;border-top:1px solid var(--rule)}
+.model-head{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:16px}
+.model-head h2{font-size:22px;letter-spacing:-.02em;margin:0 0 4px}
+.model-head p{margin:0;color:var(--mut);font-size:13.5px;max-width:72ch}
+.model-link{flex:0 0 auto;border:1px solid var(--rule);border-radius:999px;padding:6px 12px;color:var(--ind);text-decoration:none;font-size:12px;font-weight:700;background:var(--panel)}
+.model-link:hover{border-color:var(--ind)}
+.layer-map{display:grid;gap:9px}
+.arch-layer{display:grid;grid-template-columns:112px minmax(0,1fr);gap:12px;align-items:stretch}
+.layer-label{display:flex;align-items:center;justify-content:center;border-radius:12px;background:var(--soft);color:var(--mut);font-size:11px;font-weight:700;text-align:center;padding:10px}
+.layer-nodes{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;position:relative}
+.arch-node{min-width:0;border:1px solid var(--rule);border-radius:12px;background:var(--panel);padding:11px 10px;text-align:center;position:relative}
+.arch-node:not(:last-child)::after{content:"→";position:absolute;right:-8px;top:50%;transform:translate(50%,-50%);z-index:2;color:var(--mut);font-size:11px;font-weight:800}
+.arch-node b{display:block;font-size:12px;line-height:1.3}
+.arch-node small{display:block;color:var(--mut);font-size:10.5px;line-height:1.35;margin-top:3px}
+.arch-node.identity{border-color:var(--ind)}
+.arch-node.service{border-color:var(--teal)}
+.arch-node.data{border-color:var(--warn)}
+.arch-node.wide{grid-column:span 2}
+.model-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);gap:14px;margin-top:14px}
+.entity-map{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.entity{border:1px solid var(--rule);border-radius:10px;background:var(--soft);padding:10px;min-height:83px}
+.entity b{display:block;font-size:11.5px;color:var(--ind);margin-bottom:5px}
+.entity span{display:block;color:var(--mut);font-size:10.5px;line-height:1.45}
+.entity.core{outline:2px solid color-mix(in srgb,var(--teal) 55%,transparent);background:var(--panel)}
+.rule-list{display:grid;gap:8px}
+.rule-item{display:grid;grid-template-columns:24px 1fr;gap:9px;align-items:start;border-bottom:1px dashed var(--rule);padding-bottom:9px}
+.rule-item:last-child{border:0;padding-bottom:0}
+.rule-num{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--soft);color:var(--teal);font-size:10px;font-weight:800}
+.rule-item b{display:block;font-size:11.5px;margin-bottom:2px}.rule-item p{margin:0;color:var(--mut);font-size:10.8px;line-height:1.45}
+.model-note{margin:13px 0 0;color:var(--mut);font-size:11.5px;line-height:1.55}
+@media(max-width:800px){.model-head{align-items:flex-start;flex-direction:column}.arch-layer{grid-template-columns:1fr}.layer-label{justify-content:flex-start}.layer-nodes{grid-template-columns:1fr 1fr}.arch-node.wide{grid-column:span 1}.arch-node::after{display:none}.model-grid{grid-template-columns:1fr}.entity-map{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.layer-nodes,.entity-map{grid-template-columns:1fr}}
+
 /* ===== 사이트 공통 톱바 (lab.html 패턴과 통일) ===== */
 .site-topbar{display:flex;align-items:center;justify-content:center;padding:14px 28px;border-bottom:1px solid var(--rule);background:var(--panel);position:relative;z-index:20;flex-wrap:wrap;gap:10px}
 .site-topbar-brand{font-weight:700;text-decoration:none;color:var(--ink);font-size:13.5px;position:absolute;left:28px}
@@ -203,10 +237,10 @@ kbd{border:1px solid var(--rule);border-radius:4px;padding:0 5px;font-family:var
 
 <div class="wrap">
 <div class="topbar" style="display:flex;align-items:center;gap:8px">
-  <h1 style="margin-right:auto">금융거래 생명주기 시각화</h1>
+  <h1 style="margin-right:auto">금융 인증·거래 신뢰성 시뮬레이터</h1>
   <button class="topbtn" id="themeBtn" aria-label="다크/라이트 전환">🌓 테마</button>
 </div>
-<p class="sub">은행에서 증권계좌로 넘어간 돈이 로그인·인증·매수·결제·매도·출금을 거치는 동안 앱과 시스템 안에서 각각 어떤 일이 벌어지는지 보여줍니다.</p>
+<p class="sub">로그인·거래 인증부터 주문·체결·결제·출금까지 재생하고, 그 흐름을 지탱하는 서비스 경계와 데이터 모델을 함께 보여줍니다.</p>
 <div class="badges">
   <span class="badge">🧪 일반화한 이론 모델</span>
   <span class="badge">💰 수수료·세율은 예시 정책 EX-A</span>
@@ -263,6 +297,76 @@ kbd{border:1px solid var(--rule);border-radius:4px;padding:0 5px;font-family:var
   </div>
   <p class="kbdhint">키보드 <kbd>←</kbd> <kbd>→</kbd> 로 단계 이동</p>
 </div>
+
+<section class="model-section" aria-labelledby="model-title">
+  <div class="model-head">
+    <div>
+      <h2 id="model-title">거래 흐름을 지탱하는 데이터·시스템 구조</h2>
+      <p>위의 14단계 이벤트가 어떤 서비스와 데이터에 기록되는지 연결했습니다. 사용자 화면, 인증 경계, 거래 처리, 원장과 감사 추적을 하나의 구조로 봅니다.</p>
+    </div>
+    <a class="model-link" href="../architecture-platform/data-architecture-platform.html">6단계 전체 설계 노트 보기 →</a>
+  </div>
+
+  <div class="card layer-map">
+    <div class="arch-layer">
+      <div class="layer-label">채널·인증 경계</div>
+      <div class="layer-nodes">
+        <div class="arch-node"><b>모바일·웹</b><small>주문·출금 요청</small></div>
+        <div class="arch-node identity"><b>Identity</b><small>기기 신뢰·세션</small></div>
+        <div class="arch-node identity"><b>거래 인가</b><small>OTP·Step-up</small></div>
+        <div class="arch-node"><b>API Gateway</b><small>요청 검증·추적 ID</small></div>
+        <div class="arch-node"><b>Command</b><small>멱등성 키 발급</small></div>
+      </div>
+    </div>
+    <div class="arch-layer">
+      <div class="layer-label">거래 서비스</div>
+      <div class="layer-nodes">
+        <div class="arch-node service"><b>계좌 서비스</b><small>상태·가용 자금</small></div>
+        <div class="arch-node service"><b>주문 서비스</b><small>예약·상태 전이</small></div>
+        <div class="arch-node service"><b>체결 처리</b><small>중복·역전 통제</small></div>
+        <div class="arch-node service"><b>결제 서비스</b><small>T+2·영업일</small></div>
+        <div class="arch-node service"><b>원장 서비스</b><small>균형 분개·커밋</small></div>
+      </div>
+    </div>
+    <div class="arch-layer">
+      <div class="layer-label">기록·통제</div>
+      <div class="layer-nodes">
+        <div class="arch-node data"><b>Operational DB</b><small>계좌·주문·체결</small></div>
+        <div class="arch-node data"><b>Event Stream</b><small>상태 변경 발행</small></div>
+        <div class="arch-node data"><b>Ledger</b><small>불변 분개 이력</small></div>
+        <div class="arch-node data"><b>Audit Log</b><small>인증·인가 근거</small></div>
+        <div class="arch-node data"><b>Reconciliation</b><small>외부 내역 대사</small></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="model-grid">
+    <article class="card">
+      <h3>핵심 엔터티 관계</h3>
+      <div class="entity-map">
+        <div class="entity"><b>CUSTOMER</b><span>고객 식별자<br>위험·적합성 등급</span></div>
+        <div class="entity"><b>ACCOUNT</b><span>CUSTOMER 1:N<br>계좌 상태·권한</span></div>
+        <div class="entity"><b>PRODUCT</b><span>종목·시장·통화<br>거래 가능 정책</span></div>
+        <div class="entity core"><b>ORDER</b><span>ACCOUNT·PRODUCT 참조<br>상태·멱등성 키</span></div>
+        <div class="entity core"><b>EXECUTION</b><span>ORDER 1:N 체결<br>체결번호 유일키</span></div>
+        <div class="entity core"><b>SETTLEMENT</b><span>EXECUTION 1:N<br>예정일·완료 상태</span></div>
+        <div class="entity core"><b>LEDGER_ENTRY</b><span>거래별 복식 분개<br>차변·대변 불변 이력</span></div>
+        <div class="entity"><b>AUTH_EVENT</b><span>세션·챌린지·Step-up<br>주문 해시·만료</span></div>
+      </div>
+      <p class="model-note">관계의 중심은 ORDER → EXECUTION → SETTLEMENT → LEDGER_ENTRY입니다. 위 시뮬레이터의 단계와 원장 분개가 이 연결을 따라 움직이며, AUTH_EVENT는 거래 요청과 승인 근거를 함께 남깁니다.</p>
+    </article>
+    <aside class="card">
+      <h3>정합성·감사 설계 규칙</h3>
+      <div class="rule-list">
+        <div class="rule-item"><span class="rule-num">01</span><div><b>중복 처리 방지</b><p>은행 거래번호·체결번호·요청 멱등성 키를 유일하게 관리합니다.</p></div></div>
+        <div class="rule-item"><span class="rule-num">02</span><div><b>상태와 금액의 원자적 변경</b><p>주문 상태와 예약금 분개가 한 트랜잭션으로 성공하거나 함께 취소됩니다.</p></div></div>
+        <div class="rule-item"><span class="rule-num">03</span><div><b>원장 불변성과 균형</b><p>기존 분개를 덮어쓰지 않고 역분개하며, 합계가 0일 때만 커밋합니다.</p></div></div>
+        <div class="rule-item"><span class="rule-num">04</span><div><b>외부 대사와 재처리</b><p>은행·청산 내역과 내부 원장을 대조하고 유실 이벤트를 안전하게 재처리합니다.</p></div></div>
+        <div class="rule-item"><span class="rule-num">05</span><div><b>인증 근거 추적</b><p>사용자·기기·정책·주문 해시·추적 ID를 감사로그로 연결합니다.</p></div></div>
+      </div>
+    </aside>
+  </div>
+</section>
 
 <p class="foot">이 페이지는 이론 모델의 시각화이며 특정 금융회사의 실제 구조가 아닙니다. 화면의 모든 숫자는 아래 이벤트 목록을 앞에서부터 접어서(reduce) 계산하며, 직접 바꾸지 않습니다. 시나리오: 은행 12,000,000원 중 10,000,000원 이체 → 매수 100주 → 결제 → 매도 → 결제 → 출금.</p>
 </div>
