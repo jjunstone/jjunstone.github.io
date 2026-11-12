@@ -197,6 +197,9 @@
   };
 
 
+  let scenarioKey='normal', step=-1, timer=null;
+  const el=id=>document.getElementById(id);
+
   const codeFiles = {
     tf: { label: 'main.tf', lang: 'HCL', body: `terraform {
   required_providers {
@@ -490,8 +493,6 @@ jobs:
     if(b){ activeFile = b.dataset.file; renderCode(); }
   });
 
-  let scenarioKey='normal', step=-1, timer=null;
-  const el=id=>document.getElementById(id);
   const stateLabel={running:'실행 중',ok:'통과',warn:'확장 중',bad:'차단 · 복구'};
 
   function renderPipeline(){
