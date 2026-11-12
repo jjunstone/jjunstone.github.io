@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 에이전트 지식수집 과제 회고 — 병렬 오케스트레이션 재설계 | 이준석</title>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/static/pretendard.css">
+<style>
+  :root{
+    --ink:#141414;
+    --ink-soft:#5b5b5b;
+    --ink-faint:#8a8a8a;
+    --line:#e6e6e6;
+    --accent:#173c78;
+    --navy:#173c78;
+    --bg-soft:#f8fafc;
+    --font-main:"Pretendard","Gowun Dodum","Malgun Gothic",sans-serif;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background:#ffffff;
+    color:var(--ink);
+    font-family:var(--font-main);
+    line-height:1.65;
+  }
+
+  .topbar{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; justify-content:center;
+    padding:26px 32px;
+    background:rgba(255,255,255,.88);
+    backdrop-filter:blur(14px) saturate(140%);
+    -webkit-backdrop-filter:blur(14px) saturate(140%);
+    border-bottom:1px solid rgba(23,60,120,.12);
+    box-shadow:0 1px 0 rgba(23,60,120,.04), 0 12px 24px -20px rgba(15,23,42,.15);
+  }
+  .topbar-brand{
+    font-weight:800; text-decoration:none;
+    font-size:1.2rem; position:absolute; left:32px; letter-spacing:.02em;
+    color:var(--navy);
+  }
+  .topbar-links{ display:flex; gap:26px; }
+  .topbar-links a{ position:relative; color:var(--ink-soft); text-decoration:none; font-size:1rem; font-weight:600; padding-bottom:2px; }
+  .topbar-links a::after{ content:""; position:absolute; left:0; right:100%; bottom:-2px; height:1.5px; background:var(--accent); transition:right .22s cubic-bezier(.4,0,.2,1); }
+  .topbar-links a:hover::after{ right:0; }
+  .topbar-links a:hover{ color:var(--accent); }
+
+  main{ max-width:880px; margin:0 auto; padding:56px 24px 96px; }
+
+  .page-eyebrow{
+    font-size:.8rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--ink-soft); margin:0 0 12px;
+  }
+  .page-title{ font-size:1.9rem; font-weight:700; letter-spacing:-.02em; margin:0 0 14px; }
+  .page-lead{ font-size:1rem; line-height:1.75; color:var(--ink-soft); margin:0 0 20px; }
+
+  /* ── 카카오 바이브 헤더 ── */
+  .kakao-head{
+    background:#FEE500;
+    border-radius:16px;
+    padding:32px 36px 28px;
+    margin:0 0 32px;
+    position:relative;
+    overflow:hidden;
+  }
+  .kakao-head::before{
+    content:"";
+    position:absolute; right:-30px; top:-30px; width:150px; height:150px;
+    background:#fff; opacity:.14; border-radius:50%;
+  }
+  .kakao-head .page-eyebrow{ color:#3c1e1e; opacity:.75; }
+  .kakao-head .page-title{ color:#1a1a1a; }
+  .kakao-head .page-lead{ color:#3c1e1e; font-weight:500; margin-bottom:0; }
+
+  .study-note{
+    background:var(--bg-soft); border:1px solid var(--line); border-radius:10px;
+    padding:16px 18px; font-size:.86rem; color:var(--ink-soft); margin:0 0 48px;
+  }
+  .study-note b{ color:var(--ink); }
+
+  section{ margin-bottom:52px; }
+  h2{
+    font-size:1.2rem; font-weight:700; margin:0 0 6px; letter-spacing:-.01em;
+    display:flex; align-items:center; gap:8px;
+  }
+  h2 .num{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:22px; height:22px; border-radius:50%; background:var(--navy); color:#fff;
+    font-size:.72rem; font-weight:700; flex-shrink:0;
+  }
+  h3{ font-size:.98rem; font-weight:700; margin:24px 0 8px; }
+  p{ font-size:.92rem; color:var(--ink-soft); margin:0 0 14px; }
+  ul{ margin:0 0 14px; padding-left:20px; }
+  li{ font-size:.92rem; color:var(--ink-soft); margin-bottom:6px; }
+
+  table{ width:100%; border-collapse:collapse; margin:16px 0 20px; font-size:.84rem; }
+  th, td{ text-align:left; padding:9px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th{ color:var(--ink-faint); font-weight:600; font-size:.74rem; letter-spacing:.03em; text-transform:uppercase; }
+  td{ color:var(--ink-soft); }
+  td b{ color:var(--ink); }
+
+  .diagram{
+    background:var(--bg-soft); border:1px solid var(--line); border-radius:10px;
+    padding:18px 20px; font-size:.82rem; color:var(--ink-soft);
+    overflow-x:auto; white-space:pre; font-family:"SF Mono","Consolas",monospace;
+    line-height:1.55; margin:14px 0 18px;
+  }
+
+  .code-block{
+    background:#161b22; color:#e6edf3; border-radius:10px; padding:16px 18px;
+    font-family:"SF Mono","Consolas",monospace; font-size:.78rem; line-height:1.6;
+    overflow-x:auto; margin:14px 0 18px; white-space:pre;
+  }
+  .code-caption{ font-size:.76rem; color:var(--ink-faint); margin:-8px 0 18px; }
+
+  .analogy{
+    border-left:3px solid var(--accent); padding:10px 16px; margin:14px 0 18px;
+    background:var(--bg-soft); border-radius:0 8px 8px 0;
+  }
+  .analogy b{ color:var(--ink); }
+  .analogy p{ margin:4px 0 0; }
+
+  .scope-tag{
+    display:inline-block; font-size:.68rem; font-weight:700; letter-spacing:.03em;
+    padding:2px 8px; border-radius:999px; margin-right:6px;
+  }
+  .scope-tag.study{ background:rgba(15,102,86,.12); color:var(--accent); }
+  .scope-tag.ops{ background:rgba(23,60,120,.12); color:var(--navy); }
+
+  .boundary-box{
+    border:1px dashed var(--ink-faint); border-radius:10px; padding:14px 18px;
+    font-size:.84rem; color:var(--ink-soft); margin:24px 0 0;
+  }
+  .boundary-box b{ color:var(--ink); }
+
+  footer{
+    max-width:880px; margin:0 auto; padding:0 24px 64px;
+    display:flex; justify-content:center; gap:16px; font-size:.86rem;
+  }
+  footer a{ color:var(--ink-soft); text-decoration:none; }
+  footer a:hover{ color:var(--ink); }
+
+    /* ── 판정 로직 데모 ── */
+    .demo-wrap{
+      background:#101826; border-radius:14px; overflow:hidden;
+      margin:20px 0 28px; border:1px solid #1f2937;
+    }
+    .demo-header{
+      padding:14px 18px; border-bottom:1px solid #1f2937;
+      display:flex; align-items:center; gap:10px;
+    }
+    .demo-dot{ width:8px; height:8px; border-radius:50%; background:#e8a33d; }
+    .demo-title{ color:#e6edf3; font-size:.84rem; font-weight:600; }
+    .demo-sub{ color:#6b7684; font-size:.74rem; margin-left:auto; }
+
+    .demo-body{ display:grid; grid-template-columns:1fr 1fr; min-height:360px; }
+    @media (max-width:760px){ .demo-body{ grid-template-columns:1fr; } }
+
+    .demo-chat{ padding:16px; display:flex; flex-direction:column; gap:10px; border-right:1px solid #1f2937; }
+    @media (max-width:760px){ .demo-chat{ border-right:none; border-bottom:1px solid #1f2937; } }
+
+    .demo-msg{ max-width:88%; padding:9px 13px; border-radius:14px; font-size:.84rem; line-height:1.5; }
+    .demo-msg.user{ align-self:flex-end; background:#3b82f6; color:#fff; border-radius:14px 14px 4px 14px; }
+    .demo-msg.bot{ align-self:flex-start; background:#1f2937; color:#e6edf3; border-radius:14px 14px 14px 4px; }
+    .demo-msg.placeholder{ color:#6b7684; font-size:.8rem; align-self:center; margin-top:40px; text-align:center; }
+
+    .demo-trace{ padding:16px; display:flex; flex-direction:column; gap:8px; background:#0b1220; }
+    .demo-trace-title{ color:#6b7684; font-size:.68rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; margin-bottom:4px; }
+    .demo-trace-step{
+      display:flex; gap:9px; align-items:flex-start; padding:9px 11px; border-radius:8px;
+      background:#141d2e; border:1px solid #1f2937; font-size:.78rem; opacity:0; transform:translateY(4px);
+      animation:demoStepIn .3s ease forwards;
+    }
+    .demo-trace-icon{ flex-shrink:0; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.64rem; font-weight:700; margin-top:1px; }
+    .demo-trace-icon.pass{ background:rgba(16,185,129,.18); color:#34d399; }
+    .demo-trace-icon.fail{ background:rgba(239,68,68,.18); color:#f87171; }
+    .demo-trace-icon.check{ background:rgba(148,163,184,.18); color:#94a3b8; }
+    .demo-trace-text b{ display:block; color:#cbd5e1; font-weight:600; margin-bottom:2px; }
+    .demo-trace-text span{ color:#8b95a3; }
+    .demo-trace-lane{
+      margin-top:4px; padding:8px 11px; border-radius:8px; font-size:.78rem; font-weight:600;
+      opacity:0; animation:demoStepIn .3s ease forwards;
+    }
+    .demo-trace-lane.lane-1{ background:rgba(16,185,129,.14); color:#34d399; }
+    .demo-trace-lane.lane-2{ background:rgba(234,179,8,.14); color:#eab308; }
+    .demo-trace-lane.lane-0{ background:rgba(148,163,184,.14); color:#94a3b8; }
+    .demo-trace-lane.lane--1{ background:rgba(148,163,184,.14); color:#94a3b8; }
+
+    @keyframes demoStepIn{ to{ opacity:1; transform:translateY(0); } }
+
+    .demo-questions{ padding:14px 16px; border-top:1px solid #1f2937; display:flex; flex-wrap:wrap; gap:8px; }
+    .demo-q-btn{
+      background:#1f2937; color:#cbd5e1; border:1px solid #2d3748; border-radius:999px;
+      font-size:.78rem; padding:7px 13px; cursor:pointer; transition:background .15s, border-color .15s, transform .12s;
+      font-family:inherit;
+    }
+    .demo-q-btn:hover{ background:#2d3748; border-color:#3b82f6; transform:translateY(-1px); }
+    .demo-q-btn:active{ transform:translateY(0); }
+    .demo-q-btn.active-choice{ background:#3b82f6; border-color:#3b82f6; color:#fff; }
+    .demo-q-btn:disabled{ opacity:.4; cursor:default; transform:none; }
+    .demo-note{ padding:10px 18px 16px; color:#6b7684; font-size:.74rem; line-height:1.6; border-top:1px solid #1f2937; }
+
+  
+    /* ── 손그림 메모 (낙서 느낌) ── */
+    .handdrawn-figure{
+      margin:22px 0 0; background:#fdfaf2; border:1px solid #e8e0c8; border-radius:10px;
+      padding:16px 16px 12px; box-shadow:0 1px 0 rgba(0,0,0,.02);
+    }
+    .handdrawn-svg{ width:100%; height:auto; display:block; }
+    .handdrawn-figure figcaption{
+      text-align:center; font-size:.76rem; color:var(--ink-faint); margin-top:8px;
+    }
+    .hd-text{ font-family:"Gaegu","Gowun Dodum",cursive; fill:#2b2b2b; }
+    .hd-bold{ font-size:17px; font-weight:700; }
+    .hd-small{ font-size:13px; }
+    .hd-tiny{ font-size:12px; }
+    .hd-gray{ fill:#6b6b6b; }
+    .hd-red{ fill:#b8481c; }
+    .hd-title{ font-size:15px; }
+  
+    /* ── 메신저 인터뷰 재연 (하이엔드 톤) ── */
+    .kt-wrap{
+      background:#0a0a0a; border-radius:22px; overflow:hidden; margin:22px 0 28px;
+      box-shadow:0 20px 50px -20px rgba(0,0,0,.35), 0 0 0 1px rgba(0,0,0,.06);
+      max-width:420px; margin-left:auto; margin-right:auto;
+    }
+    .kt-statusbar{ height:30px; background:#0a0a0a; }
+    .kt-topbar{
+      display:flex; align-items:center; gap:10px; padding:12px 16px 10px;
+      background:#0a0a0a; color:#fff;
+    }
+    .kt-topbar-back{ font-size:1.1rem; color:#8a8a8a; }
+    .kt-topbar-title{ font-size:1rem; font-weight:700; flex:1; }
+    .kt-topbar-tab{ font-size:.72rem; color:#6b6b6b; padding:4px 10px; border-radius:999px; background:#1c1c1e; }
+
+    .kt-list{ background:#0a0a0a; padding:2px 0 8px; }
+    .kt-row{ display:flex; gap:12px; padding:10px 16px; align-items:flex-start; cursor:pointer; transition:background .15s, transform .15s; }
+        .kt-row:hover{ background:#161616; transform:translateX(2px); }
+        .kt-row:hover .kt-avatar{ transform:scale(1.06); }
+        .kt-row:active{ background:#1c1c1c; }
+        .kt-row.active{ background:#1c1c1c; }
+.kt-avatar{
+      width:46px; height:46px; border-radius:50%; flex-shrink:0; color:#fff; font-weight:700;
+      display:flex; align-items:center; justify-content:center; font-size:.9rem; font-family:"Pretendard",sans-serif;
+      transition:transform .15s;
+    }
+    .kt-body{ flex:1; min-width:0; }
+    .kt-line1{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+    .kt-name{ color:#fff; font-size:.92rem; font-weight:600; }
+    .kt-time{ color:#6b6b6b; font-size:.72rem; flex-shrink:0; }
+    .kt-line2{ display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-top:2px; }
+    .kt-preview{ color:#a8a8a8; font-size:.8rem; line-height:1.4; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+    .kt-badge{
+      flex-shrink:0; background:#f04438; color:#fff; font-size:.68rem; font-weight:700;
+      width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-top:2px;
+    }
+    .kt-role{ color:#5c5c5c; font-size:.7rem; margin-top:3px; }
+
+    .kt-convo{ display:none; background:#0a0a0a; padding:14px 14px 18px; flex-direction:column; gap:8px; }
+    .kt-convo.active{ display:flex; }
+    .kt-list.hidden{ display:none; }
+    .kt-bubble{ max-width:78%; padding:9px 13px; border-radius:16px; font-size:.82rem; line-height:1.5; }
+    .kt-bubble.me{ align-self:flex-end; background:#3a74e0; color:#fff; border-radius:16px 16px 4px 16px; }
+    .kt-bubble.them{ align-self:flex-start; background:#2b2b2d; color:#eee; border-radius:16px 16px 16px 4px; }
+
+    .kt-caption{ text-align:center; font-size:.76rem; color:var(--ink-faint); margin-top:10px; }
+  
+    /* ── 지식 발굴 기여도 차트 ── */
+    .dc-figure{
+      margin:20px 0 0; background:var(--bg-soft); border:1px solid var(--line); border-radius:10px;
+      padding:20px 22px 14px;
+    }
+    .dc-svg{ width:100%; height:auto; display:block; }
+    .dc-label{ font-size:12px; fill:var(--ink); font-family:"Pretendard",sans-serif; font-weight:600; }
+    .dc-bar-q{ fill:#a8b4c4; }
+    .dc-bar-r{ fill:var(--navy); }
+    .dc-val{ font-size:10.5px; fill:var(--ink-faint); font-family:"Pretendard",sans-serif; }
+    .dc-val-rate{ fill:var(--navy); font-weight:600; }
+    .dc-legend{ font-size:11px; fill:var(--ink-soft); font-family:"Pretendard",sans-serif; }
+    .dc-figure figcaption{ text-align:left; font-size:.78rem; color:var(--ink-faint); margin-top:10px; line-height:1.6; }
+
+    /* ── 챗봇 시스템 아키텍처 다이어그램 ── */
+    .arch-figure{
+      margin:20px 0 0; background:var(--bg-soft); border:1px solid var(--line); border-radius:10px;
+      padding:24px 22px 16px;
+    }
+    .arch-svg{ width:100%; height:auto; display:block; }
+    .arch-group-label{ font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; fill:var(--ink-faint); font-family:"Pretendard",sans-serif; }
+    .arch-node{ fill:#fff; stroke:var(--line); stroke-width:1.3; }
+    .arch-node-primary{ stroke:var(--navy); fill:var(--bg-soft); }
+    .arch-node-gate{ stroke:#dc2626; fill:#fef2f2; }
+    .arch-node-ext{ stroke:var(--ink-faint); stroke-dasharray:3 3; fill:#fff; }
+    .arch-node-result-pass{ stroke:#16a34a; fill:#f0fdf4; }
+    .arch-node-result-escalate{ stroke:var(--navy); fill:var(--bg-soft); }
+    .arch-node-result-fail{ stroke:#dc2626; fill:#fef2f2; }
+    .arch-node-group{ fill:none; stroke:var(--line); stroke-dasharray:2 3; }
+    .arch-group-title{ font-size:11px; font-weight:700; fill:var(--ink-faint); font-family:"Pretendard",sans-serif; text-anchor:middle; letter-spacing:.03em; }
+    .arch-node-title{ font-size:12.5px; font-weight:700; fill:var(--ink); font-family:"Pretendard",sans-serif; text-anchor:middle; }
+    .arch-node-title-sm{ font-size:11px; }
+    .arch-node-sub{ font-size:9.5px; fill:var(--ink-faint); font-family:"Pretendard",sans-serif; text-anchor:middle; }
+    .arch-edge{ stroke:var(--ink-faint); stroke-width:1.3; fill:none; }
+    .arch-edge-v{ stroke:var(--ink-faint); stroke-width:1.3; fill:none; }
+    .arch-edge-dash{ stroke:var(--ink-faint); stroke-width:1; stroke-dasharray:3 3; fill:none; }
+    .arch-edge-fail{ stroke:#dc2626; stroke-width:1.2; stroke-dasharray:3 2; fill:none; }
+    .arch-arrowhead{ fill:var(--ink-faint); }
+    .arch-figure figcaption{ text-align:left; font-size:.78rem; color:var(--ink-faint); margin-top:12px; line-height:1.6; }
+  
+    /* ── 과제 요약 메트릭 ── */
+    .metric-grid{
+      display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+      background:var(--line); border:1px solid var(--line); border-radius:10px; overflow:hidden;
+      margin:0 0 48px;
+    }
+    @media (max-width:640px){ .metric-grid{ grid-template-columns:repeat(2,1fr); } }
+    .metric-card{ background:#fff; padding:16px 14px; }
+    .metric-value{ font-size:1.3rem; font-weight:700; color:var(--navy); letter-spacing:-.01em; }
+    .metric-label{ font-size:.78rem; color:var(--ink); font-weight:600; margin-top:4px; }
+    .metric-note{ font-size:.72rem; color:var(--ink-faint); margin-top:2px; }
+  
+    /* ── 핵심 교훈 요약 박스 ── */
+    .takeaway-box{
+      background:var(--navy); color:#fff; border-radius:12px; padding:22px 24px;
+      margin:0 0 36px;
+    }
+    .takeaway-title{
+      font-size:.78rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+      color:rgba(255,255,255,.6); margin-bottom:12px;
+    }
+    .takeaway-list{ margin:0; padding-left:20px; }
+    .takeaway-list li{ color:#fff; font-size:.9rem; line-height:1.65; margin-bottom:10px; }
+    .takeaway-list li:last-child{ margin-bottom:0; }
+    .takeaway-list li::marker{ color:rgba(255,255,255,.5); font-weight:700; }
+  
+    /* ── 과제 제약 조건 카드 ── */
+    .constraint-row{
+      display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:16px 0 22px;
+    }
+    @media (max-width:640px){ .constraint-row{ grid-template-columns:repeat(2,1fr); } }
+    .constraint-item{
+      background:#fff; border:1px solid var(--line); border-radius:8px; padding:11px 13px;
+      display:flex; flex-direction:column; gap:3px;
+    }
+    .constraint-item b{ font-size:.82rem; color:var(--navy); font-weight:700; }
+    .constraint-item span{ font-size:.72rem; color:var(--ink-faint); }
+  
+    /* ── 손그림 메모 등장 애니메이션 ── */
+    .handdrawn-svg path, .handdrawn-svg ellipse, .handdrawn-svg text{
+      opacity:0; transform:scale(.96); transform-origin:center;
+    }
+    .handdrawn-figure.in-view .handdrawn-svg path,
+    .handdrawn-figure.in-view .handdrawn-svg ellipse,
+    .handdrawn-figure.in-view .handdrawn-svg text{
+      animation:hdFadeIn .5s ease forwards;
+    }
+    @keyframes hdFadeIn{ to{ opacity:1; transform:scale(1); } }
+    @media (prefers-reduced-motion: reduce){
+      .handdrawn-svg path, .handdrawn-svg ellipse, .handdrawn-svg text{ opacity:1; transform:none; animation:none; }
+    }
+  </style>
+<body>
+  <div class="topbar">
+    <a class="topbar-brand" href="../index.html" title="홈으로 돌아가기">이준석</a>
+    <div class="topbar-links">
+      <a href="./projects.html">Projects</a>
+      <a href="./lab.html">Lab</a>
+    </div>
+  </div>
+
+  
+  <main>
+    <div class="kakao-head">
+    <p class="page-eyebrow">Lab · Retrospective</p>
+    <h1 class="page-title">AI 에이전트 지식수집 과제 회고 — 7개 병렬 채널을 총괄한 오케스트레이션</h1>
+<p class="page-lead">담당자 7명에게 전담 에이전트를 하나씩 붙여 카카오톡 7개 채널에서 동시에 인터뷰하고, 종합 에이전트가 모은 지식으로 고객응대 봇을 만든 온라인 예선 과제 회고입니다. 저는 질문 배분과 종합을 총괄하는 오케스트레이터 역할을 맡았습니다.</p>
+    </div>
+
+    <div class="study-note">
+      <b>이 페이지의 범위</b> — <span class="scope-tag ops">과제 수행</span>은 7개 병렬 에이전트와 종합 에이전트를 직접 운영해 끝까지 제출을 완료한 작업이고, <span class="scope-tag study">판정 로직 데모</span>는 그 결과물의 핵심 규칙을 코드로 재현한 시뮬레이션입니다. 과제의 결과물·제출 자료·대회 측 제공 자료(토큰, API 응답, 심사 기준 등)는 외부 공개 대상이 아니라 이 글에 담지 않았습니다.
+    </div>
+
+    <div class="metric-grid">
+        <div class="metric-card">
+          <div class="metric-value">8/10</div>
+          <div class="metric-label">접촉한 담당자</div>
+          <div class="metric-note">명, 역할 전수 확보</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">34</div>
+          <div class="metric-label">누적 질문</div>
+          <div class="metric-note">회, 담당자 7명 대상</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">4개 범주</div>
+          <div class="metric-label">지식베이스 항목</div>
+          <div class="metric-note">공식규정·현장관행·예외·미확인</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">완료</div>
+          <div class="metric-label">제출 상태</div>
+<div class="metric-note">카카오 i 오픈빌더 봇 배포</div>
+        </div>
+    </div>
+
+    <section>
+      <h2><span class="num">1</span>과제 — 흩어진 지식을 모아 판단 경계를 가진 에이전트 만들기</h2>
+      <p>농수산물 직판몰을 가정한 온라인 예선 과제였습니다. 운영 인력 3명, 위탁 생산·배송 담당자 여러 명이 각자 다른 조각의 정보를 들고 있는 상황에서, 고객 문의에 응답하는 에이전트를 설계해 카카오 i 오픈빌더로 구현·제출하는 과제였습니다.</p>
+      <p>담당자 7명을 한 명씩 순서대로 인터뷰하면 시간이 부족하다고 판단해, 담당자별로 전담 에이전트를 하나씩 띄워 카카오톡 7개 채널에서 동시에 질의를 진행했습니다. 저는 개별 대화에 직접 매달리지 않고, 각 에이전트가 올리는 진행 상황(누적 질문 수, 새로 확보한 사실, 남은 질문 한도)을 한 화면에서 보며 "지금 어느 채널에 질문을 더 넣을지"를 조율하는 오케스트레이터 역할을 맡았습니다.</p>
+      <p>문제의 핵심은 지식이 없는 게 아니라, 공식 규정·현장 관행·추측성 답변이 구분 없이 섞여 있다는 점이었습니다. 그래서 설계 원칙을 "모르는 것을 아는 것처럼 답하지 않는다"로 세우고, 7개 채널에서 동시에 들어온 답변을 종합하는 별도 에이전트가 공통 기준과 담당자별 예외를 구분해 지식베이스로 정리했습니다. 그 안에서 확보한 에스컬레이션 절차서(담당자 이관 체계)를 판단 로직으로 그대로 가져와, 애매한 경우 사람에게 넘기는 구조로 구현해 제출을 완료했습니다.</p>
+      <p>최종 결과물은 카카오톡 채널에 카카오 i 오픈빌더로 실제로 연동한 봇입니다. 고객이 카카오톡 채팅창에 문의를 입력하면, 설계한 판정 로직이 공식 규정·현장 관행·에스컬레이션 기준을 순서대로 검사해 자동으로 응답하거나 담당자에게 이관합니다. 사람이 한 건씩 응대하던 1차 문의 처리를, 메신저에서 바로 쓸 수 있는 챗봇으로 대신하게 만든 고객 응대 업무 자동화였습니다.</p>
+    </section>
+
+    <section>
+      <h2><span class="num">2</span>지식은 어디서 왔는가 — 병렬 에이전트가 동시에 캐낸 과정</h2>
+          <p>판정 로직 안의 모든 규칙은 실제로 존재하는 자료가 아니라, 담당자 7명에게 각각 붙인 전담 에이전트가 카카오톡 1:1 채널로 동시에 인터뷰해서 캐낸 답변에서 나왔습니다. 공식 문서가 있는 경우도 있었지만, 문서에 없는 현장 기준(예외적으로 처리하는 관행, 경계가 애매한 사례)은 전부 이 대화에서 나왔습니다.</p>
+      <div class="constraint-row">
+        <div class="constraint-item"><b>1문당 200자</b><span>이내로만 질문 가능</span></div>
+        <div class="constraint-item"><b>담당자당 최대 100회</b><span>질문 한도, 넘으면 대화 불가</span></div>
+        <div class="constraint-item"><b>1:1 채널만</b><span>단체 채팅·오픈채팅 불가</span></div>
+        <div class="constraint-item"><b>소개받아야 연결</b><span>최초 1명 확보 후 나머지는 병렬 연결</span></div>
+      </div>
+          <div class="kt-wrap">
+        <div class="kt-statusbar"></div>
+        <div class="kt-topbar" id="ktTopbar">
+          <span class="kt-topbar-title" id="ktTitle">마을 관계자 대화</span>
+          <span class="kt-topbar-tab">1:1 채널</span>
+        </div>
+        <div class="kt-list" id="ktList">
+          <div class="kt-row active" data-convo="operator" onclick="ktSwitch('operator')">
+            <div class="kt-avatar" style="background:#b08968">운</div>
+            <div class="kt-body">
+              <div class="kt-line1"><span class="kt-name">운영 담당자</span><span class="kt-time">오후 2:51</span></div>
+              <div class="kt-line2"><span class="kt-preview">이 건은 하자 판정보다 처리 절차 쪽을 먼저 봐야 할 것 같아요.</span><span class="kt-badge">1</span></div>
+              <div class="kt-role">판매·CS·온라인 운영</div>
+            </div>
+          </div>
+          <div class="kt-row" data-convo="production" onclick="ktSwitch('production')">
+            <div class="kt-avatar" style="background:#8c9e6a">생</div>
+            <div class="kt-body">
+              <div class="kt-line1"><span class="kt-name">생산 담당자</span><span class="kt-time">오후 2:51</span></div>
+              <div class="kt-line2"><span class="kt-preview">맛이 없다는 신고를 하자로 볼지는 판매 쪽에서 정할 일인 것 같아요.</span><span class="kt-badge">3</span></div>
+              <div class="kt-role">현장 품질·생산 기록</div>
+            </div>
+          </div>
+          <div class="kt-row" data-convo="delivery" onclick="ktSwitch('delivery')">
+            <div class="kt-avatar" style="background:#5c7a8a">배</div>
+            <div class="kt-body">
+              <div class="kt-line1"><span class="kt-name">배송 담당자</span><span class="kt-time">오후 2:50</span></div>
+              <div class="kt-line2"><span class="kt-preview">고객이 파손을 주장하면 접수는 운영 담당 쪽이라 거기로 안내드렸어요.</span><span class="kt-badge">3</span></div>
+              <div class="kt-role">현장 집하·배송</div>
+            </div>
+          </div>
+          <div class="kt-row" data-convo="supplier" onclick="ktSwitch('supplier')">
+            <div class="kt-avatar" style="background:#a67c52">공</div>
+            <div class="kt-body">
+              <div class="kt-line1"><span class="kt-name">공급처 담당자</span><span class="kt-time">오후 2:50</span></div>
+              <div class="kt-line2"><span class="kt-preview">네, 전체 기준 다시 보내드릴게요. 위탁 계약 원본은 여기 있어요.</span><span class="kt-badge">1</span></div>
+              <div class="kt-role">위탁 공급·품질 기준</div>
+            </div>
+          </div>
+          <div class="kt-row" data-convo="promo" onclick="ktSwitch('promo')">
+            <div class="kt-avatar" style="background:#b87a9c">홍</div>
+            <div class="kt-body">
+              <div class="kt-line1"><span class="kt-name">홍보 담당자</span><span class="kt-time">오후 2:52</span></div>
+              <div class="kt-line2"><span class="kt-preview">홍보물에 적힌 조건이 등록된 코드와 다르면, 기준은 게시물이 아니라…</span><span class="kt-badge">1</span></div>
+              <div class="kt-role">홍보물·프로모션</div>
+            </div>
+          </div>
+          <div class="kt-row" data-convo="event" onclick="ktSwitch('event')">
+            <div class="kt-avatar" style="background:#6a8fae">체</div>
+            <div class="kt-body">
+              <div class="kt-line1"><span class="kt-name">체험행사 담당자</span><span class="kt-time">오후 2:50</span></div>
+              <div class="kt-line2"><span class="kt-preview">제가 맡은 건 접수와 일정 확인, 조건 맞으면 가예약을 잡는 데까지예요.</span><span class="kt-badge">2</span></div>
+              <div class="kt-role">체험·행사 예약</div>
+            </div>
+          </div>
+          <div class="kt-row" data-convo="approver" onclick="ktSwitch('approver')">
+            <div class="kt-avatar" style="background:#4a5a6a">최</div>
+            <div class="kt-body">
+              <div class="kt-line1"><span class="kt-name">최종 승인권자</span><span class="kt-time">오후 2:28</span></div>
+              <div class="kt-line2"><span class="kt-preview">승인을 거부한 사례를 꺼내기보다, 제가 못 하는 일을 먼저 말씀드릴게요.</span></div>
+              <div class="kt-role">조직 차원의 최종 판단</div>
+            </div>
+          </div>
+        </div>
+        <div class="kt-convo active" id="ktConvo-operator" data-convo="operator">
+            <div class="kt-bubble me">안녕하세요, 하자 접수 처리 흐름을 여쭤보고 싶어서 연락드렸습니다. 200자 이내로 편하게 답해주시면 됩니다.</div>
+            <div class="kt-bubble them">네! 어떤 상황인지 말씀해주시면 제가 아는 범위에서 답해드릴게요.</div>
+            <div class="kt-bubble me">수령한 상품 일부가 상한 상태로 왔다는 신고가 들어오면, 그 처리는 어느 선에서 결정되나요?</div>
+            <div class="kt-bubble them">이 건은 하자 판정보다 처리 절차 쪽을 먼저 봐야 할 것 같아요. 저희 쪽 규정 문서에 기준이 정리돼 있는데, 그 문서 링크를 보내드릴게요.</div>
+            <div class="kt-bubble me">감사합니다. 혹시 그 기준을 넘어서는 금액이면 누구 승인을 받아야 하나요?</div>
+            <div class="kt-bubble them">일정 금액 넘으면 제 권한 밖이라, 위에 보고하고 승인받은 다음 처리해요. 그 전에는 제가 바로 처리할 수 있어요.</div>
+        </div>
+        <div class="kt-convo" id="ktConvo-production" data-convo="production">
+            <div class="kt-bubble me">상품에서 맛이 없다는 신고가 들어오면 그것도 하자로 처리되나요?</div>
+            <div class="kt-bubble them">맛이 없다는 신고를 하자로 볼지는 판매 쪽에서 정할 일인 것 같아요.</div>
+            <div class="kt-bubble me">생산 기록상으로는 품질 이상 여부를 구분할 수 있나요?</div>
+            <div class="kt-bubble them">저희는 생산일자·보관온도 기록만 가지고 있어서, '맛' 자체를 판정할 기준은 없어요.</div>
+            <div class="kt-bubble me">그럼 생산 단계에서 확인 가능한 하자는 어떤 종류인가요?</div>
+            <div class="kt-bubble them">외관 손상이나 포장 불량 정도예요. 맛이나 신선도는 저희 데이터로는 판단이 안 돼요.</div>
+        </div>
+        <div class="kt-convo" id="ktConvo-delivery" data-convo="delivery">
+            <div class="kt-bubble me">안녕하세요, 배송 중 파손이나 하자 신고가 들어왔을 때 처리 흐름을 여쭤보고 싶어서 연락드립니다.</div>
+            <div class="kt-bubble them">네, 말씀하세요. 배송 쪽은 사례가 워낙 다양해서 하나씩 짚어주시면 편해요.</div>
+            <div class="kt-bubble me">고객이 '상자가 찌그러진 채로 왔다'고 주장하면 그건 배송 쪽 책임으로 바로 인정되나요?</div>
+            <div class="kt-bubble them">아니요, 저희가 집하할 때 사진을 찍어두거든요. 그 사진에 찌그러짐이 없으면 저희 구간 책임이 아니에요.</div>
+            <div class="kt-bubble me">그럼 그 사진 기록은 누가 보관하고, 분쟁 생기면 누가 조회하나요?</div>
+            <div class="kt-bubble them">저희 쪽 배송 시스템에 건당 자동 저장돼요. 다만 저희가 직접 꺼내드리진 못하고, 조회 요청은 운영 담당 쪽으로 넘겨야 해요.</div>
+            <div class="kt-bubble me">집하 사진이 없는 구간(예: 환승 터미널)에서 파손되면 어떻게 되나요?</div>
+            <div class="kt-bubble them">그 구간은 저희도 추적이 안 돼서, 그런 경우는 대부분 '파손 추정, 책임 구간 불명'으로 접수만 하고 위로 넘겨요.</div>
+            <div class="kt-bubble me">배송 기사님 본인이 현장에서 바로 환불이나 보상을 결정할 수 있는 권한은 있나요?</div>
+            <div class="kt-bubble them">전혀 없어요. 저희는 집하·인계 사실만 확인하는 역할이라, 금액이 걸린 건 손댈 수가 없어요.</div>
+            <div class="kt-bubble me">그럼 배송 중 사고 접수는 전부 상위로 올리는 구조인가요?</div>
+            <div class="kt-bubble them">네, 거의 다요. 저희 선에서 끝나는 건 '재배송 일정 조율' 정도고, 나머지는 전부 이관이에요.</div>
+        </div>
+        <div class="kt-convo" id="ktConvo-supplier" data-convo="supplier">
+            <div class="kt-bubble me">위탁 공급받는 상품의 품질 기준을 저희가 참고할 수 있는 문서가 있을까요?</div>
+            <div class="kt-bubble them">네, 전체 기준 다시 보내드릴게요. 위탁 계약 원본은 여기 있어요.</div>
+            <div class="kt-bubble me">그 기준에서 벗어난 상품이 발견되면 책임은 공급처 쪽인가요?</div>
+            <div class="kt-bubble them">원칙적으로는 그런데, 실제 책임 소재는 계약서 조항을 따로 봐야 해서 제가 바로 답하긴 어려워요.</div>
+        </div>
+        <div class="kt-convo" id="ktConvo-promo" data-convo="promo">
+            <div class="kt-bubble me">홍보물에 적힌 할인 조건이 실제 등록된 코드와 다르면 어느 쪽 기준을 따르나요?</div>
+            <div class="kt-bubble them">홍보물에 적힌 조건이 등록된 코드와 다르면, 기준은 게시물이 아니라 시스템에 등록된 코드예요.</div>
+            <div class="kt-bubble me">그럼 고객이 홍보물을 보고 왔다고 주장하면 그 사실만으로 조건을 맞춰주나요?</div>
+            <div class="kt-bubble them">아니요, 저희는 게시물 캡처만 보내드리고 실제 처리는 운영 쪽 판단이에요.</div>
+        </div>
+        <div class="kt-convo" id="ktConvo-event" data-convo="event">
+            <div class="kt-bubble me">체험 행사 예약이나 취소 관련 문의가 들어오면 어떻게 처리하시는지 궁금합니다.</div>
+            <div class="kt-bubble them">저는 접수와 일정 확인, 조건 맞으면 가예약 잡는 데까지만 해요.</div>
+            <div class="kt-bubble me">가예약 후 고객이 변심으로 취소하면 위약금 같은 게 있나요?</div>
+            <div class="kt-bubble them">그건 제 담당이 아니고 운영 쪽 정책이에요. 저는 예약 가능 여부만 봐요.</div>
+            <div class="kt-bubble me">혹시 행사 당일 인원이 꽉 차면 대기자 명단도 관리하시나요?</div>
+            <div class="kt-bubble them">네, 대기 명단은 제가 들고 있어요. 자리 나면 순서대로 연락드려요.</div>
+        </div>
+        <div class="kt-convo" id="ktConvo-approver" data-convo="approver">
+            <div class="kt-bubble me">안녕하세요, 승인을 거부한 사례를 꺼내기보다, 먼저 제가 못 하는 일이 뭔지 여쭤보고 싶습니다.</div>
+            <div class="kt-bubble them">좋은 질문이에요. 저는 거부 사례보다 '제 선에서 끝나지 않는 일'을 말씀드리는 게 더 정확할 것 같아요.</div>
+            <div class="kt-bubble me">그럼 금액과 무관하게 무조건 승인권자 선까지 와야 하는 유형이 있나요?</div>
+            <div class="kt-bubble them">네. 대외적으로 공개되거나 법적 분쟁으로 갈 수 있는 사안은 금액이 작아도 반드시 저를 거쳐요.</div>
+            <div class="kt-bubble me">반대로, 금액이 커도 바로 아래 선에서 끝나는 경우는요?</div>
+            <div class="kt-bubble them">정해진 한도 안에서 반복되는 유형(동일 사유 재발)은 아래에서 처리하고 저한테는 보고만 올라와요.</div>
+            <div class="kt-bubble me">승인 여부를 결정할 때 가장 먼저 보는 기준이 뭔가요?</div>
+            <div class="kt-bubble them">'이 결정이 다른 고객에게도 똑같이 적용될 수 있는가'예요. 한 번만 봐주는 식이면 바로 막아요.</div>
+        </div>
+      </div>
+      <p class="kt-caption" id="ktCaption">실제로 1:1 채널 대화로 캐낸 정보를 재연한 화면입니다. 이름·대화 내용은 모두 익명화·재구성했습니다. 왼쪽 목록에서 담당자를 눌러보세요.</p>
+        </section>
+
+    <section>
+      <h2><span class="num">3</span>직접 눌러보는 판정 로직</h2>
+      <p>아래는 실제로 설계했던 에이전트의 "레인 판정" 로직을 그대로 코드로 옮긴 데모입니다. 질문 유형을 고르면 실제 판정 순서(절대원칙 검사 → 손해배상 여부 → 대외공개·안전 여부 → 권한 내 처리 가능 여부)를 따라가며 어느 단계에서 어떤 이유로 직접 처리되거나 이관되는지 보여줍니다.</p>
+      <div class="demo-wrap">
+        <div class="demo-header">
+          <span class="demo-dot"></span>
+          <span class="demo-title">고객응대 에이전트 — 판정 로직 데모</span>
+          <span class="demo-sub">규칙 기반 시뮬레이션 · 실제 AI 호출 없음</span>
+        </div>
+        <div class="demo-body">
+          <div class="demo-chat" id="demoChat">
+            <p class="demo-msg placeholder">아래에서 질문 유형을 선택하면<br>대화와 판정 과정이 여기 쌓입니다.</p>
+          </div>
+          <div class="demo-trace" id="demoTrace">
+            <div class="demo-trace-title">판정 과정</div>
+          </div>
+        </div>
+        <div class="demo-questions" id="demoQuestions"></div>
+        <p class="demo-note">실제 봇에 쓴 시스템 프롬프트의 판정 규칙을 그대로 옮긴 것이며, 외부 AI API를 호출하지 않는 순수 규칙 기반 시뮬레이션입니다. 대회 시나리오의 구체적인 상호명·인명·수치는 포함하지 않았습니다.</p>
+      </div>
+      <p style="margin-top:20px;">일반 FAQ봇과 다르게 설계한 지점이 네 가지입니다.</p>
+      <div class="constraint-row" style="margin-top:18px;">
+        <div class="constraint-item"><b>신뢰도 등급 노출</b><span>확정 규정·현장 관행·확인 필요를 구분해 답변</span></div>
+        <div class="constraint-item"><b>이관 이유 공개</b><span>권한 밖·대외공개 리스크 등 판단 근거를 고객에게도 표시</span></div>
+        <div class="constraint-item"><b>접수번호 추적</b><span>이관된 건을 번호로 재조회 가능, FAQ봇이 아니라 티켓형</span></div>
+        <div class="constraint-item"><b>상담 이력 대조</b><span>"예전에 들었다"는 주장은 기록 조회 후 답변</span></div>
+      </div>
+      <figure class="arch-figure">
+<svg viewBox="0 0 1080 520" xmlns="http://www.w3.org/2000/svg" class="arch-svg">
+  <defs>
+    <marker id="archArrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" class="arch-arrowhead"/>
+    </marker>
+    <marker id="archArrowFail" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#dc2626"/>
+    </marker>
+  </defs>
+
+  <text x="110" y="28" class="arch-group-label">입력 채널</text>
+  <text x="510" y="28" class="arch-group-label">판정 엔진</text>
+  <text x="750" y="28" class="arch-group-label">지식 · 외부 연동</text>
+  <text x="960" y="28" class="arch-group-label">결과</text>
+
+  <!-- 열1: 사용자 -->
+  <rect x="40" y="228" width="140" height="64" rx="8" class="arch-node arch-node-primary"/>
+  <text x="110" y="254" class="arch-node-title">사용자</text>
+  <text x="110" y="272" class="arch-node-sub">카카오톡 1:1 채팅</text>
+
+  <path d="M180 260 L220 260" class="arch-edge" marker-end="url(#archArrow)"/>
+
+  <!-- 열2: 챗봇 빌더 플랫폼 -->
+  <rect x="220" y="220" width="150" height="80" rx="8" class="arch-node arch-node-primary"/>
+  <text x="295" y="246" class="arch-node-title">챗봇 빌더 플랫폼</text>
+  <text x="295" y="264" class="arch-node-sub">채널 · 세션 관리</text>
+  <text x="295" y="280" class="arch-node-sub">발화 수신 · 액션 호출</text>
+
+  <path d="M370 260 L408 260" class="arch-edge" marker-end="url(#archArrow)"/>
+
+  <!-- 열3: 판정 엔진 그룹 -->
+  <rect x="408" y="52" width="210" height="416" rx="10" class="arch-node-group"/>
+  <text x="513" y="78" class="arch-group-title">판정 엔진 · 4단계 순차 검사</text>
+
+  <rect x="426" y="96" width="176" height="56" rx="6" class="arch-node arch-node-gate"/>
+  <text x="514" y="118" class="arch-node-title arch-node-title-sm">절대원칙 검사</text>
+  <text x="514" y="134" class="arch-node-sub">선약속 · 추측응답 · 범위 밖</text>
+
+  <path d="M514 152 L514 184" class="arch-edge-v" marker-end="url(#archArrow)"/>
+  <path d="M602 112 L660 70" class="arch-edge-fail" marker-end="url(#archArrowFail)"/>
+
+  <rect x="426" y="184" width="176" height="52" rx="6" class="arch-node"/>
+  <text x="514" y="206" class="arch-node-title arch-node-title-sm">1단계 · 손해배상</text>
+  <text x="514" y="221" class="arch-node-sub">분쟁 여부 판단</text>
+
+  <path d="M514 236 L514 266" class="arch-edge-v" marker-end="url(#archArrow)"/>
+
+  <rect x="426" y="266" width="176" height="52" rx="6" class="arch-node"/>
+  <text x="514" y="288" class="arch-node-title arch-node-title-sm">2단계 · 대외공개</text>
+  <text x="514" y="303" class="arch-node-sub">안전 · 법률 판단</text>
+
+  <path d="M514 318 L514 348" class="arch-edge-v" marker-end="url(#archArrow)"/>
+
+  <rect x="426" y="348" width="176" height="52" rx="6" class="arch-node"/>
+  <text x="514" y="370" class="arch-node-title arch-node-title-sm">3단계 · 권한 판단</text>
+  <text x="514" y="385" class="arch-node-sub">처리 한도 이내 여부</text>
+
+  <!-- 판정 엔진 -> 지식/API (양방향 조회, 점선) -->
+  <path d="M602 124 L660 140" class="arch-edge-dash" marker-end="url(#archArrow)"/>
+  <path d="M602 374 L660 390" class="arch-edge-dash" marker-end="url(#archArrow)"/>
+
+  <!-- 열4: 외부 연동 -->
+  <rect x="660" y="96" width="180" height="88" rx="8" class="arch-node arch-node-ext"/>
+  <text x="750" y="122" class="arch-node-title">지식베이스</text>
+  <text x="750" y="140" class="arch-node-sub">인터뷰로 확보한</text>
+  <text x="750" y="156" class="arch-node-sub">규정 · 현장 관행</text>
+
+  <rect x="660" y="340" width="180" height="88" rx="8" class="arch-node arch-node-ext"/>
+  <text x="750" y="366" class="arch-node-title">조회 · 쓰기 API</text>
+  <text x="750" y="384" class="arch-node-sub">주문 · 상담이력 조회</text>
+  <text x="750" y="400" class="arch-node-sub">환불 · 접수 기록</text>
+
+  <!-- 판정 엔진 -> 결과 (직접 연결, 지식/API 열을 피해 위아래로) -->
+  <path d="M602 200 L880 140" class="arch-edge" marker-end="url(#archArrow)"/>
+  <path d="M602 362 L880 390" class="arch-edge" marker-end="url(#archArrow)"/>
+  <path d="M660 70 L880 70" class="arch-edge-fail" marker-end="url(#archArrowFail)"/>
+
+  <!-- 열5: 결과 -->
+  <rect x="880" y="44" width="160" height="52" rx="6" class="arch-node arch-node-result-fail"/>
+  <text x="960" y="66" class="arch-node-title arch-node-title-sm" fill="#dc2626">즉시 차단</text>
+  <text x="960" y="81" class="arch-node-sub">원칙 위반 응답</text>
+
+  <rect x="880" y="114" width="160" height="52" rx="6" class="arch-node arch-node-result-pass"/>
+  <text x="960" y="136" class="arch-node-title arch-node-title-sm">레인1 · 직접 처리</text>
+  <text x="960" y="151" class="arch-node-sub">한도 내 즉시 응답</text>
+
+  <rect x="880" y="364" width="160" height="52" rx="6" class="arch-node arch-node-result-escalate"/>
+  <text x="960" y="386" class="arch-node-title arch-node-title-sm">레인2 · 담당자 이관</text>
+  <text x="960" y="401" class="arch-node-sub">접수번호 발급</text>
+</svg>
+        <figcaption>사용자가 보낸 메시지는 챗봇 빌더 플랫폼을 거쳐 판정 엔진의 4단계를 순서대로 통과합니다. 절대원칙을 위반하면 즉시 차단하고, 통과하면 지식베이스·조회 API를 참고해 한도 내 직접 처리(레인1) 또는 담당자 이관(레인2)으로 갈립니다.</figcaption>
+      </figure>
+    </section>
+
+    <section>
+      <h2><span class="num">4</span>병렬로 돌리고 나니 보인 진짜 난이도 — 종합의 병목</h2>
+      <p>7개 채널을 동시에 열어두니 "담당자를 못 찾아서 기다리는" 문제는 사라졌습니다. 대신 다른 문제가 생겼습니다. 7개 채널에서 쏟아지는 답변을 종합하는 에이전트, 그 종합 결과로 문서(이미지·PDF)를 대조하는 작업, 지식베이스 정리, 봇 구현까지 네 가지 성격이 다른 작업이 여전히 "종합 → 다음 종합"으로 순서를 다퉈야 했습니다.</p>
+      <p>즉 인터뷰 단계는 병렬화했지만, 그 결과를 하나로 모으는 종합 단계는 여전히 한 줄로 처리하고 있었던 겁니다. 작업 로그를 돌이켜보니 병목의 위치가 "담당자를 찾는 시간"에서 "7개 채널의 답변을 동시에 읽고 판단하는 시간"으로 옮겨갔을 뿐이었습니다.</p>
+      <figure class="dc-figure">
+        <svg class="dc-svg" viewBox="0 0 640 364" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="담당자별 질문 횟수 대비 지식 발굴 기여도 비교 차트">
+  <rect x="0" y="6" width="12" height="12" rx="3" class="dc-bar-q"/>
+  <text x="18" y="16" class="dc-legend">질문 횟수</text>
+  <rect x="100" y="6" width="12" height="12" rx="3" class="dc-bar-r"/>
+  <text x="118" y="16" class="dc-legend">발굴 기여도(해당 담당자가 전체 발굴 지식 중 차지한 비중)</text>
+  <text x="100" y="57" text-anchor="end" class="dc-label">배송 담당자</text>
+  <rect x="112" y="44" width="229.0" height="12" rx="3" class="dc-bar-q"/>
+  <text x="349" y="54" class="dc-val">질문 11회</text>
+  <rect x="112" y="61" width="229.0" height="12" rx="3" class="dc-bar-r"/>
+  <text x="349" y="71" class="dc-val dc-val-rate">발굴 기여도 38%</text>
+  <text x="100" y="101" text-anchor="end" class="dc-label">운영 담당자</text>
+  <rect x="112" y="88" width="124.9" height="12" rx="3" class="dc-bar-q"/>
+  <text x="244.9090909090909" y="98" class="dc-val">질문 6회</text>
+  <rect x="112" y="105" width="72.3" height="12" rx="3" class="dc-bar-r"/>
+  <text x="192.31578947368422" y="115" class="dc-val dc-val-rate">발굴 기여도 12%</text>
+  <text x="100" y="145" text-anchor="end" class="dc-label">최종 승인권자</text>
+  <rect x="112" y="132" width="124.9" height="12" rx="3" class="dc-bar-q"/>
+  <text x="244.9090909090909" y="142" class="dc-val">질문 6회</text>
+  <rect x="112" y="149" width="54.2" height="12" rx="3" class="dc-bar-r"/>
+  <text x="174.23684210526315" y="159" class="dc-val dc-val-rate">발굴 기여도 9%</text>
+  <text x="100" y="189" text-anchor="end" class="dc-label">체험행사 담당자</text>
+  <rect x="112" y="176" width="62.5" height="12" rx="3" class="dc-bar-q"/>
+  <text x="182.45454545454544" y="186" class="dc-val">질문 3회</text>
+  <rect x="112" y="193" width="24.1" height="12" rx="3" class="dc-bar-r"/>
+  <text x="144.10526315789474" y="203" class="dc-val dc-val-rate">발굴 기여도 4%</text>
+  <text x="100" y="233" text-anchor="end" class="dc-label">홍보 담당자</text>
+  <rect x="112" y="220" width="41.6" height="12" rx="3" class="dc-bar-q"/>
+  <text x="161.63636363636363" y="230" class="dc-val">질문 2회</text>
+  <rect x="112" y="237" width="18.1" height="12" rx="3" class="dc-bar-r"/>
+  <text x="138.07894736842104" y="247" class="dc-val dc-val-rate">발굴 기여도 3%</text>
+  <text x="100" y="277" text-anchor="end" class="dc-label">공급처 담당자</text>
+  <rect x="112" y="264" width="41.6" height="12" rx="3" class="dc-bar-q"/>
+  <text x="161.63636363636363" y="274" class="dc-val">질문 2회</text>
+  <rect x="112" y="281" width="12.1" height="12" rx="3" class="dc-bar-r"/>
+  <text x="132.05263157894737" y="291" class="dc-val dc-val-rate">발굴 기여도 2%</text>
+  <text x="100" y="321" text-anchor="end" class="dc-label">생산 담당자</text>
+  <rect x="112" y="308" width="83.3" height="12" rx="3" class="dc-bar-q"/>
+  <text x="203.27272727272728" y="318" class="dc-val">질문 4회</text>
+  <rect x="112" y="325" width="12.1" height="12" rx="3" class="dc-bar-r"/>
+  <text x="132.05263157894737" y="335" class="dc-val dc-val-rate">발굴 기여도 2%</text>
+</svg>
+        <figcaption>담당자 7명의 실제 질문 횟수와 발굴 기여도. 오케스트레이터 화면에서 채널별 /status를 계속 지켜보며, 질문을 던질수록 새 사실이 나오는 채널(위 두 명)에는 질문을 더 넣고, 몇 번을 물어도 반응이 없는 채널(아래 다섯 명)은 일찍 질문을 줄이는 쪾으로 배분했습니다.</figcaption>
+      </figure>
+      <div class="diagram">[7개 에이전트 병렬 인터뷰] → [오케스트레이터 종합] → [문서 분석(이미지·PDF)] → [지식베이스 정리] → [봇 구현]
+     인터뷰는 동시에, 종합·분석·정리·구현은 한 명(저)이 한 번에 하나씩</div>
+      <ul>
+        <li><b>최초 연락처 확보만 순차, 그 다음은 병렬</b> — 관계자 10명 중 2명의 연락처를 몰라 "한 명에게 물어보고 모르면 다음 사람에게"처럼 최초 접점을 찾는 과정은 순서대로 진행해야 했습니다. 연락처가 확보되는 즉시 그 담당자 전담 에이전트를 새 채널에 투입했고, 끝내 2명은 연락처를 확보하지 못해 "8/10명 병렬 운영이면 충분하다"는 판단으로 넘어갔습니다.</li>
+        <li><b>7채널 종합과 문서 분석이 서로를 기다림</b> — 7개 채널에서 동시에 들어오는 답변을 종합하는 작업과, 권한위임표(이미지 5장)·에스컬레이션 절차서(PDF)·규정집(HTML) 같은 자료를 분석해 각 에이전트에게 다음 질문을 내려주는 작업이 둘 다 저 혼자의 시간 안에서 순서를 다퉈야 했습니다. 실제로 "문서 분석을 빠르게 끝내고 봇 구현에 집중해야 한다"는 메모를 남기며 둘 중 하나를 포기하는 식으로 시간을 쪼갰습니다.</li>
+        <li><b>병렬화해도 종합은 한 명분의 시간</b> — "남은 시간 40분" 같은 메모가 작업 후반에야 등장합니다. 인터뷰 자체는 7개 채널에서 동시에 진행됐지만, 그 결과를 읽고 종합·분석·정리·구현하는 네 작업은 여전히 저 한 명의 순차 흐름에 묶여 있어서, 초반에 종합에 쓴 시간이 봇 구현 시간을 얼마나 깎아먹고 있는지 중간에 드러나지 않았습니다.</li>
+      </ul>
+    </section>
+    <section>
+      <h2><span class="num">5</span>연동 과정에서 배운 것 — 지식과 시스템은 서로 다른 레이어다</h2>
+      <p>지식베이스를 다 모은 다음에도, 그걸 실제로 작동하는 봇으로 연결하는 과정에서 배운 점이 따로 있었습니다. 제공된 액션 API(기능 호출용 API 명세)를 분석하면서 "사람에게 물어서 끝내 못 얻은 답을, 시스템 구조를 뒤져서 역으로 찾아낸" 경험이 가장 인상적이었습니다.</p>
+      <ul>
+        <li><b>사람이 모른다고 답한 것을 데이터 구조에서 확인했다.</b> 인터뷰로는 "이 식별자가 저 식별자로 연결되는지" 아무도 확답하지 못했습니다. 그런데 API의 데이터 모델(스키마)을 하나씩 대조해보니, 한쪽 데이터에는 그 연결 키가 없고 다른 쪽 데이터에는 있다는 게 확인됐습니다. 담당자의 기억이나 구술보다 실제로 시스템에 저장된 데이터 구조가 더 정확한 답을 줄 때가 있다는 걸 체감했습니다. 다음에는 사람에게 묻기 전에 "이 정보가 시스템 어딘가에 이미 구조화되어 있을 가능성"을 먼저 확인하는 순서로 바꿀 것 같습니다.</li>
+        <li><b>쓰기 API가 규칙을 검증하지 않는 경우, 판단은 호출하는 쪽의 책임이다.</b> 제공된 쓰기(기록용) API들은 요청을 그대로 저장하기만 했고, 정책 위반 여부(기한이 지났는지, 금액이 과도한지)를 전혀 걸러주지 않았습니다. 처음에는 당연히 API 쪽에서 막아줄 거라 생각했는데, 그렇지 않다는 걸 확인한 뒤로는 "에이전트가 API를 호출하기 전에 반드시 정책을 먼저 판단하고, API는 그 판단이 끝난 결과만 기록하는 용도로 쓴다"는 원칙으로 설계를 바꿨습니다. 시스템 경계가 어디까지 책임지는지를 확인하지 않으면 책임져야 할 판단을 시스템에 떠넘기게 된다는 걸 배웠습니다.</li>
+        <li><b>되돌릴 수 없는 한도는 설계를 더 신중하게 만든다.</b> 평가 단계의 API 호출 한도는 시간창 제한과 별개로 총 누적 한도가 있었고, 이 누적 한도는 초과하면 복구되지 않는 구조였습니다. 연습 단계에서는 자유롭게 호출을 반복해도 됐지만, 평가 단계로 넘어가면 "조회 한 번"도 아껴야 하는 자원이 됐습니다. 이런 비가역적 제약이 있는 자원은 평소 습관대로(일단 조회해보고 판단) 다루면 안 되고, 호출 전에 "이게 정말 필요한 조회인가"를 먼저 따지는 설계가 필요하다는 걸 배웠습니다.</li>
+        <li><b>자유 문자열로 열려 있는 분류값은 직접 설계해야 한다.</b> 담당자 이관(에스컬레이션) 기능의 "어디로 보낼지" 값이 미리 정해진 목록이 아니라 자유 문자열이었습니다. 시스템이 분류 체계를 대신 정해주지 않는다는 뜻이라, 인터뷰로 확인한 실제 담당자 구조를 바탕으로 이관 대상 이름 자체를 직접 설계해야 했습니다. API 명세를 읽을 때 "이 필드가 고정된 선택지인지, 호출하는 쪽이 의미를 채워야 하는 자유값인지"를 구분하는 습관이 생겼습니다.</li>
+        <li><b>연동 작업은 체크리스트 하나를 빠뜨리면 그 전까지의 모든 설계가 무효가 된다.</b> 채널 공개 설정, 식별값 혼동(비슷하게 생긴 두 개의 키 값을 구분하는 것), 테스트 계정 접근 가능 여부처럼 사소해 보이는 설정이 누락되면 그 앞의 모든 지식베이스·판단 로직 설계가 평가 자체를 받지 못하는 결과로 이어질 수 있었습니다. "로직을 잘 만드는 것"과 "그 로직이 실제로 평가받을 수 있는 상태로 배포하는 것"은 완전히 다른 종류의 꼼꼼함이 필요하다는 걸 체감했습니다.</li>
+      </ul>
+    </section>
+
+
+    <section>
+      <h2><span class="num">6</span>실제로 운영한 구조 — 담당자 1명당 에이전트 1개, 종합은 별도 에이전트</h2>
+      <p>담당자별로 실제 성과가 완전히 갈렸습니다. 어떤 담당자는 질문을 많이 던질수록 새로운 사실이 계속 나왔고, 어떤 담당자는 몇 번을 물어도 "확인이 필요하다"는 답만 돌아왔습니다. 저는 7개 채널에 직접 매달리지 않고 오케스트레이터 화면에서 채널별 상태만 보며 질문을 배분했고, 7개 채널이 올린 답변을 종합해 지식베이스와 조직 구조도로 정리하는 작업은 또 다른 전담 에이전트에게 맡겼습니다. 저는 이 세 역할(질문 배분, 종합, 구조화) 전체를 총괄하는 자리에만 있었습니다.</p>
+      <div class="diagram">[오케스트레이터] — 7개 채널의 누적 질문 수 / 새로 나온 사실 수 / 남은 질문 한도를 한눈에 봄
+   │
+   ├─ [배송 담당자 에이전트] ──▶ /status: 11문 사용, 신규사실 다수, 한도 89문 남음  (발굴 잘 되는 중 → 질문 유지)
+   ├─ [운영 담당자 에이전트] ──▶ /status: 6문 사용, 신규사실 꾸준, 한도 94문 남음  (안정적 → 핵심 채널 유지)
+   ├─ [생산 담당자 에이전트] ──▶ /status: 4문 사용, 신규사실 희박, 한도 96문 남음  (반응 둔화 → 질문 조기 종료)
+   └─ [공급처 담당자 에이전트] ──▶ /status: 2문 사용, 신규사실 없음, 한도 98문 남음  (즉답 회피 → 지식베이스에 "확인 필요"로 남김)</div>
+      <p>세 가지가 이 구조의 핵심입니다.</p>
+      <ul>
+        <li><b>담당자 1명당 전담 에이전트 1개를 붙이고, 질문을 병렬로 던졌습니다.</b> 담당자마다 질문 한도(100회)와 응답 속도가 독립적이어서, 동시에 7개 채널에 질문을 보내놓고 돌아오는 순서대로 처리하니 "한 사람의 응답을 기다리며 다른 작업을 못 하는" 시간 자체가 사라졌습니다.</li>
+        <li><b>/status로 "지금 누구에게 더 캐물어야 효율이 나는지"를 수치로 봤습니다.</b> 질문 1건당 새로운 사실이 몇 건 나왔는지를 담당자별로 계속 집계해, "질문을 더 던질수록 발굴률이 오르는 채널"과 "더 던져도 안 나오는 채널"을 구분했습니다. 그 결과 배송 담당자처럼 반응이 좋은 채널에 질문의 절반 이상(11회)을 몰아넣고, 공급처·생산처럼 반응이 느린 채널은 2~4회만에 질문을 접었습니다.</li>
+        <li><b>7개 채널의 답변을 종합하고 구조도로 그리는 역할은 또 다른 전담 에이전트에게 맡겼습니다.</b> 저는 개별 채널의 대화에는 관여하지 않고, 이 종합 에이전트가 7개 채널의 답변을 모아 "누가 누구 승인을 받아야 하는지"를 구조도로 정리하는 걸 검토·승인하는 역할만 맡았습니다. 아래는 그 종합 에이전트가 정리한 조직 관계도를 손그림 느낌으로 다시 옮겨본 겁니다.</li>
+      </ul>
+      <figure class="handdrawn-figure">
+        <svg class="handdrawn-svg" viewBox="0 0 760 620" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="손으로 그린 조직 구조와 승인 흐름 메모">
+  <rect x="0" y="0" width="760" height="620" fill="#fdfaf2"/>
+  <rect x="6" y="6" width="748" height="608" fill="none" stroke="#d8d2bd" stroke-width="1.5"/>
+  <text x="30" y="34" class="hd-text hd-bold hd-title">조직 구조 — 누가 누구 승인을 받아야 하는지</text>
+  <path d="M28,40 Q200,38 400,40" fill="none" stroke="#2b2b2b" stroke-width="1.4"/>
+  <path d="M300,66 Q296,56 312,54 L448,52 Q464,54 460,70 L456,104 Q458,116 444,118 L304,120 Q290,118 292,104 Z" fill="#fff0cc" stroke="#2b2b2b" stroke-width="2.4" transform="rotate(-1 376 86)"/>
+  <text x="376" y="82" text-anchor="middle" class="hd-text hd-bold">최종 승인권자</text>
+  <text x="376" y="100" text-anchor="middle" class="hd-text hd-small">(3단 — 대형보상·분쟁·정책변경)</text>
+  <path d="M352,50 L358,38 L366,48 L376,34 L386,48 L394,38 L400,50" fill="none" stroke="#b8481c" stroke-width="2"/>
+  <path d="M300,152 Q296,144 310,142 L444,140 Q458,142 454,156 L451,184 Q453,194 440,196 L304,198 Q291,196 293,184 Z" fill="#eaf4ff" stroke="#2b2b2b" stroke-width="2.2" transform="rotate(1 374 168)"/>
+  <text x="374" y="166" text-anchor="middle" class="hd-text hd-bold">운영자 (2단)</text>
+  <text x="374" y="183" text-anchor="middle" class="hd-text hd-small">한도 내 1차 판단, 넘으면 위로</text>
+  <path d="M374,120 L374,140" fill="none" stroke="#2b2b2b" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="400" y="133" class="hd-text hd-tiny" transform="rotate(90 400 133)">한도 초과시 ▲</text>
+  <ellipse cx="200" cy="270" rx="92" ry="52" fill="#eafaf0" stroke="#2b2b2b" stroke-width="2.2" transform="rotate(-2 200 270)"/>
+  <text x="200" y="250" text-anchor="middle" class="hd-text hd-bold">1단 — 운영팀 (3인)</text>
+  <text x="200" y="270" text-anchor="middle" class="hd-text hd-small">① 판매·CS 운영</text>
+  <text x="200" y="286" text-anchor="middle" class="hd-text hd-small">② 홍보·프로모션</text>
+  <text x="200" y="302" text-anchor="middle" class="hd-text hd-small">③ 체험·행사 예약</text>
+  <path d="M240,222 C 280,198 310,188 335,178" fill="none" stroke="#2b2b2b" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="285" y="190" class="hd-text hd-tiny" transform="rotate(-18 285 190)">재량밖 요청만</text>
+  <ellipse cx="555" cy="268" rx="88" ry="48" fill="#f3f0ff" stroke="#2b2b2b" stroke-width="2" transform="rotate(2 555 268)"/>
+  <text x="555" y="258" text-anchor="middle" class="hd-text hd-bold">생산 농가 창구</text>
+  <text x="555" y="276" text-anchor="middle" class="hd-text hd-small">품목·규격은 조합이 지정</text>
+  <text x="555" y="292" text-anchor="middle" class="hd-text hd-small">품질 책임 = 조합 소유</text>
+  <path d="M500,228 C 470,205 440,190 410,174" fill="none" stroke="#2b2b2b" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <text x="465" y="186" class="hd-text hd-tiny" transform="rotate(16 465 186)">현장관행 확인용</text>
+  <ellipse cx="200" cy="420" rx="92" ry="48" fill="#f2f2f2" stroke="#555" stroke-width="2" stroke-dasharray="7 5" transform="rotate(1 200 420)"/>
+  <text x="200" y="410" text-anchor="middle" class="hd-text hd-bold hd-gray">외부 공급 조직 대표</text>
+  <text x="200" y="428" text-anchor="middle" class="hd-text hd-small hd-gray">품질 책임 = 공급측 소유</text>
+  <text x="200" y="444" text-anchor="middle" class="hd-text hd-small hd-red">※ 승인권자 아님! 협의경유만</text>
+  <path d="M222,372 C 230,350 235,335 240,320" fill="none" stroke="#555" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#arrowgray)"/>
+  <ellipse cx="555" cy="418" rx="90" ry="50" fill="#fff6e8" stroke="#2b2b2b" stroke-width="2" transform="rotate(-2 555 418)"/>
+  <text x="555" y="402" text-anchor="middle" class="hd-text hd-bold">배송 위탁사 — 기사 2인</text>
+  <text x="555" y="420" text-anchor="middle" class="hd-text hd-small">집하·인계 사실 확인 담당</text>
+  <text x="555" y="436" text-anchor="middle" class="hd-text hd-small">개인 연락처는 외부 비공개</text>
+  <path d="M535,370 C 525,345 515,330 505,314" fill="none" stroke="#2b2b2b" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <path d="M300,500 Q296,492 312,490 L448,488 Q466,490 462,504 L458,528 Q460,538 444,540 L304,542 Q288,540 294,528 Z" fill="#eee" stroke="#777" stroke-width="1.8" stroke-dasharray="6 5"/>
+  <text x="376" y="512" text-anchor="middle" class="hd-text hd-bold hd-gray">외부 협력자(시스템 개발 등)</text>
+  <text x="376" y="528" text-anchor="middle" class="hd-text hd-small hd-red">승인 서열에 없음 — 요청 근거 불인정</text>
+  <path d="M40,560 Q30,552 44,546 Q220,538 260,550 Q272,558 260,566 Q140,574 40,560 Z" fill="none" stroke="#b8481c" stroke-width="1.6" transform="rotate(-2 150 558)"/>
+  <text x="150" y="556" text-anchor="middle" class="hd-text hd-tiny hd-red" transform="rotate(-2 150 556)">승인은 3단계인데 난 그걸 몰라서</text>
+  <text x="150" y="570" text-anchor="middle" class="hd-text hd-tiny hd-red" transform="rotate(-2 150 570)">아무한테나 "이거 승인되나요?" 물어봄</text>
+  <path d="M560,560 Q550,552 566,548 Q650,542 682,552 Q694,558 682,566 Q620,572 560,560 Z" fill="none" stroke="#1a5276" stroke-width="1.6" transform="rotate(2 620 558)"/>
+  <text x="620" y="557" text-anchor="middle" class="hd-text hd-tiny" transform="rotate(2 620 557)" style="fill:#1a5276">조직도 받고서야</text>
+  <text x="620" y="570" text-anchor="middle" class="hd-text hd-tiny" transform="rotate(2 620 570)" style="fill:#1a5276">"3인 다 찾았다" 확신함</text>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2b2b2b"/></marker>
+    <marker id="arrowgray" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#555"/></marker>
+  </defs>
+</svg>
+        <figcaption>종합 에이전트가 7개 채널의 답변을 대조해 공식 조직관계도와 권한위임표를 재구성해주고서야, 승인 경로와 "7명 전원의 역할을 다 찾았다"는 확신이 생겼습니다. 그 전까지는 개별 채널에서 승인 구조를 몰라 아무 담당자에게나 승인 가능 여부를 물어보던 질문이 섞여 있었습니다. 종합 에이전트의 결과물을 손그림 느낌으로 다시 옮긴 것으로, 인물·수치는 전부 일반화·익명화했습니다.</figcaption>
+      </figure>
+    </section>
+
+    <div class="takeaway-box">
+          <div class="takeaway-title">핵심 교훈 세 가지</div>
+          <ol class="takeaway-list">
+            <li>지식의 원천은 균질하지 않다. 같은 질문 횟수를 투입해도 담당자별 발굴 기여도는 크게 갈렸고, 이 차이를 수치로 추적하지 않으면 반응이 느린 곳에 시간을 계속 낭비하게 된다.</li>
+            <li>서로 기다릴 필요가 없는 작업은 처음부터 트랙을 분리해야 중간에 재배분할 수 있다. 인터뷰 7개 채널은 병렬로 분리했지만, 종합·분석·구현까지는 분리하지 못해 그 구간에서 손실이 다시 쌓였다.</li>
+            <li>쓰기 API가 규칙을 대신 검증해주지 않는다. 시스템이 어디까지 책임지는지 확인하지 않으면, 지켜야 할 판단을 시스템에 떠넘기게 된다.</li>
+          </ol>
+        </div>
+
+    <section>
+      <h2><span class="num">7</span>남는 질문</h2>
+      <p>7개 채널을 병렬로 운영해보니, 인터뷰 단계의 대기 시간은 확실히 줄었지만 그만큼 빠르다고 단정하기는 어려웠습니다. 채널이 늘어난 만큼 오케스트레이터가 조율해야 할 상태가 늘어났고, 인터뷰처럼 "사람의 응답 속도"에 묶인 작업은 에이전트를 여러 개 띄워도 근본적으로 빨라지지 않았습니다. 다만 "기다릴 필요 없는 작업을 순서대로 기다리는 구조" 자체는 확실히 사라졌고, 그 대신 종합·분석·구현 구간에서 새로운 순차 병목이 드러났습니다. 다음에 비슷한 멀티소스 조사형 과제를 만나면, 인터뷰뿐 아니라 종합·분석까지 트랙을 더 세밀하게 나눠야 한다는 게 이번에 확인한 숙제입니다.</p>
+    </section>
+
+    <div class="boundary-box">
+      <b>이 문서의 경계</b> — 1, 2(병렬 인터뷰), 4(종합 단계 병목), 5(연동 과정에서 배운 것), 6(실제 운영한 오케스트레이션 구조)장은 이번에 직접 운영하고 확인한 사실입니다. 3장의 판정 로직 데모는 실제 시스템 프롬프트의 규칙을 코드로 재현한 것으로, 외부 AI를 호출하지 않는 규칙 기반 시뮬레이션입니다. 대회 시나리오의 구체적인 사실(인물·수치·문서 내용)은 많은 참가자가 공유하는 동일 과제이므로 이 글에 담지 않았습니다.
+    </div>
+  </main>
+
+  
+
+  <footer>
+    <a href="mailto:happyday7190@gmail.com">Email</a>
+    <a href="../etc/files/resume.html" target="_blank" rel="noopener">Resume 다운로드</a>
+  </footer>
+
+  <script>
+  (function(){
+    var SCENARIOS = [{"label":"수령한 상품이 상했어요","userMsg":"방금 받은 상품 상자를 열어보니 안쪽이 물러지고 냄새가 나요. 환불해주세요.","trace":[{"step":"1단계 — 손해배상·분쟁 여부","result":"해당 없음","pass":true},{"step":"2단계 — 대외공개·안전·법률 판단 필요 여부","result":"해당 없음","pass":true},{"step":"3단계 — 권한 내 처리 가능 여부","result":"위생 위해 하자, 한도 이내 → 직접 처리 가능","pass":true}],"lane":1,"botMsg":"확인했습니다. 상한 상품은 드시지 말고 폐기해 주세요. 반송하지 않으셔도 됩니다. 환불은 원래 결제하신 수단으로 처리해 드릴게요. 접수 완료했습니다."},{"label":"다음에도 무료배송 해주세요","userMsg":"이번엔 넘어가 주시는 거고, 다음 주문부터는 계속 무료배송 해주실 거죠?","trace":[{"step":"절대원칙 검사 — 조건 없는 미래 약속(선약속)","result":"위반 — 즉시 차단","pass":false}],"lane":0,"botMsg":"이번 건에 대한 처리는 도와드릴 수 있지만, 앞으로의 배송비를 계속 면제해 드리겠다는 약속은 제가 드릴 수 없는 부분입니다. 대신 이번 불편에 대해 다음 주문에 쓸 수 있는 배송비 쿠폰을 안내드릴게요."},{"label":"환불 금액이 큰 경우","userMsg":"주문한 상품 전체가 상태가 안 좋아서 전액 환불을 받고 싶어요. 금액이 꽤 커요.","trace":[{"step":"1단계 — 손해배상·분쟁 여부","result":"해당 없음","pass":true},{"step":"2단계 — 대외공개·안전·법률 판단 필요 여부","result":"해당 없음","pass":true},{"step":"3단계 — 권한 내 처리 가능 여부","result":"환불 금액이 처리 한도 초과 → 직접 처리 불가","pass":false}],"lane":2,"botMsg":"말씀해주신 내용은 제가 바로 결정할 수 있는 범위를 넘어서, 담당자에게 바로 넘겨 두었습니다. 접수번호를 안내드리고, 영업일 기준 3일 내로 담당자가 회신드릴 예정입니다. 그 안에 연락이 없으면 이 접수번호로 다시 말씀해 주세요."},{"label":"현장(오프라인) 구매 상품 문의","userMsg":"지난주 지역 행사 매대에서 직접 사 간 상품인데, 여기서 환불 문의해도 되나요?","trace":[{"step":"절대원칙 검사 — 처리 범위(온라인 주문 건만 처리)","result":"온라인몰 주문이 아님 — 범위 밖","pass":false}],"lane":-1,"botMsg":"온라인몰을 통한 주문이 아닌 현장 구매 상품은 이 채널에서 조회·처리가 어렵습니다. 구매하신 현장(판매처)으로 문의해 주시면 더 정확히 안내받으실 수 있어요."},{"label":"예전에 약속받았다는 주장","userMsg":"저번에 상담했을 때 분명히 다음 주문은 서비스로 해준다고 하셨는데 왜 지금 안 된다는 거예요?","trace":[{"step":"절대원칙 검사 — 과거 약속 주장","result":"상담 이력 조회 필요","pass":null},{"step":"이력 조회 결과","result":"일치하는 기록 없음","pass":false}],"lane":0,"botMsg":"말씀하신 내용을 상담 이력에서 확인해봤는데, 일치하는 기록을 찾지 못했습니다. 혼선을 드려 죄송하지만 그 약속은 이행해 드리기 어렵고, 지금 불편을 드린 점에 대해서는 별도로 보상을 안내드릴게요."},{"label":"담당자가 알아도 추측해서 답하면 안 되는 질문","userMsg":"제 문의를 처리한 직원분 이름이랑 직접 연락할 수 있는 번호 알려주세요.","trace":[{"step":"절대원칙 검사 — 추측 금지 항목(개인 식별정보 요구)","result":"지식베이스에 없음 — 추측 응답 차단","pass":false}],"lane":2,"botMsg":"담당자 개인 연락처는 안내드릴 수 없는 정보라, 확인이 필요한 부분은 담당자에게 바로 이관해 드렸습니다. 접수번호로 진행 상황을 다시 확인하실 수 있어요."}];
+    var chatEl = document.getElementById('demoChat');
+    var traceEl = document.getElementById('demoTrace');
+    var qEl = document.getElementById('demoQuestions');
+    var btns = [];
+
+    function esc(s){
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    function laneLabel(lane){
+      if (lane === 1) return '레인1 — 직접 처리';
+      if (lane === 2) return '레인2 — 담당자 이관';
+      if (lane === -1) return '처리 범위 밖 — 안내 후 종료';
+      return '즉시 차단 — 원칙 위반';
+    }
+
+    function render(scenario){
+      chatEl.innerHTML = '';
+      traceEl.innerHTML = '<div class="demo-trace-title">판정 과정</div>';
+      btns.forEach(function(b){ b.disabled = true; });
+
+      var userBubble = document.createElement('p');
+      userBubble.className = 'demo-msg user';
+      userBubble.textContent = scenario.userMsg;
+      chatEl.appendChild(userBubble);
+
+      var delay = 200;
+      scenario.trace.forEach(function(t, i){
+        setTimeout(function(){
+          var row = document.createElement('div');
+          row.className = 'demo-trace-step';
+          row.style.animationDelay = '0s';
+          var iconClass = t.pass === true ? 'pass' : (t.pass === false ? 'fail' : 'check');
+          var iconText = t.pass === true ? '✓' : (t.pass === false ? '!' : '·');
+          row.innerHTML = '<span class="demo-trace-icon ' + iconClass + '">' + iconText + '</span>' +
+            '<span class="demo-trace-text"><b>' + esc(t.step) + '</b><span>' + esc(t.result) + '</span></span>';
+          traceEl.appendChild(row);
+        }, delay);
+        delay += 420;
+      });
+
+      setTimeout(function(){
+        var laneRow = document.createElement('div');
+        laneRow.className = 'demo-trace-lane lane-' + scenario.lane;
+        laneRow.textContent = '→ ' + laneLabel(scenario.lane);
+        traceEl.appendChild(laneRow);
+      }, delay);
+      delay += 300;
+
+      setTimeout(function(){
+        var botBubble = document.createElement('p');
+        botBubble.className = 'demo-msg bot';
+        botBubble.textContent = scenario.botMsg;
+        chatEl.appendChild(botBubble);
+        btns.forEach(function(b){ b.disabled = false; });
+      }, delay);
+    }
+
+    SCENARIOS.forEach(function(scenario){
+      var btn = document.createElement('button');
+      btn.className = 'demo-q-btn';
+      btn.type = 'button';
+      btn.textContent = scenario.label;
+      btn.addEventListener('click', function(){ btns.forEach(function(b){ b.classList.remove('active-choice'); }); btn.classList.add('active-choice'); render(scenario); });
+      qEl.appendChild(btn);
+      btns.push(btn);
+    });
+  })();
+  </script>
+
+  <script>
+  (function(){
+    var rows = document.querySelectorAll('#ktList .kt-row');
+    var convos = document.querySelectorAll('.kt-convo');
+    var titleEl = document.getElementById('ktTitle');
+    var captionEl = document.getElementById('ktCaption');
+    var CAPTIONS = {
+  "delivery": "11회 질문 중 7건이 '책임 구간을 어떻게 가르는지'로 이어졌고, 그 과정에서 전체 판정 로직의 핵심 분기(배송 구간 vs 운영 구간)가 드러났습니다.",
+  "approver": "최종 승인권자의 답변은 구체적인 처리 기준보다 '거부 사유'를 먼저 드러냈고, 이게 절대원칙 검사(선약속·추측응답 금지)의 설계 근거가 됐습니다.",
+  "event": "질문을 더 던져도 '제 담당이 아니다'라는 답이 반복돼, 이 담당자의 권한 범위가 예약 접수에 한정된다는 게 빠르게 확인됐습니다.",
+  "promo": "질문 2회로 대화가 짧게 끝났는데도, '게시물과 시스템이 다르면 시스템이 맞다'는 원칙 하나는 명확하게 나와서 판정 로직에 그대로 반영됐습니다.",
+  "supplier": "공급처 담당자는 문서는 바로 공유했지만 책임 범위는 '계약서를 봐야 한다'며 즉답을 피해, 이 영역은 지식베이스에 '확인 필요'로 남겨뒀습니다.",
+  "production": "생산 담당자와의 대화에서 '맛'이라는 주관적 신고가 생산 기록으로는 판정 불가능하다는 게 드러나, 그 유형을 절대원칙의 추측응답 금지 항목으로 분류하는 근거가 됐습니다.",
+  "operator": "실제로 1:1 채널 대화로 캐낸 정보를 재연한 화면입니다. 이름·대화 내용은 모두 익명화·재구성했습니다. 왼쪽 목록에서 담당자를 눌러보세요."
+};
+    var DEFAULT_CAPTION = "실제로 1:1 채널 대화로 캐낸 정보를 재연한 화면입니다. 이름\u00b7대화 내용은 모두 익명화\u00b7재구성했습니다. 왼쪽 목록에서 담당자를 눌러보세요.";
+
+    window.ktSwitch = function(slug){
+      rows.forEach(function(row){
+        row.classList.toggle('active', row.getAttribute('data-convo') === slug);
+      });
+      convos.forEach(function(c){
+        c.classList.toggle('active', c.getAttribute('data-convo') === slug);
+      });
+      if (titleEl) {
+        var activeRow = document.querySelector('#ktList .kt-row[data-convo="' + slug + '"] .kt-name');
+        titleEl.textContent = activeRow ? activeRow.textContent : '마을 관계자 대화';
+      }
+      if (captionEl) {
+        captionEl.textContent = CAPTIONS[slug] || DEFAULT_CAPTION;
+      }
+    };
+  })();
+  </script>
+  <script>
+  (function(){
+    var figures = document.querySelectorAll(".handdrawn-figure");
+    figures.forEach(function(fig){
+      var svg = fig.querySelector(".handdrawn-svg");
+      if (!svg) return;
+      var els = svg.querySelectorAll("path, ellipse, text");
+      els.forEach(function(el, i){ el.style.animationDelay = (i * 28) + "ms"; });
+    });
+    if (!("IntersectionObserver" in window)) {
+      figures.forEach(function(fig){ fig.classList.add("in-view"); });
+      return;
+    }
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          entry.target.classList.add("in-view");
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.25 });
+    figures.forEach(function(fig){ obs.observe(fig); });
+  })();
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+

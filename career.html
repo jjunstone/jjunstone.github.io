@@ -31,7 +31,7 @@
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:18px 32px;
+    padding:26px 32px;
     background:rgba(255,255,255,.82);
     backdrop-filter:blur(14px) saturate(140%);
     -webkit-backdrop-filter:blur(14px) saturate(140%);
@@ -41,16 +41,16 @@
   .topbar-brand{
     font-weight:800;
     text-decoration:none;
-    font-size:.98rem;
+    font-size:1.2rem;
     letter-spacing:.02em;
     color:var(--accent);
   }
-  .topbar-links{ display:flex; align-items:center; gap:14px; }
+  .topbar-links{ display:flex; align-items:center; gap:18px; }
   .topbar-links a{
     position:relative;
     color:var(--ink-soft);
     text-decoration:none;
-    font-size:.88rem;
+    font-size:1rem;
     font-weight:600;
   }
   .topbar-links a:not(.topbar-btn)::after{
@@ -279,7 +279,7 @@
   <div class="topbar">
     <a class="topbar-brand" href="./index.html" title="홈으로 돌아가기">이준석</a>
     <div class="topbar-links">
-      <a href="./azure-knowledge-platform/projects.html">프로젝트</a>
+      <a href="./portfolio/projects.html">프로젝트</a>
       <a class="topbar-btn" href="mailto:happyday7190@gmail.com">✉ Email</a>
       <a class="topbar-btn primary" href="./etc/files/resume.html" target="_blank" rel="noopener">⬇ PDF 다운로드</a>
     </div>
@@ -287,14 +287,14 @@
 
   <main>
     <p class="page-eyebrow">Career</p>
-    <h1 class="page-title">어떻게 살아왔는가</h1>
-    <p class="page-lead">기업 내부 IT 인프라와 보안 시스템을 운영하며, 운영 과정에서 발견한 문제를 코드와 도구로 개선해 왔습니다. 인프라 운영을 기반으로 권한관리 시스템 개발, 업무 자동화, 클라우드 기반 업무 플랫폼 운영까지 경험을 확장하고 있습니다.</p>
+    <h1 class="page-title">운영의 병목을 코드와 자동화로 뚫는 엔지니어</h1>
+    <p class="page-lead">법무법인 인프라보안팀에서 사내 핵심 IT 인프라와 하이브리드 클라우드(AD·Entra ID·M365)를 운영하고 있습니다. 정해진 매뉴얼만 따르기보다, 현업과 운영팀이 겪는 반복 업무와 병목을 직접 코드(PowerShell·SQL·Python)와 자동화 워크플로우로 해결해 왔습니다. 레거시 온프레미스 환경부터 클라우드·사내 생성형 AI 플랫폼까지, 조직의 업무 방식을 실제로 바꾸는 실전형 인프라·자동화 엔지니어입니다.</p>
     <div class="focus-tags">
-      <span>Infrastructure</span>
-      <span>Identity</span>
-      <span>System Development</span>
-      <span>Automation</span>
-      <span>Cloud &amp; AI</span>
+      <span>하이브리드 인프라(AD·Entra)</span>
+      <span>사내 시스템 개발</span>
+      <span>보안·운영 자동화</span>
+      <span>M365·AI 플랫폼</span>
+      <span>실전형 메이커</span>
     </div>
 
     <p class="section-label">Career Experience</p>
@@ -306,59 +306,40 @@
           <p class="timeline-org">법무법인(유) 율촌 · 전산보안실 인프라보안팀</p>
 
           <div class="role-block">
-            <p class="role-block-title">Infrastructure &amp; Hybrid Identity</p>
-            <p>Windows Server, Active Directory, DNS, DHCP, GPO, VMware/vSphere 기반 사내 인프라를 운영하고 Entra Connect, PHS, Conditional Access, PIM을 포함한 하이브리드 ID 환경을 관리합니다. 회의실 PC 중앙 관리를 위한 별도 AD 포리스트 구성과 DMZ 네트워크 연동도 수행했습니다.</p>
+            <p class="role-block-title">하이브리드 인프라 및 ID 아키텍처 운영</p>
+            <p>Windows Server, Active Directory, DNS·DHCP·GPO, VMware/vSphere 기반의 전사 온프레미스 인프라를 안정적으로 운영하며, Entra Connect·PHS·조건부 액세스(Conditional Access)·PIM을 연계한 하이브리드 ID 거버넌스를 관리합니다. 보안 분리가 필요한 회의실 PC의 중앙 통제를 위해 별도 AD 포리스트를 구축하고 DMZ 네트워크 연동까지 직접 설계·구축했습니다.</p>
           </div>
 
           <div class="role-block">
-            <p class="role-block-title">System Development &amp; Access Governance</p>
-            <p>Classic ASP·MSSQL·PowerShell을 활용해 권한관리 및 운영 시스템을 개발·개선합니다. 방화벽 정책 예외 신청·승인 페이지의 데이터 구조와 화면을 구현하고, AD 그룹 기반 접근 권한 관리와 DLP USB 예외 처리 시스템을 운영합니다.</p>
+            <p class="role-block-title">사내 권한관리·예외승인 시스템 직접 개발</p>
+            <p>수기·메일로 처리되던 운영 병목을 없애기 위해 Classic ASP·MSSQL·PowerShell로 사내 운영 도구를 직접 개발·고도화했습니다. 방화벽 정책 예외 신청·승인 웹 페이지와 DB 구조를 구현하고, AD 그룹 기반 접근 권한 라이프사이클 관리 및 DLP USB 예외 처리 시스템을 운영하고 있습니다.</p>
           </div>
 
           <div class="role-block">
-            <p class="role-block-title">Automation &amp; Operational Reliability</p>
-            <p>PowerShell로 ISO 27001 보안 점검 항목 약 84개를 자동화했습니다. 인증 갱신 관련 실무와 증적 수집·취약점 진단 조율에 참여하고, Power Automate 기반 업무 흐름 개선, WSUS·IIS 오류 분석, SIEM 이전에 따른 대시보드 쿼리 수정을 수행합니다.</p>
+            <p class="role-block-title">보안 점검 및 운영 워크플로우 자동화</p>
+            <p>ISO 27001 인증 심사에 필요한 보안 점검 항목 약 84개를 PowerShell 스크립트로 자동화해 수작업 점검 부담과 휴먼 에러를 줄였습니다. 또한 Power Automate 기반의 사내 업무 흐름 개선, WSUS·IIS 장애 원인 분석, SIEM 솔루션 이전에 따른 대시보드 쿼리 마이그레이션을 수행했습니다.</p>
           </div>
 
           <div class="role-block">
-            <p class="role-block-title">Cloud &amp; AI Workplace</p>
-            <p>Copilot Studio·Azure OpenAI·SharePoint·Entra SSO 기반 사내 AI 업무지원 플랫폼을 운영·개선하며, RAG 구조와 사내 지식 검색을 실무 환경에 적용하는 과정을 경험했습니다.</p>
+            <p class="role-block-title">사내 생성형 AI 및 M365 업무 플랫폼 구축·운영</p>
+            <p>Copilot Studio·Azure OpenAI·SharePoint·Entra SSO를 결합한 사내 AI 업무지원 플랫폼을 운영·개선하며, 내부 보안 정책을 준수하는 환경에서 RAG 기반 사내 지식 검색 구조를 실무에 안착시켰습니다.</p>
           </div>
 
           <p class="stack-note"><strong>주요 기술</strong> &nbsp;Windows Server · AD DS · Entra ID · VMware/vSphere · PowerShell · Classic ASP · VBScript · MSSQL · Power Automate · Palo Alto · NAC · ChakraMax · Azure OpenAI</p>
         </div>
       </div>
+    </div>
 
+    <p class="section-label">Maker &amp; Business Experience</p>
+    <div class="timeline">
       <div class="timeline-item">
         <div class="timeline-period">2023.06 –<br>2024.04</div>
         <div>
-          <h2 class="timeline-role">온라인 스토어 운영</h2>
-          <p class="timeline-org">개인사업 · 약 1년</p>
+          <h2 class="timeline-role">온라인 스토어 창업 및 운영 자동화 도구 개발</h2>
+          <p class="timeline-org">1인 사업</p>
           <ul class="timeline-list">
-            <li>온라인 스토어를 직접 구축·운영하고, 주문·재고 관리, 상품 등록 및 데이터 가공, 매출·운영 데이터 분석, 관리자 웹 도구를 개발했습니다. 직접 코딩과 AI 코딩 도구를 함께 활용해 기능을 구현·수정하고 오류를 개선했습니다</li>
-            <li>Python·OpenAI API·FAISS 기반 RAG 챗봇을 구현해 상품·배송·교환 문의 대응을 지원했습니다</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-period">2023.07 –<br>2023.12</div>
-        <div>
-          <h2 class="timeline-role">IT Infrastructure Intern</h2>
-          <p class="timeline-org">㈜딥노이드 · AI연구교육팀 · 5개월</p>
-          <ul class="timeline-list">
-            <li>AI 모델 학습용 이미지 데이터 수집·분류 및 모델 튜닝을 수행하고, Java·Android 기반 프로토타입 개발을 경험했습니다</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="timeline-item">
-        <div class="timeline-period">2020.09 –<br>2020.12</div>
-        <div>
-          <h2 class="timeline-role">IT Support Intern</h2>
-          <p class="timeline-org">㈜효성ITX · 행정안전부 23팀 파견 · 3개월</p>
-          <ul class="timeline-list">
-            <li>공공기관 빅데이터 포털 운영을 지원하고 공공데이터 API 연동 상태를 점검했습니다</li>
+            <li>직접 온라인 스토어를 구축·운영하며 발생하는 주문·재고·매출 데이터 처리와 CS 병목을 해결하기 위해 관리자 웹 도구를 직접 개발했습니다</li>
+            <li>반복적인 상품·배송·교환 문의를 줄이기 위해 Python·OpenAI API·FAISS 기반의 RAG 고객 응대 챗봇을 구현해 실무에 투입했습니다</li>
           </ul>
         </div>
       </div>
@@ -366,10 +347,35 @@
       <div class="timeline-item">
         <div class="timeline-period">2023 –<br>현재</div>
         <div>
-          <h2 class="timeline-role">주택임대사업자 운영</h2>
-          <p class="timeline-org">개인사업</p>
+          <h2 class="timeline-role">주택임대사업자 운영 및 계약 관리 프로그램 제작</h2>
+          <p class="timeline-org">개인 자산 운영</p>
           <ul class="timeline-list">
-            <li>임대차 계약 관리를 위한 프로그램을 직접 만들어 개인적으로 운영하고 있습니다</li>
+            <li>임대차 계약 일정, 정산, 이력 관리를 수기로 관리하는 불편함을 줄이기 위해 전용 계약 관리 프로그램을 직접 설계·개발해 현재까지 실사용하고 있습니다</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <p class="section-label">Internship Experience</p>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-period">2023.07 –<br>2023.12</div>
+        <div>
+          <h2 class="timeline-role">AI연구교육팀 인턴</h2>
+          <p class="timeline-org">㈜딥노이드 · 5개월</p>
+          <ul class="timeline-list">
+            <li>AI 모델 학습용 이미지 데이터 수집·분류 및 모델 튜닝을 수행하고, Java·Android 기반 서비스 프로토타입 개발에 참여했습니다</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-period">2020.09 –<br>2020.12</div>
+        <div>
+          <h2 class="timeline-role">행정안전부 파견 IT 운영 지원 인턴</h2>
+          <p class="timeline-org">㈜효성ITX · 3개월</p>
+          <ul class="timeline-list">
+            <li>행정안전부 23팀에 파견되어 공공기관 빅데이터 포털 운영을 지원하고 공공데이터 API 연동 상태를 상시 점검했습니다</li>
           </ul>
         </div>
       </div>
@@ -388,7 +394,8 @@
       <div class="timeline-item">
         <div class="timeline-period">군 복무</div>
         <div>
-          <h2 class="timeline-role">데이터센터·인프라 기초 경험</h2>
+          <h2 class="timeline-role">정보통신반 전산병</h2>
+          <p class="timeline-org">전산실·데이터센터·전산 인프라 운영 기초 경험</p>
         </div>
       </div>
     </div>
