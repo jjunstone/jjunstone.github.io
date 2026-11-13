@@ -204,8 +204,8 @@
     font-size:.84rem;
     color:var(--ink-soft);
     white-space:nowrap;
+    font-weight:600;
   }
-  .notes-count b{ color:var(--navy); }
 
   .view-toggle{
     display:inline-flex;
@@ -278,15 +278,6 @@
     color:var(--ink);
     margin:0 0 8px;
     line-height:1.42;
-  }
-  .post-tldr{
-    font-size:.82rem;
-    font-weight:600;
-    color:var(--navy);
-    background:var(--blue-soft);
-    padding:6px 10px;
-    border-radius:6px;
-    margin:0 0 8px;
   }
   .post-excerpt{
     font-size:.86rem;
@@ -389,28 +380,9 @@
   .markdown-body{
     font-size:.95rem;
     line-height:1.75;
-    color:#1e293b;
+    color:var(--ink);
     white-space:pre-wrap;
     word-break:keep-all;
-  }
-  .markdown-body .sec-h{
-    display:block;
-    font-size:1.1rem;
-    font-weight:800;
-    color:var(--navy);
-    margin:20px 0 6px;
-    padding-bottom:4px;
-    border-bottom:1px solid var(--line);
-  }
-  .markdown-body pre{
-    font-family:var(--font-mono);
-    font-size:.83rem;
-    background:#0f172a;
-    color:#f8fafc;
-    padding:14px 16px;
-    border-radius:8px;
-    overflow-x:auto;
-    margin:10px 0;
   }
   .modal-BottomNav{
     display:flex; justify-content:space-between; gap:12px;
@@ -451,12 +423,18 @@
     </section>
 
     <div class="blog-layout">
-      <aside class="blog-sidebar" id="sidebarNav">
+      <aside class="blog-sidebar">
         <div class="sidebar-group">
           <div class="sidebar-heading">Overview</div>
-          <div class="sidebar-nav">
-            <button type="button" class="cat-btn active" data-filter="ALL"><span>전체 아티클</span><span class="cat-count">-</span></button>
-          </div>
+          <div class="sidebar-nav" id="navOverview"></div>
+        </div>
+        <div class="sidebar-group">
+          <div class="sidebar-heading">Engineering</div>
+          <div class="sidebar-nav" id="navTech"></div>
+        </div>
+        <div class="sidebar-group">
+          <div class="sidebar-heading">Perspective</div>
+          <div class="sidebar-nav" id="navInsight"></div>
         </div>
       </aside>
 
@@ -476,7 +454,7 @@
           <span>GitHub(jjunstone/SSD)에서 이슈를 불러오는 중…</span>
         </div>
         <div class="notes-state" id="notesError">
-          <strong id="notesErrorTitle" style="color:#dc2626;">포스트를 불러오지 못했습니다.</strong>
+          <strong id="notesErrorTitle">포스트를 불러오지 못했습니다.</strong>
           <span id="notesErrorMsg"></span>
         </div>
         <div class="notes-state" id="notesEmpty">
@@ -519,11 +497,13 @@
 
   <script>
   (function(){
-    var REPO = "jjunstone/SSD";
-    var INSIGHT_KEYWORDS = ["insight", "etc", "생각", "일상", "유튜브", "독서", "축구", "경제", "부동산"];
+    var API_URL = "https://api.github.com/repos/jjunstone/SSD/issues?state=all&per_page=100";
+    var INSIGHT_WORDS = ["insight", "etc", "생각", "일상", "유튜브", "독서", "축구", "경제", "부동산"];
 
     var board = document.getElementById("notesBoard");
-    var sidebarNav = document.getElementById("sidebarNav");
+    var navOverview = document.getElementById("navOverview");
+    var navTech = document.getElementById("navTech");
+    var navInsight = document.getElementById("navInsight");
     var loadingEl = document.getElementById("notesLoading");
     var errorEl = document.getElementById("notesError");
     var errorTitleEl = document.getElementById("notesErrorTitle");
@@ -551,82 +531,100 @@
     var activeFilter = "ALL";
     var currentModalIndex = -1;
 
-    function esc(s){
-      return String(s == null ? "" : s)
-        .replace(/&/g, "&")
-        .replace(/</g, "<")
-        .replace(/>/g, ">")
-        .replace(/"/g, """);
-    }
-
     function formatDate(iso){
-      var d = new Date(iso);
-      if (isNaN(d.getTime())) return "";
-      return d.getFullYear() + "." + String(d.getMonth() + 1).padStart(2, "0") + "." + String(d.getDate()).padStart(2, "0");
+      if (!iso) return "";
+      return String(iso).slice(0, 10).split("-").join(".");
     }
 
     function isInsightLabel(name){
       var lower = String(name || "").toLowerCase();
-      return INSIGHT_KEYWORDS.some(function(k){ return lower.indexOf(k) !== -1; });
+      for (var i = 0; i < INSIGHT_WORDS.length; i++) {
+        if (lower.indexOf(INSIGHT_WORDS[i]) !== -1) return true;
+      }
+      return false;
     }
 
-    function formatBodyHtml(body){
-      var html = esc(body || "(내용 없음)");
-      html = html.replace(/```([\s\S]*?)```/g, function(_, code){
-        return "<pre>" + code.trim() + "</pre>";
+    function cleanTitleText(t){
+      var s = String(t || "");
+      if (s.indexOf("질문:") === 0) {
+        return s.slice(3).trim();
+      }
+      return s;
+    }
+
+    function createCatBtn(label, count, filterVal){
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "cat-btn" + (activeFilter === filterVal ? " active" : "");
+      btn.setAttribute("data-filter", filterVal);
+
+      var spanName = document.createElement("span");
+      spanName.textContent = label;
+
+      var spanCount = document.createElement("span");
+      spanCount.className = "cat-count";
+      spanCount.textContent = String(count);
+
+      btn.appendChild(spanName);
+      btn.appendChild(spanCount);
+      btn.addEventListener("click", function(){
+        activeFilter = filterVal;
+        renderSidebar();
+        renderBoard();
       });
-      html = html.replace(/^#{1,3}\s+(.*)$/gm, '<span class="sec-h">$1</span>');
-      return html;
+      return btn;
     }
 
     function renderSidebar(){
+      navOverview.innerHTML = "";
+      navTech.innerHTML = "";
+      navInsight.innerHTML = "";
+
       var techCounts = {};
       var insightCounts = {};
       var techTotal = 0;
       var insightTotal = 0;
 
-      allNotes.forEach(function(n){
-        var hasInsight = n.labels.some(function(l){ return isInsightLabel(l.name); });
-        if (hasInsight) insightTotal++; else techTotal++;
-
-        n.labels.forEach(function(l){
-          if (isInsightLabel(l.name)) {
-            insightCounts[l.name] = (insightCounts[l.name] || 0) + 1;
+      for (var i = 0; i < allNotes.length; i++) {
+        var n = allNotes[i];
+        var hasInsight = false;
+        for (var j = 0; j < n.labels.length; j++) {
+          var lname = n.labels[j].name;
+          if (isInsightLabel(lname)) {
+            hasInsight = true;
+            insightCounts[lname] = (insightCounts[lname] || 0) + 1;
           } else {
-            techCounts[l.name] = (techCounts[l.name] || 0) + 1;
+            techCounts[lname] = (techCounts[lname] || 0) + 1;
           }
-        });
-      });
+        }
+        if (hasInsight) insightTotal++; else techTotal++;
+      }
 
-      var html = '';
-      html += '<div class="sidebar-group"><div class="sidebar-heading">Overview</div><div class="sidebar-nav">';
-      html += '<button type="button" class="cat-btn' + (activeFilter === "ALL" ? " active" : "") + '" data-filter="ALL"><span>전체 아티클</span><span class="cat-count">' + allNotes.length + '</span></button>';
-      html += '</div></div>';
+      navOverview.appendChild(createCatBtn("전체 아티클", allNotes.length, "ALL"));
+      navTech.appendChild(createCatBtn("기술 노트 전체", techTotal, "TECH_ALL"));
 
-      html += '<div class="sidebar-group"><div class="sidebar-heading">Engineering</div><div class="sidebar-nav">';
-      html += '<button type="button" class="cat-btn' + (activeFilter === "TECH_ALL" ? " active" : "") + '" data-filter="TECH_ALL"><span>기술 노트 전체</span><span class="cat-count">' + techTotal + '</span></button>';
-      Object.keys(techCounts).forEach(function(name){
-        var act = activeFilter === "LABEL:" + name ? " active" : "";
-        html += '<button type="button" class="cat-btn' + act + '" data-filter="LABEL:' + esc(name) + '"><span># ' + esc(name) + '</span><span class="cat-count">' + techCounts[name] + '</span></button>';
-      });
-      html += '</div></div>';
+      var techKeys = Object.keys(techCounts);
+      for (var k = 0; k < techKeys.length; k++) {
+        var tName = techKeys[k];
+        navTech.appendChild(createCatBtn("# " + tName, techCounts[tName], "LABEL:" + tName));
+      }
 
-      html += '<div class="sidebar-group"><div class="sidebar-heading">Perspective</div><div class="sidebar-nav">';
-      html += '<button type="button" class="cat-btn' + (activeFilter === "INSIGHT_ALL" ? " active" : "") + '" data-filter="INSIGHT_ALL"><span>인사이트 전체</span><span class="cat-count">' + insightTotal + '</span></button>';
-      Object.keys(insightCounts).forEach(function(name){
-        var act = activeFilter === "LABEL:" + name ? " active" : "";
-        html += '<button type="button" class="cat-btn' + act + '" data-filter="LABEL:' + esc(name) + '"><span># ' + esc(name) + '</span><span class="cat-count">' + insightCounts[name] + '</span></button>';
-      });
-      html += '</div></div>';
-
-      sidebarNav.innerHTML = html;
+      navInsight.appendChild(createCatBtn("인사이트 전체", insightTotal, "INSIGHT_ALL"));
+      var inKeys = Object.keys(insightCounts);
+      for (var m = 0; m < inKeys.length; m++) {
+        var iName = inKeys[m];
+        navInsight.appendChild(createCatBtn("# " + iName, insightCounts[iName], "LABEL:" + iName));
+      }
     }
 
-    function render(){
+    function renderBoard(){
       var q = searchInput.value.trim().toLowerCase();
+      filteredNotes = [];
 
-      filteredNotes = allNotes.filter(function(n){
+      for (var i = 0; i < allNotes.length; i++) {
+        var n = allNotes[i];
         var matchSector = true;
+
         if (activeFilter === "TECH_ALL") {
           matchSector = !n.labels.some(function(l){ return isInsightLabel(l.name); });
         } else if (activeFilter === "INSIGHT_ALL") {
@@ -635,60 +633,103 @@
           var target = activeFilter.slice(6);
           matchSector = n.labels.some(function(l){ return l.name === target; });
         }
-        var matchQuery = !q || (n.title + " " + n.body).toLowerCase().indexOf(q) !== -1;
-        return matchSector && matchQuery;
-      });
+
+        var combined = (n.title + " " + n.body).toLowerCase();
+        var matchQuery = !q || combined.indexOf(q) !== -1;
+
+        if (matchSector && matchQuery) {
+          filteredNotes.push(n);
+        }
+      }
+
+      board.innerHTML = "";
 
       if (filteredNotes.length === 0) {
-        board.innerHTML = "";
-        emptyMsgEl.textContent = allNotes.length === 0
-          ? "현재 jjunstone/SSD 레포지토리에 등록된 Issue가 0개입니다. 새 아티클을 작성해 보세요."
-          : "선택한 섹터나 검색어에 해당하는 아티클이 없습니다.";
         emptyEl.classList.add("show");
         countEl.textContent = "0개 아티클";
         return;
       }
 
       emptyEl.classList.remove("show");
-      countEl.innerHTML = "총 <b>" + filteredNotes.length + "</b>개 아티클";
+      countEl.textContent = "총 " + filteredNotes.length + "개 아티클";
 
-      board.innerHTML = filteredNotes.map(function(n, idx){
-        var cleanTitle = esc(n.title.replace(/^질문:\s*/, ""));
-        var labelsHtml = n.labels.map(function(l){
-          return '<span class="note-label-chip">#' + esc(l.name) + '</span>';
-        }).join("");
+      for (var idx = 0; idx < filteredNotes.length; idx++) {
+        var item = filteredNotes[idx];
+        var card = document.createElement("article");
+        card.className = "post-item";
 
-        return '<article class="post-item" data-index="' + idx + '" tabindex="0">' +
-          '<div class="post-meta">' +
-            '<span class="post-issue">#' + n.number + '</span>' +
-            '<span>' + formatDate(n.createdAt) + '</span>' +
-          '</div>' +
-          '<h3 class="post-title">' + cleanTitle + '</h3>' +
-          '<div class="post-excerpt">' + esc(n.body || "(내용 없음)") + '</div>' +
-          '<div class="post-footer">' +
-            '<div class="post-tags">' + labelsHtml + '</div>' +
-            '<span class="post-more">읽기 →</span>' +
-          '</div>' +
-        '</article>';
-      }).join("");
+        var meta = document.createElement("div");
+        meta.className = "post-meta";
+        var issueSpan = document.createElement("span");
+        issueSpan.className = "post-issue";
+        issueSpan.textContent = "#" + item.number;
+        var dateSpan = document.createElement("span");
+        dateSpan.textContent = formatDate(item.createdAt);
+        meta.appendChild(issueSpan);
+        meta.appendChild(dateSpan);
+
+        var h3 = document.createElement("h3");
+        h3.className = "post-title";
+        h3.textContent = cleanTitleText(item.title);
+
+        var excerpt = document.createElement("div");
+        excerpt.className = "post-excerpt";
+        excerpt.textContent = item.body || "(내용 없음)";
+
+        var footer = document.createElement("div");
+        footer.className = "post-footer";
+        var tagsWrap = document.createElement("div");
+        tagsWrap.className = "post-tags";
+        for (var t = 0; t < item.labels.length; t++) {
+          var chip = document.createElement("span");
+          chip.className = "note-label-chip";
+          chip.textContent = "#" + item.labels[t].name;
+          tagsWrap.appendChild(chip);
+        }
+        var moreSpan = document.createElement("span");
+        moreSpan.className = "post-more";
+        moreSpan.textContent = "읽기 →";
+
+        footer.appendChild(tagsWrap);
+        footer.appendChild(moreSpan);
+
+        card.appendChild(meta);
+        card.appendChild(h3);
+        card.appendChild(excerpt);
+        card.appendChild(footer);
+
+        (function(capturedIdx){
+          card.addEventListener("click", function(){
+            openModal(capturedIdx);
+          });
+        })(idx);
+
+        board.appendChild(card);
+      }
     }
 
-    function openModalByIndex(idx){
+    function openModal(idx){
       if (idx < 0 || idx >= filteredNotes.length) return;
       currentModalIndex = idx;
       var n = filteredNotes[idx];
 
       modalIssueNum.textContent = "#" + n.number;
       modalDate.textContent = formatDate(n.createdAt);
-      modalTitle.textContent = n.title.replace(/^질문:\s*/, "");
+      modalTitle.textContent = cleanTitleText(n.title);
       modalGithubLink.href = n.url;
-      modalTags.innerHTML = n.labels.map(function(l){
-        return '<span class="note-label-chip">#' + esc(l.name) + '</span>';
-      }).join("");
 
-      modalBody.innerHTML = formatBodyHtml(n.body);
+      modalTags.innerHTML = "";
+      for (var i = 0; i < n.labels.length; i++) {
+        var chip = document.createElement("span");
+        chip.className = "note-label-chip";
+        chip.textContent = "#" + n.labels[i].name;
+        modalTags.appendChild(chip);
+      }
+
+      modalBody.textContent = n.body || "(내용 없음)";
       prevNoteBtn.disabled = idx <= 0;
       nextNoteBtn.disabled = idx >= filteredNotes.length - 1;
+
       modal.classList.add("open");
       document.body.classList.add("modal-open");
       modalScroll.scrollTop = 0;
@@ -699,76 +740,58 @@
       document.body.classList.remove("modal-open");
     }
 
-    sidebarNav.addEventListener("click", function(e){
-      var btn = e.target.closest(".cat-btn");
-      if (!btn) return;
-      activeFilter = btn.getAttribute("data-filter") || "ALL";
-      renderSidebar();
-      render();
-    });
-
     viewToggle.addEventListener("click", function(e){
       var btn = e.target.closest(".view-btn");
       if (!btn) return;
-      viewToggle.querySelectorAll(".view-btn").forEach(function(b){ b.classList.remove("active"); });
+      var buttons = viewToggle.querySelectorAll(".view-btn");
+      for (var i = 0; i < buttons.length; i++) {
+        buttons[i].classList.remove("active");
+      }
       btn.classList.add("active");
       var mode = btn.getAttribute("data-view");
       board.className = "notes-board " + (mode === "grid" ? "grid-view" : "list-view");
     });
 
-    board.addEventListener("click", function(e){
-      var item = e.target.closest(".post-item");
-      if (!item) return;
-      openModalByIndex(Number(item.getAttribute("data-index")));
+    modalCloseBtn.addEventListener("click", closeModal);
+    modal.addEventListener("click", function(e){
+      if (e.target === modal) closeModal();
+    });
+    prevNoteBtn.addEventListener("click", function(){
+      if (currentModalIndex > 0) openModal(currentModalIndex - 1);
+    });
+    nextNoteBtn.addEventListener("click", function(){
+      if (currentModalIndex < filteredNotes.length - 1) openModal(currentModalIndex + 1);
     });
 
-    modalCloseBtn.addEventListener("click", closeModal);
-    modal.addEventListener("click", function(e){ if (e.target === modal) closeModal(); });
-    prevNoteBtn.addEventListener("click", function(){ if (currentModalIndex > 0) openModalByIndex(currentModalIndex - 1); });
-    nextNoteBtn.addEventListener("click", function(){ if (currentModalIndex < filteredNotes.length - 1) openModalByIndex(currentModalIndex + 1); });
+    searchInput.addEventListener("input", renderBoard);
 
-    searchInput.addEventListener("input", render);
-
-    fetch("https://api.github.com/repos/" + REPO + "/issues?state=all&per_page=100", {
-      headers: { "Accept": "application/vnd.github+json" }
-    })
+    fetch(API_URL)
       .then(function(res){
-        if (!res.ok) {
-          throw new Error("HTTP " + res.status);
-        }
+        if (!res.ok) throw new Error("HTTP " + res.status);
         return res.json();
       })
       .then(function(data){
-        allNotes = (Array.isArray(data) ? data : [])
-          .filter(function(n){ return !n.pull_request; })
-          .map(function(n){
-            return {
-              number: n.number,
-              title: n.title || "",
-              body: n.body || "",
-              url: n.html_url || ("https://github.com/" + REPO + "/issues/" + n.number),
-              labels: (n.labels || []).map(function(l){ return { name: l.name }; }),
-              createdAt: n.created_at
-            };
-          })
-          .sort(function(a, b){ return b.createdAt.localeCompare(a.createdAt); });
-
+        var list = Array.isArray(data) ? data : [];
+        allNotes = [];
+        for (var i = 0; i < list.length; i++) {
+          var item = list[i];
+          if (item.pull_request) continue;
+          allNotes.push({
+            number: item.number,
+            title: item.title || "",
+            body: item.body || "",
+            url: item.html_url || "",
+            labels: Array.isArray(item.labels) ? item.labels : [],
+            createdAt: item.created_at || ""
+          });
+        }
         loadingEl.classList.remove("show");
         renderSidebar();
-        render();
+        renderBoard();
       })
       .catch(function(err){
         loadingEl.classList.remove("show");
-        var msg = String(err && err.message ? err.message : "");
-        if (msg.indexOf("404") !== -1) {
-          errorTitleEl.textContent = "jjunstone/SSD 레포지토리를 찾을 수 없습니다 (HTTP 404)";
-          errorMsgEl.textContent = "SSD 레포지토리가 Private(비공개) 상태인지 확인해 주세요. GitHub Settings에서 Public으로 변경해야 웹페이지에서 불러올 수 있습니다.";
-        } else if (msg.indexOf("403") !== -1) {
-          errorTitleEl.textContent = "GitHub API 호출 횟수 제한 초과 (HTTP 403)";
-          errorMsgEl.textContent = "사내 공인 IP에서 시간당 호출 제한(60회)에 도달했습니다. 잠시 후 다시 시도해 주세요.";
-        } else {
-          errorMsgEl.textContent = "원인: " + msg;
-        }
+        errorMsgEl.textContent = String(err && err.message ? err.message : "네트워크 오류");
         errorEl.classList.add("show");
       });
   })();
