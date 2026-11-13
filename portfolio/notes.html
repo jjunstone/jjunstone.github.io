@@ -5,11 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Archive | 이준석</title>
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
-<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/static/pretendard.css">
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <style>
   :root{
     --ink:#0f172a;
@@ -22,7 +17,7 @@
     --blue-soft:#eff4fd;
     --bg-page:#f8fafc;
     --bg-card:#ffffff;
-    --font-main:"Pretendard","Gowun Dodum","Malgun Gothic",sans-serif;
+    --font-main:"Pretendard",-apple-system,BlinkMacSystemFont,"Malgun Gothic",sans-serif;
     --font-mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
   }
   *{ box-sizing:border-box; }
@@ -35,12 +30,10 @@
   }
   body.modal-open{ overflow:hidden; }
 
-  /* ── 상단 네비게이션 ── */
   .topbar{
     position:sticky; top:0; z-index:40;
-    background:rgba(255,255,255,.9);
-    backdrop-filter:blur(14px) saturate(140%);
-    -webkit-backdrop-filter:blur(14px) saturate(140%);
+    background:rgba(255,255,255,.92);
+    backdrop-filter:blur(12px);
     border-bottom:1px solid var(--line);
   }
   .topbar-inner{
@@ -55,29 +48,17 @@
     font-weight:800;
     text-decoration:none;
     font-size:1.18rem;
-    letter-spacing:.02em;
     color:var(--navy);
   }
-  .topbar-links{ display:flex; gap:26px; }
+  .topbar-links{ display:flex; gap:24px; }
   .topbar-links a{
-    position:relative;
     color:var(--ink-soft);
     text-decoration:none;
     font-size:.95rem;
     font-weight:600;
-    padding-bottom:2px;
   }
-  .topbar-links a::after{
-    content:"";
-    position:absolute; left:0; right:100%; bottom:-2px;
-    height:1.5px;
-    background:var(--navy);
-    transition:right .22s cubic-bezier(.4,0,.2,1);
-  }
-  .topbar-links a:hover::after{ right:0; }
   .topbar-links a:hover{ color:var(--navy); }
 
-  /* ── 메인 레이아웃 ── */
   main{
     max-width:1280px;
     margin:0 auto;
@@ -98,7 +79,7 @@
     display:inline-block;
     font-size:.73rem;
     font-weight:700;
-    letter-spacing:.14em;
+    letter-spacing:.12em;
     text-transform:uppercase;
     color:var(--navy);
     background:var(--blue-soft);
@@ -109,7 +90,6 @@
   .page-title{
     font-size:1.95rem;
     font-weight:800;
-    letter-spacing:-.02em;
     margin:0 0 6px;
   }
   .page-lead{
@@ -124,22 +104,15 @@
     font-weight:700;
     color:#ffffff;
     background:var(--navy);
-    border:1px solid var(--navy);
     border-radius:9px;
     padding:10px 16px;
     text-decoration:none;
     display:inline-flex;
     align-items:center;
     gap:6px;
-    transition:background .15s ease, transform .15s ease;
     white-space:nowrap;
   }
-  .btn-primary:hover{
-    background:#102a56;
-    transform:translateY(-1px);
-  }
 
-  /* ── 2단 구조: 섹터 2(사이드바) + 섹터 3(피드) ── */
   .blog-layout{
     display:grid;
     grid-template-columns:230px 1fr;
@@ -147,7 +120,6 @@
     align-items:start;
   }
 
-  /* 섹터 2: 사이드바 */
   .blog-sidebar{
     position:sticky;
     top:84px;
@@ -195,17 +167,9 @@
     align-items:center;
     justify-content:space-between;
     text-align:left;
-    transition:all .14s ease;
   }
-  .cat-btn:hover{
-    background:var(--bg-page);
-    color:var(--navy);
-  }
-  .cat-btn.active{
-    background:var(--blue-soft);
-    color:var(--navy);
-    font-weight:700;
-  }
+  .cat-btn:hover{ background:var(--bg-page); color:var(--navy); }
+  .cat-btn.active{ background:var(--blue-soft); color:var(--navy); font-weight:700; }
   .cat-count{
     font-family:var(--font-mono);
     font-size:.73rem;
@@ -214,12 +178,7 @@
     padding:1px 7px;
     border-radius:999px;
   }
-  .cat-btn.active .cat-count{
-    background:#ffffff;
-    color:var(--navy);
-  }
 
-  /* 섹터 3: 피드 툴바 & 보드 */
   .feed-toolbar{
     display:flex;
     align-items:center;
@@ -230,29 +189,16 @@
   .notes-search{
     flex:1;
     min-width:220px;
-    position:relative;
   }
   .notes-search input{
     width:100%;
-    padding:10px 36px 10px 36px;
+    padding:10px 14px;
     border:1px solid var(--line-strong);
     border-radius:10px;
     font:inherit;
     font-size:.88rem;
     color:var(--ink);
     background:var(--bg-card);
-  }
-  .notes-search input:focus{
-    outline:none;
-    border-color:var(--navy);
-    box-shadow:0 0 0 3px rgba(23,60,120,.1);
-  }
-  .notes-search-icon{
-    position:absolute; left:12px; top:50%;
-    transform:translateY(-50%);
-    color:var(--ink-faint);
-    font-size:.88rem;
-    pointer-events:none;
   }
   .notes-count{
     font-size:.84rem;
@@ -284,7 +230,6 @@
     color:#ffffff;
   }
 
-  /* 목록형 vs 카드형 */
   .notes-board.list-view{
     display:flex;
     flex-direction:column;
@@ -303,22 +248,18 @@
     border-radius:12px;
     padding:20px 22px;
     cursor:pointer;
-    transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+    transition:transform .16s ease, box-shadow .16s ease;
     display:flex;
     flex-direction:column;
   }
   .post-item:hover{
     transform:translateY(-2px);
     box-shadow:0 12px 24px -10px rgba(15,23,42,.1);
-    border-color:var(--line-strong);
-    border-left-color:var(--navy);
   }
-
   .post-meta{
     display:flex;
     align-items:center;
     justify-content:space-between;
-    gap:8px;
     font-size:.75rem;
     color:var(--ink-faint);
     margin-bottom:8px;
@@ -337,7 +278,6 @@
     color:var(--ink);
     margin:0 0 8px;
     line-height:1.42;
-    word-break:keep-all;
   }
   .post-tldr{
     font-size:.82rem;
@@ -347,18 +287,15 @@
     padding:6px 10px;
     border-radius:6px;
     margin:0 0 8px;
-    word-break:keep-all;
   }
   .post-excerpt{
     font-size:.86rem;
     line-height:1.62;
     color:var(--ink-soft);
     margin:0 0 14px;
-    display:-webkit-box;
-    -webkit-line-clamp:2;
-    -webkit-box-orient:vertical;
+    white-space:pre-line;
+    max-height:4.8em;
     overflow:hidden;
-    word-break:keep-all;
   }
   .post-footer{
     display:flex;
@@ -369,11 +306,7 @@
     padding-top:10px;
     border-top:1px solid var(--line);
   }
-  .post-tags{
-    display:flex;
-    gap:6px;
-    flex-wrap:wrap;
-  }
+  .post-tags{ display:flex; gap:6px; flex-wrap:wrap; }
   .note-label-chip{
     font-size:.72rem;
     font-weight:600;
@@ -385,43 +318,32 @@
   .post-more{
     font-size:.75rem;
     font-weight:700;
-    color:var(--ink-soft);
+    color:var(--navy);
     margin-left:auto;
   }
-  .post-item:hover .post-more{ color:var(--navy); }
 
-  /* 상태 표시 */
   .notes-state{
     display:none;
     align-items:center;
     justify-content:center;
     flex-direction:column;
-    gap:12px;
-    padding:72px 24px;
+    gap:10px;
+    padding:64px 24px;
     background:var(--bg-card);
     border:1px dashed var(--line-strong);
     border-radius:14px;
     color:var(--ink-soft);
     font-size:.92rem;
     text-align:center;
+    line-height:1.6;
   }
   .notes-state.show{ display:flex; }
-  .notes-spinner{
-    width:24px; height:24px;
-    border:2.5px solid var(--line);
-    border-top-color:var(--navy);
-    border-radius:50%;
-    animation:notes-spin .8s linear infinite;
-  }
-  @keyframes notes-spin{ to{ transform:rotate(360deg); } }
 
-  /* 아티클 모달 */
   .modal-backdrop{
     position:fixed;
     inset:0;
     z-index:100;
     background:rgba(15,23,42,.55);
-    backdrop-filter:blur(4px);
     display:none;
     align-items:center;
     justify-content:center;
@@ -435,7 +357,6 @@
     max-height:90vh;
     border-radius:16px;
     border:1px solid var(--line);
-    box-shadow:0 25px 50px -12px rgba(15,23,42,.28);
     display:flex;
     flex-direction:column;
     overflow:hidden;
@@ -448,42 +369,409 @@
     border-bottom:1px solid var(--line);
     background:var(--bg-page);
   }
-  .modal-topbar-left{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-size:.8rem;
-    color:var(--ink-soft);
-  }
+  .modal-topbar-left{ display:flex; align-items:center; gap:10px; font-size:.8rem; color:var(--ink-soft); }
   .modal-actions{ display:flex; align-items:center; gap:8px; }
   .modal-btn{
-    font:inherit;
-    font-size:.78rem;
-    font-weight:600;
-    color:var(--ink-soft);
-    background:var(--bg-card);
-    border:1px solid var(--line-strong);
-    border-radius:7px;
-    padding:6px 11px;
-    cursor:pointer;
-    text-decoration:none;
+    font:inherit; font-size:.78rem; font-weight:600; color:var(--ink-soft);
+    background:var(--bg-card); border:1px solid var(--line-strong);
+    border-radius:7px; padding:6px 11px; cursor:pointer; text-decoration:none;
   }
-  .modal-btn:hover{ border-color:var(--navy); color:var(--navy); background:var(--blue-soft); }
   .modal-close{
     font:inherit; font-size:1.1rem; color:var(--ink-soft);
-    background:transparent; border:none; width:32px; height:32px;
-    border-radius:8px; cursor:pointer;
+    background:transparent; border:none; width:32px; height:32px; cursor:pointer;
   }
   .modal-scroll{ padding:32px 36px 40px; overflow-y:auto; }
-  .modal-title{
-    font-size:1.55rem; font-weight:800; line-height:1.38;
-    margin:0 0 14px; word-break:keep-all;
-  }
+  .modal-title{ font-size:1.55rem; font-weight:800; line-height:1.38; margin:0 0 14px; }
   .modal-tags{
     display:flex; gap:6px; flex-wrap:wrap;
-    margin-bottom:24px; padding-bottom:18px; border-bottom:1px solid var(--line);
+    margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--line);
+  }
+  .markdown-body{
+    font-size:.95rem;
+    line-height:1.75;
+    color:#1e293b;
+    white-space:pre-wrap;
+    word-break:keep-all;
+  }
+  .markdown-body .sec-h{
+    display:block;
+    font-size:1.1rem;
+    font-weight:800;
+    color:var(--navy);
+    margin:20px 0 6px;
+    padding-bottom:4px;
+    border-bottom:1px solid var(--line);
+  }
+  .markdown-body pre{
+    font-family:var(--font-mono);
+    font-size:.83rem;
+    background:#0f172a;
+    color:#f8fafc;
+    padding:14px 16px;
+    border-radius:8px;
+    overflow-x:auto;
+    margin:10px 0;
+  }
+  .modal-BottomNav{
+    display:flex; justify-content:space-between; gap:12px;
+    padding:14px 24px; border-top:1px solid var(--line); background:var(--bg-page);
   }
 
-  /* 마크다운 본문 */
-  .markdown-body{ font-size:.95rem; line-height:1.8; color:#1e293b; word-break:keep-all; overflow-wrap:anywhere; }
-  .markdown-body
+  footer{
+    max-width:1280px; margin:0 auto; padding:0 24px 64px;
+    display:flex; justify-content:center; gap:20px; font-size:.86rem;
+  }
+  footer a{ color:var(--ink-soft); text-decoration:none; font-weight:500; }
+
+  @media (max-width:860px){
+    .blog-layout{ grid-template-columns:1fr; gap:20px; }
+    .blog-sidebar{ position:static; }
+  }
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="topbar-brand" href="../index.html">이준석</a>
+      <nav class="topbar-links">
+        <a href="./lab.html">Lab</a>
+        <a href="../index.html">Home</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="blog-hero">
+      <div>
+        <p class="page-eyebrow">Engineering & Insight Log</p>
+        <h1 class="page-title">지식 아카이브</h1>
+        <p class="page-lead">인프라·클라우드·자동화 엔지니어링 노트와 일상에서 얻은 구조적 인사이트를 기록합니다.</p>
+      </div>
+      <a class="btn-primary" href="https://github.com/jjunstone/SSD/issues/new" target="_blank" rel="noopener">✎ 새 아티클 작성</a>
+    </section>
+
+    <div class="blog-layout">
+      <aside class="blog-sidebar" id="sidebarNav">
+        <div class="sidebar-group">
+          <div class="sidebar-heading">Overview</div>
+          <div class="sidebar-nav">
+            <button type="button" class="cat-btn active" data-filter="ALL"><span>전체 아티클</span><span class="cat-count">-</span></button>
+          </div>
+        </div>
+      </aside>
+
+      <section class="blog-feed">
+        <div class="feed-toolbar">
+          <div class="notes-search">
+            <input id="notesSearch" type="text" placeholder="제목, 본문, 키워드 검색">
+          </div>
+          <span class="notes-count" id="notesCount"></span>
+          <div class="view-toggle" id="viewToggle">
+            <button type="button" class="view-btn active" data-view="list">목록형</button>
+            <button type="button" class="view-btn" data-view="grid">카드형</button>
+          </div>
+        </div>
+
+        <div class="notes-state show" id="notesLoading">
+          <span>GitHub(jjunstone/SSD)에서 이슈를 불러오는 중…</span>
+        </div>
+        <div class="notes-state" id="notesError">
+          <strong id="notesErrorTitle" style="color:#dc2626;">포스트를 불러오지 못했습니다.</strong>
+          <span id="notesErrorMsg"></span>
+        </div>
+        <div class="notes-state" id="notesEmpty">
+          <span id="notesEmptyMsg">조건에 맞는 아티클이 없습니다.</span>
+        </div>
+
+        <div class="notes-board list-view" id="notesBoard"></div>
+      </section>
+    </div>
+  </main>
+
+  <div class="modal-backdrop" id="articleModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog">
+      <div class="modal-topbar">
+        <div class="modal-topbar-left">
+          <span class="post-issue" id="modalIssueNum">#0</span>
+          <span id="modalDate"></span>
+        </div>
+        <div class="modal-actions">
+          <a class="modal-btn" id="modalGithubLink" href="#" target="_blank" rel="noopener">GitHub 원문 ↗</a>
+          <button type="button" class="modal-close" id="modalCloseBtn">✕</button>
+        </div>
+      </div>
+      <div class="modal-scroll" id="modalScroll">
+        <h2 class="modal-title" id="modalTitle"></h2>
+        <div class="modal-tags" id="modalTags"></div>
+        <div class="markdown-body" id="modalBody"></div>
+      </div>
+      <div class="modal-BottomNav">
+        <button type="button" class="modal-btn" id="prevNoteBtn">← 이전 글</button>
+        <button type="button" class="modal-btn" id="nextNoteBtn">다음 글 →</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <a href="mailto:happyday7190@gmail.com">Email</a>
+    <a href="../etc/files/resume.html" target="_blank" rel="noopener">Resume 다운로드</a>
+  </footer>
+
+  <script>
+  (function(){
+    var REPO = "jjunstone/SSD";
+    var INSIGHT_KEYWORDS = ["insight", "etc", "생각", "일상", "유튜브", "독서", "축구", "경제", "부동산"];
+
+    var board = document.getElementById("notesBoard");
+    var sidebarNav = document.getElementById("sidebarNav");
+    var loadingEl = document.getElementById("notesLoading");
+    var errorEl = document.getElementById("notesError");
+    var errorTitleEl = document.getElementById("notesErrorTitle");
+    var errorMsgEl = document.getElementById("notesErrorMsg");
+    var emptyEl = document.getElementById("notesEmpty");
+    var emptyMsgEl = document.getElementById("notesEmptyMsg");
+    var countEl = document.getElementById("notesCount");
+    var searchInput = document.getElementById("notesSearch");
+    var viewToggle = document.getElementById("viewToggle");
+
+    var modal = document.getElementById("articleModal");
+    var modalIssueNum = document.getElementById("modalIssueNum");
+    var modalDate = document.getElementById("modalDate");
+    var modalTitle = document.getElementById("modalTitle");
+    var modalTags = document.getElementById("modalTags");
+    var modalBody = document.getElementById("modalBody");
+    var modalScroll = document.getElementById("modalScroll");
+    var modalGithubLink = document.getElementById("modalGithubLink");
+    var modalCloseBtn = document.getElementById("modalCloseBtn");
+    var prevNoteBtn = document.getElementById("prevNoteBtn");
+    var nextNoteBtn = document.getElementById("nextNoteBtn");
+
+    var allNotes = [];
+    var filteredNotes = [];
+    var activeFilter = "ALL";
+    var currentModalIndex = -1;
+
+    function esc(s){
+      return String(s == null ? "" : s)
+        .replace(/&/g, "&")
+        .replace(/</g, "<")
+        .replace(/>/g, ">")
+        .replace(/"/g, """);
+    }
+
+    function formatDate(iso){
+      var d = new Date(iso);
+      if (isNaN(d.getTime())) return "";
+      return d.getFullYear() + "." + String(d.getMonth() + 1).padStart(2, "0") + "." + String(d.getDate()).padStart(2, "0");
+    }
+
+    function isInsightLabel(name){
+      var lower = String(name || "").toLowerCase();
+      return INSIGHT_KEYWORDS.some(function(k){ return lower.indexOf(k) !== -1; });
+    }
+
+    function formatBodyHtml(body){
+      var html = esc(body || "(내용 없음)");
+      html = html.replace(/```([\s\S]*?)```/g, function(_, code){
+        return "<pre>" + code.trim() + "</pre>";
+      });
+      html = html.replace(/^#{1,3}\s+(.*)$/gm, '<span class="sec-h">$1</span>');
+      return html;
+    }
+
+    function renderSidebar(){
+      var techCounts = {};
+      var insightCounts = {};
+      var techTotal = 0;
+      var insightTotal = 0;
+
+      allNotes.forEach(function(n){
+        var hasInsight = n.labels.some(function(l){ return isInsightLabel(l.name); });
+        if (hasInsight) insightTotal++; else techTotal++;
+
+        n.labels.forEach(function(l){
+          if (isInsightLabel(l.name)) {
+            insightCounts[l.name] = (insightCounts[l.name] || 0) + 1;
+          } else {
+            techCounts[l.name] = (techCounts[l.name] || 0) + 1;
+          }
+        });
+      });
+
+      var html = '';
+      html += '<div class="sidebar-group"><div class="sidebar-heading">Overview</div><div class="sidebar-nav">';
+      html += '<button type="button" class="cat-btn' + (activeFilter === "ALL" ? " active" : "") + '" data-filter="ALL"><span>전체 아티클</span><span class="cat-count">' + allNotes.length + '</span></button>';
+      html += '</div></div>';
+
+      html += '<div class="sidebar-group"><div class="sidebar-heading">Engineering</div><div class="sidebar-nav">';
+      html += '<button type="button" class="cat-btn' + (activeFilter === "TECH_ALL" ? " active" : "") + '" data-filter="TECH_ALL"><span>기술 노트 전체</span><span class="cat-count">' + techTotal + '</span></button>';
+      Object.keys(techCounts).forEach(function(name){
+        var act = activeFilter === "LABEL:" + name ? " active" : "";
+        html += '<button type="button" class="cat-btn' + act + '" data-filter="LABEL:' + esc(name) + '"><span># ' + esc(name) + '</span><span class="cat-count">' + techCounts[name] + '</span></button>';
+      });
+      html += '</div></div>';
+
+      html += '<div class="sidebar-group"><div class="sidebar-heading">Perspective</div><div class="sidebar-nav">';
+      html += '<button type="button" class="cat-btn' + (activeFilter === "INSIGHT_ALL" ? " active" : "") + '" data-filter="INSIGHT_ALL"><span>인사이트 전체</span><span class="cat-count">' + insightTotal + '</span></button>';
+      Object.keys(insightCounts).forEach(function(name){
+        var act = activeFilter === "LABEL:" + name ? " active" : "";
+        html += '<button type="button" class="cat-btn' + act + '" data-filter="LABEL:' + esc(name) + '"><span># ' + esc(name) + '</span><span class="cat-count">' + insightCounts[name] + '</span></button>';
+      });
+      html += '</div></div>';
+
+      sidebarNav.innerHTML = html;
+    }
+
+    function render(){
+      var q = searchInput.value.trim().toLowerCase();
+
+      filteredNotes = allNotes.filter(function(n){
+        var matchSector = true;
+        if (activeFilter === "TECH_ALL") {
+          matchSector = !n.labels.some(function(l){ return isInsightLabel(l.name); });
+        } else if (activeFilter === "INSIGHT_ALL") {
+          matchSector = n.labels.some(function(l){ return isInsightLabel(l.name); });
+        } else if (activeFilter.indexOf("LABEL:") === 0) {
+          var target = activeFilter.slice(6);
+          matchSector = n.labels.some(function(l){ return l.name === target; });
+        }
+        var matchQuery = !q || (n.title + " " + n.body).toLowerCase().indexOf(q) !== -1;
+        return matchSector && matchQuery;
+      });
+
+      if (filteredNotes.length === 0) {
+        board.innerHTML = "";
+        emptyMsgEl.textContent = allNotes.length === 0
+          ? "현재 jjunstone/SSD 레포지토리에 등록된 Issue가 0개입니다. 새 아티클을 작성해 보세요."
+          : "선택한 섹터나 검색어에 해당하는 아티클이 없습니다.";
+        emptyEl.classList.add("show");
+        countEl.textContent = "0개 아티클";
+        return;
+      }
+
+      emptyEl.classList.remove("show");
+      countEl.innerHTML = "총 <b>" + filteredNotes.length + "</b>개 아티클";
+
+      board.innerHTML = filteredNotes.map(function(n, idx){
+        var cleanTitle = esc(n.title.replace(/^질문:\s*/, ""));
+        var labelsHtml = n.labels.map(function(l){
+          return '<span class="note-label-chip">#' + esc(l.name) + '</span>';
+        }).join("");
+
+        return '<article class="post-item" data-index="' + idx + '" tabindex="0">' +
+          '<div class="post-meta">' +
+            '<span class="post-issue">#' + n.number + '</span>' +
+            '<span>' + formatDate(n.createdAt) + '</span>' +
+          '</div>' +
+          '<h3 class="post-title">' + cleanTitle + '</h3>' +
+          '<div class="post-excerpt">' + esc(n.body || "(내용 없음)") + '</div>' +
+          '<div class="post-footer">' +
+            '<div class="post-tags">' + labelsHtml + '</div>' +
+            '<span class="post-more">읽기 →</span>' +
+          '</div>' +
+        '</article>';
+      }).join("");
+    }
+
+    function openModalByIndex(idx){
+      if (idx < 0 || idx >= filteredNotes.length) return;
+      currentModalIndex = idx;
+      var n = filteredNotes[idx];
+
+      modalIssueNum.textContent = "#" + n.number;
+      modalDate.textContent = formatDate(n.createdAt);
+      modalTitle.textContent = n.title.replace(/^질문:\s*/, "");
+      modalGithubLink.href = n.url;
+      modalTags.innerHTML = n.labels.map(function(l){
+        return '<span class="note-label-chip">#' + esc(l.name) + '</span>';
+      }).join("");
+
+      modalBody.innerHTML = formatBodyHtml(n.body);
+      prevNoteBtn.disabled = idx <= 0;
+      nextNoteBtn.disabled = idx >= filteredNotes.length - 1;
+      modal.classList.add("open");
+      document.body.classList.add("modal-open");
+      modalScroll.scrollTop = 0;
+    }
+
+    function closeModal(){
+      modal.classList.remove("open");
+      document.body.classList.remove("modal-open");
+    }
+
+    sidebarNav.addEventListener("click", function(e){
+      var btn = e.target.closest(".cat-btn");
+      if (!btn) return;
+      activeFilter = btn.getAttribute("data-filter") || "ALL";
+      renderSidebar();
+      render();
+    });
+
+    viewToggle.addEventListener("click", function(e){
+      var btn = e.target.closest(".view-btn");
+      if (!btn) return;
+      viewToggle.querySelectorAll(".view-btn").forEach(function(b){ b.classList.remove("active"); });
+      btn.classList.add("active");
+      var mode = btn.getAttribute("data-view");
+      board.className = "notes-board " + (mode === "grid" ? "grid-view" : "list-view");
+    });
+
+    board.addEventListener("click", function(e){
+      var item = e.target.closest(".post-item");
+      if (!item) return;
+      openModalByIndex(Number(item.getAttribute("data-index")));
+    });
+
+    modalCloseBtn.addEventListener("click", closeModal);
+    modal.addEventListener("click", function(e){ if (e.target === modal) closeModal(); });
+    prevNoteBtn.addEventListener("click", function(){ if (currentModalIndex > 0) openModalByIndex(currentModalIndex - 1); });
+    nextNoteBtn.addEventListener("click", function(){ if (currentModalIndex < filteredNotes.length - 1) openModalByIndex(currentModalIndex + 1); });
+
+    searchInput.addEventListener("input", render);
+
+    fetch("https://api.github.com/repos/" + REPO + "/issues?state=all&per_page=100", {
+      headers: { "Accept": "application/vnd.github+json" }
+    })
+      .then(function(res){
+        if (!res.ok) {
+          throw new Error("HTTP " + res.status);
+        }
+        return res.json();
+      })
+      .then(function(data){
+        allNotes = (Array.isArray(data) ? data : [])
+          .filter(function(n){ return !n.pull_request; })
+          .map(function(n){
+            return {
+              number: n.number,
+              title: n.title || "",
+              body: n.body || "",
+              url: n.html_url || ("https://github.com/" + REPO + "/issues/" + n.number),
+              labels: (n.labels || []).map(function(l){ return { name: l.name }; }),
+              createdAt: n.created_at
+            };
+          })
+          .sort(function(a, b){ return b.createdAt.localeCompare(a.createdAt); });
+
+        loadingEl.classList.remove("show");
+        renderSidebar();
+        render();
+      })
+      .catch(function(err){
+        loadingEl.classList.remove("show");
+        var msg = String(err && err.message ? err.message : "");
+        if (msg.indexOf("404") !== -1) {
+          errorTitleEl.textContent = "jjunstone/SSD 레포지토리를 찾을 수 없습니다 (HTTP 404)";
+          errorMsgEl.textContent = "SSD 레포지토리가 Private(비공개) 상태인지 확인해 주세요. GitHub Settings에서 Public으로 변경해야 웹페이지에서 불러올 수 있습니다.";
+        } else if (msg.indexOf("403") !== -1) {
+          errorTitleEl.textContent = "GitHub API 호출 횟수 제한 초과 (HTTP 403)";
+          errorMsgEl.textContent = "사내 공인 IP에서 시간당 호출 제한(60회)에 도달했습니다. 잠시 후 다시 시도해 주세요.";
+        } else {
+          errorMsgEl.textContent = "원인: " + msg;
+        }
+        errorEl.classList.add("show");
+      });
+  })();
+  </script>
+</body>
+</html>
