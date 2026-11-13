@@ -9,7 +9,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/static/pretendard.css">
-<!-- 마크다운 완벽 파싱 & XSS 보안 필터 (CDN) -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.9/dist/purify.min.js"></script>
 <style>
@@ -31,8 +30,6 @@
   html,body{ margin:0; padding:0; }
   body{
     background-color:var(--bg-page);
-    background-image:radial-gradient(#cbd5e1 1px, transparent 1px);
-    background-size:24px 24px;
     color:var(--ink);
     font-family:var(--font-main);
     -webkit-font-smoothing:antialiased;
@@ -42,15 +39,15 @@
   /* ── 상단 네비게이션 ── */
   .topbar{
     position:sticky; top:0; z-index:40;
-    background:rgba(255,255,255,.88);
+    background:rgba(255,255,255,.9);
     backdrop-filter:blur(14px) saturate(140%);
     -webkit-backdrop-filter:blur(14px) saturate(140%);
-    border-bottom:1px solid rgba(23,60,120,.1);
+    border-bottom:1px solid var(--line);
   }
   .topbar-inner{
     max-width:1280px;
     margin:0 auto;
-    padding:20px 24px;
+    padding:18px 24px;
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -67,7 +64,7 @@
     position:relative;
     color:var(--ink-soft);
     text-decoration:none;
-    font-size:.96rem;
+    font-size:.95rem;
     font-weight:600;
     padding-bottom:2px;
   }
@@ -81,23 +78,27 @@
   .topbar-links a:hover::after{ right:0; }
   .topbar-links a:hover{ color:var(--navy); }
 
-  /* ── 메인 컨테이너 & 헤더 ── */
+  /* ── 메인 컨테이너 ── */
   main{
     max-width:1280px;
     margin:0 auto;
-    padding:44px 24px 96px;
+    padding:36px 24px 96px;
   }
-  .page-header{
-    background:var(--bg-card);
-    border:1px solid var(--line);
-    border-radius:16px;
-    padding:32px;
+
+  /* ── 심플 헤더 ── */
+  .blog-hero{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:20px;
+    padding-bottom:24px;
     margin-bottom:28px;
-    box-shadow:0 4px 20px -12px rgba(15,23,42,.06);
+    border-bottom:1px solid var(--line);
+    flex-wrap:wrap;
   }
   .page-eyebrow{
     display:inline-block;
-    font-size:.75rem;
+    font-size:.73rem;
     font-weight:700;
     letter-spacing:.14em;
     text-transform:uppercase;
@@ -105,60 +106,143 @@
     background:var(--blue-soft);
     padding:4px 10px;
     border-radius:6px;
-    margin:0 0 12px;
+    margin:0 0 8px;
   }
   .page-title{
-    font-size:2rem;
+    font-size:1.95rem;
     font-weight:800;
     letter-spacing:-.02em;
-    margin:0 0 10px;
+    margin:0 0 6px;
   }
   .page-lead{
-    font-size:.96rem;
-    line-height:1.7;
-    color:var(--ink-soft);
-    margin:0 0 16px;
-    max-width:820px;
-  }
-  .page-note{
-    font-size:.82rem;
+    font-size:.93rem;
     line-height:1.6;
     color:var(--ink-soft);
     margin:0;
-    padding:10px 14px;
-    border-left:3px solid var(--navy);
-    background:var(--bg-page);
-    border-radius:0 8px 8px 0;
-    display:inline-block;
   }
-  .page-note a{ color:var(--navy); font-weight:600; text-decoration:none; }
-  .page-note a:hover{ text-decoration:underline; }
+  .btn-primary{
+    font:inherit;
+    font-size:.83rem;
+    font-weight:700;
+    color:#ffffff;
+    background:var(--navy);
+    border:1px solid var(--navy);
+    border-radius:9px;
+    padding:10px 16px;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    transition:background .15s ease, transform .15s ease;
+    white-space:nowrap;
+  }
+  .btn-primary:hover{
+    background:#102a56;
+    transform:translateY(-1px);
+  }
 
-  /* ── 검색 + 툴바 ── */
-  .notes-toolbar{
+  /* ── 2단 레이아웃: 섹터 2(사이드바) + 섹터 3(피드) ── */
+  .blog-layout{
+    display:grid;
+    grid-template-columns:230px 1fr;
+    gap:32px;
+    align-items:start;
+  }
+
+  /* ── 섹터 2: 좌측 카테고리 사이드바 ── */
+  .blog-sidebar{
+    position:sticky;
+    top:84px;
+    background:var(--bg-card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:18px 14px;
+  }
+  .sidebar-group{
+    margin-bottom:18px;
+    padding-bottom:16px;
+    border-bottom:1px solid var(--line);
+  }
+  .sidebar-group:last-child{
+    margin-bottom:0;
+    padding-bottom:0;
+    border-bottom:none;
+  }
+  .sidebar-heading{
+    font-size:.71rem;
+    font-weight:800;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    padding:0 10px;
+    margin:0 0 6px;
+  }
+  .sidebar-nav{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+  }
+  .cat-btn{
+    width:100%;
+    font:inherit;
+    font-size:.85rem;
+    font-weight:600;
+    color:var(--ink-soft);
+    background:transparent;
+    border:none;
+    border-radius:8px;
+    padding:8px 10px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    text-align:left;
+    transition:all .14s ease;
+  }
+  .cat-btn:hover{
+    background:var(--bg-page);
+    color:var(--navy);
+  }
+  .cat-btn.active{
+    background:var(--blue-soft);
+    color:var(--navy);
+    font-weight:700;
+  }
+  .cat-count{
+    font-family:var(--font-mono);
+    font-size:.73rem;
+    color:var(--ink-faint);
+    background:var(--bg-page);
+    padding:1px 7px;
+    border-radius:999px;
+  }
+  .cat-btn.active .cat-count{
+    background:#ffffff;
+    color:var(--navy);
+  }
+
+  /* ── 섹터 3: 우측 아티클 피드 ── */
+  .feed-toolbar{
     display:flex;
     align-items:center;
     gap:12px;
-    margin:0 0 16px;
+    margin-bottom:16px;
     flex-wrap:wrap;
   }
   .notes-search{
     flex:1;
-    min-width:240px;
-    max-width:420px;
+    min-width:220px;
     position:relative;
   }
   .notes-search input{
     width:100%;
-    padding:11px 36px 11px 38px;
+    padding:10px 36px 10px 36px;
     border:1px solid var(--line-strong);
     border-radius:10px;
     font:inherit;
-    font-size:.9rem;
+    font-size:.88rem;
     color:var(--ink);
     background:var(--bg-card);
-    box-shadow:0 1px 2px rgba(15,23,42,.04);
-    transition:border-color .15s ease, box-shadow .15s ease;
   }
   .notes-search input:focus{
     outline:none;
@@ -166,17 +250,17 @@
     box-shadow:0 0 0 3px rgba(23,60,120,.1);
   }
   .notes-search-icon{
-    position:absolute; left:13px; top:50%;
+    position:absolute; left:12px; top:50%;
     transform:translateY(-50%);
     color:var(--ink-faint);
-    font-size:.9rem;
+    font-size:.88rem;
     pointer-events:none;
   }
   .notes-search-kbd{
     position:absolute; right:10px; top:50%;
     transform:translateY(-50%);
     font-family:var(--font-mono);
-    font-size:.72rem;
+    font-size:.7rem;
     color:var(--ink-faint);
     background:var(--bg-page);
     border:1px solid var(--line);
@@ -185,65 +269,185 @@
     pointer-events:none;
   }
   .notes-count{
-    font-size:.85rem;
+    font-size:.84rem;
     color:var(--ink-soft);
     white-space:nowrap;
   }
-  .notes-count b{ color:var(--navy); font-weight:700; }
+  .notes-count b{ color:var(--navy); }
 
-  .notes-actions{
-    margin-left:auto;
-    display:flex;
-    align-items:center;
-    gap:8px;
-  }
-  .btn-chip{
-    font:inherit;
-    font-size:.8rem;
-    font-weight:600;
-    color:var(--ink-soft);
+  .view-toggle{
+    display:inline-flex;
     background:var(--bg-card);
     border:1px solid var(--line-strong);
     border-radius:8px;
-    padding:8px 14px;
-    cursor:pointer;
-    text-decoration:none;
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    transition:all .15s ease;
+    padding:2px;
   }
-  .btn-chip:hover{
-    border-color:var(--navy);
-    color:var(--navy);
-    background:var(--blue-soft);
-  }
-
-  /* ── 태그 필터 바 ── */
-  .notes-tags{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-    margin:0 0 24px;
-  }
-  .notes-tags:empty{ display:none; }
-  .tag-filter{
+  .view-btn{
     font:inherit;
-    font-size:.78rem;
+    font-size:.76rem;
     font-weight:600;
     color:var(--ink-soft);
-    background:var(--bg-card);
-    border:1px solid var(--line);
-    padding:6px 13px;
-    border-radius:999px;
+    background:transparent;
+    border:none;
+    padding:5px 10px;
+    border-radius:6px;
     cursor:pointer;
-    transition:all .15s ease;
   }
-  .tag-filter:hover{ border-color:var(--navy); color:var(--navy); }
-  .tag-filter.active{
+  .view-btn.active{
     background:var(--navy);
     color:#ffffff;
-    border-color:var(--navy);
+  }
+
+  /* ── 피드 보드 (목록형 vs 카드형) ── */
+  .notes-board.list-view{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .notes-board.grid-view{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(310px, 1fr));
+    gap:18px;
+  }
+
+  .post-item{
+    background:var(--bg-card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:22px 24px;
+    cursor:pointer;
+    transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+    display:flex;
+    justify-content:space-between;
+    align-items:stretch;
+    gap:22px;
+  }
+  .post-item:hover,
+  .post-item:focus-visible{
+    outline:none;
+    transform:translateY(-2px);
+    box-shadow:0 12px 24px -10px rgba(15,23,42,.1);
+    border-color:var(--line-strong);
+  }
+  .notes-board.grid-view .post-item{
+    flex-direction:column;
+    padding:18px 20px;
+    gap:14px;
+  }
+
+  .post-main{
+    flex:1;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+  }
+  .post-meta{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:.75rem;
+    color:var(--ink-faint);
+    margin-bottom:8px;
+  }
+  .post-issue{
+    font-family:var(--font-mono);
+    font-weight:700;
+    color:var(--navy);
+    background:var(--blue-soft);
+    padding:1px 6px;
+    border-radius:4px;
+  }
+  .post-title{
+    font-size:1.08rem;
+    font-weight:800;
+    color:var(--ink);
+    margin:0 0 8px;
+    line-height:1.42;
+    word-break:keep-all;
+  }
+  .post-tldr{
+    font-size:.82rem;
+    font-weight:600;
+    color:var(--navy);
+    background:var(--blue-soft);
+    border-left:3px solid var(--navy);
+    padding:6px 10px;
+    border-radius:0 6px 6px 0;
+    margin:0 0 8px;
+    word-break:keep-all;
+  }
+  .post-excerpt{
+    font-size:.86rem;
+    line-height:1.6;
+    color:var(--ink-soft);
+    margin:0 0 12px;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+    word-break:keep-all;
+  }
+  .post-tags{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    margin-top:auto;
+  }
+  .note-label-chip{
+    font-size:.72rem;
+    font-weight:600;
+    color:var(--ink-soft);
+    background:var(--bg-page);
+    border:1px solid var(--line);
+    padding:2px 8px;
+    border-radius:6px;
+  }
+
+  /* ── 이미지/다이어그램 썸네일 프리뷰 박스 (핵심: 잘리지 않게 contain 처리) ── */
+  .post-thumb-box{
+    width:168px;
+    height:116px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    background:#f8fafc;
+    padding:6px;
+    flex-shrink:0;
+    align-self:center;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+  .post-thumb{
+    max-width:100%;
+    max-height:100%;
+    width:auto;
+    height:auto;
+    object-fit:contain;
+    border-radius:4px;
+    transition:transform .25s ease;
+  }
+  .post-item:hover .post-thumb{
+    transform:scale(1.04);
+  }
+  .post-img-count{
+    position:absolute;
+    right:6px;
+    bottom:6px;
+    font-family:var(--font-mono);
+    font-size:.68rem;
+    font-weight:700;
+    color:#ffffff;
+    background:rgba(15,23,42,.72);
+    padding:2px 6px;
+    border-radius:4px;
+    backdrop-filter:blur(4px);
+  }
+  .notes-board.grid-view .post-thumb-box{
+    width:100%;
+    height:160px;
+    order:-1;
   }
 
   /* ── 상태 영역 ── */
@@ -271,154 +475,7 @@
   }
   @keyframes notes-spin{ to{ transform:rotate(360deg); } }
 
-  /* ── 블로그 카드 그리드 ── */
-  .notes-board{
-    display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(340px, 1fr));
-    gap:20px;
-    align-items:stretch;
-  }
-
-  .note-card{
-    background:var(--bg-card);
-    border-radius:14px;
-    border:1px solid var(--line);
-    border-top:3px solid var(--accent, var(--navy));
-    box-shadow:0 2px 8px rgba(15,23,42,.04);
-    transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-    cursor:pointer;
-    display:flex;
-    flex-direction:column;
-    overflow:hidden;
-  }
-  .note-card:hover,
-  .note-card:focus-visible{
-    outline:none;
-    transform:translateY(-4px);
-    box-shadow:0 14px 28px -10px rgba(15,23,42,.14);
-    border-color:var(--line-strong);
-    border-top-color:var(--accent, var(--navy));
-  }
-
-  .note-card.c0{ --accent:#173c78; }
-  .note-card.c1{ --accent:#2563eb; }
-  .note-card.c2{ --accent:#0d9488; }
-  .note-card.c3{ --accent:#4f46e5; }
-  .note-card.c4{ --accent:#d97706; }
-
-  /* 카드 썸네일 (이미지 있을 때 자동 표시) */
-  .note-thumb-wrap{
-    width:100%;
-    height:168px;
-    background:#f1f5f9;
-    border-bottom:1px solid var(--line);
-    overflow:hidden;
-    position:relative;
-  }
-  .note-thumb{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block;
-    transition:transform .3s ease;
-  }
-  .note-card:hover .note-thumb{
-    transform:scale(1.03);
-  }
-
-  .note-card-inner{
-    padding:20px;
-    display:flex;
-    flex-direction:column;
-    flex:1;
-  }
-
-  .note-top{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:8px;
-    margin-bottom:10px;
-    font-size:.75rem;
-    color:var(--ink-faint);
-  }
-  .note-meta-left{
-    display:flex;
-    align-items:center;
-    gap:8px;
-  }
-  .note-issue-num{
-    font-family:var(--font-mono);
-    font-weight:700;
-    color:var(--navy);
-    background:var(--blue-soft);
-    padding:2px 7px;
-    border-radius:5px;
-    font-size:.72rem;
-  }
-
-  .note-title{
-    font-size:1.06rem;
-    font-weight:700;
-    color:var(--ink);
-    margin:0 0 10px;
-    line-height:1.45;
-    word-break:keep-all;
-    display:-webkit-box;
-    -webkit-line-clamp:2;
-    -webkit-box-orient:vertical;
-    overflow:hidden;
-  }
-
-  .note-excerpt{
-    font-size:.86rem;
-    line-height:1.65;
-    color:var(--ink-soft);
-    margin:0 0 16px;
-    word-break:keep-all;
-    display:-webkit-box;
-    -webkit-line-clamp:3;
-    -webkit-box-orient:vertical;
-    overflow:hidden;
-    flex:1;
-  }
-
-  .note-footer{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:8px;
-    padding-top:12px;
-    border-top:1px solid var(--line);
-    margin-top:auto;
-  }
-  .note-labels{
-    display:flex;
-    gap:5px;
-    flex-wrap:wrap;
-  }
-  .note-label-chip{
-    font-size:.72rem;
-    font-weight:600;
-    color:var(--navy);
-    background:var(--blue-soft);
-    padding:2px 8px;
-    border-radius:6px;
-  }
-  .note-read-more{
-    margin-left:auto;
-    font-size:.76rem;
-    font-weight:700;
-    color:var(--ink-soft);
-    white-space:nowrap;
-    transition:color .15s ease, transform .15s ease;
-  }
-  .note-card:hover .note-read-more{
-    color:var(--navy);
-    transform:translateX(2px);
-  }
-
-  /* ── 블로그 아티클 리더 모달 (핵심) ── */
+  /* ── 아티클 리더 모달 ── */
   .modal-backdrop{
     position:fixed;
     inset:0;
@@ -432,11 +489,10 @@
     padding:24px;
   }
   .modal-backdrop.open{ display:flex; }
-
   .modal-dialog{
     background:var(--bg-card);
     width:100%;
-    max-width:820px;
+    max-width:840px;
     max-height:90vh;
     border-radius:16px;
     border:1px solid var(--line);
@@ -444,13 +500,7 @@
     display:flex;
     flex-direction:column;
     overflow:hidden;
-    animation:modal-up .18s cubic-bezier(.16,1,.3,1);
   }
-  @keyframes modal-up{
-    from{ opacity:0; transform:translateY(12px) scale(.98); }
-    to{ opacity:1; transform:translateY(0) scale(1); }
-  }
-
   .modal-topbar{
     display:flex;
     align-items:center;
@@ -466,11 +516,7 @@
     font-size:.8rem;
     color:var(--ink-soft);
   }
-  .modal-actions{
-    display:flex;
-    align-items:center;
-    gap:8px;
-  }
+  .modal-actions{ display:flex; align-items:center; gap:8px; }
   .modal-btn{
     font:inherit;
     font-size:.78rem;
@@ -482,244 +528,103 @@
     padding:6px 11px;
     cursor:pointer;
     text-decoration:none;
-    display:inline-flex;
-    align-items:center;
-    gap:5px;
-    transition:all .15s ease;
   }
-  .modal-btn:hover{
-    border-color:var(--navy);
-    color:var(--navy);
-    background:var(--blue-soft);
-  }
+  .modal-btn:hover{ border-color:var(--navy); color:var(--navy); background:var(--blue-soft); }
   .modal-close{
-    font:inherit;
-    font-size:1.1rem;
-    line-height:1;
-    color:var(--ink-soft);
-    background:transparent;
-    border:none;
-    width:32px;
-    height:32px;
-    border-radius:8px;
-    cursor:pointer;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
+    font:inherit; font-size:1.1rem; color:var(--ink-soft);
+    background:transparent; border:none; width:32px; height:32px;
+    border-radius:8px; cursor:pointer;
   }
-  .modal-close:hover{ background:var(--line); color:var(--ink); }
-
-  .modal-scroll{
-    padding:32px 36px 40px;
-    overflow-y:auto;
-  }
+  .modal-scroll{ padding:32px 36px 40px; overflow-y:auto; }
   .modal-title{
-    font-size:1.65rem;
-    font-weight:800;
-    line-height:1.38;
-    letter-spacing:-.02em;
-    color:var(--ink);
-    margin:0 0 14px;
-    word-break:keep-all;
+    font-size:1.6rem; font-weight:800; line-height:1.38;
+    margin:0 0 14px; word-break:keep-all;
   }
   .modal-tags{
-    display:flex;
-    gap:6px;
-    flex-wrap:wrap;
-    margin-bottom:24px;
-    padding-bottom:20px;
-    border-bottom:1px solid var(--line);
+    display:flex; gap:6px; flex-wrap:wrap;
+    margin-bottom:24px; padding-bottom:18px; border-bottom:1px solid var(--line);
   }
 
-  /* ── 모달 본문 마크다운 타이포그래피 ── */
-  .markdown-body{
-    font-size:.96rem;
-    line-height:1.8;
-    color:#1e293b;
-    word-break:keep-all;
-    overflow-wrap:anywhere;
-  }
+  /* ── 모달 본문 마크다운 및 이미지 최적화 ── */
+  .markdown-body{ font-size:.96rem; line-height:1.8; color:#1e293b; word-break:keep-all; overflow-wrap:anywhere; }
   .markdown-body > *:first-child{ margin-top:0 !important; }
-  .markdown-body h1,
-  .markdown-body h2,
-  .markdown-body h3{
-    color:var(--ink);
-    font-weight:800;
-    letter-spacing:-.01em;
-    margin:28px 0 12px;
-    line-height:1.4;
-  }
-  .markdown-body h2{
-    font-size:1.2rem;
-    padding-bottom:8px;
-    border-bottom:1px solid var(--line);
-  }
-  .markdown-body h3{ font-size:1.05rem; color:var(--navy); }
+  .markdown-body h2{ font-size:1.18rem; padding-bottom:8px; border-bottom:1px solid var(--line); margin:28px 0 12px; }
+  .markdown-body h3{ font-size:1.04rem; color:var(--navy); margin:22px 0 10px; }
   .markdown-body p{ margin:0 0 16px; }
-  .markdown-body ul,
-  .markdown-body ol{
-    margin:0 0 16px;
-    padding-left:22px;
-  }
+  .markdown-body ul, .markdown-body ol{ margin:0 0 16px; padding-left:22px; }
   .markdown-body li{ margin:4px 0; }
   .markdown-body blockquote{
-    margin:16px 0;
-    padding:12px 16px;
-    border-left:4px solid var(--navy);
-    background:var(--blue-soft);
-    border-radius:0 8px 8px 0;
-    color:var(--ink-soft);
+    margin:16px 0; padding:12px 16px; border-left:4px solid var(--navy);
+    background:var(--blue-soft); border-radius:0 8px 8px 0; color:var(--navy); font-weight:600;
   }
   .markdown-body blockquote p:last-child{ margin-bottom:0; }
-  .markdown-body a{
-    color:var(--blue);
-    font-weight:600;
-    text-decoration:underline;
-    text-underline-offset:3px;
-  }
-  .markdown-body hr{
-    border:none;
-    border-top:1px solid var(--line);
-    margin:28px 0;
-  }
   .markdown-body code{
-    font-family:var(--font-mono);
-    font-size:.84em;
-    color:#0f172a;
-    background:#f1f5f9;
-    border:1px solid #e2e8f0;
-    padding:2px 6px;
-    border-radius:5px;
+    font-family:var(--font-mono); font-size:.84em; background:#f1f5f9;
+    border:1px solid #e2e8f0; padding:2px 6px; border-radius:5px;
   }
-  .code-block-wrap{
-    position:relative;
-    margin:16px 0;
-  }
+  .code-block-wrap{ position:relative; margin:16px 0; }
   .code-copy-btn{
-    position:absolute;
-    top:8px;
-    right:8px;
-    font-family:var(--font-main);
-    font-size:.72rem;
-    font-weight:600;
-    color:#cbd5e1;
-    background:rgba(255,255,255,.1);
-    border:1px solid rgba(255,255,255,.18);
-    border-radius:6px;
-    padding:4px 9px;
-    cursor:pointer;
-    transition:all .15s ease;
-  }
-  .code-copy-btn:hover{
-    background:rgba(255,255,255,.2);
-    color:#ffffff;
+    position:absolute; top:8px; right:8px; font-size:.72rem; font-weight:600;
+    color:#cbd5e1; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
+    border-radius:6px; padding:4px 9px; cursor:pointer;
   }
   .markdown-body pre{
-    font-family:var(--font-mono);
-    font-size:.84rem;
-    line-height:1.6;
-    background:#0f172a;
-    color:#f8fafc;
-    padding:16px 18px;
-    border-radius:10px;
-    overflow-x:auto;
-    margin:0;
+    font-family:var(--font-mono); font-size:.84rem; line-height:1.6;
+    background:#0f172a; color:#f8fafc; padding:16px 18px; border-radius:10px; overflow-x:auto; margin:0;
   }
-  .markdown-body pre code{
-    background:none;
-    border:none;
-    color:inherit;
-    padding:0;
-    font-size:inherit;
-  }
+  .markdown-body pre code{ background:none; border:none; color:inherit; padding:0; }
+
+  /* 본문 내 이미지 프레임 (다이어그램/스크린샷 가독성 극대화) */
   .markdown-body img{
     display:block;
     max-width:100%;
+    max-height:560px;
+    width:auto;
     height:auto;
-    border-radius:10px;
-    border:1px solid var(--line);
-    margin:18px 0;
+    margin:20px auto;
+    padding:8px;
     background:#f8fafc;
-    cursor:zoom-in;
-    box-shadow:0 4px 12px rgba(15,23,42,.05);
-  }
-  .markdown-body table{
-    width:100%;
-    border-collapse:collapse;
-    margin:16px 0;
-    font-size:.88rem;
-  }
-  .markdown-body th,
-  .markdown-body td{
     border:1px solid var(--line);
-    padding:9px 12px;
-    text-align:left;
-  }
-  .markdown-body th{
-    background:var(--bg-page);
-    font-weight:700;
+    border-radius:10px;
+    cursor:zoom-in;
+    box-shadow:0 4px 14px rgba(15,23,42,.05);
   }
 
-  /* ── 모달 하단 이전/다음 글 네비게이션 ── */
   .modal-BottomNav{
-    display:flex;
-    justify-content:space-between;
-    gap:12px;
-    padding:14px 24px;
-    border-top:1px solid var(--line);
-    background:var(--bg-page);
+    display:flex; justify-content:space-between; gap:12px;
+    padding:14px 24px; border-top:1px solid var(--line); background:var(--bg-page);
   }
 
-  /* ── 이미지 원본 확대 라이트박스 ── */
   .lightbox{
-    position:fixed;
-    inset:0;
-    z-index:200;
-    background:rgba(15,23,42,.88);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:24px;
-    cursor:zoom-out;
+    position:fixed; inset:0; z-index:200; background:rgba(15,23,42,.9);
+    display:none; align-items:center; justify-content:center; padding:24px; cursor:zoom-out;
   }
   .lightbox.open{ display:flex; }
-  .lightbox img{
-    max-width:95vw;
-    max-height:92vh;
-    border-radius:8px;
-    box-shadow:0 20px 40px rgba(0,0,0,.5);
-  }
+  .lightbox img{ max-width:95vw; max-height:92vh; border-radius:8px; background:#ffffff; }
 
   footer{
-    max-width:1280px;
-    margin:0 auto;
-    padding:0 24px 64px;
-    display:flex;
-    justify-content:center;
-    gap:20px;
-    font-size:.86rem;
+    max-width:1280px; margin:0 auto; padding:0 24px 64px;
+    display:flex; justify-content:center; gap:20px; font-size:.86rem;
   }
   footer a{ color:var(--ink-soft); text-decoration:none; font-weight:500; }
-  footer a:hover{ color:var(--navy); }
 
+  @media (max-width:860px){
+    .blog-layout{ grid-template-columns:1fr; gap:20px; }
+    .blog-sidebar{ position:static; }
+  }
   @media (max-width:640px){
-    .page-header{ padding:22px 18px; }
-    .page-title{ font-size:1.6rem; }
-    .notes-toolbar{ flex-direction:column; align-items:stretch; }
-    .notes-search{ max-width:none; }
-    .notes-actions{ margin-left:0; justify-content:space-between; }
-    .notes-board{ grid-template-columns:1fr; }
+    .post-item{ flex-direction:column; gap:14px; }
+    .post-thumb-box{ width:100%; height:150px; order:-1; }
     .modal-backdrop{ padding:0; align-items:flex-end; }
     .modal-dialog{ max-height:94vh; border-radius:16px 16px 0 0; }
     .modal-scroll{ padding:22px 20px 32px; }
-    .modal-title{ font-size:1.35rem; }
   }
 </style>
 </head>
 <body>
   <header class="topbar">
     <div class="topbar-inner">
-      <a class="topbar-brand" href="../index.html" title="홈으로 돌아가기">이준석</a>
+      <a class="topbar-brand" href="../index.html">이준석</a>
       <nav class="topbar-links">
         <a href="./lab.html">Lab</a>
         <a href="../index.html">Home</a>
@@ -728,53 +633,61 @@
   </header>
 
   <main>
-    <section class="page-header">
-      <p class="page-eyebrow">Tech Archive</p>
-      <h1 class="page-title">엔지니어링 아카이브</h1>
-      <p class="page-lead">인프라 운영과 기술 학습 중 마주친 문제의 원인 분석, 해결 과정, 그리고 제 언어로 다시 정의한 핵심 요약을 기록합니다.</p>
-      <p class="page-note">포스트는 <a href="https://github.com/jjunstone/SSD/issues" target="_blank" rel="noopener">GitHub Issue</a>에 작성하면 자동으로 이 블로그에 반영됩니다.</p>
+    <section class="blog-hero">
+      <div>
+        <p class="page-eyebrow">Engineering & Insight Log</p>
+        <h1 class="page-title">지식 아카이브</h1>
+        <p class="page-lead">인프라·클라우드·자동화 엔지니어링 노트와 일상에서 얻은 구조적 인사이트를 한 줄의 결론과 함께 기록합니다.</p>
+      </div>
+      <a class="btn-primary" href="https://github.com/jjunstone/SSD/issues/new?title=%5B%EC%A3%BC%EC%A0%9C%5D+%ED%95%B5%EC%8B%AC+%EC%A0%9C%EB%AA%A9%EC%9D%84+%EC%9E%85%EB%A0%A5%ED%95%98%EC%84%B8%EC%9A%94&body=%23%23+1.+%ED%95%9C+%EC%A4%84+%EC%A0%95%EC%9D%98+(TL%3BDR)%0A%3E+%EB%82%B4+%EC%96%B8%EC%96%B4%EB%A1%9C+%EB%8B%A4%EC%8B%9C+%EC%A0%95%EC%9D%98%ED%95%9C+%ED%95%B5%EC%8B%AC+%EA%B2%B0%EB%A1%A0+%ED%95%9C+%EB%AC%B8%EC%9E%A5%0A%0A%23%23+2.+%EC%99%9C+%EC%B0%BE%EC%95%84%EB%B4%A4%EB%82%98%3F+(Context)%0A-%20%0A%0A%23%23+3.+%ED%95%B5%EC%8B%AC+%EB%A9%94%EC%BB%A4%EB%8B%88%EC%A6%98+(How+it+works)%0A-%20%0A%0A%23%23+4.+%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8+%26+%EC%A0%81%EC%9A%A9%EC%A0%90+(Takeaway)%0A-%20" target="_blank" rel="noopener">✎ 새 아티클 작성</a>
     </section>
 
-    <div class="notes-toolbar">
-      <div class="notes-search">
-        <span class="notes-search-icon">⌕</span>
-        <input id="notesSearch" type="text" placeholder="제목, 본문, 명령어 검색" aria-label="메모 검색" disabled>
-        <span class="notes-search-kbd" title="단축키 /">/</span>
-      </div>
-      <span class="notes-count" id="notesCount"></span>
-      <div class="notes-actions">
-        <a class="btn-chip" href="https://github.com/jjunstone/SSD/issues/new" target="_blank" rel="noopener">✎ 새 포스트 작성</a>
-      </div>
-    </div>
+    <!-- 섹터 2(좌측 사이드바) + 섹터 3(우측 피드) -->
+    <div class="blog-layout">
+      <aside class="blog-sidebar" id="sidebarNav"></aside>
 
-    <div class="notes-tags" id="notesTags"></div>
+      <section class="blog-feed">
+        <div class="feed-toolbar">
+          <div class="notes-search">
+            <span class="notes-search-icon">⌕</span>
+            <input id="notesSearch" type="text" placeholder="제목, 한 줄 정의, 본문 검색" disabled>
+            <span class="notes-search-kbd">/</span>
+          </div>
+          <span class="notes-count" id="notesCount"></span>
+          <div class="view-toggle" role="group" aria-label="보기 방식 전환">
+            <button type="button" class="view-btn active" data-view="list">목록형</button>
+            <button type="button" class="view-btn" data-view="grid">카드형</button>
+          </div>
+        </div>
 
-    <div class="notes-state show" id="notesLoading">
-      <span class="notes-spinner" aria-hidden="true"></span>
-      <span>GitHub에서 포스트를 불러오는 중…</span>
-    </div>
-    <div class="notes-state" id="notesError">
-      <span>포스트를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.</span>
-    </div>
-    <div class="notes-state" id="notesEmpty">
-      <span>조건에 맞는 포스트가 없습니다.</span>
-    </div>
+        <div class="notes-state show" id="notesLoading">
+          <span class="notes-spinner"></span>
+          <span>아카이브 데이터를 불러오는 중…</span>
+        </div>
+        <div class="notes-state" id="notesError">
+          <span>포스트를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.</span>
+        </div>
+        <div class="notes-state" id="notesEmpty">
+          <span>조건에 맞는 아티클이 없습니다.</span>
+        </div>
 
-    <div class="notes-board" id="notesBoard"></div>
+        <div class="notes-board list-view" id="notesBoard"></div>
+      </section>
+    </div>
   </main>
 
   <!-- 아티클 리더 모달 -->
-  <div class="modal-backdrop" id="articleModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-backdrop" id="articleModal" role="dialog" aria-modal="true">
     <div class="modal-dialog">
       <div class="modal-topbar">
         <div class="modal-topbar-left">
-          <span class="note-issue-num" id="modalIssueNum">#0</span>
+          <span class="post-issue" id="modalIssueNum">#0</span>
           <span id="modalDate"></span>
         </div>
         <div class="modal-actions">
           <button type="button" class="modal-btn" id="copyLinkBtn">🔗 링크 복사</button>
           <a class="modal-btn" id="modalGithubLink" href="#" target="_blank" rel="noopener">GitHub 원문 ↗</a>
-          <button type="button" class="modal-close" id="modalCloseBtn" aria-label="닫기">✕</button>
+          <button type="button" class="modal-close" id="modalCloseBtn">✕</button>
         </div>
       </div>
       <div class="modal-scroll" id="modalScroll">
@@ -789,8 +702,7 @@
     </div>
   </div>
 
-  <!-- 이미지 원본 확대 라이트박스 -->
-  <div class="lightbox" id="lightbox" aria-label="이미지 확대 보기">
+  <div class="lightbox" id="lightbox">
     <img id="lightboxImg" src="" alt="확대 이미지">
   </div>
 
@@ -803,17 +715,16 @@
   (function(){
     var REPO = "jjunstone/SSD";
     var AUTHOR = "jjunstone";
-    var COLORS = ["c0","c1","c2","c3","c4"];
+    var INSIGHT_LABELS = ["insight", "etc", "생각", "일상", "유튜브", "독서", "축구", "경제", "부동산"];
 
     var board = document.getElementById("notesBoard");
+    var sidebarNav = document.getElementById("sidebarNav");
     var loadingEl = document.getElementById("notesLoading");
     var errorEl = document.getElementById("notesError");
     var emptyEl = document.getElementById("notesEmpty");
     var countEl = document.getElementById("notesCount");
     var searchInput = document.getElementById("notesSearch");
-    var tagsEl = document.getElementById("notesTags");
 
-    // 모달 요소
     var modal = document.getElementById("articleModal");
     var modalIssueNum = document.getElementById("modalIssueNum");
     var modalDate = document.getElementById("modalDate");
@@ -827,142 +738,184 @@
     var prevNoteBtn = document.getElementById("prevNoteBtn");
     var nextNoteBtn = document.getElementById("nextNoteBtn");
 
-    // 라이트박스 요소
     var lightbox = document.getElementById("lightbox");
     var lightboxImg = document.getElementById("lightboxImg");
 
     var allNotes = [];
     var filteredNotes = [];
-    var activeLabel = "";
+    var activeFilter = "ALL";
     var currentModalIndex = -1;
 
     function esc(s){
       return String(s == null ? "" : s)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;");
+        .replace(/&/g,"&").replace(/</g,"<").replace(/>/g,">").replace(/"/g,""");
     }
 
     function formatDate(iso){
       var d = new Date(iso);
-      var now = new Date();
-      var diffDays = Math.floor((now - d) / 86400000);
-      if (diffDays <= 0) return "오늘";
-      if (diffDays === 1) return "1일 전";
-      if (diffDays < 30) return diffDays + "일 전";
       return d.getFullYear() + "." + String(d.getMonth()+1).padStart(2,"0") + "." + String(d.getDate()).padStart(2,"0");
     }
 
-    // 본문에서 첫 번째 이미지 URL 추출 (마크다운 & HTML <img> 모두 지원)
-    function extractFirstImage(body){
-      if (!body) return null;
-      var mdMatch = body.match(/!\[[^\]]*\]\((https?:\/\/[^\s)]+)\)/i);
-      if (mdMatch) return mdMatch[1];
-      var htmlMatch = body.match(/<img[^>]+src=["'](https?:\/\/[^"']+)["']/i);
-      if (htmlMatch) return htmlMatch[1];
-      return null;
+    function isInsightLabel(name){
+      var lower = (name || "").toLowerCase();
+      return INSIGHT_LABELS.some(function(k){ return lower.indexOf(k) !== -1; });
     }
 
-    // 카드 요약용 순수 텍스트 추출 (이미지 코드, 마크다운 기호 제거)
+    // 본문 내 모든 이미지 URL 배열로 추출
+    function extractAllImages(body){
+      if (!body) return [];
+      var urls = [];
+      var mdRegex = /!\[[^\]]*\]\((https?:\/\/[^\s)]+)\)/gi;
+      var htmlRegex = /<img[^>]+src=["'](https?:\/\/[^"']+)["']/gi;
+      var m;
+      while ((m = mdRegex.exec(body)) !== null) urls.push(m[1]);
+      while ((m = htmlRegex.exec(body)) !== null) {
+        if (urls.indexOf(m[1]) === -1) urls.push(m[1]);
+      }
+      return urls;
+    }
+
+    function extractTldr(body){
+      if (!body) return "";
+      var m = body.match(/^>\s*(.+)$/m);
+      if (m && m[1].indexOf("내 언어로 다시 정의한") === -1) {
+        return m[1].replace(/[*_`]/g, "").trim();
+      }
+      return "";
+    }
+
     function extractCleanExcerpt(body){
-      if (!body) return "내용이 아직 작성되지 않았습니다.";
+      if (!body) return "내용이 없습니다.";
       return body
-        .replace(/```[\s\S]*?```/g, " [코드 블록] ")
+        .replace(/<!--[\s\S]*?-->/g, "") // 업로드 실패 주석 등 제거
+        .replace(/^>\s*.+$/gm, "")
+        .replace(/```[\s\S]*?```/g, "")
         .replace(/!\[[^\]]*\]\([^)]+\)/g, "")
         .replace(/<img[^>]*>/gi, "")
-        .replace(/^#{1,6}\s+/gm, "")
+        .replace(/^#{1,6}\s+.*$/gm, "")
         .replace(/[*_`~>-]/g, "")
         .replace(/\s+/g, " ")
-        .trim() || "이미지 포스트입니다. 클릭하여 본문을 확인하세요.";
+        .trim() || "다이어그램/이미지가 포함된 노트입니다. 클릭하여 확인하세요.";
     }
 
-    // 마크다운 본문 렌더링 (marked.js + DOMPurify, 폴백 포함)
     function renderMarkdown(body){
-      var raw = body || "(내용 없음)";
+      // 업로드 실패 주석 제거 후 렌더링
+      var raw = (body || "(내용 없음)").replace(/<!--[\s\S]*?-->/g, "");
       if (window.marked && window.DOMPurify) {
         marked.setOptions({ breaks: true, gfm: true });
-        var parsed = marked.parse(raw);
-        return DOMPurify.sanitize(parsed, { ADD_ATTR: ["target", "loading"] });
+        return DOMPurify.sanitize(marked.parse(raw), { ADD_ATTR: ["target", "loading"] });
       }
-      // CDN 로드 실패 시 안전한 자체 파서 폴백
-      var html = esc(raw);
-      html = html.replace(/```([\s\S]*?)```/g, function(_, code){ return "<pre><code>" + code.trim() + "</code></pre>"; });
-      html = html.replace(/`([^`\n]+)`/g, "<code>$1</code>");
-      html = html.replace(/!\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)/g, '<img src="$2" alt="$1" loading="lazy">');
-      html = html.replace(/&lt;img[^&]*?src=&quot;(https?:\/\/[^&]+?)&quot;[^&]*?\/?&gt;/gi, '<img src="$1" alt="첨부 이미지" loading="lazy">');
-      html = html.replace(/^#{2,3}\s+(.*)$/gm, "<h2>$1</h2>");
-      html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
-      return html.replace(/\n/g, "<br>");
+      return esc(raw).replace(/\n/g, "<br>");
     }
 
-    function renderTags(){
-      var counts = {};
+    function renderSidebar(){
+      var techCounts = {};
+      var insightCounts = {};
+      var techTotal = 0;
+      var insightTotal = 0;
+
       allNotes.forEach(function(n){
-        (n.labels || []).forEach(function(l){
-          counts[l.name] = (counts[l.name] || 0) + 1;
+        var hasInsight = n.labels.some(function(l){ return isInsightLabel(l.name); });
+        if (hasInsight) insightTotal++; else techTotal++;
+
+        n.labels.forEach(function(l){
+          if (isInsightLabel(l.name)) {
+            insightCounts[l.name] = (insightCounts[l.name] || 0) + 1;
+          } else {
+            techCounts[l.name] = (techCounts[l.name] || 0) + 1;
+          }
         });
       });
-      var labelNames = Object.keys(counts);
-      if (labelNames.length === 0) {
-        tagsEl.innerHTML = "";
-        return;
-      }
-      var html = '<button type="button" class="tag-filter' + (activeLabel === "" ? " active" : "") + '" data-label="">전체 (' + allNotes.length + ')</button>';
-      html += labelNames.map(function(name){
-        var isActive = activeLabel === name ? " active" : "";
-        return '<button type="button" class="tag-filter' + isActive + '" data-label="' + esc(name) + '">#' + esc(name) + " (" + counts[name] + ")</button>";
-      }).join("");
-      tagsEl.innerHTML = html;
+
+      var html = '<div class="sidebar-group">' +
+        '<div class="sidebar-heading">Overview</div>' +
+        '<div class="sidebar-nav">' +
+          '<button type="button" class="cat-btn' + (activeFilter === "ALL" ? " active" : "") + '" data-filter="ALL"><span>전체 아티클</span><span class="cat-count">' + allNotes.length + '</span></button>' +
+        '</div>' +
+      '</div>';
+
+      html += '<div class="sidebar-group">' +
+        '<div class="sidebar-heading">🛠 Engineering</div>' +
+        '<div class="sidebar-nav">' +
+          '<button type="button" class="cat-btn' + (activeFilter === "TECH_ALL" ? " active" : "") + '" data-filter="TECH_ALL"><span>기술 노트 전체</span><span class="cat-count">' + techTotal + '</span></button>';
+      Object.keys(techCounts).forEach(function(name){
+        var act = activeFilter === "LABEL:" + name ? " active" : "";
+        html += '<button type="button" class="cat-btn' + act + '" data-filter="LABEL:' + esc(name) + '"><span># ' + esc(name) + '</span><span class="cat-count">' + techCounts[name] + '</span></button>';
+      });
+      html += '</div></div>';
+
+      html += '<div class="sidebar-group">' +
+        '<div class="sidebar-heading">💡 Perspective</div>' +
+        '<div class="sidebar-nav">' +
+          '<button type="button" class="cat-btn' + (activeFilter === "INSIGHT_ALL" ? " active" : "") + '" data-filter="INSIGHT_ALL"><span>인사이트 전체</span><span class="cat-count">' + insightTotal + '</span></button>';
+      Object.keys(insightCounts).forEach(function(name){
+        var act = activeFilter === "LABEL:" + name ? " active" : "";
+        html += '<button type="button" class="cat-btn' + act + '" data-filter="LABEL:' + esc(name) + '"><span># ' + esc(name) + '</span><span class="cat-count">' + insightCounts[name] + '</span></button>';
+      });
+      html += '</div></div>';
+
+      sidebarNav.innerHTML = html;
     }
 
     function render(){
       var q = searchInput.value.trim().toLowerCase();
+
       filteredNotes = allNotes.filter(function(n){
-        var matchLabel = !activeLabel || (n.labels || []).some(function(l){ return l.name === activeLabel; });
+        var matchSector = true;
+        if (activeFilter === "TECH_ALL") {
+          matchSector = !n.labels.some(function(l){ return isInsightLabel(l.name); });
+        } else if (activeFilter === "INSIGHT_ALL") {
+          matchSector = n.labels.some(function(l){ return isInsightLabel(l.name); });
+        } else if (activeFilter.indexOf("LABEL:") === 0) {
+          var target = activeFilter.slice(6);
+          matchSector = n.labels.some(function(l){ return l.name === target; });
+        }
         var matchQuery = !q || (n.title + " " + n.body).toLowerCase().indexOf(q) !== -1;
-        return matchLabel && matchQuery;
+        return matchSector && matchQuery;
       });
 
       if (filteredNotes.length === 0) {
         board.innerHTML = "";
         emptyEl.classList.add("show");
-        countEl.textContent = "";
+        countEl.textContent = "0개 아티클";
         return;
       }
 
       emptyEl.classList.remove("show");
-      countEl.innerHTML = "총 <b>" + allNotes.length + "</b>개 포스트" + (q || activeLabel ? " · <b>" + filteredNotes.length + "</b>개 검색됨" : "");
+      countEl.innerHTML = "<b>" + filteredNotes.length + "</b>개 아티클";
 
       board.innerHTML = filteredNotes.map(function(n, idx){
-        var color = COLORS[n.number % COLORS.length];
         var title = esc(n.title.replace(/^질문:\s*/, ""));
-        var labelsHtml = (n.labels || []).map(function(l){
-          return '<span class="note-label-chip">#' + esc(l.name) + "</span>";
+        var labelsHtml = n.labels.map(function(l){
+          return '<span class="note-label-chip">#' + esc(l.name) + '</span>';
         }).join("");
-        var thumbHtml = n.thumb ? '<div class="note-thumb-wrap"><img class="note-thumb" src="' + esc(n.thumb) + '" alt="" loading="lazy"></div>' : "";
+        var tldrHtml = n.tldr ? '<div class="post-tldr">💡 ' + esc(n.tldr) + '</div>' : "";
 
-        return '<article class="note-card ' + color + '" data-index="' + idx + '" tabindex="0" role="button" aria-label="' + title + ' 읽기">' +
-          thumbHtml +
-          '<div class="note-card-inner">' +
-            '<div class="note-top">' +
-              '<div class="note-meta-left">' +
-                '<span class="note-issue-num">#' + n.number + '</span>' +
-                '<span>' + formatDate(n.createdAt) + '</span>' +
-              '</div>' +
+        var thumbHtml = "";
+        if (n.images.length > 0) {
+          var extraCount = n.images.length > 1 ? '<span class="post-img-count">+' + (n.images.length - 1) + '</span>' : '';
+          thumbHtml = '<div class="post-thumb-box">' +
+            '<img class="post-thumb" src="' + esc(n.images[0]) + '" alt="미리보기" loading="lazy" onerror="this.parentElement.style.display=\'none\'">' +
+            extraCount +
+          '</div>';
+        }
+
+        return '<article class="post-item" data-index="' + idx + '" tabindex="0">' +
+          '<div class="post-main">' +
+            '<div class="post-meta">' +
+              '<span class="post-issue">#' + n.number + '</span>' +
+              '<span>' + formatDate(n.createdAt) + '</span>' +
             '</div>' +
-            '<h3 class="note-title">' + title + '</h3>' +
-            '<p class="note-excerpt">' + esc(n.excerpt) + '</p>' +
-            '<div class="note-footer">' +
-              '<span class="note-labels">' + labelsHtml + '</span>' +
-              '<span class="note-read-more">읽기 →</span>' +
-            '</div>' +
+            '<h3 class="post-title">' + title + '</h3>' +
+            tldrHtml +
+            '<p class="post-excerpt">' + esc(n.excerpt) + '</p>' +
+            '<div class="post-tags">' + labelsHtml + '</div>' +
           '</div>' +
+          thumbHtml +
         '</article>';
       }).join("");
     }
 
-    // 아티클 리더 모달 열기
     function openModalByIndex(idx){
       if (idx < 0 || idx >= filteredNotes.length) return;
       currentModalIndex = idx;
@@ -972,22 +925,18 @@
       modalDate.textContent = formatDate(n.createdAt);
       modalTitle.textContent = n.title.replace(/^질문:\s*/, "");
       modalGithubLink.href = n.url;
-
-      var labelsHtml = (n.labels || []).map(function(l){
-        return '<span class="note-label-chip">#' + esc(l.name) + "</span>";
+      modalTags.innerHTML = n.labels.map(function(l){
+        return '<span class="note-label-chip">#' + esc(l.name) + '</span>';
       }).join("");
-      modalTags.innerHTML = labelsHtml;
-      modalTags.style.display = labelsHtml ? "flex" : "none";
+      modalTags.style.display = n.labels.length ? "flex" : "none";
 
       modalBody.innerHTML = renderMarkdown(n.body);
 
-      // 코드 블록에 복사 버튼 부착
       modalBody.querySelectorAll("pre").forEach(function(pre){
         var wrap = document.createElement("div");
         wrap.className = "code-block-wrap";
         pre.parentNode.insertBefore(wrap, pre);
         wrap.appendChild(pre);
-
         var btn = document.createElement("button");
         btn.type = "button";
         btn.className = "code-copy-btn";
@@ -1003,9 +952,6 @@
 
       prevNoteBtn.disabled = idx <= 0;
       nextNoteBtn.disabled = idx >= filteredNotes.length - 1;
-      prevNoteBtn.style.opacity = idx <= 0 ? ".4" : "1";
-      nextNoteBtn.style.opacity = idx >= filteredNotes.length - 1 ? ".4" : "1";
-
       modal.classList.add("open");
       document.body.classList.add("modal-open");
       modalScroll.scrollTop = 0;
@@ -1015,85 +961,60 @@
     function closeModal(){
       modal.classList.remove("open");
       document.body.classList.remove("modal-open");
-      currentModalIndex = -1;
       if (location.hash.indexOf("#issue-") === 0) {
         history.replaceState(null, "", location.pathname + location.search);
       }
     }
 
-    // 이벤트 바인딩
-    board.addEventListener("click", function(e){
-      var card = e.target.closest(".note-card");
-      if (!card) return;
-      openModalByIndex(Number(card.getAttribute("data-index")));
+    sidebarNav.addEventListener("click", function(e){
+      var btn = e.target.closest(".cat-btn");
+      if (!btn) return;
+      activeFilter = btn.getAttribute("data-filter") || "ALL";
+      renderSidebar();
+      render();
     });
 
-    board.addEventListener("keydown", function(e){
-      if (e.key !== "Enter" && e.key !== " ") return;
-      var card = e.target.closest(".note-card");
-      if (!card) return;
-      e.preventDefault();
-      openModalByIndex(Number(card.getAttribute("data-index")));
+    document.querySelector(".view-toggle").addEventListener("click", function(e){
+      var btn = e.target.closest(".view-btn");
+      if (!btn) return;
+      document.querySelectorAll(".view-btn").forEach(function(b){ b.classList.remove("active"); });
+      btn.classList.add("active");
+      var view = btn.getAttribute("data-view");
+      board.className = "notes-board " + (view === "grid" ? "grid-view" : "list-view");
+    });
+
+    board.addEventListener("click", function(e){
+      var item = e.target.closest(".post-item");
+      if (!item) return;
+      openModalByIndex(Number(item.getAttribute("data-index")));
     });
 
     modalCloseBtn.addEventListener("click", closeModal);
-    modal.addEventListener("click", function(e){
-      if (e.target === modal) closeModal();
-    });
-
-    prevNoteBtn.addEventListener("click", function(){
-      if (currentModalIndex > 0) openModalByIndex(currentModalIndex - 1);
-    });
-    nextNoteBtn.addEventListener("click", function(){
-      if (currentModalIndex < filteredNotes.length - 1) openModalByIndex(currentModalIndex + 1);
-    });
+    modal.addEventListener("click", function(e){ if (e.target === modal) closeModal(); });
+    prevNoteBtn.addEventListener("click", function(){ if (currentModalIndex > 0) openModalByIndex(currentModalIndex - 1); });
+    nextNoteBtn.addEventListener("click", function(){ if (currentModalIndex < filteredNotes.length - 1) openModalByIndex(currentModalIndex + 1); });
 
     copyLinkBtn.addEventListener("click", function(){
       navigator.clipboard.writeText(location.href).then(function(){
-        var orig = copyLinkBtn.textContent;
         copyLinkBtn.textContent = "✓ 복사됨";
-        setTimeout(function(){ copyLinkBtn.textContent = orig; }, 1500);
+        setTimeout(function(){ copyLinkBtn.textContent = "🔗 링크 복사"; }, 1500);
       });
     });
 
-    // 본문 이미지 클릭 시 원본 크기 라이트박스 열기
     modalBody.addEventListener("click", function(e){
       var img = e.target.closest("img");
       if (!img) return;
       lightboxImg.src = img.src;
       lightbox.classList.add("open");
     });
-    lightbox.addEventListener("click", function(){
-      lightbox.classList.remove("open");
-      lightboxImg.src = "";
-    });
-
-    tagsEl.addEventListener("click", function(e){
-      var btn = e.target.closest(".tag-filter");
-      if (!btn) return;
-      activeLabel = btn.getAttribute("data-label") || "";
-      renderTags();
-      render();
-    });
+    lightbox.addEventListener("click", function(){ lightbox.classList.remove("open"); });
 
     searchInput.addEventListener("input", render);
 
-    // 키보드 단축키 ('/' 검색, ESC 닫기, 좌우 화살표로 글 이동)
     document.addEventListener("keydown", function(e){
       if (e.key === "Escape") {
-        if (lightbox.classList.contains("open")) {
-          lightbox.classList.remove("open");
-          return;
-        }
-        if (modal.classList.contains("open")) {
-          closeModal();
-          return;
-        }
-      }
-      if (modal.classList.contains("open")) {
-        if (e.key === "ArrowLeft" && currentModalIndex > 0) openModalByIndex(currentModalIndex - 1);
-        if (e.key === "ArrowRight" && currentModalIndex < filteredNotes.length - 1) openModalByIndex(currentModalIndex + 1);
-        return;
+        if (lightbox.classList.contains("open")) lightbox.classList.remove("open");
+        else if (modal.classList.contains("open")) closeModal();
       }
       if (e.key === "/" && document.activeElement !== searchInput && !searchInput.disabled) {
         e.preventDefault();
@@ -1101,7 +1022,6 @@
       }
     });
 
-    // GitHub Issues 데이터 로드
     fetch("https://api.github.com/repos/" + REPO + "/issues?state=all&per_page=100&creator=" + AUTHOR, {
       headers: { "Accept": "application/vnd.github+json" }
     })
@@ -1118,7 +1038,8 @@
               number: n.number,
               title: n.title || "",
               body: rawBody,
-              thumb: extractFirstImage(rawBody),
+              tldr: extractTldr(rawBody),
+              images: extractAllImages(rawBody),
               excerpt: extractCleanExcerpt(rawBody),
               url: n.html_url || ("https://github.com/" + REPO + "/issues/" + n.number),
               labels: (n.labels || []).map(function(l){ return { name: l.name }; }),
@@ -1129,14 +1050,12 @@
 
         loadingEl.classList.remove("show");
         searchInput.disabled = false;
-        renderTags();
+        renderSidebar();
         render();
 
-        // URL 해시(#issue-번호)로 접속한 경우 해당 포스트 바로 열기
         var hashMatch = location.hash.match(/^#issue-(\d+)$/);
         if (hashMatch) {
-          var targetNum = Number(hashMatch[1]);
-          var targetIdx = filteredNotes.findIndex(function(n){ return n.number === targetNum; });
+          var targetIdx = filteredNotes.findIndex(function(n){ return n.number === Number(hashMatch[1]); });
           if (targetIdx !== -1) openModalByIndex(targetIdx);
         }
       })
