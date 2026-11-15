@@ -95,9 +95,30 @@
   }
 
   main{
-    max-width:760px;
+    max-width:1060px;
     margin:0 auto;
     padding:64px 24px 96px;
+  }
+
+  .page-grid{
+    display:grid;
+    grid-template-columns:1fr 240px;
+    gap:48px;
+    align-items:start;
+  }
+
+  .page-main{ min-width:0; }
+
+  .stack-sidebar{
+    position:sticky;
+    top:100px;
+  }
+
+  .stack-sidebar .section-label{ margin-bottom:14px; }
+
+  @media (max-width:860px){
+    .page-grid{ grid-template-columns:1fr; }
+    .stack-sidebar{ position:static; }
   }
 
   .page-eyebrow{
@@ -137,6 +158,122 @@
     padding:5px 12px;
     border:1px solid var(--line);
     border-radius:999px;
+  }
+
+.journey{
+    margin:0 0 44px;
+  }
+
+  .journey-label{
+    font-size:.78rem;
+    font-weight:700;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    margin:0 0 22px;
+  }
+
+  .journey-track{
+    position:relative;
+    height:64px;
+    margin:0 6px 18px;
+  }
+
+  .journey-line{
+    position:absolute;
+    left:0; right:0; top:8px;
+    height:2px;
+    background:var(--line);
+  }
+
+  .journey-dot{
+    position:absolute;
+    top:0;
+    transform:translateX(-50%);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    cursor:default;
+  }
+
+  .journey-dot:first-child{ transform:translateX(0); align-items:flex-start; }
+  .journey-dot:last-child{ transform:translateX(-100%); align-items:flex-end; }
+
+  .journey-dot-mark{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:var(--ink-faint);
+    flex-shrink:0;
+  }
+
+  .journey-dot-mark.edu{ background:#6b9e78; }
+  .journey-dot-mark.intern{ background:#8a8a8a; }
+  .journey-dot-mark.maker{ background:#c9a227; }
+  .journey-dot-mark.career{ background:var(--accent); }
+
+  .journey-dot-year{
+    font-size:.78rem;
+    font-weight:600;
+    color:var(--ink-soft);
+    white-space:nowrap;
+  }
+
+  .journey-dot.now .journey-dot-year{ color:var(--accent); font-weight:700; }
+
+  .journey-dot::after{
+    content:attr(data-note);
+    position:absolute;
+    top:calc(100% + 30px);
+    left:50%;
+    transform:translateX(-50%) translateY(-4px);
+    background:#1f1f1f;
+    color:#fff;
+    font-size:.74rem;
+    font-weight:500;
+    line-height:1.5;
+    padding:8px 11px;
+    border-radius:8px;
+    white-space:normal;
+    width:190px;
+    text-align:left;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .15s ease, transform .15s ease;
+    z-index:10;
+  }
+
+  .journey-dot:first-child::after{ left:0; transform:translateX(0) translateY(-4px); text-align:left; }
+  .journey-dot:last-child::after{ left:auto; right:0; transform:translateX(0) translateY(-4px); text-align:right; }
+
+  .journey-dot:hover::after{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+  }
+  .journey-dot:first-child:hover::after{ transform:translateX(0) translateY(0); }
+  .journey-dot:last-child:hover::after{ transform:translateX(0) translateY(0); }
+
+  .journey-legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:16px;
+  }
+
+  .journey-legend span{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:.78rem;
+    color:var(--ink-soft);
+  }
+
+  @media (max-width:560px){
+    .journey-track{ margin:0 0 18px; }
+    .journey-dot::after{
+      width:160px;
+      font-size:.7rem;
+    }
   }
 
   .section-label{
@@ -243,6 +380,114 @@
     color:var(--ink-faint);
   }
 
+
+  .stack-intro{
+    font-size:.82rem;
+    line-height:1.6;
+    color:var(--ink-soft);
+    margin:0 0 16px;
+  }
+
+  .stack-legend{
+    display:flex;
+    gap:16px;
+    margin:0 0 18px;
+  }
+
+  .stack-legend-item{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    font-size:.82rem;
+    color:var(--ink-soft);
+  }
+
+  .stack-dot{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    display:inline-block;
+  }
+
+  .stack-dot.work{ background:var(--accent); }
+  .stack-dot.lab{ background:#c9a227; }
+
+  .stack-group{
+    margin:0 0 16px;
+  }
+
+  .stack-group-title{
+    font-size:.72rem;
+    font-weight:700;
+    color:var(--ink-faint);
+    letter-spacing:.03em;
+    margin:0 0 7px;
+  }
+
+  .stack-tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+  }
+
+  .stack-tag{
+    position:relative;
+    font-size:.76rem;
+    font-weight:600;
+    padding:5px 10px;
+    border-radius:999px;
+    cursor:default;
+    border:1.3px solid transparent;
+  }
+
+  .stack-tag.work{
+    background:var(--blue-soft, #eff4fd);
+    color:var(--accent);
+    border-color:rgba(23,60,120,.18);
+  }
+
+  .stack-tag.lab{
+    background:#fbf6e8;
+    color:#8a6d1c;
+    border-color:rgba(201,162,39,.3);
+  }
+
+  .stack-tag::after{
+    content:attr(data-note);
+    position:absolute;
+    left:0;
+    bottom:calc(100% + 8px);
+    transform:translateY(4px);
+    background:#1f1f1f;
+    color:#fff;
+    font-size:.74rem;
+    font-weight:500;
+    line-height:1.4;
+    padding:7px 10px;
+    border-radius:8px;
+    white-space:normal;
+    width:200px;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .15s ease, transform .15s ease;
+    z-index:10;
+  }
+
+  .stack-tag:hover::after{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  @media (max-width:860px){
+    .stack-tag::after{
+      left:50%;
+      transform:translateX(-50%) translateY(4px);
+    }
+    .stack-tag:hover::after{
+      transform:translateX(-50%) translateY(0);
+    }
+  }
+
   footer{
     max-width:760px;
     margin:0 auto;
@@ -286,15 +531,36 @@
   </div>
 
   <main>
-    <p class="page-eyebrow">Career</p>
-    <h1 class="page-title">운영의 병목을 코드와 자동화로 뚫는 엔지니어</h1>
-    <p class="page-lead">법무법인 인프라보안팀에서 사내 핵심 IT 인프라와 하이브리드 클라우드(AD·Entra ID·M365)를 운영하고 있습니다. 정해진 매뉴얼만 따르기보다, 현업과 운영팀이 겪는 반복 업무와 병목을 직접 코드(PowerShell·SQL·Python)와 자동화 워크플로우로 해결해 왔습니다. 레거시 온프레미스 환경부터 클라우드·사내 생성형 AI 플랫폼까지, 조직의 업무 방식을 실제로 바꾸는 실전형 인프라·자동화 엔지니어입니다.</p>
+    <div class="page-grid">
+    <div class="page-main">
+<p class="page-eyebrow">Career</p>
+    <h1 class="page-title">불편하면 그냥 만들어버리는 사람</h1>
+    <p class="page-lead">법무법인에서 인프라와 보안을 맡고 있습니다. 반복되는 일이 보이면 그냥 코드나 자동화로 바꿔버립니다. 업무든 제 집 계약서든 상관없이요. 새 기술 써보는 것도 좋아해서, 괜찮으면 일에도 바로 들고 옵니다.</p>
     <div class="focus-tags">
-      <span>하이브리드 인프라(AD·Entra)</span>
-      <span>사내 시스템 개발</span>
-      <span>보안·운영 자동화</span>
-      <span>M365·AI 플랫폼</span>
-      <span>실전형 메이커</span>
+      <span>인프라·ID</span>
+      <span>사내 도구 개발</span>
+      <span>자동화</span>
+      <span>AI·클라우드</span>
+      <span>만드는 걸 좋아함</span>
+    </div>
+
+    <div class="journey">
+      <p class="journey-label">지금까지</p>
+      <div class="journey-track">
+        <div class="journey-line"></div>
+        <div class="journey-dot" style="left:0%" data-note="연세대 입학"><span class="journey-dot-mark edu"></span><span class="journey-dot-year">2018</span></div>
+        <div class="journey-dot" style="left:16%" data-note="입대, 전산병으로"><span class="journey-dot-mark edu"></span><span class="journey-dot-year">2019</span></div>
+        <div class="journey-dot" style="left:33%" data-note="전역하고 바로 효성ITX 인턴"><span class="journey-dot-mark intern"></span><span class="journey-dot-year">2020</span></div>
+        <div class="journey-dot" style="left:50%" data-note="주택임대, 온라인 스토어, 딥노이드 인턴까지 한 해에"><span class="journey-dot-mark maker"></span><span class="journey-dot-year">2023</span></div>
+        <div class="journey-dot" style="left:83%" data-note="졸업하고 율촌 입사"><span class="journey-dot-mark career"></span><span class="journey-dot-year">2024</span></div>
+        <div class="journey-dot now" style="left:100%" data-note="지금 여기"><span class="journey-dot-mark career"></span><span class="journey-dot-year">현재</span></div>
+      </div>
+      <div class="journey-legend">
+        <span><span class="journey-dot-mark edu"></span>학업·군복무</span>
+        <span><span class="journey-dot-mark intern"></span>인턴</span>
+        <span><span class="journey-dot-mark maker"></span>메이커·사업</span>
+        <span><span class="journey-dot-mark career"></span>커리어</span>
+      </div>
     </div>
 
     <p class="section-label">Career Experience</p>
@@ -306,23 +572,23 @@
           <p class="timeline-org">법무법인(유) 율촌 · 전산보안실 인프라보안팀</p>
 
           <div class="role-block">
-            <p class="role-block-title">하이브리드 인프라 및 ID 아키텍처 운영</p>
-            <p>Windows Server, Active Directory, DNS·DHCP·GPO, VMware/vSphere 기반의 전사 온프레미스 인프라를 안정적으로 운영하며, Entra Connect·PHS·조건부 액세스(Conditional Access)·PIM을 연계한 하이브리드 ID 거버넌스를 관리합니다. 보안 분리가 필요한 회의실 PC의 중앙 통제를 위해 별도 AD 포리스트를 구축하고 DMZ 네트워크 연동까지 직접 설계·구축했습니다.</p>
+            <p class="role-block-title">인프라·ID</p>
+            <p>Windows Server, AD, VMware 기반 사내 인프라를 운영합니다. 회의실 PC는 보안 분리가 필요해서 AD 포리스트를 따로 세우고 DMZ까지 직접 구축했습니다.</p>
           </div>
 
           <div class="role-block">
-            <p class="role-block-title">사내 권한관리·예외승인 시스템 직접 개발</p>
-            <p>수기·메일로 처리되던 운영 병목을 없애기 위해 Classic ASP·MSSQL·PowerShell로 사내 운영 도구를 직접 개발·고도화했습니다. 방화벽 정책 예외 신청·승인 웹 페이지와 DB 구조를 구현하고, AD 그룹 기반 접근 권한 라이프사이클 관리 및 DLP USB 예외 처리 시스템을 운영하고 있습니다.</p>
+            <p class="role-block-title">권한관리 시스템</p>
+            <p>방화벽 예외 신청을 메일로 주고받길래 그냥 웹 페이지로 만들었습니다. Classic ASP·MSSQL·PowerShell로요. AD 권한, USB 예외 처리도 지금 이걸로 돌립니다.</p>
           </div>
 
           <div class="role-block">
-            <p class="role-block-title">보안 점검 및 운영 워크플로우 자동화</p>
-            <p>ISO 27001 인증 심사에 필요한 보안 점검 항목 약 84개를 PowerShell 스크립트로 자동화해 수작업 점검 부담과 휴먼 에러를 줄였습니다. 또한 Power Automate 기반의 사내 업무 흐름 개선, WSUS·IIS 장애 원인 분석, SIEM 솔루션 이전에 따른 대시보드 쿼리 마이그레이션을 수행했습니다.</p>
+            <p class="role-block-title">보안 점검</p>
+            <p>ISO 27001 점검 항목 84개를 PowerShell로 자동화했습니다. 손으로 하면 꼭 하나씩 틀리거든요. WSUS·IIS 장애도 들여다보고, SIEM 옮길 때 쿼리도 다 새로 짰습니다.</p>
           </div>
 
           <div class="role-block">
-            <p class="role-block-title">사내 생성형 AI 및 M365 업무 플랫폼 구축·운영</p>
-            <p>Copilot Studio·Azure OpenAI·SharePoint·Entra SSO를 결합한 사내 AI 업무지원 플랫폼을 운영·개선하며, 내부 보안 정책을 준수하는 환경에서 RAG 기반 사내 지식 검색 구조를 실무에 안착시켰습니다.</p>
+            <p class="role-block-title">AI 플랫폼</p>
+            <p>Copilot Studio·Azure OpenAI로 사내 AI 업무 도구를 운영합니다. 보안 정책 지켜가면서 RAG로 사내 지식 검색도 붙였습니다.</p>
           </div>
 
           <p class="stack-note"><strong>주요 기술</strong> &nbsp;Windows Server · AD DS · Entra ID · VMware/vSphere · PowerShell · Classic ASP · VBScript · MSSQL · Power Automate · Palo Alto · NAC · ChakraMax · Azure OpenAI</p>
@@ -335,11 +601,11 @@
       <div class="timeline-item">
         <div class="timeline-period">2023.06 –<br>2024.04</div>
         <div>
-          <h2 class="timeline-role">온라인 스토어 창업 및 운영 자동화 도구 개발</h2>
+          <h2 class="timeline-role">온라인 스토어 운영</h2>
           <p class="timeline-org">1인 사업</p>
           <ul class="timeline-list">
-            <li>직접 온라인 스토어를 구축·운영하며 발생하는 주문·재고·매출 데이터 처리와 CS 병목을 해결하기 위해 관리자 웹 도구를 직접 개발했습니다</li>
-            <li>반복적인 상품·배송·교환 문의를 줄이기 위해 Python·OpenAI API·FAISS 기반의 RAG 고객 응대 챗봇을 구현해 실무에 투입했습니다</li>
+            <li>주문·재고·매출 관리가 너무 번거로워서 관리자 도구를 직접 만들었습니다</li>
+            <li>똑같은 문의가 계속 와서 Python·OpenAI API로 챗봇을 붙였습니다</li>
           </ul>
         </div>
       </div>
@@ -347,10 +613,10 @@
       <div class="timeline-item">
         <div class="timeline-period">2023 –<br>현재</div>
         <div>
-          <h2 class="timeline-role">주택임대사업자 운영 및 계약 관리 프로그램 제작</h2>
+          <h2 class="timeline-role">주택임대사업 운영</h2>
           <p class="timeline-org">개인 자산 운영</p>
           <ul class="timeline-list">
-            <li>임대차 계약 일정, 정산, 이력 관리를 수기로 관리하는 불편함을 줄이기 위해 전용 계약 관리 프로그램을 직접 설계·개발해 현재까지 실사용하고 있습니다</li>
+            <li>계약 일정이랑 정산을 엑셀로 관리하다 지쳐서 프로그램을 만들었고, 지금도 그걸로 씁니다</li>
           </ul>
         </div>
       </div>
@@ -361,10 +627,10 @@
       <div class="timeline-item">
         <div class="timeline-period">2023.07 –<br>2023.12</div>
         <div>
-          <h2 class="timeline-role">AI연구교육팀 인턴</h2>
+          <h2 class="timeline-role">AI연구교육팀</h2>
           <p class="timeline-org">㈜딥노이드 · 5개월</p>
           <ul class="timeline-list">
-            <li>AI 모델 학습용 이미지 데이터 수집·분류 및 모델 튜닝을 수행하고, Java·Android 기반 서비스 프로토타입 개발에 참여했습니다</li>
+            <li>AI 학습용 이미지를 모으고 분류했고, Java·Android 프로토타입도 같이 만들었습니다</li>
           </ul>
         </div>
       </div>
@@ -372,10 +638,10 @@
       <div class="timeline-item">
         <div class="timeline-period">2020.09 –<br>2020.12</div>
         <div>
-          <h2 class="timeline-role">행정안전부 파견 IT 운영 지원 인턴</h2>
+          <h2 class="timeline-role">행정안전부 파견 인턴</h2>
           <p class="timeline-org">㈜효성ITX · 3개월</p>
           <ul class="timeline-list">
-            <li>행정안전부 23팀에 파견되어 공공기관 빅데이터 포털 운영을 지원하고 공공데이터 API 연동 상태를 상시 점검했습니다</li>
+            <li>공공기관 빅데이터 포털을 지원하고, API 연동이 제대로 되는지 틈틈이 점검했습니다</li>
           </ul>
         </div>
       </div>
@@ -399,6 +665,65 @@
         </div>
       </div>
     </div>
+    </div>
+    <aside class="stack-sidebar">
+<p class="section-label">Tech Stack</p>
+    <div class="stack-legend">
+      <span class="stack-legend-item"><span class="stack-dot work"></span>실무</span>
+      <span class="stack-legend-item"><span class="stack-dot lab"></span>Lab</span>
+    </div>
+
+    <div class="stack-group">
+      <p class="stack-group-title">인프라 &amp; ID</p>
+      <div class="stack-tags">
+        <span class="stack-tag work" data-note="회사에서 AD 포리스트까지 직접 구성">Windows Server</span>
+        <span class="stack-tag work" data-note="매일 쓰는 AD·GPO">Active Directory</span>
+        <span class="stack-tag work" data-note="하이브리드 ID 연동 담당">Entra ID</span>
+        <span class="stack-tag work" data-note="회사 가상화 인프라 운영">VMware/vSphere</span>
+        <span class="stack-tag work" data-note="네트워크 기본 서비스 운영">DNS · DHCP · GPO</span>
+        <span class="stack-tag work" data-note="접근 정책 설계">Conditional Access</span>
+        <span class="stack-tag lab" data-note="Lab에서 IaC로 설계해본 것">Terraform</span>
+        <span class="stack-tag lab" data-note="Lab에서 배포 파이프라인 만들어본 것">Kubernetes</span>
+      </div>
+    </div>
+
+    <div class="stack-group">
+      <p class="stack-group-title">보안 &amp; 네트워크</p>
+      <div class="stack-tags">
+        <span class="stack-tag work" data-note="방화벽 정책 운영">Palo Alto</span>
+        <span class="stack-tag work" data-note="네트워크 접근 제어">NAC</span>
+        <span class="stack-tag work" data-note="USB 예외 처리, DLP 운영">DLP / Purview</span>
+        <span class="stack-tag work" data-note="SIEM 옮길 때 쿼리 다시 짬">Logpresso (SIEM)</span>
+        <span class="stack-tag work" data-note="DB 접근 통제 운영">ChakraMax</span>
+        <span class="stack-tag work" data-note="패치·웹 서버 장애 잡던 경험">WSUS / IIS</span>
+        <span class="stack-tag lab" data-note="Lab에서 정책 검사 흐름 만들어봄">conftest / OPA</span>
+      </div>
+    </div>
+
+    <div class="stack-group">
+      <p class="stack-group-title">개발 &amp; 자동화</p>
+      <div class="stack-tags">
+        <span class="stack-tag work" data-note="점검 자동화는 거의 이걸로">PowerShell</span>
+        <span class="stack-tag work" data-note="사내 권한관리 시스템 이걸로 짬">Classic ASP / VBScript</span>
+        <span class="stack-tag work" data-note="권한관리 DB 쿼리">MSSQL</span>
+        <span class="stack-tag work" data-note="사내 업무 흐름 자동화">Power Automate</span>
+        <span class="stack-tag lab" data-note="RAG 챗봇, 자동화 도구 만들 때">Python</span>
+        <span class="stack-tag lab" data-note="Lab 시뮬레이터 UI 직접 구현">JavaScript (Vanilla)</span>
+      </div>
+    </div>
+
+    <div class="stack-group">
+      <p class="stack-group-title">클라우드 &amp; AI</p>
+      <div class="stack-tags">
+        <span class="stack-tag work" data-note="사내 AI 업무 플랫폼 운영">Azure OpenAI</span>
+        <span class="stack-tag work" data-note="사내 AI 플랫폼 구축">Copilot Studio</span>
+        <span class="stack-tag work" data-note="사내 지식 검색, SSO 연동">SharePoint / M365</span>
+        <span class="stack-tag lab" data-note="온라인 스토어 CS 챗봇에 써봄">OpenAI API · FAISS (RAG)</span>
+        <span class="stack-tag lab" data-note="GitHub Actions 배포 파이프라인 익힘">GitHub Actions / OIDC</span>
+      </div>
+    </div>
+    </aside>
+  </div>
   </main>
 
   <footer>
