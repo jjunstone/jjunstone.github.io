@@ -87,35 +87,50 @@
 
     .docnb-layout { flex: 1; display: flex; min-height: 0; background: var(--doc-bg); }
 
-    /* ── Project nav sidebar ── */
-    .docnb-sidebar {
-      width: 300px; flex-shrink: 0; border-right: 1px solid var(--doc-border);
-      background: var(--doc-paper); display: flex; flex-direction: column; min-height: 0;
-    }
-    .docnb-sidebar-head { padding: 18px 18px 14px; border-bottom: 1px solid var(--doc-border); }
-    .docnb-sidebar-title {
-      font-size: 12px; font-weight: 700; letter-spacing: .08em; color: var(--doc-text-muted);
+    /* ── Explore bar: 검색(상단 중앙, 넓게) + 대분류 5개(그 아래 한 줄) ── */
+    .explore-bar {
+      padding: 20px 44px; border-bottom: 1px solid var(--doc-border); background: var(--doc-paper);
+      display: flex; flex-direction: column; align-items: center; gap: 14px;
     }
 
-    .docnb-project-list { flex: 1; overflow-y: auto; padding: 10px 12px 20px; }
-    .docnb-domain-group { margin-bottom: 4px; }
-    .docnb-domain-label {
-      font-size: 10.5px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase;
-      color: var(--doc-gray); padding: 12px 8px 6px;
+    .explore-search-row { width: 100%; max-width: 760px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .explore-search { display: flex; gap: 8px; width: 100%; }
+    .explore-search input {
+      flex: 1; font-family: inherit; font-size: 13px; padding: 10px 14px; border-radius: 9px;
+      border: 1px solid var(--doc-border); background: var(--doc-bg); color: var(--doc-text);
+      outline: none; transition: .15s; min-width: 0;
     }
-    .docnb-project-item {
-      display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; border-radius: 10px;
-      cursor: pointer; margin-bottom: 2px; border: 1px solid transparent; transition: .12s ease;
+    .explore-search input:focus { border-color: var(--doc-accent); box-shadow: 0 0 0 3px rgba(23,60,120,.1); }
+    .explore-search button {
+      flex-shrink: 0; font-family: inherit; font-size: 13px; font-weight: 700; padding: 10px 20px;
+      border-radius: 9px; border: 1px solid var(--doc-accent); background: var(--doc-accent); color: #fff;
+      cursor: pointer; transition: .15s;
     }
-    .docnb-project-item:hover { background: var(--doc-bg); }
-    .docnb-project-item.active { background: var(--doc-accent-soft); border-color: rgba(23,60,120,.22); }
-    .docnb-project-item-top { display: flex; align-items: center; gap: 8px; }
-    .docnb-project-num { font-size: 11px; font-weight: 800; color: var(--doc-gray); flex-shrink: 0; font-variant-numeric: tabular-nums; width: 20px; }
-    .docnb-project-item.active .docnb-project-num { color: var(--doc-accent); }
-    .docnb-project-title {
-      font-size: 13px; font-weight: 600; color: var(--doc-text); line-height: 1.4;
+    .explore-search button:hover { background: #122d5c; }
+    .explore-search-examples { font-size: 10.5px; color: var(--doc-text-muted); line-height: 1.6; text-align: center; }
+    .explore-search-examples strong { color: var(--doc-text); font-weight: 700; }
+
+    .explore-categories { display: flex; gap: 8px; width: 100%; max-width: 980px; }
+    .explore-cat-card {
+      background: var(--doc-bg); border: 1px solid var(--doc-border); border-radius: 9px;
+      padding: 7px 11px; cursor: pointer; text-align: left; transition: .18s ease;
+      display: flex; align-items: center; gap: 7px; font-family: inherit; flex: 1 1 0; min-width: 0;
     }
-    .docnb-project-item.active .docnb-project-title { color: var(--doc-accent); }
+    .explore-cat-card:hover { border-color: var(--doc-accent); box-shadow: 0 4px 10px rgba(15,23,42,.08); }
+    .explore-cat-card.active { border-color: var(--doc-accent); background: var(--doc-accent-soft); box-shadow: 0 0 0 1px rgba(23,60,120,.25); }
+    .explore-cat-num { font-size: 9.5px; font-weight: 800; color: var(--doc-gray); font-variant-numeric: tabular-nums; flex-shrink: 0; }
+    .explore-cat-card.active .explore-cat-num { color: var(--doc-accent); }
+    .explore-cat-name { font-size: 11.5px; font-weight: 700; color: var(--doc-text); line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    @media (max-width: 900px) {
+      .explore-bar { padding: 14px 20px; }
+      .explore-categories { flex-wrap: wrap; }
+      .explore-cat-card { flex: 1 1 calc(50% - 8px); }
+    }
+    @media (max-width: 560px) {
+      .explore-cat-card { flex: 1 1 100%; }
+      .explore-search { flex-direction: column; }
+    }
 
     /* ── Main documentation area ── */
     .docnb-main { flex: 1; min-width: 0; overflow-y: auto; }
@@ -123,10 +138,21 @@
     .docnb-doclist-wrap { padding: 8px 44px 48px; }
     .docnb-doclist-wrap-top { padding-top: 36px; }
     .docnb-doclist-title { font-size: 12px; font-weight: 700; letter-spacing: .08em; color: var(--doc-text-muted); text-transform: uppercase; margin: 22px 0 14px; }
-    .docnb-doc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 20px; }
+    .docnb-doclist-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 22px 0 14px; }
+    .docnb-doclist-head .docnb-doclist-title { margin: 0; }
+    .explore-active-label { font-size: 12.5px; font-weight: 600; color: var(--doc-text); }
+    .explore-active-label .q { color: var(--doc-accent); font-weight: 700; }
+    .explore-reset-btn {
+      font-family: inherit; font-size: 12px; font-weight: 600; color: var(--doc-text-muted);
+      background: none; border: 1px solid var(--doc-border); border-radius: 8px; padding: 6px 12px; cursor: pointer; transition: .15s;
+    }
+    .explore-reset-btn:hover { border-color: var(--doc-accent); color: var(--doc-accent); }
+
+    .docnb-doc-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
     .docnb-doc-card {
       background: var(--doc-paper); border: 1px solid var(--doc-border); border-radius: 4px;
-      cursor: pointer; transition: .15s ease; display: flex; flex-direction: column;
+      cursor: pointer; transition: opacity .25s ease, filter .25s ease, box-shadow .25s ease, border-color .25s ease, transform .2s ease;
+      display: flex; flex-direction: column;
       min-height: 300px; padding: 22px 22px 16px;
     }
     .docnb-doc-card{ opacity:0; }
@@ -134,6 +160,21 @@
     html:not(.motion-ready) .docnb-doc-card{ opacity:1; }
     @media (prefers-reduced-motion: reduce){ .docnb-doc-card{ opacity:1 !important; } }
     .docnb-doc-card:hover { box-shadow: 0 10px 24px rgba(15,23,42,.1); border-color: rgba(23,60,120,.3); }
+
+    /* ── Focus Mode: 추천 프로젝트 강조(Glow + Elevation) / 나머지 블러 ── */
+    .docnb-doc-card.is-recommended {
+      border-color: rgba(23,60,120,.4);
+      box-shadow: 0 0 0 1px rgba(23,60,120,.2), 0 14px 30px -6px rgba(23,60,120,.22);
+      transform: translateY(-2px);
+    }
+    .docnb-doc-card.is-recommended.is-top-match {
+      border-color: rgba(23,60,120,.55);
+      box-shadow: 0 0 0 1.5px rgba(23,60,120,.3), 0 18px 36px -6px rgba(23,60,120,.28);
+    }
+    .docnb-doc-card.is-dimmed {
+      opacity: .4 !important; filter: blur(1.5px) saturate(.7); pointer-events: none;
+    }
+    .docnb-doc-card.is-dimmed:hover { box-shadow: none; }
 
     /* 정식 표지형 카드 리스트 — eyebrow/문서번호 + 상단 룰 + 중앙 정렬 제목/부제 + 우측 메타 + 하단 섹터 푸터 */
     .docnb-doc-card-top { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
@@ -153,6 +194,13 @@
     .docnb-doc-card-metarow2 { font-size: 10.5px; color: var(--doc-text-muted); }
     .docnb-doc-card-metarow2 .mark { color: var(--doc-accent); margin-right: 5px; }
     .docnb-doc-card-footer2 { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--doc-border); text-align: center; font-size: 10.5px; font-weight: 800; letter-spacing: .1em; color: var(--doc-accent); }
+    .docnb-doc-card-reason {
+      margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--doc-border);
+      font-size: 11px; color: var(--doc-text-muted); line-height: 1.5; text-align: center;
+    }
+    .docnb-doc-card-reason::before { content: '· '; color: var(--doc-accent); font-weight: 800; }
+
+
 
     /* ── Note-style document modal (정식 보고서 느낌 + 3D 페이지 플립) ── */
     .doc-modal-overlay {
@@ -382,6 +430,9 @@
     }
 
     /* ── Responsive ── */
+    @media (max-width: 1300px) {
+      .docnb-doc-grid { grid-template-columns: repeat(4, 1fr); }
+    }
     @media (max-width: 900px) {
       /* Four top-level destinations: drop the descriptions and let the nav
          scroll rather than squeezing the brand or the theme toggle. */
@@ -389,20 +440,11 @@
       .topbar { flex-wrap: wrap; align-content: center; row-gap: 10px; padding: 14px 18px; }
       .topbar-brand { position: static; }
       .topbar-links { flex: 1 0 100%; justify-content: center; }
-      .docnb-sidebar { position: fixed; top: var(--topbar-h); bottom: 0; left: 0; width: 82vw; max-width: 320px;
-        transform: translateX(-100%); transition: transform .22s ease; z-index: 60; box-shadow: 10px 0 30px rgba(0,0,0,.15); }
-      .docnb-sidebar.open { transform: translateX(0); }
-      .docnb-mobile-toggle { display: flex !important; }
       .docnb-doclist-wrap { padding-left: 20px; padding-right: 20px; }
       .docnb-doc-grid { grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 12px; }
       .doc-modal-overlay { padding: 0; }
       .doc-modal-panel { width: 100%; height: 100%; border-radius: 0; }
       .doc-modal-body { padding: 22px 18px 32px; }
-    }
-    .docnb-mobile-toggle {
-      display: none; align-items: center; gap: 6px; margin-right: 8px; padding: 8px 12px;
-      border: 1px solid var(--doc-border); border-radius: 8px; background: var(--doc-paper);
-      color: var(--doc-text-muted); font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit;
     }
   </style>
 </head>
@@ -418,22 +460,24 @@
 </header>
 
 <div class="body-wrap">
-  <div class="docnb-layout">
 
-    <!-- ── Project navigation sidebar ── -->
-    <aside class="docnb-sidebar" id="docnbSidebar">
-      <div class="docnb-sidebar-head">
-        <div class="docnb-sidebar-title">PROJECT DOCUMENTATION</div>
+  <!-- ── Explore bar: 검색(상단 중앙) + 대분류 5개(그 아래 한 줄) ── -->
+  <div class="explore-bar">
+    <div class="explore-search-row">
+      <div class="explore-search">
+        <input type="text" id="exploreSearchInput" placeholder="찾고 계신 직무나 채용공고를 붙여넣으면 맞는 프로젝트를 보여드립니다" onkeydown="if(event.key==='Enter') exploreRunSearch();">
+        <button type="button" onclick="exploreRunSearch()">검색</button>
       </div>
-      <div class="docnb-project-list" id="docnbProjectList"></div>
-    </aside>
+      <div class="explore-search-examples"><strong>예시</strong> · DX Engineer · AX Engineer · DBA · Cloud Infrastructure Engineer · 금융권 IT 업무혁신 · 사내 업무 프로세스 자동화</div>
+    </div>
+    <div class="explore-categories" id="exploreCategories"></div>
+  </div>
 
+  <div class="docnb-layout">
     <!-- ── Main documentation area ── -->
     <main class="docnb-main" id="docnbMain">
-      <button class="docnb-mobile-toggle" id="docnbMobileToggle" onclick="docnbToggleSidebar()" aria-label="프로젝트 목록 열기">☰ 프로젝트 목록</button>
       <div id="docnbCoverAndList"></div>
     </main>
-
   </div>
 </div>
 
@@ -2115,57 +2159,13 @@ function renderSection(sec, secIndex) {
   }
 }
 
-/* ══ 도메인 라벨 ══ */
-const DOMAIN_ORDER = ['Infrastructure', 'Cloud', 'Database', 'Identity', 'Security', 'Automation', 'Data', 'Workplace'];
-
-/* ══ 사이드바 상태 ══ */
-let selectedProjectId = null;
-
 function docnbFilteredProjects() {
   return [...projects].sort((a, b) => a.priority - b.priority);
 }
 
-function renderDocnbSidebar() {
-  const list = docnbFilteredProjects();
-  const wrap = document.getElementById('docnbProjectList');
-
-  const byDomain = {};
-  list.forEach(p => { (byDomain[p.domain] = byDomain[p.domain] || []).push(p); });
-  const domains = DOMAIN_ORDER.filter(d => byDomain[d]).concat(Object.keys(byDomain).filter(d => !DOMAIN_ORDER.includes(d)));
-
-  let seq = 0;
-  wrap.innerHTML = domains.map(dom => `
-    <div class="docnb-domain-group">
-      <div class="docnb-domain-label">${escapeHtml(dom)}</div>
-      ${byDomain[dom].map(p => {
-        seq++;
-        return `
-        <div class="docnb-project-item ${p.id === selectedProjectId ? 'active' : ''}" onclick="docnbSelectProject(${p.id})" role="button" tabindex="0">
-          <div class="docnb-project-item-top">
-            <span class="docnb-project-num">${String(seq).padStart(2, '0')}</span>
-            <span class="docnb-project-title">${escapeHtml(p.title)}</span>
-          </div>
-        </div>
-      `;
-      }).join('')}
-    </div>
-  `).join('');
-}
-
-function docnbToggleSidebar() {
-  document.getElementById('docnbSidebar').classList.toggle('open');
-}
-
-/* 사이드바에서 프로젝트를 고르면 표지를 한 번 더 보여주지 않고,
-   바로 그 프로젝트의 전체 관리문서(보고서 형태)로 이동한다 */
-function docnbSelectProject(id) {
-  selectedProjectId = id;
-  renderDocnbSidebar();
-  document.getElementById('docnbSidebar').classList.remove('open');
-  openDocModal(id);
-}
-
-/* ══ 프로젝트 갤러리 — 14개 프로젝트를 REPORT 표지 카드로 나열 ══
+/* ══ 프로젝트 갤러리 — 기존 12개 프로젝트를 REPORT 표지 카드로 항상 나열한다 ══
+   대분류 선택이나 검색을 해도 이 12개 목록 자체는 그대로 유지되고,
+   Focus Mode(applyFocusMode)가 카드별로 강조/블러 클래스만 토글한다.
    각 카드를 클릭하면 그 프로젝트의 전체 관리문서가 보고서처럼 이어지는 문서 모달로 넘어간다. */
 function renderProjectGallery() {
   const list = docnbFilteredProjects();
@@ -2173,12 +2173,15 @@ function renderProjectGallery() {
 
   host.innerHTML = `
     <div class="docnb-doclist-wrap docnb-doclist-wrap-top">
-      <div class="docnb-doclist-title">전체 프로젝트 (${list.length})</div>
-      <div class="docnb-doc-grid">        ${list.map(p => `
-          <div class="docnb-doc-card" onclick="openDocModal(${p.id})">
+      <div class="docnb-doclist-head">
+        <div class="docnb-doclist-title">전체 프로젝트 (${list.length})</div>
+        <div id="exploreActiveLabel"></div>
+      </div>
+      <div class="docnb-doc-grid">        ${list.map((p, i) => `
+          <div class="docnb-doc-card" data-project-id="${p.id}" onclick="openDocModal(${p.id})">
             <div class="docnb-doc-card-top">
               <span class="docnb-doc-card-eyebrow2">PROJECT REPORT</span>
-              <span class="docnb-doc-card-no">No. ${String(p.id).padStart(3, '0')}</span>
+              <span class="docnb-doc-card-no">No. ${String(i + 1).padStart(2, '0')}</span>
             </div>
             <div class="docnb-doc-card-rule"></div>
             <div class="docnb-doc-card-spacer-top"></div>
@@ -2193,11 +2196,275 @@ function renderProjectGallery() {
               <div class="docnb-doc-card-metarow2"><span class="mark">■</span>상태 : ${escapeHtml(p.status)}</div>
             </div>
             <div class="docnb-doc-card-footer2">${escapeHtml(p.domain.toUpperCase())}</div>
+            <div class="docnb-doc-card-reason-slot"></div>
           </div>
         `).join('')}
       </div>
     </div>
   `;
+}
+
+/* ══════════════════════════════════════════════════════════
+   Explore — 5개 대분류 + 직무 검색 → Focus Mode로 추천 프로젝트 강조
+   (12개 프로젝트 원본 배열과 priority 순서는 변경하지 않는다.
+    목록 자체를 바꾸지 않고, 카드별 강조/블러 클래스만 토글한다.)
+   ══════════════════════════════════════════════════════════ */
+
+/* 대분류 5종 — 번호/영문명/한글 설명 */
+const EXPLORE_CATEGORIES = [
+  { id: 'infra', no: '01', name: 'Infrastructure & Platform', desc: '인프라 구축과 운영' },
+  { id: 'dx', no: '02', name: 'Business Automation & DX', desc: '업무 프로세스 개선과 자동화' },
+  { id: 'ai', no: '03', name: 'AI & Digital Innovation', desc: 'AI 기반 업무 환경과 디지털 혁신' },
+  { id: 'data', no: '04', name: 'Database & Data', desc: '데이터 구조 분석과 관리 체계' },
+  { id: 'cloud', no: '05', name: 'Cloud Architecture', desc: '클라우드 및 하이브리드 환경 설계' },
+];
+
+/* 대분류별 연결 프로젝트 id (지시서 4장 기준, 프로젝트 하나가 여러 대분류에 연결될 수 있음) */
+const CATEGORY_PROJECT_LINKS = {
+  infra: [1, 7, 12, 4],
+  dx: [2, 4, 6, 8],
+  ai: [5, 10],
+  data: [13, 14, 10],
+  cloud: [9, 1, 12],
+};
+
+/* 대분류 클릭 시 보여줄 짧은 추천 이유 (대분류 단위이므로 고정 문구) */
+const CATEGORY_REASON = {
+  infra: '인프라 구축·운영 경험과 연결되는 프로젝트입니다.',
+  dx: '업무 프로세스 개선·자동화 경험과 연결되는 프로젝트입니다.',
+  ai: 'AI 기반 업무 환경·디지털 혁신 경험과 연결되는 프로젝트입니다.',
+  data: '데이터 구조 분석·관리 체계 경험과 연결되는 프로젝트입니다.',
+  cloud: '클라우드·하이브리드 환경 설계 경험과 연결되는 프로젝트입니다.',
+};
+
+/* 직무명 사전 — 입력이 이 중 하나와 (느슨하게) 일치하면 primaryIds를 우선 추천하고,
+   그 외의 자유 텍스트(채용공고 등)는 keywords로 전체 프로젝트를 점수 매칭한다.
+   primaryIds는 지시서 5장의 "초기 지원 직무 예시" 기준 추천 대상이다. */
+const JOB_PROFILES = {
+  'DX Engineer': { primaryIds: [2, 6, 4, 8], keywords: ['dx', 'digital transformation', '디지털 전환', '업무 자동화', '프로세스 개선', 'workflow'] },
+  'AX Engineer': { primaryIds: [5, 10, 6], keywords: ['ax', 'ai transformation', 'ai 전환', '업무지원', 'copilot', 'rag'] },
+  'Automation Engineer': { primaryIds: [6, 2, 4], keywords: ['automation', '자동화', 'rpa', 'power automate', 'workflow'] },
+  'DBA': { primaryIds: [13, 14], keywords: ['dba', 'database administrator', '데이터베이스 관리', 'mssql', 'sql server'] },
+  'Database Engineer': { primaryIds: [13, 14, 10], keywords: ['database engineer', '데이터베이스 엔지니어', 'data modeling', 'mssql'] },
+  'Cloud Engineer': { primaryIds: [9, 1, 12], keywords: ['cloud engineer', '클라우드 엔지니어', 'azure', 'landing zone', 'hybrid cloud'] },
+  'Cloud Infrastructure Engineer': { primaryIds: [9, 1, 12], keywords: ['cloud infrastructure', '클라우드 인프라', 'azure', 'hybrid cloud', 'landing zone'] },
+  'Infrastructure Engineer': { primaryIds: [1, 7, 12], keywords: ['infrastructure engineer', '인프라 엔지니어', 'windows server', 'active directory', 'vmware'] },
+  'IAM Engineer': { primaryIds: [2, 14, 8], keywords: ['iam', 'identity', '접근권한', '권한 관리', 'rbac', 'active directory'] },
+  'M365 Engineer': { primaryIds: [5, 8, 6], keywords: ['m365', 'microsoft 365', 'sharepoint', 'teams', 'purview', 'copilot'] },
+  'Data Engineer': { primaryIds: [13, 10, 14], keywords: ['data engineer', '데이터 엔지니어', 'data governance', 'data catalog', '데이터 거버넌스'] },
+  '금융권 IT 업무혁신': { primaryIds: [6, 2, 4], keywords: ['금융권', 'it 업무혁신', '업무 프로세스', '자동화', 'workflow'] },
+  '사내 업무 프로세스 자동화': { primaryIds: [6, 2, 4], keywords: ['사내 업무', '프로세스 자동화', 'workflow', 'power automate', 'rpa'] },
+};
+
+/* ══ 추천 함수 — 향후 AI 연동을 고려해 역할을 분리해 둔다 ══ */
+
+/* A. 대분류 클릭 → 연결된 프로젝트 중 최대 3개 (연결 순서 = 적합도 순서로 취급) */
+function recommendProjectsByCategory(categoryId) {
+  const ids = CATEGORY_PROJECT_LINKS[categoryId] || [];
+  const found = ids
+    .map(id => projects.find(p => p.id === id))
+    .filter(Boolean)
+    .slice(0, 3);
+  return found.map(p => ({ project: p, reason: CATEGORY_REASON[categoryId] || '선택한 분야와 연결된 프로젝트입니다.' }));
+}
+
+/* 검색어에서 키워드 토큰을 뽑아낸다 (채용공고 같은 긴 텍스트도 지원) */
+function extractKeywords(query) {
+  const lower = String(query).toLowerCase();
+  const tokens = lower
+    .split(/[\s,·\/|()\[\]{}:;·\n\r]+/)
+    .map(t => t.trim())
+    .filter(t => t.length >= 2);
+  return [...new Set(tokens)];
+}
+
+/* B. 직무 검색 → 12개 프로젝트 전체를 대상으로 추천 최대 3개.
+   입력이 JOB_PROFILES의 직무명과 (느슨하게) 일치하면 그 직무의 primaryIds를 우선 쓰고,
+   그 외 자유 텍스트(채용공고 등)는 title/tags/desc/domain을 키워드로 점수 매칭한다. */
+function matchJobProfile(query) {
+  const lowerQuery = query.toLowerCase();
+  let best = null;
+  Object.entries(JOB_PROFILES).forEach(([role, profile]) => {
+    const roleLower = role.toLowerCase();
+    if (lowerQuery === roleLower || lowerQuery.includes(roleLower) || roleLower.includes(lowerQuery)) {
+      if (!best || roleLower.length > best.roleLower.length) {
+        best = { role, profile, roleLower };
+      }
+    }
+  });
+  return best;
+}
+
+function scoreProjectsByKeywords(tokens) {
+  return projects.map(p => {
+    const haystack = [p.title, p.domain, p.desc, ...(p.tags || [])].join(' ').toLowerCase();
+    let score = 0;
+    tokens.forEach(token => {
+      if (!token) return;
+      if (haystack.includes(token)) {
+        score += 1;
+        if (p.tags && p.tags.some(t => t.toLowerCase().includes(token))) score += 0.5;
+      }
+    });
+    return { project: p, score };
+  });
+}
+
+function recommendProjectsLocally(query) {
+  const trimmed = String(query || '').trim();
+  if (!trimmed) return [];
+
+  const matched = matchJobProfile(trimmed);
+
+  if (matched) {
+    const ids = matched.profile.primaryIds;
+    const found = ids.map(id => projects.find(p => p.id === id)).filter(Boolean).slice(0, 3);
+    return found.map(p => ({
+      project: p,
+      reason: `'${matched.role}' 직무와 연관된 ${p.domain} 영역 경험입니다.`,
+    }));
+  }
+
+  // 사전에 없는 자유 텍스트(채용공고 등) — 키워드 점수로 전체 프로젝트를 비교
+  const queryTokens = extractKeywords(trimmed);
+  const scored = scoreProjectsByKeywords(queryTokens);
+
+  return scored
+    .filter(s => s.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3)
+    .map(s => ({
+      project: s.project,
+      reason: `${s.project.domain} 영역 — ${s.project.title} 경험과 연관됩니다.`,
+    }));
+}
+
+/* C. AI 연동 자리 — 아직 Endpoint가 없으면 로컬 검색으로 자동 대체한다.
+   실제 AI API 연결 시 이 함수 내부만 fetch 호출로 교체하면 된다. */
+const AI_RECOMMEND_ENDPOINT = null; // 예: 'https://your-worker.workers.dev/recommend'
+
+async function recommendProjectsByAI(query) {
+  if (!AI_RECOMMEND_ENDPOINT) {
+    // Endpoint 미설정 — 로컬 추천으로 대체 (AI 추천이라고 표시하지 않는다)
+    return { source: 'local', results: recommendProjectsLocally(query) };
+  }
+
+  try {
+    const res = await fetch(AI_RECOMMEND_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query,
+        projects: projects.map(p => ({ id: p.id, title: p.title, tags: p.tags, desc: p.desc })),
+      }),
+    });
+    if (!res.ok) throw new Error('AI recommend request failed: ' + res.status);
+    const data = await res.json();
+
+    const validIds = new Set(projects.map(p => p.id));
+    const recs = Array.isArray(data.recommendations) ? data.recommendations : [];
+    const results = recs
+      .filter(r => validIds.has(r.projectId))
+      .slice(0, 3)
+      .map(r => ({ project: projects.find(p => p.id === r.projectId), reason: r.reason || '' }));
+
+    return { source: 'ai', interpretedRole: data.interpretedRole || null, results };
+  } catch (e) {
+    // AI 호출 실패 시 로컬 추천으로 조용히 대체
+    return { source: 'local', results: recommendProjectsLocally(query) };
+  }
+}
+
+/* ══ 렌더링 — 대분류 카드 ══ */
+function renderExploreCategories() {
+  const host = document.getElementById('exploreCategories');
+  host.innerHTML = EXPLORE_CATEGORIES.map(cat => `
+    <button type="button" class="explore-cat-card" id="exploreCat-${cat.id}" onclick="exploreSelectCategory('${cat.id}')" title="${escapeHtml(cat.desc)}">
+      <span class="explore-cat-num">${cat.no}</span>
+      <span class="explore-cat-name">${escapeHtml(cat.name)}</span>
+    </button>
+  `).join('');
+}
+
+/* ══ Focus Mode — 추천된 프로젝트는 Glow+Elevation으로 강조하고,
+   나머지는 블러로 흐리게 남겨둔다. 12개 카드 목록 자체는 그대로 유지한다. ══ */
+function applyFocusMode(items, labelHtml) {
+  const recommendedIds = new Set(items.map(item => item.project.id));
+  const topMatchId = items.length ? items[0].project.id : null;
+  const reasonById = new Map(items.map(item => [item.project.id, item.reason]));
+
+  document.querySelectorAll('.docnb-doc-card').forEach(card => {
+    const id = Number(card.dataset.projectId);
+    const slot = card.querySelector('.docnb-doc-card-reason-slot');
+    card.classList.remove('is-recommended', 'is-top-match', 'is-dimmed');
+    if (slot) slot.innerHTML = '';
+
+    if (recommendedIds.has(id)) {
+      card.classList.add('is-recommended');
+      if (id === topMatchId) card.classList.add('is-top-match');
+      const reason = reasonById.get(id);
+      if (slot && reason) {
+        slot.innerHTML = `<div class="docnb-doc-card-reason">${escapeHtml(reason)}</div>`;
+      }
+    } else {
+      card.classList.add('is-dimmed');
+    }
+  });
+
+  const labelHost = document.getElementById('exploreActiveLabel');
+  if (labelHost) {
+    if (!items.length) {
+      labelHost.innerHTML = `
+        <span class="explore-active-label">${labelHtml} — 관련 프로젝트를 찾지 못했습니다</span>
+        <button type="button" class="explore-reset-btn" onclick="exploreReset()">전체 보기</button>
+      `;
+    } else {
+      labelHost.innerHTML = `
+        <span class="explore-active-label">${labelHtml}</span>
+        <button type="button" class="explore-reset-btn" onclick="exploreReset()">전체 보기</button>
+      `;
+    }
+  }
+}
+
+/* ══ 상태 전환 ══ */
+let exploreActiveCategory = null;
+
+function exploreSelectCategory(categoryId) {
+  exploreActiveCategory = categoryId;
+  document.querySelectorAll('.explore-cat-card').forEach(el => el.classList.remove('active'));
+  const activeEl = document.getElementById('exploreCat-' + categoryId);
+  if (activeEl) activeEl.classList.add('active');
+
+  const cat = EXPLORE_CATEGORIES.find(c => c.id === categoryId);
+  const results = recommendProjectsByCategory(categoryId);
+  applyFocusMode(results, `<span class="q">${escapeHtml(cat ? cat.name : '')}</span> 추천 프로젝트`);
+}
+
+function exploreRunSearch() {
+  const input = document.getElementById('exploreSearchInput');
+  const query = input ? input.value.trim() : '';
+  if (!query) return;
+
+  document.querySelectorAll('.explore-cat-card').forEach(el => el.classList.remove('active'));
+  exploreActiveCategory = null;
+
+  const results = recommendProjectsLocally(query);
+  applyFocusMode(results, `'${escapeHtml(query)}' 검색 결과`);
+}
+
+function exploreReset() {
+  exploreActiveCategory = null;
+  document.querySelectorAll('.explore-cat-card').forEach(el => el.classList.remove('active'));
+  const input = document.getElementById('exploreSearchInput');
+  if (input) input.value = '';
+  document.querySelectorAll('.docnb-doc-card').forEach(card => {
+    card.classList.remove('is-recommended', 'is-top-match', 'is-dimmed');
+    const slot = card.querySelector('.docnb-doc-card-reason-slot');
+    if (slot) slot.innerHTML = '';
+  });
+  const labelHost = document.getElementById('exploreActiveLabel');
+  if (labelHost) labelHost.innerHTML = '';
 }
 
 /* ══ 노트형 문서 모달 — 문서 한 장씩 3D 페이지 플립으로 넘긴다 ══ */
@@ -2375,10 +2642,10 @@ function closeDiagramLightbox() {
 }
 
 /* ══ Init ══ */
-renderDocnbSidebar();
+renderExploreCategories();
 renderProjectGallery();
-// Motion(바닐라 CDN) 기반 인터랙션 — 문서 카드 진입 애니메이션과
-// 카드/사이드바 항목의 호버 스프링. 사이드바는 선택 시 다시 그려지므로
+// Motion(바닐라 CDN) 기반 인터랙션 — 문서 카드/추천 결과 카드 진입 애니메이션과
+// 카드 호버 스프링. 메인 영역은 검색/대분류 선택이나 초기화 시 다시 그려지므로
 // 이벤트 리스너를 매번 새로 붙이지 않도록 위임(delegation) 방식으로 처리한다.
 (async function initMotion() {
   try {
@@ -2398,13 +2665,13 @@ renderProjectGallery();
 
     let hoverTarget = null;
     document.addEventListener('mouseover', (e) => {
-      const card = e.target.closest('.docnb-doc-card, .docnb-project-item');
-      if (!card || card === hoverTarget) return;
+      const card = e.target.closest('.docnb-doc-card');
+      if (!card || card === hoverTarget || card.classList.contains('is-dimmed')) return;
       hoverTarget = card;
       animate(card, { y: -3 }, { type: 'spring', stiffness: 340, damping: 22 });
     });
     document.addEventListener('mouseout', (e) => {
-      const card = e.target.closest('.docnb-doc-card, .docnb-project-item');
+      const card = e.target.closest('.docnb-doc-card');
       if (!card) return;
       if (!e.relatedTarget || !card.contains(e.relatedTarget)) {
         animate(card, { y: 0 }, { type: 'spring', stiffness: 340, damping: 24 });
@@ -2418,6 +2685,10 @@ renderProjectGallery();
 </script>
 </body>
 </html>
+
+
+
+
 
 
 
