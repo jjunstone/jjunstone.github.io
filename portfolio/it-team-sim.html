@@ -35,15 +35,15 @@
   /* ── 상단 ── */
   .sim-top{
     display:flex; align-items:center; justify-content:center; position:relative;
-    padding:14px 24px; background:#ffffff; border-bottom:1px solid var(--line);
+    height:64px; padding:0 24px; background:#ffffff; border-bottom:1px solid var(--line);
     flex-shrink:0;
   }
   .sim-top-left{ display:flex; align-items:center; gap:10px; min-width:0; position:absolute; left:24px; }
-  .sim-brand{ font-size:.9rem; font-weight:700; letter-spacing:-.01em; flex-shrink:0; }
+  .sim-brand{ font-size:.9rem; font-weight:800; letter-spacing:-.01em; flex-shrink:0; color:#141414; }
   .sim-sep{ color:var(--ink-faint); }
-  .sim-current{ font-size:.9rem; color:var(--ink-soft); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; position:absolute; left:50%; transform:translateX(-50%); max-width:40%; }
+  .sim-current{ font-size:.9rem; color:#141414; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; position:absolute; left:50%; transform:translateX(-50%); max-width:40%; }
   .sim-top-right{ display:flex; align-items:center; gap:12px; flex-shrink:0; position:absolute; right:24px; }
-  .sim-clock{ font-size:.82rem; color:var(--ink-faint); font-variant-numeric:tabular-nums; }
+  .sim-clock{ font-size:.82rem; color:#5b5b5b; font-variant-numeric:tabular-nums; }
   .sim-btn-ghost{
     font-size:.82rem; color:var(--ink-soft); text-decoration:none; background:none;
     border:1px solid var(--line); border-radius:999px; padding:6px 14px; cursor:pointer; font-family:inherit;

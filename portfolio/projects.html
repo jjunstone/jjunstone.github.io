@@ -19,7 +19,7 @@
   </script>
   <style>
     :root {
-      --topbar-h: 104px;
+      --topbar-h: 64px;
       --sidebar-w: 240px;
       --bg: #f8fafc;
       --bg-panel: #ffffff;
@@ -42,23 +42,22 @@
     /* ── Topbar — index.html/career.html과 같은 디자인 언어 ── */
     .topbar {
       position: fixed; top: 0; left: 0; right: 0; height: var(--topbar-h);
-      background: rgba(255,255,255,.82);
-      backdrop-filter: blur(14px) saturate(140%); -webkit-backdrop-filter: blur(14px) saturate(140%);
-      border-bottom: 1px solid rgba(23,60,120,.1);
-      box-shadow: 0 1px 0 rgba(23,60,120,.04), 0 12px 24px -20px rgba(15,23,42,.15);
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      box-shadow: none;
       display: flex; align-items: center; justify-content: center; z-index: 100; padding: 0 32px;
     }
     .topbar-brand {
-      font-weight: 800; text-decoration: none; font-size: 18px; letter-spacing: .02em;
+      font-weight: 800; text-decoration: none; font-size: 16.8px; letter-spacing: .02em;
       position: absolute; left: 32px;
-      color: var(--accent);
+      color: #141414;
     }
     .brand-info { line-height: 1.2; }
-    .topbar-links { display: flex; gap: 22px; }
-    .topbar-links a { position: relative; color: var(--text-muted); text-decoration: none; font-size: 15px; font-weight: 600; padding-bottom: 2px; }
-    .topbar-links a::after { content: ""; position: absolute; left: 0; right: 100%; bottom: -2px; height: 1.5px; background: var(--accent); transition: right .22s cubic-bezier(.4,0,.2,1); }
+    .topbar-links { display: flex; gap: 24px; }
+    .topbar-links a { position: relative; color: #141414; text-decoration: none; font-size: 15.2px; font-weight: 600; padding-bottom: 2px; }
+    .topbar-links a::after { content: ""; position: absolute; left: 0; right: 100%; bottom: -2px; height: 1.5px; background: #141414; transition: right .22s cubic-bezier(.4,0,.2,1); }
     .topbar-links a:hover::after { right: 0; }
-    .topbar-links a:hover { color: var(--accent); }
+    .topbar-links a:hover { color: #141414; }
 
     /* ── Page body ── */
     .body-wrap {
@@ -436,7 +435,7 @@
     @media (max-width: 900px) {
       /* Four top-level destinations: drop the descriptions and let the nav
          scroll rather than squeezing the brand or the theme toggle. */
-      :root { --topbar-h: 138px; }
+      :root { --topbar-h: 108px; }
       .topbar { flex-wrap: wrap; align-content: center; row-gap: 10px; padding: 14px 18px; }
       .topbar-brand { position: static; }
       .topbar-links { flex: 1 0 100%; justify-content: center; }

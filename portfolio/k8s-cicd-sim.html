@@ -17,10 +17,10 @@
   html{scroll-behavior:smooth}
   body{margin:0;background:radial-gradient(circle at 50% -20%,#16345b 0,transparent 42%),var(--bg);color:var(--ink);font:400 15px/1.55 var(--font)}
   button{font:inherit}
-  .site-topbar{display:flex;align-items:center;justify-content:center;min-height:54px;padding:20px 26px;border-bottom:1px solid var(--line);background:rgba(7,17,31,.9);backdrop-filter:blur(12px);position:sticky;top:0;z-index:20}
-  .brand{position:absolute;left:26px;color:var(--ink);text-decoration:none;font-weight:750;font-size:17px}
-  .nav{display:flex;gap:18px;align-items:center}
-  .nav a{color:var(--mut);text-decoration:none;font-size:13px;font-weight:650}
+  .site-topbar{display:flex;align-items:center;justify-content:center;height:64px;padding:0 26px;border-bottom:1px solid #e5e7eb;background:#ffffff;position:sticky;top:0;z-index:20}
+  .brand{position:absolute;left:26px;color:#141414;text-decoration:none;font-weight:750;font-size:15.9px}
+  .nav{display:flex;gap:24px;align-items:center}
+  .nav a{color:#141414;text-decoration:none;font-size:13px;font-weight:650}
   .scope-chip{border:1px solid rgba(244,182,79,.55);color:var(--amber);border-radius:999px;padding:3px 9px;font-size:11px;font-weight:750}
   .wrap{width:min(1280px,calc(100% - 36px));margin:0 auto;padding:44px 0 70px}
   .eyebrow{margin:0 0 8px;color:var(--cyan);font:700 12px var(--mono);letter-spacing:.12em;text-transform:uppercase}
@@ -100,10 +100,13 @@
 <body>
 <header class="site-topbar">
   <a class="brand" href="../index.html">이준석</a>
-  <nav class="nav"><a href="lab.html">Lab</a><a href="../index.html">Home</a><span class="scope-chip">개인 학습 · 인터랙티브 프로토타입</span></nav>
+  <nav class="nav"><a href="lab.html">Lab</a><a href="../index.html">Home</a></nav>
 </header>
 <main class="wrap">
-  <p class="eyebrow">K8s · CI/CD · IaC</p>
+  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px;">
+    <p class="eyebrow" style="margin:0;">K8s · CI/CD · IaC</p>
+    <span class="scope-chip">개인 학습 · 인터랙티브 프로토타입</span>
+  </div>
   <h1>Terraform · K8s · GitOps<br>배포 파이프라인</h1>
   <p class="lead">코드 변경부터 정책 검사, OIDC 인증, AKS 롤링 업데이트와 장애 복구까지 한 흐름으로 재생합니다. 시나리오를 바꾸면 배포 게이트와 클러스터 상태가 함께 달라집니다.</p>
   <div class="scope"><b>구현 범위</b> — 공개 아키텍처와 개인 학습 내용을 바탕으로 만든 브라우저 시뮬레이터입니다. Terraform·Kubernetes·GitHub Actions를 프로덕션에서 구축·운영했다는 의미가 아니며, 배포 설계의 핵심 판단과 실패 처리를 검증하기 위한 가상 환경입니다.</div>

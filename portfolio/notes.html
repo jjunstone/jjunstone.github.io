@@ -32,14 +32,15 @@
 
   .topbar{
     position:sticky; top:0; z-index:40;
-    background:rgba(255,255,255,.92);
-    backdrop-filter:blur(12px);
-    border-bottom:1px solid var(--line);
+    height:64px;
+    background:#ffffff;
+    border-bottom:1px solid #e5e7eb;
   }
   .topbar-inner{
     max-width:1280px;
+    height:100%;
     margin:0 auto;
-    padding:18px 24px;
+    padding:0 24px;
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -47,17 +48,17 @@
   .topbar-brand{
     font-weight:800;
     text-decoration:none;
-    font-size:1.18rem;
-    color:var(--navy);
+    font-size:1.05rem;
+    color:#141414;
   }
   .topbar-links{ display:flex; gap:24px; }
   .topbar-links a{
-    color:var(--ink-soft);
+    color:#141414;
     text-decoration:none;
     font-size:.95rem;
     font-weight:600;
   }
-  .topbar-links a:hover{ color:var(--navy); }
+  .topbar-links a:hover{ color:#141414; }
 
   main{
     max-width:1280px;

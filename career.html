@@ -31,37 +31,36 @@
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:26px 32px;
-    background:rgba(255,255,255,.82);
-    backdrop-filter:blur(14px) saturate(140%);
-    -webkit-backdrop-filter:blur(14px) saturate(140%);
-    border-bottom:1px solid rgba(23,60,120,.1);
-    box-shadow:0 1px 0 rgba(23,60,120,.04), 0 12px 24px -20px rgba(15,23,42,.15);
+    height:64px;
+    padding:0 32px;
+    background:#ffffff;
+    border-bottom:1px solid #e5e7eb;
+    box-shadow:none;
   }
   .topbar-brand{
     font-weight:800;
     text-decoration:none;
-    font-size:1.2rem;
+    font-size:1.05rem;
     letter-spacing:.02em;
-    color:var(--accent);
+    color:#141414;
   }
-  .topbar-links{ display:flex; align-items:center; gap:18px; }
+  .topbar-links{ display:flex; align-items:center; gap:24px; }
   .topbar-links a{
     position:relative;
-    color:var(--ink-soft);
+    color:#141414;
     text-decoration:none;
-    font-size:1rem;
+    font-size:.95rem;
     font-weight:600;
   }
   .topbar-links a:not(.topbar-btn)::after{
     content:"";
     position:absolute; left:0; right:100%; bottom:-3px;
     height:1.5px;
-    background:var(--accent);
+    background:#141414;
     transition:right .22s cubic-bezier(.4,0,.2,1);
   }
   .topbar-links a:not(.topbar-btn):hover::after{ right:0; }
-  .topbar-links a:hover{ color:var(--accent); }
+  .topbar-links a:hover{ color:#141414; }
 
   .topbar-btn{
     display:inline-flex;
@@ -69,29 +68,29 @@
     gap:6px;
     padding:8px 16px;
     border-radius:999px;
-    border:1.4px solid var(--line);
+    border:1.4px solid #d4d4d4;
     font-size:.85rem;
     font-weight:600;
-    color:var(--ink);
+    color:#141414;
     text-decoration:none;
     transition:border-color .18s ease, color .18s ease, box-shadow .18s ease, transform .18s ease;
   }
   .topbar-btn:hover{
-    border-color:var(--accent);
-    color:var(--accent);
-    box-shadow:0 4px 12px -4px rgba(23,60,120,.25);
+    border-color:#141414;
+    color:#141414;
+    box-shadow:0 4px 12px -4px rgba(0,0,0,.15);
     transform:translateY(-1px);
   }
   .topbar-btn.primary{
-    background:linear-gradient(135deg,#173c78,#2a5bb0);
-    border-color:var(--ink);
+    background:#141414;
+    border-color:#141414;
     color:#fff;
   }
   .topbar-btn.primary:hover{
-    background:linear-gradient(135deg,#1a4488,#2563eb);
-    border-color:var(--accent);
+    background:#000000;
+    border-color:#141414;
     color:#fff;
-    box-shadow:0 6px 16px -4px rgba(23,60,120,.4);
+    box-shadow:0 6px 16px -4px rgba(0,0,0,.3);
   }
 
   main{
@@ -515,7 +514,7 @@
     .timeline-item{ opacity:1 !important; transform:none !important; }
   }
   @media (max-width:560px){
-    .topbar{ padding:16px 20px; flex-wrap:wrap; gap:10px; }
+    .topbar{ height:auto; padding:16px 20px; flex-wrap:wrap; gap:10px; }
     .timeline-item{ grid-template-columns:1fr; gap:6px; }
   }
 </style>
@@ -535,7 +534,7 @@
     <div class="page-main">
 <p class="page-eyebrow">Career</p>
     <h1 class="page-title">불편하면 만들어버리는 사람</h1>
-    <p class="page-lead">법무법인에서 인프라와 보안을 맡고 있습니다. 게을러지기 위해 열심히 살고 있습니다. 자동화를 좋아해서 업무에 최대한 적용하고, 요즘은 Azure와 코드 쪽으로 넓히는 중입니다.</p>
+    <p class="page-lead">법무법인에서 인프라와 보안을 맡고 있습니다. 게을러지기 위해 열심히 살고 있습니다. <br>자동화를 좋아해서 업무에 최대한 적용하고 있습니다.</p>
     <div class="focus-tags">
       <span>인프라·ID</span>
       <span>사내 도구 개발</span>
@@ -551,7 +550,7 @@
         <div class="journey-dot" style="left:16%" data-note="입대, 전산병으로"><span class="journey-dot-mark edu"></span><span class="journey-dot-year">2019</span></div>
         <div class="journey-dot" style="left:33%" data-note="전역하고 바로 효성ITX 인턴"><span class="journey-dot-mark intern"></span><span class="journey-dot-year">2020</span></div>
         <div class="journey-dot" style="left:50%" data-note="주택임대, 온라인 스토어, 딥노이드 인턴까지 한 해에"><span class="journey-dot-mark maker"></span><span class="journey-dot-year">2023</span></div>
-        <div class="journey-dot" style="left:83%" data-note="졸업하고 율촌 입사"><span class="journey-dot-mark career"></span><span class="journey-dot-year">2024</span></div>
+        <div class="journey-dot" style="left:83%" data-note="졸업 전 율촌 입사"><span class="journey-dot-mark career"></span><span class="journey-dot-year">2024</span></div>
         <div class="journey-dot now" style="left:100%" data-note="지금 여기"><span class="journey-dot-mark career"></span><span class="journey-dot-year">현재</span></div>
       </div>
       <div class="journey-legend">
@@ -562,7 +561,7 @@
       </div>
     </div>
 
-    <p class="page-lead">군대 전산실에서 인프라를 처음 만졌고, 쇼핑몰을 하면서 필요한 건 직접 만들기 시작했습니다. 지금은 그걸 회사 인프라에서 하고 있습니다.</p>
+    <p class="page-lead">군대 전산실에서 인프라를 처음 만졌고, 개인 사업을 운영하면서 필요한 건 직접 만들기 시작했습니다.<br> 지금은 그걸 회사 인프라에서 해보고 있습니다.</p>
 
     <p class="section-label">Career Experience</p>
     <div class="timeline">
@@ -574,22 +573,22 @@
 
           <div class="role-block">
             <p class="role-block-title">인프라·ID</p>
-            <p>사내 서버·AD·VMware 환경을 운영합니다. 회의실 PC는 보안 분리를 위해 AD 포리스트와 DMZ를 따로 구축했습니다.</p>
+            <p>사내 서버·AD·VMware 환경을 운영합니다.<br> 무선망 PC는 보안 분리를 위해 AD 포리스트와 DMZ를 따로 구축했습니다.</p>
           </div>
 
           <div class="role-block">
             <p class="role-block-title">권한관리 시스템</p>
-            <p>메일로 받던 방화벽 예외 신청을 웹 시스템으로 바꿨습니다. 신청·승인·이력을 한곳에서 관리하고, AD 권한과 USB 예외 처리도 이걸로 돌립니다. (Classic ASP · MSSQL · PowerShell)</p>
+            <p>메일로 받던 방화벽 예외 신청을 웹 시스템으로 바꿨습니다. 신청·승인·이력을 한곳에서 관리하고, AD 권한과 파일 반출 예외 처리도 처리하는 프로세스를 만들었습니다. <br>(Classic ASP · MSSQL · PowerShell)</p>
           </div>
 
           <div class="role-block">
             <p class="role-block-title">점검·운영</p>
-            <p>ISO 27001 점검 84개 항목을 PowerShell로 자동화했습니다. 손으로 하면 꼭 놓치는 부분들이 있어서요. SIEM 이전 때는 쿼리를 새 버전에 맞게 다시 짰고, WSUS·IIS 장애도 대응합니다.</p>
+            <p>ISO 27001 점검 항목들을 PowerShell로 자동화했습니다. <br> 손으로 하면 꼭 놓치는 부분들이 있어서요.<br> SIEM 버전이전 때는 쿼리를 새 버전에 맞게 다시 짰고, WSUS·IIS 장애도 대응합니다.</p>
           </div>
 
           <div class="role-block">
             <p class="role-block-title">AI 플랫폼</p>
-            <p>Copilot Studio·Azure OpenAI로 사내 AI 업무 도구를 운영합니다. 보안 정책 안에서 사내 문서를 RAG로 검색해 답하고, 도입 후 IT 문의 메일이 약 30% 줄었습니다.</p>
+            <p>Copilot Studio·Azure OpenAI로 사내 AI 업무 도구를 운영합니다. <br>보안 정책 안에서 사내 문서를 RAG로 검색해 답하고, 도입 후 IT 문의 메일이 약 30% 줄었습니다.</p>
           </div>
         </div>
       </div>
