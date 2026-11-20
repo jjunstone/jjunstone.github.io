@@ -21,10 +21,10 @@
   .brand{position:absolute;left:26px;color:var(--ink);text-decoration:none;font-weight:750;font-size:17px}
   .nav{display:flex;gap:18px;align-items:center}
   .nav a{color:var(--mut);text-decoration:none;font-size:13px;font-weight:650}
-  .scope-chip{border:1px solid rgba(244,182,79,.55);color:var(--amber);border-radius:999px;padding:3px 9px;font-size:11px;font-weight:750}
+  .scope-chip{border:1px solid rgba(244,182,79,.55);color:var(--amber);border-radius:999px;padding:3px 9px;font-size:11px;font-weight:750;white-space:nowrap}
   .wrap{width:min(1280px,calc(100% - 36px));margin:0 auto;padding:44px 0 70px}
   .eyebrow{margin:0 0 8px;color:var(--cyan);font:700 12px var(--mono);letter-spacing:.12em;text-transform:uppercase}
-  h1{font-size:clamp(30px,4.4vw,52px);line-height:1.08;letter-spacing:-.045em;margin:0;max-width:900px}
+  h1{font-size:clamp(26px,3.6vw,44px);line-height:1.15;letter-spacing:-.045em;margin:0;max-width:1100px}
   .lead{max-width:790px;color:var(--mut);font-size:16px;margin:16px 0 0}
   .scope{margin:22px 0 28px;padding:13px 16px;border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:9px;background:rgba(13,27,45,.72);color:#c4d2e1;font-size:13px}
   .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:14px;border:1px solid var(--line);border-radius:14px;background:rgba(13,27,45,.88)}
@@ -33,7 +33,7 @@
   .scenario:hover,.control:hover{border-color:var(--blue);color:var(--ink)}
   .scenario.active{background:var(--blue);border-color:var(--blue);color:#06101e}
   .control.primary{background:var(--cyan);border-color:var(--cyan);color:#041512}
-  .pipeline{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:0;margin:22px 0;overflow-x:auto;padding:4px 1px 12px}
+  .pipeline{display:grid;grid-template-columns:repeat(7,minmax(126px,1fr));gap:0;margin:22px 0;overflow-x:auto;padding:4px 1px 12px}
   .pipe-step{min-width:126px;position:relative;padding-right:24px}
   .pipe-step:not(:last-child)::after{content:"→";position:absolute;right:6px;top:25px;color:#4f6883;font:700 18px var(--mono)}
   .pipe-node{width:100%;min-height:68px;border:1px solid var(--line);border-radius:11px;background:var(--panel);padding:10px;transition:.25s ease}
@@ -75,8 +75,11 @@
   .check.pass::before{content:"✓";color:var(--green)}.check.fail::before{content:"×";color:var(--red)}.check.warn::before{content:"!";color:var(--amber)}
   .log{margin-top:16px;min-height:154px;max-height:230px;overflow:auto;border:1px solid var(--line);border-radius:10px;background:#030a13;padding:12px;font:11px/1.6 var(--mono);color:#98adc4}
   .log-line{display:block}.log-line strong{color:var(--cyan);font-weight:600}.log-line.bad{color:#ff9aa1}.log-line.warn{color:#ffd080}
-  .principles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
-  .principle{border:1px solid var(--line);border-radius:12px;padding:15px;background:rgba(13,27,45,.75)}
+  .principles{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+  .principle{border:1px solid var(--line);border-radius:12px;padding:15px;background:rgba(13,27,45,.75);text-align:left;color:inherit;font:inherit;cursor:pointer;width:100%}
+  .principle:hover{border-color:var(--blue)}
+  .principle.on{border-color:var(--blue);background:rgba(94,160,255,.1)}
+  .principle code{font:11px var(--mono);color:#9fd0ff}
   .principle b{display:block;font-size:13px;margin-bottom:5px}.principle p{margin:0;color:var(--mut);font-size:12px}
   .principle i{display:block;color:var(--cyan);font:700 11px var(--mono);font-style:normal;margin-bottom:8px}
 
@@ -93,27 +96,40 @@
   .cl .cn{flex:none;width:34px;color:#4f6883;user-select:none;text-align:right;margin-right:14px}
   .cl .ct{color:#c3d3e4}
 
-  @media(max-width:900px){.workspace{grid-template-columns:1fr}.cluster{grid-template-columns:1fr}.traffic{min-height:110px}.nodepool{grid-template-columns:1fr 1fr}.principles{grid-template-columns:1fr 1fr}.brand{position:static;margin-right:auto}.site-topbar{justify-content:flex-end}}
-  @media(max-width:560px){.wrap{width:min(100% - 24px,1280px);padding-top:28px}.nodepool,.principles{grid-template-columns:1fr}.scope-chip{display:none}.scenario,.control{padding:7px 10px;font-size:12px}}
+  @media(max-width:900px){.workspace{grid-template-columns:1fr}.cluster{grid-template-columns:1fr}.traffic{min-height:110px}.nodepool{grid-template-columns:1fr 1fr}.principles{grid-template-columns:1fr}.brand{position:static;margin-right:auto}.site-topbar{justify-content:flex-end}}
+  @media(max-width:560px){.wrap{width:min(100% - 24px,1280px);padding-top:28px}.nodepool,.principles{grid-template-columns:1fr}.nav{gap:12px}.scenario,.control{padding:7px 10px;font-size:12px}}
+
+  button:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+  .toolbar{scroll-margin-top:70px}
+  /* 좁은 화면: 설계 판단 카드를 클러스터 화면 앞으로 올려 스크롤 한 번 안에 보이게 한다 */
+  @media(max-width:900px){.wrap{display:flex;flex-direction:column}.workspace{order:2}.codecard{order:3}}
+  .extra{display:contents}.extra[hidden]{display:none}
+  footer{display:flex;justify-content:center;gap:16px;padding:0 24px 56px;font-size:13px}
+  footer a{color:var(--mut);text-decoration:none}
+  footer a:hover{color:var(--ink)}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 <header class="site-topbar">
   <a class="brand" href="../index.html">이준석</a>
-  <nav class="nav"><a href="lab.html">Lab</a><a href="../index.html">Home</a><span class="scope-chip">개인 학습 · 인터랙티브 프로토타입</span></nav>
+  <nav class="nav"><a href="lab.html">Lab</a><a href="../index.html">Home</a><span class="scope-chip">직접 구현 · 가상 데이터</span></nav>
 </header>
 <main class="wrap">
   <p class="eyebrow">K8s · CI/CD · IaC</p>
-  <h1>Terraform · K8s · GitOps<br>배포 파이프라인</h1>
-  <p class="lead">코드 변경부터 정책 검사, OIDC 인증, AKS 롤링 업데이트와 장애 복구까지 한 흐름으로 재생합니다. 시나리오를 바꾸면 배포 게이트와 클러스터 상태가 함께 달라집니다.</p>
+  <h1>잘못된 배포가 서비스에 닿기 전에 멈추도록 설계했다</h1>
+  <p class="lead">새 버전 배포가 잘못돼도 서비스가 멈추지 않는 과정을 직접 돌려 볼 수 있습니다.</p>
   <div class="scope"><b>구현 범위</b> — 공개 아키텍처와 개인 학습 내용을 바탕으로 만든 브라우저 시뮬레이터입니다. Terraform·Kubernetes·GitHub Actions를 프로덕션에서 구축·운영했다는 의미가 아니며, 배포 설계의 핵심 판단과 실패 처리를 검증하기 위한 가상 환경입니다.</div>
 
   <section class="toolbar" aria-label="시뮬레이션 제어">
     <div class="scenario-group" id="scenarios">
-      <button class="scenario active" data-scenario="normal">정상 배포</button>
-      <button class="scenario" data-scenario="probe">Probe 실패</button>
+      <button class="scenario" data-scenario="normal">정상 배포</button>
+      <button class="scenario active" data-scenario="probe">Probe 실패</button>
       <button class="scenario" data-scenario="drift">Terraform Drift</button>
-      <button class="scenario" data-scenario="traffic">트래픽 급증</button>
+      <button class="control" id="moreBtn" aria-expanded="false" aria-controls="extraScenarios">더 해보기 +</button>
+      <span class="extra" id="extraScenarios" hidden>
+        <button class="scenario" data-scenario="traffic">트래픽 급증</button>
+      </span>
     </div>
     <button class="control" id="prev">← 이전</button>
     <button class="control primary" id="play">▶ 전체 재생</button>
@@ -151,19 +167,23 @@
     </aside>
   </section>
 
+  <section class="principles" aria-label="내가 내린 설계 판단">
+    <button type="button" class="principle" data-scenario="probe"><i>판단 1 · Probe 실패로 확인</i><b>왜 기존 Pod부터 내리지 않고, 새 Pod가 Ready된 뒤에 내리나</b><p>새 버전이 시작하자마자 실패할 수 있어서 → <code>maxUnavailable: 0</code>과 readinessProbe로 Ready를 확인한 뒤에만 교체 → 배포 실패가 서비스 장애로 번지지 않게.</p></button>
+    <button type="button" class="principle" data-scenario="drift"><i>판단 2 · Terraform Drift로 확인</i><b>왜 apply 뒤가 아니라 plan 단계에서 막나</b><p>22번 포트를 0.0.0.0/0에 여는 위험한 변경이 들어올 수 있어서 → plan 결과를 conftest로 검사해 apply 전에 차단 → 배포가 시작되기 전에 막으려고.</p></button>
+    <button type="button" class="principle" data-scenario="normal"><i>판단 3 · 정상 배포로 확인</i><b>왜 장기 Client Secret이 아니라 OIDC 단기 자격 증명을 쓰나</b><p>배포 때마다 Azure 인증이 필요해서 → 저장된 비밀값 대신 실행마다 만료되는 OIDC 토큰 → 유출될 장기 비밀값을 아예 두지 않으려고.</p></button>
+  </section>
+
   <section class="card codecard" aria-label="배포 코드">
     <div class="card-title"><h2>코드 보기 <span class="codenote">이 레포에서 실제로 돌린 코드는 아니고, 이 시나리오에 맞춰 새로 작성한 예시 코드입니다</span></h2></div>
     <div class="code-tabs" id="codeTabs"></div>
     <div class="code-body" id="codeBody"></div>
   </section>
 
-  <section class="principles">
-    <article class="principle"><i>01 · SECRETLESS</i><b>OIDC 단기 자격 증명</b><p>장기 Client Secret 없이 GitHub OIDC 토큰을 Entra Workload Identity와 교환합니다.</p></article>
-    <article class="principle"><i>02 · POLICY GATE</i><b>Plan과 정책을 먼저 검사</b><p>삭제와 외부 공개 규칙, 실제 상태와 코드의 차이를 배포 전에 차단합니다.</p></article>
-    <article class="principle"><i>03 · ZERO DOWNTIME</i><b>Ready 이후 트래픽 전환</b><p>신규 Pod가 Readiness Probe를 통과해야 기존 버전이 내려갑니다.</p></article>
-    <article class="principle"><i>04 · RECOVERY</i><b>실패해도 서비스 유지</b><p>Probe 실패 시 기존 Replica가 요청을 처리하고 신규 ReplicaSet을 롤백합니다.</p></article>
-  </section>
 </main>
+<footer>
+  <a href="mailto:happyday7190@gmail.com">Email</a>
+  <a href="../etc/files/resume.html" target="_blank" rel="noopener">Resume 다운로드</a>
+</footer>
 <script>
   const pipelineLabels = [
     ['SOURCE','Git Push'],['PLAN','Terraform Plan'],['POLICY','Policy Gate'],['AUTH','OIDC Login'],
@@ -197,7 +217,7 @@
   };
 
 
-  let scenarioKey='normal', step=-1, timer=null;
+  let scenarioKey='probe', step=-1, timer=null;
   const el=id=>document.getElementById(id);
 
   const codeFiles = {
@@ -474,7 +494,10 @@ jobs:
     }).join('');
     if(range){
       const target = el('codeBody').querySelector('.cl.hl');
-      if(target) target.scrollIntoView({block:'center'});
+      if(target){
+        const body = el('codeBody'), tr = target.getBoundingClientRect(), br = body.getBoundingClientRect();
+        body.scrollTop += (tr.top - br.top) - body.clientHeight/2 + tr.height/2;
+      }
     } else {
       el('codeBody').scrollTop = 0;
     }
@@ -504,6 +527,9 @@ jobs:
       const blocked=step>=0&&scenarios[scenarioKey][step].state==='bad'&&i===currentStage?' blocked':'';
       return '<div class="pipe-step '+cls+blocked+'"><div class="pipe-node"><small>'+p[0]+'</small><b>'+p[1]+'</b></div></div>';
     }).join('');
+    // 좁은 화면에서는 단계 줄이 안쪽에서 스크롤되므로 현재 단계를 가운데로 따라간다
+    const bar=el('pipeline'), cur=bar.querySelector('.active');
+    if(cur) bar.scrollLeft+=cur.getBoundingClientRect().left-bar.getBoundingClientRect().left-(bar.clientWidth-cur.offsetWidth)/2;
   }
 
   function pods(kind){
@@ -523,6 +549,7 @@ jobs:
 
   function render(){
     renderPipeline();
+    document.querySelectorAll('.principle').forEach(b=>b.classList.toggle('on',b.dataset.scenario===scenarioKey));
     const data=scenarios[scenarioKey];
     if(step<0){
       el('stepTitle').textContent='시나리오를 선택하세요';el('stepDesc').textContent='다음 버튼이나 전체 재생으로 파이프라인을 시작합니다.';el('command').textContent='workflow_dispatch';el('checks').innerHTML='';el('gateStatus').textContent='대기';el('gateStatus').className='status';el('clusterStatus').textContent='대기';el('clusterStatus').className='status';el('log').innerHTML='<span class="log-line">$ 실행 대기 중…</span>';pods('old');return;
@@ -545,7 +572,17 @@ jobs:
   function play(){if(timer){stop();return}if(step>=scenarios[scenarioKey].length-1)step=-1;el('play').textContent='■ 정지';next();timer=setInterval(next,1700)}
   el('scenarios').addEventListener('click',e=>{const b=e.target.closest('.scenario');if(b)setScenario(b.dataset.scenario)});
   el('prev').onclick=()=>{stop();step=Math.max(-1,step-1);render()};el('next').onclick=()=>{stop();next()};el('play').onclick=play;
+  el('moreBtn').onclick=()=>{const box=el('extraScenarios');box.hidden=!box.hidden;el('moreBtn').setAttribute('aria-expanded',String(!box.hidden));el('moreBtn').textContent=box.hidden?'더 해보기 +':'더 해보기 −'};
+  document.querySelector('.principles').addEventListener('click',e=>{
+    const b=e.target.closest('.principle');if(!b)return;
+    setScenario(b.dataset.scenario);
+    document.querySelector('.toolbar').scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'start'});
+    play();
+  });
+  const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
   render();
+  // 첫 화면에서 바로 움직이도록 자동 재생(움직임 줄이기 설정이면 재생하지 않음)
+  if(!reduceMotion) setTimeout(()=>{if(step<0&&!timer)play()},700);
 </script>
 </body>
 </html>
