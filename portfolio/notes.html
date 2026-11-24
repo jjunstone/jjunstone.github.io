@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Archive | 이준석</title>
+<title>SSD | Personal Knowledge Archive</title>
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <style>
   :root{
@@ -29,7 +29,9 @@
     -webkit-font-smoothing:antialiased;
   }
   body.modal-open{ overflow:hidden; }
+  a{ color:inherit; }
 
+  /* ── Topbar (사이트 공통 헤더 패턴과 통일) ── */
   .topbar{
     position:sticky; top:0; z-index:40;
     height:64px;
@@ -46,12 +48,17 @@
     justify-content:space-between;
   }
   .topbar-brand{
+    display:flex; align-items:center; gap:8px;
     font-weight:800;
     text-decoration:none;
     font-size:1.05rem;
     color:#141414;
   }
-  .topbar-links{ display:flex; gap:24px; }
+  .topbar-brand-sub{
+    font-size:.68rem; font-weight:600; color:var(--ink-faint);
+    letter-spacing:.01em;
+  }
+  .topbar-links{ display:flex; gap:24px; align-items:center; }
   .topbar-links a{
     color:#141414;
     text-decoration:none;
@@ -60,306 +67,274 @@
   }
   .topbar-links a:hover{ color:#141414; }
 
-  main{
-    max-width:1280px;
-    margin:0 auto;
-    padding:36px 24px 96px;
+  main{ max-width:1280px; margin:0 auto; padding:0 24px 96px; }
+
+  /* ── Hero ── */
+  .hero{
+    padding:48px 0 32px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:32px;
+  }
+  .hero-eyebrow{
+    font-size:1.05rem; font-weight:700; color:var(--ink-soft);
+    margin:0 0 6px; line-height:1.5;
+  }
+  .hero-title{
+    font-size:2.6rem; font-weight:800; letter-spacing:-.01em;
+    margin:0 0 10px;
+  }
+  .hero-sub{
+    font-size:1.1rem; font-weight:700; color:var(--navy);
+    margin:0 0 16px;
+  }
+  .hero-lead{
+    font-size:.95rem; line-height:1.75; color:var(--ink-soft);
+    margin:0 0 22px; max-width:640px;
+  }
+  .hero-cta{
+    font:inherit; font-size:.86rem; font-weight:700; color:#ffffff;
+    background:var(--navy); border:none; border-radius:9px;
+    padding:11px 18px; cursor:pointer; text-decoration:none;
+    display:inline-flex; align-items:center; gap:6px;
   }
 
-  .blog-hero{
-    display:flex;
-    align-items:flex-end;
-    justify-content:space-between;
-    gap:20px;
-    padding-bottom:24px;
-    margin-bottom:28px;
-    border-bottom:1px solid var(--line);
-    flex-wrap:wrap;
+  /* ── Stats + Topics strip ── */
+  .stats-row{
+    display:flex; align-items:stretch; gap:16px; flex-wrap:wrap;
+    margin-bottom:40px;
   }
-  .page-eyebrow{
-    display:inline-block;
-    font-size:.73rem;
-    font-weight:700;
-    letter-spacing:.12em;
-    text-transform:uppercase;
-    color:var(--navy);
-    background:var(--blue-soft);
-    padding:4px 10px;
-    border-radius:6px;
-    margin:0 0 8px;
+  .stats-cards{ display:flex; gap:14px; flex-wrap:wrap; }
+  .stat-card{
+    background:var(--bg-card); border:1px solid var(--line); border-radius:12px;
+    padding:14px 18px; display:flex; align-items:center; gap:12px;
+    min-width:132px;
   }
-  .page-title{
-    font-size:1.95rem;
-    font-weight:800;
-    margin:0 0 6px;
+  .stat-icon{
+    width:36px; height:36px; border-radius:9px; background:var(--blue-soft);
+    display:flex; align-items:center; justify-content:center; font-size:1.05rem;
+    flex-shrink:0;
   }
-  .page-lead{
-    font-size:.93rem;
-    line-height:1.6;
-    color:var(--ink-soft);
-    margin:0;
+  .stat-num{ font-size:1.25rem; font-weight:800; line-height:1.1; }
+  .stat-label{ font-size:.76rem; color:var(--ink-soft); font-weight:600; }
+
+  .topics-strip{
+    flex:1; min-width:260px;
+    background:var(--bg-card); border:1px solid var(--line); border-radius:12px;
+    padding:14px 18px; display:flex; align-items:center; gap:14px;
   }
-  .btn-primary{
-    font:inherit;
-    font-size:.83rem;
-    font-weight:700;
-    color:#ffffff;
-    background:var(--navy);
-    border-radius:9px;
-    padding:10px 16px;
-    text-decoration:none;
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
+  .topics-strip-label{
+    font-size:.76rem; font-weight:700; color:var(--ink-soft);
+    white-space:nowrap;
+  }
+  .topics-strip-items{
+    display:flex; gap:8px; flex-wrap:wrap; overflow:hidden;
+  }
+  .topic-pill{
+    font-size:.78rem; font-weight:600; color:var(--navy);
+    background:var(--blue-soft); border-radius:999px; padding:5px 12px;
     white-space:nowrap;
   }
 
-  .blog-layout{
+  /* ── Why / How 중간 영역 ── */
+  .mid-section{
     display:grid;
-    grid-template-columns:230px 1fr;
-    gap:32px;
-    align-items:start;
+    grid-template-columns:1fr 1fr;
+    gap:24px;
+    margin-bottom:48px;
+    align-items:stretch;
   }
-
-  .blog-sidebar{
-    position:sticky;
-    top:84px;
+  .mid-card{
     background:var(--bg-card);
     border:1px solid var(--line);
-    border-radius:14px;
-    padding:18px 14px;
-  }
-  .sidebar-group{
-    margin-bottom:18px;
-    padding-bottom:16px;
-    border-bottom:1px solid var(--line);
-  }
-  .sidebar-group:last-child{
-    margin-bottom:0;
-    padding-bottom:0;
-    border-bottom:none;
-  }
-  .sidebar-heading{
-    font-size:.71rem;
-    font-weight:800;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    color:var(--ink-faint);
-    padding:0 10px;
-    margin:0 0 6px;
-  }
-  .sidebar-nav{
+    border-radius:16px;
+    padding:32px;
     display:flex;
     flex-direction:column;
-    gap:2px;
   }
-  .cat-btn{
-    width:100%;
-    font:inherit;
-    font-size:.85rem;
-    font-weight:600;
-    color:var(--ink-soft);
-    background:transparent;
-    border:none;
-    border-radius:8px;
-    padding:8px 10px;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    text-align:left;
+  .mid-card-why{
+    background:linear-gradient(180deg,#fbfcfe 0%, var(--bg-card) 100%);
   }
-  .cat-btn:hover{ background:var(--bg-page); color:var(--navy); }
-  .cat-btn.active{ background:var(--blue-soft); color:var(--navy); font-weight:700; }
-  .cat-count{
-    font-family:var(--font-mono);
-    font-size:.73rem;
-    color:var(--ink-faint);
-    background:var(--bg-page);
-    padding:1px 7px;
-    border-radius:999px;
+  .mid-kicker{
+    font-size:.72rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--navy); margin:0 0 14px;
+  }
+  .mid-title{
+    font-size:1.5rem; font-weight:800; margin:0 0 6px; line-height:1.4;
+  }
+  .mid-desc{
+    font-size:.88rem; color:var(--ink-soft); line-height:1.65; margin:0 0 20px;
+  }
+  .why-body p{
+    font-size:.98rem; line-height:1.85; color:var(--ink); margin:0 0 16px;
+  }
+  .why-body p:last-of-type{ margin-bottom:0; }
+  .why-body b{ color:var(--navy); }
+  .why-quote{
+    margin-top:24px; padding-top:20px; border-top:1px solid var(--line);
+    font-size:1rem; font-weight:700; color:var(--ink);
+    font-style:italic;
   }
 
-  .feed-toolbar{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    margin-bottom:16px;
-    flex-wrap:wrap;
+  .flow-steps{
+    display:flex; align-items:stretch; gap:0; margin-top:4px; flex:1;
   }
-  .notes-search{
-    flex:1;
-    min-width:220px;
+  .flow-step{
+    flex:1; display:flex; flex-direction:column; gap:6px; padding:0 10px;
+    position:relative;
   }
-  .notes-search input{
+  .flow-step:first-child{ padding-left:0; }
+  .flow-step:last-child{ padding-right:0; }
+  .flow-num{
+    font-family:var(--font-mono); font-size:.72rem; font-weight:700; color:var(--ink-faint);
+  }
+  .flow-step-title{ font-size:.95rem; font-weight:800; color:var(--ink); }
+  .flow-step-desc{ font-size:.78rem; line-height:1.55; color:var(--ink-soft); }
+  .flow-arrow{
+    display:flex; align-items:center; justify-content:center;
+    color:var(--line-strong); font-size:1rem; font-weight:700;
+    padding-top:2px;
+  }
+  .flow-repo-note{
+    margin-top:22px; padding-top:18px; border-top:1px solid var(--line);
+    font-size:.78rem; color:var(--ink-faint); font-family:var(--font-mono);
+  }
+  .flow-repo-note a{ color:var(--navy); text-decoration:none; font-weight:600; }
+
+  @media (max-width:860px){
+    .mid-section{ grid-template-columns:1fr; }
+    .flow-steps{ flex-direction:column; gap:16px; }
+    .flow-step{ padding:0; }
+    .flow-arrow{ transform:rotate(90deg); padding:0; }
+  }
+
+  /* ── Recently Added ── */
+  .recent-header{
+    display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+    margin-bottom:6px; flex-wrap:wrap;
+  }
+  .recent-title{ font-size:1.3rem; font-weight:800; margin:0; }
+  .recent-link{ font-size:.85rem; font-weight:700; color:var(--navy); text-decoration:none; white-space:nowrap; }
+  .recent-lead{ font-size:.88rem; color:var(--ink-soft); margin:0 0 20px; }
+
+  /* ── 카테고리 영역 ── */
+  .categories-section{ margin-bottom:48px; }
+  .section-heading{
+    display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+    margin-bottom:16px; flex-wrap:wrap;
+  }
+  .section-title{ font-size:1.3rem; font-weight:800; margin:0; }
+  .cat-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));
+    gap:10px;
+  }
+  .cat-tile{
     width:100%;
-    padding:10px 14px;
-    border:1px solid var(--line-strong);
-    border-radius:10px;
-    font:inherit;
-    font-size:.88rem;
-    color:var(--ink);
-    background:var(--bg-card);
+    font:inherit; font-size:.86rem; font-weight:700; color:var(--ink);
+    background:var(--bg-card); border:1px solid var(--line); border-radius:10px;
+    padding:14px 14px; cursor:pointer; text-align:left;
+    display:flex; flex-direction:column; gap:4px;
   }
-  .notes-count{
-    font-size:.84rem;
-    color:var(--ink-soft);
-    white-space:nowrap;
-    font-weight:600;
+  .cat-tile:hover{ border-color:var(--navy); }
+  .cat-tile.active{ border-color:var(--navy); background:var(--blue-soft); color:var(--navy); }
+  .cat-tile-count{ font-size:.74rem; font-weight:600; color:var(--ink-faint); }
+  .cat-tile.active .cat-tile-count{ color:var(--navy); }
+
+  /* ── Feed ── */
+  .feed-toolbar{
+    display:flex; align-items:center; gap:12px; margin-bottom:16px; flex-wrap:wrap;
   }
+  .notes-search{ flex:1; min-width:220px; }
+  .notes-search input{
+    width:100%; padding:10px 14px; border:1px solid var(--line-strong); border-radius:10px;
+    font:inherit; font-size:.88rem; color:var(--ink); background:var(--bg-card);
+  }
+  .notes-count{ font-size:.84rem; color:var(--ink-soft); white-space:nowrap; font-weight:600; }
 
   .view-toggle{
-    display:inline-flex;
-    background:var(--bg-card);
-    border:1px solid var(--line-strong);
-    border-radius:8px;
-    padding:2px;
+    display:inline-flex; background:var(--bg-card); border:1px solid var(--line-strong);
+    border-radius:8px; padding:2px;
   }
   .view-btn{
-    font:inherit;
-    font-size:.76rem;
-    font-weight:600;
-    color:var(--ink-soft);
-    background:transparent;
-    border:none;
-    padding:5px 12px;
-    border-radius:6px;
-    cursor:pointer;
+    font:inherit; font-size:.76rem; font-weight:600; color:var(--ink-soft);
+    background:transparent; border:none; padding:5px 12px; border-radius:6px; cursor:pointer;
   }
-  .view-btn.active{
-    background:var(--navy);
-    color:#ffffff;
-  }
+  .view-btn.active{ background:var(--navy); color:#ffffff; }
 
-  .notes-board.list-view{
-    display:flex;
-    flex-direction:column;
-    gap:14px;
-  }
+  .notes-board.list-view{ display:flex; flex-direction:column; gap:14px; }
   .notes-board.grid-view{
-    display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
-    gap:18px;
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:18px;
   }
 
   .post-item{
-    background:var(--bg-card);
-    border:1px solid var(--line);
-    border-left:4px solid var(--navy);
-    border-radius:12px;
-    padding:20px 22px;
-    cursor:pointer;
+    background:var(--bg-card); border:1px solid var(--line); border-left:4px solid var(--navy);
+    border-radius:12px; padding:20px 22px; cursor:pointer;
     transition:transform .16s ease, box-shadow .16s ease;
-    display:flex;
-    flex-direction:column;
-  }
-  .post-item:hover{
-    transform:translateY(-2px);
-    box-shadow:0 12px 24px -10px rgba(15,23,42,.1);
-  }
-  .post-meta{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    font-size:.75rem;
-    color:var(--ink-faint);
-    margin-bottom:8px;
-  }
-  .post-issue{
-    font-family:var(--font-mono);
-    font-weight:700;
-    color:var(--navy);
-    background:var(--blue-soft);
-    padding:2px 7px;
-    border-radius:4px;
-  }
-  .post-title{
-    font-size:1.06rem;
-    font-weight:800;
-    color:var(--ink);
-    margin:0 0 8px;
-    line-height:1.42;
-  }
-  .post-excerpt{
-    font-size:.86rem;
-    line-height:1.62;
-    color:var(--ink-soft);
-    margin:0 0 14px;
-    white-space:pre-line;
-    max-height:4.8em;
+    display:flex; flex-direction:column;
     overflow:hidden;
   }
+  .post-item:hover{ transform:translateY(-2px); box-shadow:0 12px 24px -10px rgba(15,23,42,.1); }
+  .post-item.has-thumb{ border-left:1px solid var(--line); padding:0; }
+  .post-thumb{
+    width:100%; aspect-ratio:16/9; overflow:hidden; background:var(--bg-page); flex-shrink:0;
+  }
+  .post-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .post-item.has-thumb .post-body{ padding:16px 22px 20px; }
+  .notes-board.list-view .post-item.has-thumb{ flex-direction:row; align-items:stretch; }
+  .notes-board.list-view .post-item.has-thumb .post-thumb{
+    width:200px; aspect-ratio:auto;
+  }
+  .notes-board.list-view .post-item.has-thumb .post-body{ flex:1; min-width:0; padding:18px 22px; }
+  .post-meta{
+    display:flex; align-items:center; justify-content:flex-end;
+    font-size:.75rem; color:var(--ink-faint); margin-bottom:8px;
+  }
+  .post-issue{
+    font-family:var(--font-mono); font-weight:700; color:var(--navy);
+    background:var(--blue-soft); padding:2px 7px; border-radius:4px;
+  }
+  .post-title{ font-size:1.06rem; font-weight:800; color:var(--ink); margin:0 0 8px; line-height:1.42; }
+  .post-excerpt{
+    font-size:.86rem; line-height:1.62; color:var(--ink-soft); margin:0 0 14px;
+    white-space:pre-line; max-height:4.8em; overflow:hidden;
+  }
   .post-footer{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:8px;
-    margin-top:auto;
-    padding-top:10px;
-    border-top:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    margin-top:auto; padding-top:10px; border-top:1px solid var(--line);
   }
   .post-tags{ display:flex; gap:6px; flex-wrap:wrap; }
   .note-label-chip{
-    font-size:.72rem;
-    font-weight:600;
-    color:var(--navy);
-    background:var(--blue-soft);
-    padding:2px 8px;
-    border-radius:6px;
+    font-size:.72rem; font-weight:600; color:var(--navy); background:var(--blue-soft);
+    padding:2px 8px; border-radius:6px;
   }
-  .post-more{
-    font-size:.75rem;
-    font-weight:700;
-    color:var(--navy);
-    margin-left:auto;
+  .post-more{ font-size:.75rem; font-weight:700; color:var(--navy); margin-left:auto; }
+
+  .toggle-more-wrap{ display:flex; justify-content:center; margin-top:24px; }
+  .toggle-more-btn{
+    font:inherit; font-size:.86rem; font-weight:700; color:var(--navy);
+    background:var(--bg-card); border:1px solid var(--line-strong); border-radius:999px;
+    padding:10px 24px; cursor:pointer;
   }
+  .toggle-more-btn:hover{ border-color:var(--navy); background:var(--blue-soft); }
 
   .notes-state{
-    display:none;
-    align-items:center;
-    justify-content:center;
-    flex-direction:column;
-    gap:10px;
-    padding:64px 24px;
-    background:var(--bg-card);
-    border:1px dashed var(--line-strong);
-    border-radius:14px;
-    color:var(--ink-soft);
-    font-size:.92rem;
-    text-align:center;
-    line-height:1.6;
+    display:none; align-items:center; justify-content:center; flex-direction:column; gap:10px;
+    padding:64px 24px; background:var(--bg-card); border:1px dashed var(--line-strong);
+    border-radius:14px; color:var(--ink-soft); font-size:.92rem; text-align:center; line-height:1.6;
   }
   .notes-state.show{ display:flex; }
 
   .modal-backdrop{
-    position:fixed;
-    inset:0;
-    z-index:100;
-    background:rgba(15,23,42,.55);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:24px;
+    position:fixed; inset:0; z-index:100; background:rgba(15,23,42,.55);
+    display:none; align-items:center; justify-content:center; padding:24px;
   }
   .modal-backdrop.open{ display:flex; }
   .modal-dialog{
-    background:var(--bg-card);
-    width:100%;
-    max-width:820px;
-    max-height:90vh;
-    border-radius:16px;
-    border:1px solid var(--line);
-    display:flex;
-    flex-direction:column;
-    overflow:hidden;
+    background:var(--bg-card); width:100%; max-width:820px; max-height:90vh;
+    border-radius:16px; border:1px solid var(--line); display:flex; flex-direction:column; overflow:hidden;
   }
   .modal-topbar{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:14px 24px;
-    border-bottom:1px solid var(--line);
-    background:var(--bg-page);
+    display:flex; align-items:center; justify-content:space-between; padding:14px 24px;
+    border-bottom:1px solid var(--line); background:var(--bg-page);
   }
   .modal-topbar-left{ display:flex; align-items:center; gap:10px; font-size:.8rem; color:var(--ink-soft); }
   .modal-actions{ display:flex; align-items:center; gap:8px; }
@@ -373,17 +348,18 @@
     background:transparent; border:none; width:32px; height:32px; cursor:pointer;
   }
   .modal-scroll{ padding:32px 36px 40px; overflow-y:auto; }
+  .modal-thumb{
+    width:100%; aspect-ratio:16/9; overflow:hidden; border-radius:12px;
+    margin-bottom:24px; background:var(--bg-page);
+  }
+  .modal-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
   .modal-title{ font-size:1.55rem; font-weight:800; line-height:1.38; margin:0 0 14px; }
   .modal-tags{
     display:flex; gap:6px; flex-wrap:wrap;
     margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--line);
   }
   .markdown-body{
-    font-size:.95rem;
-    line-height:1.75;
-    color:var(--ink);
-    white-space:pre-wrap;
-    word-break:keep-all;
+    font-size:.95rem; line-height:1.75; color:var(--ink); white-space:pre-wrap; word-break:keep-all;
   }
   .modal-BottomNav{
     display:flex; justify-content:space-between; gap:12px;
@@ -397,16 +373,20 @@
   footer a{ color:var(--ink-soft); text-decoration:none; font-weight:500; }
 
   @media (max-width:860px){
-    .blog-layout{ grid-template-columns:1fr; gap:20px; }
-    .blog-sidebar{ position:static; }
+    .hero-title{ font-size:2rem; }
+    .stats-row{ flex-direction:column; }
   }
 </style>
 </head>
 <body>
   <header class="topbar">
     <div class="topbar-inner">
-      <a class="topbar-brand" href="../index.html">이준석</a>
+      <a class="topbar-brand" href="../index.html">
+        이준석 <span class="topbar-brand-sub">· SSD Archive</span>
+      </a>
       <nav class="topbar-links">
+        <a href="#how-it-works">How It Works</a>
+        <a href="#categories">Categories</a>
         <a href="./lab.html">Lab</a>
         <a href="../index.html">Home</a>
       </nav>
@@ -414,57 +394,135 @@
   </header>
 
   <main>
-    <section class="blog-hero">
-      <div>
-        <p class="page-eyebrow">Engineering & Insight Log</p>
-        <h1 class="page-title">지식 아카이브</h1>
-        <p class="page-lead">인프라·클라우드·자동화 엔지니어링 노트와 일상에서 얻은 구조적 인사이트를 기록합니다.</p>
-      </div>
-      <a class="btn-primary" href="https://github.com/jjunstone/SSD/issues/new" target="_blank" rel="noopener">✎ 새 아티클 작성</a>
+    <section class="hero">
+      <p class="hero-eyebrow">잊어버리기 전에,</p>
+      <h1 class="hero-title">SSD</h1>
+      <p class="hero-sub">Things I don't want to forget.</p>
+      <p class="hero-lead">
+        관심이 생겨 찾아보고, 공부하고, 이해했던 것들.<br>
+        시간이 지나도 다시 꺼내볼 수 있도록, 이곳에 기록합니다.
+      </p>
+      <a class="hero-cta" href="https://github.com/jjunstone/SSD/issues/new" target="_blank" rel="noopener">✎ 새 아티클 작성</a>
     </section>
 
-    <div class="blog-layout">
-      <aside class="blog-sidebar">
-        <div class="sidebar-group">
-          <div class="sidebar-heading">Overview</div>
-          <div class="sidebar-nav" id="navOverview"></div>
-        </div>
-        <div class="sidebar-group">
-          <div class="sidebar-heading">Engineering</div>
-          <div class="sidebar-nav" id="navTech"></div>
-        </div>
-        <div class="sidebar-group">
-          <div class="sidebar-heading">Perspective</div>
-          <div class="sidebar-nav" id="navInsight"></div>
-        </div>
-      </aside>
-
-      <section class="blog-feed">
-        <div class="feed-toolbar">
-          <div class="notes-search">
-            <input id="notesSearch" type="text" placeholder="제목, 본문, 키워드 검색">
-          </div>
-          <span class="notes-count" id="notesCount"></span>
-          <div class="view-toggle" id="viewToggle">
-            <button type="button" class="view-btn active" data-view="list">목록형</button>
-            <button type="button" class="view-btn" data-view="grid">카드형</button>
+    <div class="stats-row">
+      <div class="stats-cards">
+        <div class="stat-card">
+          <div class="stat-icon">📄</div>
+          <div>
+            <div class="stat-num" id="statArticles">0</div>
+            <div class="stat-label">Articles</div>
           </div>
         </div>
-
-        <div class="notes-state show" id="notesLoading">
-          <span>GitHub(jjunstone/SSD)에서 이슈를 불러오는 중…</span>
+        <div class="stat-card">
+          <div class="stat-icon">🗂️</div>
+          <div>
+            <div class="stat-num" id="statCategories">0</div>
+            <div class="stat-label">Categories</div>
+          </div>
         </div>
-        <div class="notes-state" id="notesError">
-          <strong id="notesErrorTitle">포스트를 불러오지 못했습니다.</strong>
-          <span id="notesErrorMsg"></span>
+        <div class="stat-card">
+          <div class="stat-icon">💡</div>
+          <div>
+            <div class="stat-num" id="statPerspectives">0</div>
+            <div class="stat-label">Perspectives</div>
+          </div>
         </div>
-        <div class="notes-state" id="notesEmpty">
-          <span id="notesEmptyMsg">조건에 맞는 아티클이 없습니다.</span>
-        </div>
-
-        <div class="notes-board list-view" id="notesBoard"></div>
-      </section>
+      </div>
+      <div class="topics-strip">
+        <span class="topics-strip-label">이런 내용을 다뤄요</span>
+        <div class="topics-strip-items" id="topicsStrip"></div>
+      </div>
     </div>
+
+    <section class="mid-section">
+      <article class="mid-card mid-card-why">
+        <p class="mid-kicker">Why I Keep This Archive</p>
+        <h2 class="mid-title">잊어버리기 전에, 기록해 둡니다.</h2>
+        <div class="why-body">
+          <p>요즘은 머릿속이 RAM처럼 느껴집니다.</p>
+          <p>관심이 생겨 찾아보고, 공부하고, 이해했던 내용도 시간이 지나면 금방 잊어버립니다. 분명히 시간을 들여 알아봤던 내용인데, 나중에 다시 필요해지면 어디서 봤는지조차 기억나지 않을 때가 있습니다.</p>
+          <p>그래서 관심 있는 기술과 자료, 일상에서 얻은 생각들을 이곳에 기록하기 시작했습니다.</p>
+          <p>한 번 찾아본 내용을 다시 처음부터 찾지 않도록, <b>필요할 때 언제든 꺼내 볼 수 있는 나만의 공간</b>입니다.</p>
+        </div>
+        <p class="why-quote">Things I don't want to forget.</p>
+      </article>
+
+      <article class="mid-card" id="how-it-works">
+        <p class="mid-kicker">How Knowledge Gets Here</p>
+        <h2 class="mid-title">자료가 쌓이는 방식</h2>
+        <p class="mid-desc">다양한 자료를 수집하고 정리한 뒤 GitHub에 기록하고, 웹사이트에서 다시 찾아볼 수 있도록 구성했습니다.</p>
+
+        <div class="flow-steps">
+          <div class="flow-step">
+            <span class="flow-num">01</span>
+            <span class="flow-step-title">Collect</span>
+            <span class="flow-step-desc">기술 블로그, 공식 문서, 영상, 뉴스, 개인 메모 등 관심 있는 자료를 수집합니다.</span>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <span class="flow-num">02</span>
+            <span class="flow-step-title">Organize</span>
+            <span class="flow-step-desc">핵심 내용을 이해하고, 제목을 붙이고, 분야에 맞게 정리합니다.</span>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <span class="flow-num">03</span>
+            <span class="flow-step-title">Store</span>
+            <span class="flow-step-desc">정리된 내용을 GitHub Issue로 기록하고, 분야별 Label을 붙여 저장합니다.</span>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <span class="flow-num">04</span>
+            <span class="flow-step-title">Publish</span>
+            <span class="flow-step-desc">웹사이트가 GitHub에서 저장된 글을 불러와, 검색하고 다시 찾아볼 수 있게 보여줍니다.</span>
+          </div>
+        </div>
+
+        <p class="flow-repo-note">Repository: <a href="https://github.com/jjunstone/SSD" target="_blank" rel="noopener">jjunstone/SSD</a> · GitHub Issues 기반</p>
+      </article>
+    </section>
+
+    <section class="categories-section" id="categories">
+      <div class="section-heading">
+        <h2 class="section-title">Categories</h2>
+      </div>
+      <div class="cat-grid" id="catGrid"></div>
+    </section>
+
+    <section class="recent-section">
+      <div class="recent-header">
+        <h2 class="recent-title">Recently Added</h2>
+      </div>
+      <p class="recent-lead">최근에 추가된 자료들을 만나보세요.</p>
+
+      <div class="feed-toolbar">
+        <div class="notes-search">
+          <input id="notesSearch" type="text" placeholder="제목, 본문, 키워드 검색">
+        </div>
+        <span class="notes-count" id="notesCount"></span>
+        <div class="view-toggle" id="viewToggle">
+          <button type="button" class="view-btn" data-view="list">목록형</button>
+          <button type="button" class="view-btn active" data-view="grid">카드형</button>
+        </div>
+      </div>
+
+      <div class="notes-state show" id="notesLoading">
+        <span>GitHub(jjunstone/SSD)에서 이슈를 불러오는 중…</span>
+      </div>
+      <div class="notes-state" id="notesError">
+        <strong id="notesErrorTitle">포스트를 불러오지 못했습니다.</strong>
+        <span id="notesErrorMsg"></span>
+      </div>
+      <div class="notes-state" id="notesEmpty">
+        <span id="notesEmptyMsg">조건에 맞는 아티클이 없습니다.</span>
+      </div>
+
+      <div class="notes-board grid-view" id="notesBoard"></div>
+      <div class="toggle-more-wrap" id="toggleMoreWrap" hidden>
+        <button type="button" class="toggle-more-btn" id="toggleMoreBtn">더보기</button>
+      </div>
+    </section>
   </main>
 
   <div class="modal-backdrop" id="articleModal" role="dialog" aria-modal="true">
@@ -480,6 +538,7 @@
         </div>
       </div>
       <div class="modal-scroll" id="modalScroll">
+        <div class="modal-thumb" id="modalThumb" hidden><img id="modalThumbImg" src="" alt=""></div>
         <h2 class="modal-title" id="modalTitle"></h2>
         <div class="modal-tags" id="modalTags"></div>
         <div class="markdown-body" id="modalBody"></div>
@@ -502,9 +561,11 @@
     var INSIGHT_WORDS = ["insight", "etc", "생각", "일상", "유튜브", "독서", "축구", "경제", "부동산"];
 
     var board = document.getElementById("notesBoard");
-    var navOverview = document.getElementById("navOverview");
-    var navTech = document.getElementById("navTech");
-    var navInsight = document.getElementById("navInsight");
+    var catGrid = document.getElementById("catGrid");
+    var topicsStrip = document.getElementById("topicsStrip");
+    var statArticles = document.getElementById("statArticles");
+    var statCategories = document.getElementById("statCategories");
+    var statPerspectives = document.getElementById("statPerspectives");
     var loadingEl = document.getElementById("notesLoading");
     var errorEl = document.getElementById("notesError");
     var errorTitleEl = document.getElementById("notesErrorTitle");
@@ -514,10 +575,14 @@
     var countEl = document.getElementById("notesCount");
     var searchInput = document.getElementById("notesSearch");
     var viewToggle = document.getElementById("viewToggle");
+    var toggleMoreWrap = document.getElementById("toggleMoreWrap");
+    var toggleMoreBtn = document.getElementById("toggleMoreBtn");
 
     var modal = document.getElementById("articleModal");
     var modalIssueNum = document.getElementById("modalIssueNum");
     var modalDate = document.getElementById("modalDate");
+    var modalThumb = document.getElementById("modalThumb");
+    var modalThumbImg = document.getElementById("modalThumbImg");
     var modalTitle = document.getElementById("modalTitle");
     var modalTags = document.getElementById("modalTags");
     var modalBody = document.getElementById("modalBody");
@@ -531,6 +596,8 @@
     var filteredNotes = [];
     var activeFilter = "ALL";
     var currentModalIndex = -1;
+    var isExpanded = false;
+    var COLLAPSED_COUNT = 4;
 
     function formatDate(iso){
       if (!iso) return "";
@@ -553,68 +620,97 @@
       return s;
     }
 
-    function createCatBtn(label, count, filterVal){
+    function extractThumbnail(body){
+      var s = String(body || "");
+      var md = s.match(/!\[[^\]]*\]\((https?:\/\/[^\s)]+)\)/);
+      if (md) return md[1];
+      var html = s.match(/<img[^>]+src=["']([^"']+)["']/i);
+      if (html) return html[1];
+      return null;
+    }
+
+    function stripThumbnailMarkup(body){
+      var s = String(body || "");
+      s = s.replace(/!\[[^\]]*\]\((https?:\/\/[^\s)]+)\)/, "");
+      s = s.replace(/<img[^>]+src=["']([^"']+)["'][^>]*>/i, "");
+      s = s.replace(/[ \t]{2,}/g, " ");
+      s = s.replace(/\n{3,}/g, "\n\n");
+      return s.trim();
+    }
+
+    function createCatTile(label, count, filterVal){
       var btn = document.createElement("button");
       btn.type = "button";
-      btn.className = "cat-btn" + (activeFilter === filterVal ? " active" : "");
+      btn.className = "cat-tile" + (activeFilter === filterVal ? " active" : "");
       btn.setAttribute("data-filter", filterVal);
 
       var spanName = document.createElement("span");
       spanName.textContent = label;
 
       var spanCount = document.createElement("span");
-      spanCount.className = "cat-count";
-      spanCount.textContent = String(count);
+      spanCount.className = "cat-tile-count";
+      spanCount.textContent = count + "개";
 
       btn.appendChild(spanName);
       btn.appendChild(spanCount);
       btn.addEventListener("click", function(){
         activeFilter = filterVal;
-        renderSidebar();
+        isExpanded = false;
+        renderCategories();
         renderBoard();
+        document.getElementById("categories").scrollIntoView({ behavior: "smooth", block: "nearest" });
       });
       return btn;
     }
 
-    function renderSidebar(){
-      navOverview.innerHTML = "";
-      navTech.innerHTML = "";
-      navInsight.innerHTML = "";
-
+    function renderStatsAndTopics(){
       var techCounts = {};
       var insightCounts = {};
-      var techTotal = 0;
-      var insightTotal = 0;
 
       for (var i = 0; i < allNotes.length; i++) {
         var n = allNotes[i];
-        var hasInsight = false;
         for (var j = 0; j < n.labels.length; j++) {
           var lname = n.labels[j].name;
           if (isInsightLabel(lname)) {
-            hasInsight = true;
             insightCounts[lname] = (insightCounts[lname] || 0) + 1;
           } else {
             techCounts[lname] = (techCounts[lname] || 0) + 1;
           }
         }
-        if (hasInsight) insightTotal++; else techTotal++;
       }
-
-      navOverview.appendChild(createCatBtn("전체 아티클", allNotes.length, "ALL"));
-      navTech.appendChild(createCatBtn("기술 노트 전체", techTotal, "TECH_ALL"));
 
       var techKeys = Object.keys(techCounts);
-      for (var k = 0; k < techKeys.length; k++) {
-        var tName = techKeys[k];
-        navTech.appendChild(createCatBtn("# " + tName, techCounts[tName], "LABEL:" + tName));
+      var insightKeys = Object.keys(insightCounts);
+
+      statArticles.textContent = String(allNotes.length);
+      statCategories.textContent = String(techKeys.length);
+      statPerspectives.textContent = String(insightKeys.length);
+
+      topicsStrip.innerHTML = "";
+      var topicKeys = techKeys.concat(insightKeys);
+      for (var k = 0; k < topicKeys.length; k++) {
+        var pill = document.createElement("span");
+        pill.className = "topic-pill";
+        pill.textContent = topicKeys[k];
+        topicsStrip.appendChild(pill);
       }
 
-      navInsight.appendChild(createCatBtn("인사이트 전체", insightTotal, "INSIGHT_ALL"));
-      var inKeys = Object.keys(insightCounts);
-      for (var m = 0; m < inKeys.length; m++) {
-        var iName = inKeys[m];
-        navInsight.appendChild(createCatBtn("# " + iName, insightCounts[iName], "LABEL:" + iName));
+      return { techCounts: techCounts, insightCounts: insightCounts, techKeys: techKeys, insightKeys: insightKeys };
+    }
+
+    function renderCategories(){
+      var data = renderStatsAndTopics();
+      catGrid.innerHTML = "";
+
+      catGrid.appendChild(createCatTile("전체 아티클", allNotes.length, "ALL"));
+
+      for (var k = 0; k < data.techKeys.length; k++) {
+        var tName = data.techKeys[k];
+        catGrid.appendChild(createCatTile(tName, data.techCounts[tName], "LABEL:" + tName));
+      }
+      for (var m = 0; m < data.insightKeys.length; m++) {
+        var iName = data.insightKeys[m];
+        catGrid.appendChild(createCatTile(iName, data.insightCounts[iName], "LABEL:" + iName));
       }
     }
 
@@ -626,11 +722,7 @@
         var n = allNotes[i];
         var matchSector = true;
 
-        if (activeFilter === "TECH_ALL") {
-          matchSector = !n.labels.some(function(l){ return isInsightLabel(l.name); });
-        } else if (activeFilter === "INSIGHT_ALL") {
-          matchSector = n.labels.some(function(l){ return isInsightLabel(l.name); });
-        } else if (activeFilter.indexOf("LABEL:") === 0) {
+        if (activeFilter.indexOf("LABEL:") === 0) {
           var target = activeFilter.slice(6);
           matchSector = n.labels.some(function(l){ return l.name === target; });
         }
@@ -648,25 +740,47 @@
       if (filteredNotes.length === 0) {
         emptyEl.classList.add("show");
         countEl.textContent = "0개 아티클";
+        toggleMoreWrap.hidden = true;
         return;
       }
 
       emptyEl.classList.remove("show");
       countEl.textContent = "총 " + filteredNotes.length + "개 아티클";
 
-      for (var idx = 0; idx < filteredNotes.length; idx++) {
-        var item = filteredNotes[idx];
+      var visibleNotes = isExpanded ? filteredNotes : filteredNotes.slice(0, COLLAPSED_COUNT);
+
+      if (filteredNotes.length > COLLAPSED_COUNT) {
+        toggleMoreWrap.hidden = false;
+        toggleMoreBtn.textContent = isExpanded ? "접기" : "더보기 (" + (filteredNotes.length - COLLAPSED_COUNT) + ")";
+      } else {
+        toggleMoreWrap.hidden = true;
+      }
+
+      for (var idx = 0; idx < visibleNotes.length; idx++) {
+        var item = visibleNotes[idx];
         var card = document.createElement("article");
-        card.className = "post-item";
+        card.className = "post-item" + (item.thumbnail ? " has-thumb" : "");
+
+        if (item.thumbnail) {
+          var thumbWrap = document.createElement("div");
+          thumbWrap.className = "post-thumb";
+          var thumbImg = document.createElement("img");
+          thumbImg.src = item.thumbnail;
+          thumbImg.alt = "";
+          thumbImg.loading = "lazy";
+          thumbImg.referrerPolicy = "no-referrer";
+          thumbImg.onerror = function(){ thumbWrap.remove(); };
+          thumbWrap.appendChild(thumbImg);
+          card.appendChild(thumbWrap);
+        }
+
+        var bodyWrap = document.createElement("div");
+        bodyWrap.className = "post-body";
 
         var meta = document.createElement("div");
         meta.className = "post-meta";
-        var issueSpan = document.createElement("span");
-        issueSpan.className = "post-issue";
-        issueSpan.textContent = "#" + item.number;
         var dateSpan = document.createElement("span");
         dateSpan.textContent = formatDate(item.createdAt);
-        meta.appendChild(issueSpan);
         meta.appendChild(dateSpan);
 
         var h3 = document.createElement("h3");
@@ -694,10 +808,11 @@
         footer.appendChild(tagsWrap);
         footer.appendChild(moreSpan);
 
-        card.appendChild(meta);
-        card.appendChild(h3);
-        card.appendChild(excerpt);
-        card.appendChild(footer);
+        bodyWrap.appendChild(meta);
+        bodyWrap.appendChild(h3);
+        bodyWrap.appendChild(excerpt);
+        bodyWrap.appendChild(footer);
+        card.appendChild(bodyWrap);
 
         (function(capturedIdx){
           card.addEventListener("click", function(){
@@ -718,6 +833,14 @@
       modalDate.textContent = formatDate(n.createdAt);
       modalTitle.textContent = cleanTitleText(n.title);
       modalGithubLink.href = n.url;
+
+      if (n.thumbnail) {
+        modalThumbImg.src = n.thumbnail;
+        modalThumb.hidden = false;
+      } else {
+        modalThumbImg.src = "";
+        modalThumb.hidden = true;
+      }
 
       modalTags.innerHTML = "";
       for (var i = 0; i < n.labels.length; i++) {
@@ -764,7 +887,14 @@
       if (currentModalIndex < filteredNotes.length - 1) openModal(currentModalIndex + 1);
     });
 
-    searchInput.addEventListener("input", renderBoard);
+    searchInput.addEventListener("input", function(){
+      isExpanded = false;
+      renderBoard();
+    });
+    toggleMoreBtn.addEventListener("click", function(){
+      isExpanded = !isExpanded;
+      renderBoard();
+    });
 
     fetch(API_URL)
       .then(function(res){
@@ -777,17 +907,19 @@
         for (var i = 0; i < list.length; i++) {
           var item = list[i];
           if (item.pull_request) continue;
+          var rawBody = item.body || "";
           allNotes.push({
             number: item.number,
             title: item.title || "",
-            body: item.body || "",
+            body: stripThumbnailMarkup(rawBody),
+            thumbnail: extractThumbnail(rawBody),
             url: item.html_url || "",
             labels: Array.isArray(item.labels) ? item.labels : [],
             createdAt: item.created_at || ""
           });
         }
         loadingEl.classList.remove("show");
-        renderSidebar();
+        renderCategories();
         renderBoard();
       })
       .catch(function(err){
@@ -799,3 +931,4 @@
   </script>
 </body>
 </html>
+

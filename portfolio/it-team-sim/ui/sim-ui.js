@@ -1,4 +1,4 @@
-﻿/**
+/**
  * IT TEAM SIMULATOR — UI 레이어
  *
  * 레이아웃: 상단(제목·진행중 시나리오·가상시간) / 좌측(사건 목록) /
@@ -18,6 +18,8 @@
   var app = document.getElementById('app');
   var session = null;      // 현재 진행 중인 ITSimDomain 세션 (없으면 사건 선택 화면)
   var selectedPersonId = null; // 사이드 패널에서 상세정보를 보고 있는 담당자
+  var threadCollapsed = false; // 보고 스레드 접기/펼치기
+  var timelineCollapsed = false; // 하단 타임라인 접기/펼치기
   var motionReady = false;
   var motionLib = null;
 
@@ -100,15 +102,20 @@
   function topbar() {
     var scenarioTitle = session ? session.getState().scenario.title : '사건을 선택하세요';
     var elapsed = session ? formatClock(session.getState().elapsedMinutes) : '09:00';
-    return '<header class="sim-top">' +
-      '<div class="sim-top-left">' +
-        '<span class="sim-brand">IT TEAM SIMULATOR</span>' +
+    return '<header class="site-topbar">' +
+      '<div class="site-topbar-left">' +
+        '<a class="site-topbar-brand" href="../index.html" title="홈으로">이준석</a>' +
+        '<nav class="site-topbar-nav">' +
+          '<a href="lab.html">Lab</a>' +
+          '<a href="../index.html">Home</a>' +
+        '</nav>' +
+        '<span class="site-topbar-divider"></span>' +
+        '<span class="site-topbar-title">IT TEAM SIMULATOR</span>' +
+        '<span class="site-topbar-case">' + esc(scenarioTitle) + '</span>' +
       '</div>' +
-      '<span class="sim-current">' + esc(scenarioTitle) + '</span>' +
-      '<div class="sim-top-right">' +
+      '<div class="site-topbar-right">' +
         '<span class="sim-clock">가상시간 ' + elapsed + '</span>' +
         (session ? '<button class="sim-btn-ghost" type="button" data-exit>사건 목록으로</button>' : '') +
-        '<a class="sim-btn-ghost" href="./lab.html">LAB으로</a>' +
       '</div>' +
     '</header>';
   }
@@ -211,7 +218,6 @@
       '<div class="sim-org-title">전산보안실 조직도 — 캐릭터를 클릭하면 담당 업무를 볼 수 있습니다</div>' +
       serviceStatusBoard() +
       '<div class="org-floor' + (session ? '' : ' no-session') + '">' + warRoomZone + zones + '</div>' +
-      personDetailPanel() +
     '</section>';
   }
 
@@ -225,19 +231,21 @@
     var p = byId(selectedPersonId);
     if (!p) return '';
     var inCase = session && session.getState().scenario.participants.indexOf(p.id) !== -1;
-    return '<div class="person-popover" data-person-popover>' +
-      '<button class="person-popover-close" type="button" data-close-person aria-label="닫기">×</button>' +
-      '<div class="person-popover-head" style="--role-color:' + esc(p.color) + '">' +
-        '<div class="person-popover-avatar">' + renderAvatar(p) + '</div>' +
-        '<div>' +
-          '<div class="person-popover-name">' + esc(p.name) + '</div>' +
-          '<div class="person-popover-dept">' + esc(p.dept) + '</div>' +
+    return '<div class="person-modal-overlay" data-person-overlay>' +
+      '<div class="person-modal" data-person-modal>' +
+        '<button class="person-modal-close" type="button" data-close-person aria-label="닫기">×</button>' +
+        '<div class="person-modal-head" style="--role-color:' + esc(p.color) + '">' +
+          '<div class="person-modal-avatar">' + renderAvatar(p) + '</div>' +
+          '<div>' +
+            '<div class="person-modal-name">' + esc(p.name) + '</div>' +
+            '<div class="person-modal-dept">' + esc(p.dept) + '</div>' +
+          '</div>' +
         '</div>' +
+        '<div class="person-modal-authority">' + esc(p.authority) + '</div>' +
+        '<div class="person-modal-label">담당 업무</div>' +
+        '<ul class="person-modal-list">' + p.responsibilities.map(function (r) { return '<li>' + esc(r) + '</li>'; }).join('') + '</ul>' +
+        (inCase ? '<div class="person-modal-tag">현재 사건에 투입됨</div>' : '<div class="person-modal-tag person-modal-tag-idle">현재 대기 중</div>') +
       '</div>' +
-      '<div class="person-popover-authority">' + esc(p.authority) + '</div>' +
-      '<div class="person-popover-label">담당 업무</div>' +
-      '<ul class="person-popover-list">' + p.responsibilities.map(function (r) { return '<li>' + esc(r) + '</li>'; }).join('') + '</ul>' +
-      (inCase ? '<div class="person-popover-tag">현재 사건에 투입됨</div>' : '<div class="person-popover-tag person-popover-tag-idle">현재 대기 중</div>') +
     '</div>';
   }
 
@@ -317,7 +325,7 @@
    * Domain의 state.thread를 그대로 읽어 렌더링만 한다. */
   function reportThread() {
     if (!session) {
-      return '<section class="sim-thread sim-thread-empty"></section>';
+      return '<div class="sim-thread-wrap is-empty"></div>';
     }
     var state = session.getState();
     var items = state.thread.map(function (msg) {
@@ -340,15 +348,20 @@
         '</div>' +
       '</div>';
     }).join('');
-    return '<section class="sim-thread">' +
-      '<div class="sim-thread-title">보고 스레드 — 누가 누구에게 전달했는지</div>' +
-      '<div class="thread-list">' + items + '</div>' +
-    '</section>';
+    return '<div class="sim-thread-wrap' + (threadCollapsed ? ' is-collapsed' : '') + '" data-thread-wrap>' +
+      '<button class="sim-thread-toggle" type="button" data-toggle-thread>' +
+        '<span>보고 스레드 — 누가 누구에게 전달했는지 (' + items.length + '건)</span>' +
+        '<span class="sim-thread-toggle-arrow">▾</span>' +
+      '</button>' +
+      '<section class="sim-thread">' +
+        '<div class="thread-list">' + items + '</div>' +
+      '</section>' +
+    '</div>';
   }
   /* ───────────── 하단: 타임라인 ───────────── */
 
   function timeline() {
-    if (!session) return '<footer class="sim-timeline sim-timeline-empty"></footer>';
+    if (!session) return '<footer class="sim-timeline-wrap is-empty"></footer>';
     var items = session.getState().timeline.map(function (t) {
       return '<div class="tl-item">' +
         '<span class="tl-time">' + esc(t.at) + '</span>' +
@@ -356,7 +369,13 @@
         (t.detail ? '<span class="tl-detail">' + esc(t.detail) + '</span>' : '') +
       '</div>';
     }).join('');
-    return '<footer class="sim-timeline"><div class="tl-title">사건 타임라인</div><div class="tl-list">' + items + '</div></footer>';
+    return '<footer class="sim-timeline-wrap' + (timelineCollapsed ? ' is-collapsed' : '') + '">' +
+      '<button class="sim-timeline-toggle" type="button" data-toggle-timeline>' +
+        '<span>사건 타임라인 (' + items.length + '건)</span>' +
+        '<span class="sim-timeline-toggle-arrow">▾</span>' +
+      '</button>' +
+      '<div class="sim-timeline"><div class="tl-list">' + items + '</div></div>' +
+    '</footer>';
   }
 
   /* ───────────── 전체 렌더 ───────────── */
@@ -366,7 +385,7 @@
   function draw() {
     app.innerHTML = topbar() + '<div class="sim-body">' + caseList() + officeFloor() +
       '<div class="sim-right-col">' + decisionPanel() + reportThread() + '</div>' +
-    '</div>' + timeline();
+    '</div>' + timeline() + personDetailPanel();
     wire();
     animateEntrance();
   }
@@ -402,10 +421,14 @@
     // 사건 카드 / 선택 카드 stagger
     animate('.sim-choice-card', { opacity: [0, 1], y: [8, 0] }, { duration: 0.35, delay: stagger(0.06) });
 
-    // 담당자 상세 패널 pop
-    var pop = app.querySelector('[data-person-popover]');
-    if (pop) {
-      animate(pop, { scale: [0.92, 1], opacity: [0, 1] }, { duration: 0.25, easing: [0.22, 1, 0.36, 1] });
+    // 담당자 상세 모달 pop + 배경 딤 페이드인
+    var overlay = app.querySelector('[data-person-overlay]');
+    var modal = app.querySelector('[data-person-modal]');
+    if (overlay) {
+      animate(overlay, { opacity: [0, 1] }, { duration: 0.18 });
+    }
+    if (modal) {
+      animate(modal, { scale: [0.94, 1], opacity: [0, 1] }, { duration: 0.22, easing: [0.22, 1, 0.36, 1] });
     }
   }
 
@@ -450,6 +473,38 @@
         draw();
       });
     }
+    var overlay = app.querySelector('[data-person-overlay]');
+    if (overlay) {
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) {
+          selectedPersonId = null;
+          draw();
+        }
+      });
+      document.addEventListener('keydown', escCloseHandler);
+    }
+    var threadToggle = app.querySelector('[data-toggle-thread]');
+    if (threadToggle) {
+      threadToggle.addEventListener('click', function () {
+        threadCollapsed = !threadCollapsed;
+        draw();
+      });
+    }
+    var timelineToggle = app.querySelector('[data-toggle-timeline]');
+    if (timelineToggle) {
+      timelineToggle.addEventListener('click', function () {
+        timelineCollapsed = !timelineCollapsed;
+        draw();
+      });
+    }
+  }
+
+  function escCloseHandler(e) {
+    if (e.key === 'Escape') {
+      selectedPersonId = null;
+      document.removeEventListener('keydown', escCloseHandler);
+      draw();
+    }
   }
 
   function openCase(id) {
@@ -462,3 +517,4 @@
 
   draw();
 })();
+
