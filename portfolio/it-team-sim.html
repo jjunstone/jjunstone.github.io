@@ -35,21 +35,27 @@
 
   /* ── 통합 헤더: 로고+네비 / 시뮬레이터 컨트롤을 한 줄에 ── */
   .site-topbar{
-    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    display:flex; align-items:center; justify-content:center; position:relative; gap:16px;
     height:var(--header-h); padding:0 20px; border-bottom:1px solid var(--line);
     background:#ffffff; flex-shrink:0; z-index:30;
   }
-  .site-topbar-left{ display:flex; align-items:center; gap:20px; min-width:0; }
+  .site-topbar-brand-group{
+    display:flex; align-items:center; gap:10px; min-width:0;
+    position:absolute; left:20px;
+  }
   .site-topbar-brand{ font-weight:700; text-decoration:none; color:var(--ink); font-size:15px; flex-shrink:0; }
+  .site-topbar-brand-divider{ color:var(--ink-faint); font-weight:400; flex-shrink:0; }
+  .site-topbar-title{ font-size:13px; font-weight:800; letter-spacing:.02em; color:var(--ink); flex-shrink:0; white-space:nowrap; }
   .site-topbar-nav{ display:flex; align-items:center; gap:18px; flex-shrink:0; }
   .site-topbar-nav a{ font-size:12.5px; font-weight:600; color:var(--ink); text-decoration:none; }
-  .site-topbar-divider{ width:1px; height:20px; background:var(--line); flex-shrink:0; }
-  .site-topbar-title{ font-size:13px; font-weight:800; letter-spacing:.02em; color:var(--ink); flex-shrink:0; white-space:nowrap; }
   .site-topbar-case{
     font-size:12.5px; color:var(--ink-soft); font-weight:600; overflow:hidden; text-overflow:ellipsis;
-    white-space:nowrap; min-width:0;
+    white-space:nowrap; min-width:0; max-width:220px;
   }
-  .site-topbar-right{ display:flex; align-items:center; gap:10px; flex-shrink:0; }
+  .site-topbar-right{
+    display:flex; align-items:center; gap:10px; flex-shrink:0;
+    position:absolute; right:20px;
+  }
   .sim-clock{ font-size:.8rem; color:var(--ink-soft); font-variant-numeric:tabular-nums; white-space:nowrap; }
   .sim-btn-ghost{
     font-size:.78rem; color:var(--ink-soft); text-decoration:none; background:none;
@@ -374,7 +380,9 @@
       grid-template-areas:"ciso" "dba" "sec" "net" "infra" "server";
     }
     .site-topbar{ flex-wrap:wrap; height:auto; padding:10px 16px; gap:8px; }
-    .site-topbar-left{ flex-wrap:wrap; }
+    .site-topbar-brand-group{ position:static; flex-wrap:wrap; }
+    .site-topbar-right{ position:static; }
+    .site-topbar-case{ max-width:none; }
   }
 
   @media (prefers-reduced-motion: reduce){

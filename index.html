@@ -22,6 +22,7 @@
     --ink-soft:#5b5b5b;
     --line:#e6e6e6;
     --accent:#173c78;
+    --accent-soft:#eef1f7;
     --font-main:"Pretendard","Gowun Dodum","Malgun Gothic",sans-serif;
   }
 
@@ -68,6 +69,8 @@
     color:var(--ink-soft);
     margin:0 0 44px;
     opacity:0;
+    word-break:keep-all;
+    overflow-wrap:break-word;
   }
 
   .actions{
@@ -79,37 +82,63 @@
   .action{
     display:flex;
     flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:6px;
-    padding:32px 20px;
+    align-items:flex-start;
+    justify-content:flex-start;
+    text-align:left;
+    gap:10px;
+    padding:26px 24px;
     border:1.4px solid var(--line);
-    border-radius:14px;
+    border-radius:16px;
     text-decoration:none;
     color:var(--ink);
+    background:#ffffff;
+    box-shadow:0 1px 2px rgba(20,20,20,.03);
+    transition:border-color .2s ease, box-shadow .2s ease, transform .2s ease;
     opacity:0;
   }
 
+  .action-title-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    width:100%;
+    gap:10px;
+  }
+
   .action-title{
-    font-size:1.12rem;
+    font-size:1.1rem;
     font-weight:700;
     letter-spacing:-.01em;
   }
 
+  .action-arrow{
+    font-size:1rem;
+    color:var(--ink-soft);
+    flex-shrink:0;
+    transition:transform .2s ease, color .2s ease;
+  }
+
   .action-sub{
     font-size:.86rem;
+    line-height:1.6;
     color:var(--ink-soft);
   }
 
   .action:hover{
     border-color:var(--accent);
+    box-shadow:0 10px 24px -8px rgba(23,60,120,.18);
   }
 
   .action:hover .action-title{
     color:var(--accent);
   }
 
-  /* Motion 로드 전/비활성 환경(스크립트 차단, prefers-reduced-motion)에서도
+  .action:hover .action-arrow{
+    transform:translateX(3px);
+    color:var(--accent);
+  }
+
+    /* Motion 로드 전/비활성 환경(스크립트 차단, prefers-reduced-motion)에서도
      콘텐츠가 보이도록 하는 안전장치 — JS가 opacity를 올리지 못하면 CSS가 대신 보여준다 */
   .no-js .eyebrow,
   .no-js .name,
@@ -136,16 +165,22 @@
   <div class="home">
     <p class="eyebrow">Infrastructure &amp; Security Engineer</p>
     <h1 class="name">이준석</h1>
-    <p class="desc">인프라와 보안을 운영하며 자동화와 Cloud Platform, DevOps로 역량을 넓히고 있습니다.</p>
+    <p class="desc">인프라 운영을 기반으로 시스템을 이해하고,<br>자동화와 클라우드 플랫폼으로 확장하는 엔지니어입니다.</p>
 
     <div class="actions">
       <a class="action" href="./career.html">
-        <span class="action-title">경력과 경험</span>
-        <span class="action-sub">어떻게 살아왔는가</span>
+        <span class="action-title-row">
+          <span class="action-title">경력과 경험</span>
+          <span class="action-arrow">→</span>
+        </span>
+        <span class="action-sub">이력서 · 경력 타임라인 · 기술 스택</span>
       </a>
       <a class="action" href="./portfolio/projects.html">
-        <span class="action-title">프로젝트</span>
-        <span class="action-sub">어떤 걸 할 줄 아는가</span>
+        <span class="action-title-row">
+          <span class="action-title">프로젝트</span>
+          <span class="action-arrow">→</span>
+        </span>
+        <span class="action-sub">실무 12건 · 개인 Lab 5건</span>
       </a>
     </div>
   </div>
@@ -191,3 +226,4 @@
   </script>
 </body>
 </html>
+

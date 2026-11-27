@@ -103,17 +103,17 @@
     var scenarioTitle = session ? session.getState().scenario.title : '사건을 선택하세요';
     var elapsed = session ? formatClock(session.getState().elapsedMinutes) : '09:00';
     return '<header class="site-topbar">' +
-      '<div class="site-topbar-left">' +
+      '<div class="site-topbar-brand-group">' +
         '<a class="site-topbar-brand" href="../index.html" title="홈으로">이준석</a>' +
-        '<nav class="site-topbar-nav">' +
-          '<a href="lab.html">Lab</a>' +
-          '<a href="../index.html">Home</a>' +
-        '</nav>' +
-        '<span class="site-topbar-divider"></span>' +
+        '<span class="site-topbar-brand-divider">|</span>' +
         '<span class="site-topbar-title">IT TEAM SIMULATOR</span>' +
-        '<span class="site-topbar-case">' + esc(scenarioTitle) + '</span>' +
       '</div>' +
+      '<nav class="site-topbar-nav">' +
+        '<a href="lab.html">Personal Lab</a>' +
+        '<a href="../index.html">Home</a>' +
+      '</nav>' +
       '<div class="site-topbar-right">' +
+        '<span class="site-topbar-case">' + esc(scenarioTitle) + '</span>' +
         '<span class="sim-clock">가상시간 ' + elapsed + '</span>' +
         (session ? '<button class="sim-btn-ghost" type="button" data-exit>사건 목록으로</button>' : '') +
       '</div>' +
